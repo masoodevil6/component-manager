@@ -1,0 +1,465 @@
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+<section id="template-main"></section>
+
+
+<!--<table class="form-choose-date-middle-table border-none">
+    <thead class="form-choose-date-middle-table-header boreder-bottom border-white">
+    <tr>
+        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_1") ? prop_langs._day_1 : "شنبه"} </th>
+        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_2") ? prop_langs._day_2 : "یک شنبه"} </th>
+        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_3") ? prop_langs._day_3 : "دو شنب"} </th>
+        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_4") ? prop_langs._day_4 : "سه شنبه"} </th>
+        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_5") ? prop_langs._day_5 : "چهار شنبه"} </th>
+        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_6") ? prop_langs._day_6 : "پنج شنبه"} </th>
+        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_7") ? prop_langs._day_7 : "جمعه"} </th>
+    </tr>
+    </thead>
+
+    <tbody class="form-choose-date-middle-table-body bg-white">
+    <tr>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
+    </tr>
+    <tr>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
+    </tr>
+    <tr>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
+    </tr>
+    <tr>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
+        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
+    </tr>
+    </tbody>
+</table>-->
+
+
+<script src="W:\teamyarProjects\marefiyan\Modules\0- Base\res_v2\attachments\components.js"></script>
+<script src="W:\teamyarProjects\marefiyan\Modules\0- Base\res_v2\attachments\tools.js"></script>
+
+<script src="./persian-date.js"></script>
+
+<script>
+
+    const date = new persianDate();
+    console.log(date.format('YYYY/MM/DD')); // مثلاً: ۱۴۰۴/۰۳/۰۶
+
+    tools_component.setup(
+        document.getElementById('template-main') ,
+        [
+
+            {
+                component: 'div',
+                props: {
+                    id: 'form-main',
+                    classList: "row mx-0 ",
+                },
+                children: [
+
+
+                    {
+                        component: 'ComponentButton',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "btn" ,
+
+                            prop_text: "asd" ,
+                            fn_callback: ()=>{
+                                alert("asd");
+                            }
+                        }
+                    } ,
+
+
+                    {
+                        component: 'div',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 position-relative"  ,
+                        },
+                        children: [
+                            {
+                                component: 'Component404',
+                                props: {
+                                    classList: "col-md-4 col-12 mt-2"  ,
+                                    id: "error404" ,
+
+                                    fn_callback: ()=>{
+                                        alert("asd");
+                                    },
+                                    prop_width: 200 ,
+                                    prop_height: 150 ,
+                                    prop_type: 0
+                                }
+                            } ,
+                        ]
+                    } ,
+
+
+                    {
+                        component: 'ComponentMessages',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "messages" ,
+
+                            prop_status: true ,
+                            prop_messages: [
+                                "a" , "b" , "c"
+                            ]
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentIsEmpty',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "isEmpty" ,
+
+                            prop_text: "it is a test" ,
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentHeader',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "header" ,
+
+                            prop_size: 4,
+                            prop_text: "it is a test header" ,
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentCollapse',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "collapse" ,
+
+                            prop_text: "asd" ,
+                            prop_body: "<h1>hello world</h1>" ,
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentTable',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "table" ,
+
+
+                            prop_tableType: 0 ,
+                            prop_tableBordered: 1 ,
+
+                            //prop_tableStriped: true ,
+                            //prop_tableHover: true ,
+                            //prop_tableBorderless: true ,
+
+                            prop_order : ["id" , "name" , "family" , "has"] ,
+                            prop_header : [
+                                {id:"id" , content: "id"},
+
+                                {id:"has" , content: "has"},
+                                {id:"name" , content: "name"},
+                                {id:"family" , content: "family"},
+                            ] ,
+                            prop_data : [
+                                {id:1 , name:"mehdi" , family:"marefiyan" , has:false} ,
+                                {id:2 , name:"ali"   , family:"sadegi"    , has:true} ,
+                            ] ,
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentSelectOption',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "selectOption" ,
+
+                            prop_name:"asd" ,
+                            prop_title:"asd" ,
+                            prop_itemSelected: 1 ,
+                            prop_options: [
+                                {
+                                    id:1 ,
+                                    name: "sasd"
+                                } ,
+                                {
+                                    id:2 ,
+                                    name: "213245"
+                                }
+                            ] ,
+                            fn_callback: (index)=>{
+                                alert(index)
+                            }
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentOtp',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "otp" ,
+
+                            prop_name: "otp_phone" ,
+                            prop_input: "09302171809" ,
+                            prop_length: 4 ,
+                            prop_langs: {
+                                _title_otp_description : "کد برای شماره/ایمیل زیر ارسال شد" ,
+                                _text_timer_after_active_otp : "تا ارسال مجدد کد" ,
+                                _text_timer_after_di_active_otp : "کد منقضی شده است" ,
+                                _text_get_new_otp : "کد جدید" ,
+                            } ,
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentTabs',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "tabs" ,
+
+                            prop_tabSelected: 1 ,
+                            prop_tabs: [
+                                {
+                                    id:1 ,
+                                    title: "tab 1",
+                                } ,
+                                {
+                                    id:2 ,
+                                    title: "tab 2",
+                                }
+                            ] ,
+                            fn_callback: (tabIndex) =>{
+                                alert(tabIndex)
+                            }
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentWidget',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "w2" ,
+
+                            prop_minHeight: 120 ,
+                            prop_fetch : {
+                                url: "https://google1.com"
+                            }
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentWidget',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "w1" ,
+
+                            prop_minHeight: 150 ,
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    } ,
+
+
+                    {
+                        component: 'ComponentForm',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "form" ,
+
+
+
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    } ,
+
+
+                    {
+                        component: 'ComponentInput',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input_price" ,
+
+                            prop_name: "input_price" ,
+                            prop_default: "123456789" ,
+                            prop_icon: "&#10127;" ,
+                            prop_btnAddStatus: true ,
+                            fn_addNewItem: () =>{
+                                alert("asd")
+                            } ,
+
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentInput',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-text" ,
+
+                            prop_name: "input" ,
+                            prop_default: "123456789" ,
+                            prop_icon: "&#10126;" ,
+
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentDate',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-date" ,
+
+
+                        }
+                    } ,
+
+
+
+
+                    {
+                        component: 'ComponentSelectOption',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "selectOption2" ,
+
+                            prop_type:1 ,
+                            prop_name:"asd" ,
+                            prop_title:"asd" ,
+                            prop_itemSelected:1 ,
+                            prop_options: [
+                                {
+                                    id:1 ,
+                                    name: "ssss"
+                                } ,
+                                {
+                                    id:2 ,
+                                    name: "aaaa"
+                                },
+                                {
+                                    id:3 ,
+                                    name: "1111"
+                                }
+                            ] ,
+                            fn_callback: (index)=>{
+                                //alert(index)
+                            }
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentTable',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "table2" ,
+
+                            prop_tableClass : ["border-none"] ,
+                            prop_tableStyles : {
+                                "background" : "darkcyan" ,
+                            },
+                            prop_tableHeadClass : [ "border-bottom" , "border-white"] ,
+                            prop_tableItemHeadClass : [ "text-center" , "text-white"]  ,
+                            prop_tableItemHeadStyles : {
+                                "font-size" : "8pt" ,
+                                "line-height" : "25px" ,
+                                "border-left" : "white solid 1px" ,
+                                "border-bottom" : "white solid 1px" ,
+                                "width" : "14%" ,
+                            },
+                            prop_tableBodyClass : [ "bg-white"] ,
+                            prop_tableItemBodyClass : [ "text-center" , "text-dark" , "bg-white", "rounded" , "d-block"] ,
+                            prop_tableItemBodyHoverStyles : {
+                                "background-color" : "#e1e1e1!important" ,
+                                "cursor" : "pointer" ,
+                            },
+
+
+                            prop_order : ["day_0" , "day_1" , "day_2" , "day_3", "day_4" , "day_5", "day_6" ] ,
+                            prop_header : [
+                                {id:"day_0" , content: "ش"},
+                                {id:"day_1" , content: "ی"},
+                                {id:"day_2" , content: "د"},
+                                {id:"day_3" , content: "س"},
+                                {id:"day_4" , content: "چ"},
+                                {id:"day_5" , content: "پ"},
+                                {id:"day_6" , content: "ج"},
+                            ] ,
+                            prop_data : [
+                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
+                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
+                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
+                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
+                            ] ,
+
+                            fn_callback: (val , key)=>{
+                                alert(val + " " + key)
+                            }
+                        }
+                    } ,
+
+                ]
+            }
+        ]
+    );
+
+
+</script>
