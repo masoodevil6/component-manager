@@ -475,7 +475,6 @@ window.Component404 = class Component404 extends ComponentBase{
         methods["button404Retry"] = {
             name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
             fn: () => {
-                console.log(config)
                 if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
                     config.fn_callback();
                 }
@@ -948,15 +947,27 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
 @prop_header
 -------------------------------------*/
 window.ComponentTable = class ComponentTable extends ComponentBase{
+
+    TYPE_SELECTED_NONE  = 0;
+    TYPE_SELECTED_ROW  = 1;
+    TYPE_SELECTED_COL  = 2;
+    TYPE_SELECTED_BOTH = 3;
+
     constructor(elId , config) {
 
         let methods = {};
         methods["onSelectCol"] = {
             name: `onSelectCol${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (event , key , row) => {
-                let value = event.target.innerHTML.trim();
+            fn: (event , key  , colIndex, rowIndex) => {
+                const el = event.target;
+                const value = el.innerHTML.trim();
+
+                config.prop_valueRow = rowIndex;
+                config.prop_valueCol = colIndex;
+                this.changeProperty(config);
+
                 if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
-                    config.fn_callback(value , key , row);
+                    config.fn_callback(value , key , colIndex , rowIndex);
                 }
             }
         };
@@ -966,30 +977,38 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
         this.render()
     }
 
-    templateFn(data , componentSlots , el){
+    templateFn = (data , componentSlots , el) => {
 
         //----------------
-        const prop_tableType            =   data.hasOwnProperty("prop_tableType")         ?  data.prop_tableType           : 0;
-        const prop_tableBordered        =   data.hasOwnProperty("prop_tableBordered")     ?  data.prop_tableBordered       : 0;
-        const prop_tableStriped         =   data.hasOwnProperty("prop_tableStriped")      ?  data.prop_tableStriped        : false;
-        const prop_tableHover           =   data.hasOwnProperty("prop_tableHover")        ?  data.prop_tableHover          : false;
-        const prop_tableBorderless      =   data.hasOwnProperty("prop_tableBorderless")   ?  data.prop_tableBorderless     : false;
+        const prop_tableType                  =   data.hasOwnProperty("prop_tableType")                ?  data.prop_tableType                : 0;
+        const prop_tableBordered              =   data.hasOwnProperty("prop_tableBordered")            ?  data.prop_tableBordered            : 0;
+        const prop_tableStriped               =   data.hasOwnProperty("prop_tableStriped")             ?  data.prop_tableStriped             : false;
+        const prop_tableHover                 =   data.hasOwnProperty("prop_tableHover")               ?  data.prop_tableHover               : false;
+        const prop_tableBorderless            =   data.hasOwnProperty("prop_tableBorderless")          ?  data.prop_tableBorderless          : false;
 
-        const prop_order                =   data.hasOwnProperty("prop_order")             ?  data.prop_order               : [];
-        const prop_data                 =   data.hasOwnProperty("prop_data")              ?  data.prop_data                : [];
-        const prop_header               =   data.hasOwnProperty("prop_header")            ?  data.prop_header              : [];
+        let   prop_valueRow                   =     data.hasOwnProperty("prop_valueRow")               ?      data.prop_valueRow             :  null;
+        let   prop_valueCol                   =     data.hasOwnProperty("prop_valueCol")               ?      data.prop_valueCol             :  null;
 
-        const prop_tableClass            =   data.hasOwnProperty("prop_tableClass")            ?  data.prop_tableClass              : ["table"];
-        const prop_tableStyles           =   data.hasOwnProperty("prop_tableStyles")           ?  data.prop_tableStyles             : null;
+        const prop_valueType                  =   data.hasOwnProperty("prop_valueType")                ?  data.prop_valueType                : this.TYPE_SELECTED_NONE;
+        const prop_valueRow_backgroundColor   =   data.hasOwnProperty("prop_valueRow_backgroundColor") ?  data.prop_valueRow_backgroundColor : tools_const.styles.public.selected_num1_backgroundColor;
+        const prop_valueCol_backgroundColor   =   data.hasOwnProperty("prop_valueCol_backgroundColor") ?  data.prop_valueCol_backgroundColor : tools_const.styles.public.selected_num3_backgroundColor;
+        const prop_valueCol_textColor         =   data.hasOwnProperty("prop_valueCol_textColor")       ?  data.prop_valueCol_textColor       : tools_const.styles.public.selected_num1_color;
 
-        const prop_tableHeadClass        =   data.hasOwnProperty("prop_tableHeadClass")        ?  data.prop_tableHeadClass          : [];
-        const prop_tableHeadStyles       =   data.hasOwnProperty("prop_tableHeadStyles")       ?  data.prop_tableHeadStyles         : null;
+        const prop_order                      =   data.hasOwnProperty("prop_order")                    ?  data.prop_order                    : [];
+        const prop_data                       =   data.hasOwnProperty("prop_data")                     ?  data.prop_data                     : [];
+        const prop_header                     =   data.hasOwnProperty("prop_header")                   ?  data.prop_header                   : [];
 
-        const prop_tableItemHeadClass    =   data.hasOwnProperty("prop_tableItemHeadClass")    ?  data.prop_tableItemHeadClass      : [];
-        const prop_tableItemHeadStyles   =   data.hasOwnProperty("prop_tableItemHeadStyles")   ?  data.prop_tableItemHeadStyles     : null;
+        const prop_tableClass                 =   data.hasOwnProperty("prop_tableClass")              ?  data.prop_tableClass               : ["table"];
+        const prop_tableStyles                =   data.hasOwnProperty("prop_tableStyles")             ?  data.prop_tableStyles              : null;
 
-        const prop_tableBodyClass        =   data.hasOwnProperty("prop_tableBodyClass")        ?  data.prop_tableBodyClass          : [];
-        const prop_tableBodyStyles       =   data.hasOwnProperty("prop_tableBodyStyles")       ?  data.prop_tableBodyStyles         : null;
+        const prop_tableHeadClass             =   data.hasOwnProperty("prop_tableHeadClass")          ?  data.prop_tableHeadClass           : [];
+        const prop_tableHeadStyles            =   data.hasOwnProperty("prop_tableHeadStyles")         ?  data.prop_tableHeadStyles          : null;
+
+        const prop_tableItemHeadClass         =   data.hasOwnProperty("prop_tableItemHeadClass")      ?  data.prop_tableItemHeadClass       : [];
+        const prop_tableItemHeadStyles        =   data.hasOwnProperty("prop_tableItemHeadStyles")     ?  data.prop_tableItemHeadStyles      : null;
+
+        const prop_tableBodyClass             =   data.hasOwnProperty("prop_tableBodyClass")          ?  data.prop_tableBodyClass           : [];
+        const prop_tableBodyStyles            =   data.hasOwnProperty("prop_tableBodyStyles")         ?  data.prop_tableBodyStyles          : null;
 
         const prop_tableItemBodyClass         =   data.hasOwnProperty("prop_tableItemBodyClass")         ?  data.prop_tableItemBodyClass           : [];
         const prop_tableItemBodyStyles        =   data.hasOwnProperty("prop_tableItemBodyStyles")        ?  data.prop_tableItemBodyStyles          : null;
@@ -1061,6 +1080,7 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
                 }
             }
             for (const headerIndex in orderHedar) {
+
                 const itemHeader = orderHedar[headerIndex];
                 htmlHeader += `
 <th class="element-item-header-table ${super.renderListClass(prop_tableItemHeadClass)}" 
@@ -1073,14 +1093,24 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
                 for (const bodyIndex in tableDataOreder) {
                     const itemBody = tableDataOreder[bodyIndex];
 
-                    htmlBody += `<tr>`
+                    let classSelected = "";
+                    if (prop_valueRow == bodyIndex &&  (prop_valueType == this.TYPE_SELECTED_ROW || prop_valueType == this.TYPE_SELECTED_BOTH)){
+                        classSelected = "selected_table_row"
+                    }
+
+                    htmlBody += `<tr class="${classSelected} rounded">`
                     for (const headerIndex in orderHedar) {
                         const itemHeader = orderHedar[headerIndex];
                         if (itemHeader != null && itemHeader.hasOwnProperty("id") && itemBody.hasOwnProperty(itemHeader.id) && itemBody[itemHeader.id].hasOwnProperty("content")){
 
+                            let colClassSelected = "";
+                            if (prop_valueRow == bodyIndex && prop_valueCol == headerIndex && (prop_valueType == this.TYPE_SELECTED_COL || prop_valueType == this.TYPE_SELECTED_BOTH)){
+                                colClassSelected = "selected_table_col"
+                            }
+
                             htmlBody += `
 <td class="element-item-body-table " >
-    <span class="${super.renderListClass(prop_tableItemBodyClass)}" onclick="${onSelectCol}(event , '${itemHeader.id}' , '${bodyIndex}')")">
+    <span class="${colClassSelected} ${super.renderListClass(prop_tableItemBodyClass)}" onclick="${onSelectCol}(event , '${itemHeader.id}', '${headerIndex}' , '${bodyIndex}')")">
         ${itemBody[itemHeader.id].content}
     </span>
 </td>
@@ -1144,6 +1174,14 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 }
 #${el.id} .element-item-body-table:hover span{
    ${super.renderListStyle(prop_tableItemBodyHoverStyles)}
+}
+
+#${el.id} .selected_table_row{
+   background-color: ${prop_valueRow_backgroundColor}!important;
+}
+#${el.id} .selected_table_col{
+   background-color: ${prop_valueCol_backgroundColor}!important;
+   color: ${prop_valueCol_textColor}!important;
 }
 </style>
 <table class="element-table ${prop_tableClass} ${tableType} ${tableBordered}
@@ -1542,7 +1580,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                         }
                     }
 
-                    config.var_titleItemSelectd = itemSelected;
+                    config.var_titleItemSelected = itemSelected;
                     this.changeProperty(config);
                 }
             }
@@ -1583,7 +1621,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
         //------------------
         const var_showFormSelector      =     data.hasOwnProperty("var_showFormSelector")      ?      data.var_showFormSelector    :  false;
-        let   var_titleItemSelectd      =     data.hasOwnProperty("var_titleItemSelectd")      ?      data.var_titleItemSelectd    :  "---";
+        let   var_titleItemSelected      =     data.hasOwnProperty("var_titleItemSelected")      ?      data.var_titleItemSelected    :  "---";
 
         //------------------
         const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type               :  0;
@@ -1677,7 +1715,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 </div>
                 `
                         if (prop_itemSelected != null && value == prop_itemSelected ){
-                            var_titleItemSelectd = item.name;
+                            var_titleItemSelected = item.name;
                         }
                     }
                 }
@@ -1723,7 +1761,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         </div>
        <input name="${prop_name}" value="${prop_itemSelected}" type="hidden"/>
        <b class="select-title w-100 d-block position-relative ${prop_titleClass}" onclick="${showlistOptions}">
-           ${var_titleItemSelectd}
+           ${var_titleItemSelected}
               
            <span class="arrow-selector-option position-absolute ">${prop_optionIcon}</span>
        </b>
@@ -2384,7 +2422,8 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 /*-------------------------------------
  Component Input
 -------------------------------------
-@prop_background
+@prop_background1
+@prop_background2
 @prop_name
 @prop_title
 
@@ -2396,22 +2435,74 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     TYPE_MONTH = "MONTH";
     TYPE_DAY = "DAY";
 
-    DEFULAT_BACKGROUND = "#13b799";
+    DEFULAT_COLOR = prop_const.colors.White1;
+    DEFULAT_BACKGROUND_1 = prop_const.colors.Green1;
+    DEFULAT_BACKGROUND_2 = prop_const.colors.Green5;
     DEFULAT_PERV_YEAR = 100;
     DEFULAT_NEXT_YEAR = 25;
     DEFULAT_YEAR = 1400;
 
-
     constructor(elId , config) {
 
         let methods = {};
+        methods["setValue"] = {
+            name: `setValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (jy, jm, jd) => {
+                let val = null;
+
+                let yearSelected = tools_converter.numEnglishToPersian(jy);
+                let monthSelected = jm.toString().length == 1 ? "0"+  tools_converter.numEnglishToPersian(jm)  : tools_converter.numEnglishToPersian(jm);
+                let daySelected = jd.toString().length == 1 ? "0"+tools_converter.numEnglishToPersian(jd) : tools_converter.numEnglishToPersian(jd);
+
+                const target = `${yearSelected}/${monthSelected}/${daySelected}`;
+                console.log(jy, tools_converter.numEnglishToPersian(jm), jd ,target)
+
+                /*const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                });*/
+
+
+
+                for (let gy = 2020; gy <= 2035; gy++) {
+                    for (let gm = 0; gm < 12; gm++) {
+                        for (let gd = 1; gd <= 31; gd++) {
+                            const d = new Date(gy, gm, gd);
+
+                            const getPartDate  = super.getMethod(config , "getPartDate"    , null );
+                            const daySelectedInfo = window[getPartDate](d);
+                           // console.log(target , daySelectedInfo)
+
+                           /* const parts = formatter.formatToParts(d);
+                            const y = +parts.find(p => p.type === 'year')?.value;
+                            const m = +parts.find(p => p.type === 'month')?.value;
+                            const day = +parts.find(p => p.type === 'day')?.value;
+
+                            const shamsi = `${y}/${m.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;*/
+
+
+
+                            if (getPartDate != null && getPartDate.hasOwnProperty("total") && getPartDate.total.hasOwnProperty("text") && getPartDate.total.text  === target) {
+                                val = Math.floor(d.getTime() / 1000);
+                            }
+                        }
+                    }
+                }
+
+                config.prop_value   =  val
+                //this.changeProperty(config);
+            }
+        };
 
         methods["getPartDate"] = {
             name: `getPartDate${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (date = null) => {
+
                 if (date == null){
-                    date = new Date();
+                    date = config.hasOwnProperty("prop_value") ? new Date(config.prop_value * 1000) : new Date();
                 }
+
                 const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
                     year: 'numeric',
                     month: '2-digit',
@@ -2421,11 +2512,182 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 const persianDate = formatter.format(date);
                 const [year, month, day] = persianDate.split('/');
 
+                // ساخت تاریخ میلادی معادل اول ماه شمسی
+                const jalaliYear = +tools_converter.numPersianToEnglish(year);
+                const jalaliMonth = +tools_converter.numPersianToEnglish(month);
+                const jalaliDay = 1;
+
+                const jalaliToGregorian  = super.getMethod(config , "jalaliToGregorian"    , null );
+                const firstDayOfJalaliMonth =   window[jalaliToGregorian](jalaliYear, jalaliMonth, jalaliDay);
+
+                // گرفتن روز هفته‌ی میلادی
+                const startWeekDay = firstDayOfJalaliMonth.getDay() + 2; // 0 = Sunday, ..., 6 = Saturday
+
+                const enDay = +tools_converter.numPersianToEnglish(day, true);
+                const dayInMonth = enDay + startWeekDay;
+                const week = Math.ceil(dayInMonth / 7);
+
                 return {
-                    year: tools_converter.numPersianToEnglish(year),
-                    month: tools_converter.numPersianToEnglish(month),
-                    day: tools_converter.numPersianToEnglish(day)
+                    total: {
+                        year: tools_converter.numPersianToEnglish(year),
+                        month: tools_converter.numPersianToEnglish(month),
+                        day: tools_converter.numPersianToEnglish(day),
+                        text: persianDate,
+                    },
+                    inMonth: {
+                        week: week ,
+                        day: dayInMonth ,
+                    },
+                    inWeek:{
+                        day: dayInMonth - (week-1)*7
+                    }
+                };
+            }
+        };
+
+
+        methods["isLeapJalaliYear"] = {
+            name: `isLeapJalaliYear${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (year) => {
+                const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181,
+                    1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394,
+                    2456, 3178];
+                let bl = breaks.length;
+                let gy = year + 621;
+                let leapJ = -14, jp = breaks[0], jump = 0, j = 1;
+
+                while (j < bl && year >= breaks[j]) {
+                    jump = breaks[j] - jp;
+                    leapJ += parseInt(jump / 33) * 8 + parseInt((jump % 33) / 4);
+                    jp = breaks[j];
+                    j++;
                 }
+
+                let n = year - jp;
+                leapJ += parseInt(n / 33) * 8 + parseInt(((n % 33) + 3) / 4);
+
+                if (((jump % 33) === 4) && (jump - n === 4)) leapJ++;
+
+                let leapG = parseInt(gy / 4) - parseInt(((parseInt(gy / 100) + 1) * 3) / 4) - 150;
+                let march = 20 + leapJ - leapG;
+
+                let diff = year - jp;
+                let mod = ((diff % 33) + 33) % 33;
+
+                return mod === 1 || mod === 5 || mod === 9 || mod === 13 || mod === 17 || mod === 22 || mod === 26 || mod === 30;
+            }
+        };
+        methods["getDaysInJalaliMonth"] = {
+            name: `getDaysInJalaliMonth${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (year, month) => {
+                if (month >= 1 && month <= 6) return 31;
+                if (month >= 7 && month <= 11) return 30;
+                const isLeapJalaliYear  = super.getMethod(config , "isLeapJalaliYear"    , null );
+                return window[isLeapJalaliYear](year) ? 30 : 29;
+            }
+        };
+        methods["jalaliToGregorian"] = {
+            name: `jalaliToGregorian${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (jy, jm, jd) => {
+                let gy = jy + 621;
+                let days = [
+                    [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334],
+                    [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335]
+                ];
+
+                const isLeapJalaliYear  = super.getMethod(config , "isLeapJalaliYear"    , null );
+                let leap = window[isLeapJalaliYear](jy) ? 1 : 0;
+                let march = 21;
+
+                let j_day_no = 365 * (jy - 1) + Math.floor((jy - 1) / 4) - Math.floor((jy - 1) / 100) + Math.floor((jy - 1) / 400);
+                for (let i = 1; i < jm; ++i) {
+                    j_day_no += i <= 6 ? 31 : (i <= 11 ? 30 : (leap ? 30 : 29));
+                }
+                j_day_no += jd;
+
+                let g_day_no = j_day_no + 226895; // offset for 1 farvardin 1 = 622/3/21
+
+                let g_year = 1600 + 400 * Math.floor(g_day_no / 146097);
+                g_day_no = g_day_no % 146097;
+
+                let leap_g = true;
+                if (g_day_no >= 36525) {
+                    g_day_no--;
+                    g_year += 100 * Math.floor(g_day_no / 36524);
+                    g_day_no = g_day_no % 36524;
+
+                    if (g_day_no >= 365) g_day_no++;
+                    else leap_g = false;
+                }
+
+                g_year += 4 * Math.floor(g_day_no / 1461);
+                g_day_no %= 1461;
+
+                if (g_day_no >= 366) {
+                    leap_g = false;
+                    g_day_no -= 1;
+                    g_year += Math.floor(g_day_no / 365);
+                    g_day_no = g_day_no % 365;
+                }
+
+                let months = [31, (leap_g ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                let gm, gd;
+                for (gm = 0; gm < 12 && g_day_no >= months[gm]; gm++) {
+                    g_day_no -= months[gm];
+                }
+                gd = g_day_no + 1;
+
+                return new Date(g_year, gm, gd);
+            }
+        };
+        methods["jalaliToTimeUnix"] = {
+            name: `jalaliToTimeUnix${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (jy, jm, jd) => {
+                let gy = jy + 621;
+                let daysInJalaliMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+                let dayOfYear = jd;
+                for (let i = 0; i < jm - 1; i++) dayOfYear += daysInJalaliMonth[i];
+
+                let gDate = new Date(gy, 2, 21); // 1 Farvardin ≈ 21 March
+                gDate.setDate(gDate.getDate() + dayOfYear - 1);
+                return {
+                    date: gDate,
+                    timeUnix: Math.floor(gDate.getTime() / 1000)
+                };
+            }
+        };
+
+        methods["getJalaliMonthGrid"] = {
+            name: `getJalaliMonthGrid${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (year, month) => {
+
+                const getDaysInJalaliMonth  = super.getMethod(config , "getDaysInJalaliMonth"    , null );
+                const jalaliToGregorian  = super.getMethod(config , "jalaliToGregorian"    , null );
+
+                const daysInMonth = window[getDaysInJalaliMonth](year, month);
+                const firstDate = window[jalaliToGregorian](year, month, 1);
+                const firstDayOfWeek = firstDate.getDay() ;
+
+                const offset = (firstDayOfWeek + 6) % 7;
+
+                const weeks = [];
+                let currentDay = 1;
+
+                let week = {};
+                for (let i = 0; i < 7; i++) {
+                    week[`day_${i}`] = i < offset ? null : currentDay++;
+                }
+                weeks.push(week);
+
+                while (currentDay <= daysInMonth) {
+                    let week = {};
+                    for (let i = 0; i < 7; i++) {
+                        week[`day_${i}`] = currentDay <= daysInMonth ? currentDay++ : null;
+                    }
+                    weeks.push(week);
+                }
+
+                return weeks;
             }
         };
 
@@ -2436,9 +2698,18 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 const getPartDate  = super.getMethod(config , "getPartDate"    , null );
                 const datePart = window[getPartDate](var_date);
 
-                config.var_selcted_year    =   config.hasOwnProperty("var_selcted_year")     ?  config.var_selcted_year    :  (datePart != null && datePart.hasOwnProperty("year") ? datePart.year : 0);
-                config.var_selcted_month   =   config.hasOwnProperty("var_selcted_month")    ?  config.var_selcted_month   :  (datePart != null && datePart.hasOwnProperty("month") ? datePart.month : 0);
-                config.var_selcted_day     =   config.hasOwnProperty("var_selcted_day")      ?  config.var_selcted_day     :  (datePart != null && datePart.hasOwnProperty("day") ? datePart.day : 0);
+                config.var_selected_date   =   datePart;
+                console.log(
+                    config.prop_value ,
+                    datePart
+                )
+                /*config.var_selected_year   =   config.hasOwnProperty("var_selected_year")     ?  config.var_selected_year  :  (datePart != null && datePart.hasOwnProperty("total") && datePart.total.hasOwnProperty("year") ? datePart.total.year : 0);
+                config.var_selected_month  =   config.hasOwnProperty("var_selected_month")    ?  config.var_selected_month :  (datePart != null && datePart.hasOwnProperty("total") && datePart.total.hasOwnProperty("month") ? datePart.total.month : 0);
+                config.var_selected_week   =   config.hasOwnProperty("var_selected_week")    ?  config.var_selected_week   :  (datePart != null && datePart.hasOwnProperty("total") && datePart.total.hasOwnProperty("day") ? datePart.total.day : 0);
+                config.var_selected_dayInMonth    =   config.hasOwnProperty("var_selected_dayInMonth")     ?  config.var_selected_dayInMonth    :  (datePart != null && datePart.hasOwnProperty("inMonth") && datePart.inMonth.hasOwnProperty("week") ? datePart.total.week : 0);
+                config.var_selected_dayInWeek     =   config.hasOwnProperty("var_selected_dayInWeek")      ?  config.var_selected_dayInWeek    :  (datePart != null && datePart.hasOwnProperty("inMonth") && datePart.inMonth.hasOwnProperty("week") ? datePart.total.week : 0);
+                */
+
                 this.changeProperty(config);
             }
         };
@@ -2449,13 +2720,13 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 let number = 0;
                 let value = 0;
                 if (type == this.TYPE_YAER){
-                    number  =   config.hasOwnProperty("var_selcted_year")     ?  config.var_selcted_year    : 0;
+                    number  =   config.hasOwnProperty("var_selected_year")     ?  config.var_selected_year    : 0;
                 }
                 else if( type == this.TYPE_MONTH){
-                    number =   config.hasOwnProperty("var_selcted_month")    ?  config.var_selcted_month   :  0;
+                    number =   config.hasOwnProperty("var_selected_month")    ?  config.var_selected_month   :  0;
                 }
                 else if(type == this.TYPE_DAY){
-                    number  =   config.hasOwnProperty("var_selcted_day")      ?  config.var_selcted_day     :  0;
+                    number  =   config.hasOwnProperty("var_selected_dayInMonth")      ?  config.var_selected_dayInMonth     :  0;
                 }
 
                 if (number != null && number > 0){
@@ -2481,9 +2752,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         methods["clearInput"] = {
             name: `clearInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                delete config.var_selcted_year;
-                delete config.var_selcted_month;
-                delete config.var_selcted_day;
+                delete config.var_selected_date;
                 this.changeProperty(config);
 
                 const readyDatePicker  = super.getMethod(config , "readyDatePicker"    , null );
@@ -2547,7 +2816,14 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     }
                 }
 
-                config.var_selcted_year = value;
+                const var_selected_date   =   config.hasOwnProperty("var_selected_date")     ?  config.var_selected_date  : null;
+                const setValue  = super.getMethod(config , "setValue"    , null );
+                window[setValue](
+                    value ,
+                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.hasOwnProperty("month") ? parseInt(var_selected_date.total.month) : 1 ,
+                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.hasOwnProperty("day") ? parseInt(var_selected_date.total.day) : 1 ,
+                );
+
                 this.changeProperty(config);
             }
         };
@@ -2557,7 +2833,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
                 const prop_prevYears     =        config.hasOwnProperty("prop_prevYears")      ?  config.prop_prevYears                :  this.DEFULAT_PERV_YEAR;
                 const prop_nextYears     =        config.hasOwnProperty("prop_nextYears")      ?  config.prop_nextYears                :  this.DEFULAT_NEXT_YEAR;
-                let   year               =        config.hasOwnProperty("var_selcted_year")    ?  parseInt(config.var_selcted_year)    : 0;
+                let   year               =        config.hasOwnProperty("var_selected_year")    ?  parseInt(config.var_selected_year)    : 0;
 
                 const getPartDate  = super.getMethod(config , "getPartDate"    , null );
                 const datePart = window[getPartDate]();
@@ -2570,7 +2846,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     year -= 1;
                 }
 
-                config.var_selcted_year = year;
+                config.var_selected_year = year;
                 this.changeProperty(config);
             }
         };
@@ -2600,15 +2876,15 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                             break;
                     }
                 }
-                config.var_selcted_month = value;
+                config.var_selected_month = value;
                 this.changeProperty(config);
             }
         };
         methods["goToMonth"] = {
             name: `goToMonth${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (isNext = false) => {
-                let   month     =        config.hasOwnProperty("var_selcted_month")    ?  parseInt(config.var_selcted_month)    : 0;
-                let   year      =        config.hasOwnProperty("var_selcted_year")     ?  parseInt(config.var_selcted_year)     : 0;
+                let   month     =        config.hasOwnProperty("var_selected_month")    ?  parseInt(config.var_selected_month)    : 0;
+                let   year      =        config.hasOwnProperty("var_selected_year")     ?  parseInt(config.var_selected_year)     : 0;
 
                 if (isNext ){
                     if (month + 1 >= 12){
@@ -2629,8 +2905,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     }
                 }
 
-                config.var_selcted_year = year;
-                config.var_selcted_month = month;
+                config.var_selected_year = year;
+                config.var_selected_month = month;
                 this.changeProperty(config);
             }
         };
@@ -2645,8 +2921,18 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
         methods["goToDaySelected"] = {
             name: `goToDaySelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (dayNum , dayName , weekIndex) => {
-                console.log(dayNum , dayName , weekIndex)
+            fn: (dayNum , dayName , dayIndex , weekIndex) => {
+
+                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
+
+                const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
+                const value = window[jalaliToTimeUnix](
+                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) : -1 ,
+                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) : -1 ,
+                    parseInt(dayNum)
+                )
+                config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                this.changeProperty(config);
             }
         };
 
@@ -2660,13 +2946,10 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     templateFn = (data , componentSlots , el) => {
 
         const var_showFormSelector          =        data.hasOwnProperty("var_showFormSelector")         ?  data.var_showFormSelector                    :  false;
-        const var_showFormSelector_year     =        data.hasOwnProperty("var_showFormSelector_year")    ?  data.var_showFormSelector_year               :  false;
-        const var_showFormSelector_month    =        data.hasOwnProperty("var_showFormSelector_month")   ?  data.var_showFormSelector_month              :  false;
-        const var_selcted_year              =        data.hasOwnProperty("var_selcted_year")             ?  data.var_selcted_year                        :  null;
-        const var_selcted_month             =        data.hasOwnProperty("var_selcted_month")            ?  data.var_selcted_month                       :  null;
-        const var_selcted_day               =        data.hasOwnProperty("var_selcted_day")              ?  data.var_selcted_day                         :  null;
 
-        const prop_background           =        data.hasOwnProperty("prop_background")            ?  data.prop_background                               :  this.DEFULAT_BACKGROUND;
+        const prop_background1          =        data.hasOwnProperty("prop_background1")          ?  data.prop_background1                               :  this.DEFULAT_BACKGROUND_1;
+        const prop_background2          =        data.hasOwnProperty("prop_background2")             ?  data.prop_background2                               :  this.DEFULAT_BACKGROUND_2;
+        const prop_color                =        data.hasOwnProperty("prop_color")                 ?  data.prop_color                                    :  this.DEFULAT_COLOR;
         const prop_name                 =        data.hasOwnProperty("prop_name")                  ?  data.prop_name                                     :  "No-Name-input-"+Math.floor(Math.random() * 10000);
         const prop_title                =        data.hasOwnProperty("prop_title")                 ?  data.prop_title                                    :  "No Title";
         const prop_value                =        data.hasOwnProperty("prop_value")                 ?  data.prop_value                                    :  null;
@@ -2737,7 +3020,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
       width: calc(4*14%);
 }
  #${el.id} .form-choose-date-info{
-     background-color: ${prop_background};
+     background-color: ${prop_background2};
      height: 40px;
 }
  #${el.id} .form-choose-date-title{
@@ -2752,7 +3035,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
      height: 130px;
 }
  #${el.id} .form-choose-date-select-form-item:hover{
-     background-color: ${prop_background};
+     background-color: ${prop_background2};
      color: white;
      cursor: pointer;
 }
@@ -2763,7 +3046,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 }
 
  #${el.id} .form-choose-date-middle{
-     background-color: ${prop_background};
+     background-color: ${prop_background2};
 }
  #${el.id} .form-choose-date-middle-table{
     
@@ -2793,7 +3076,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
  #${el.id} .form-choose-date-bottom{
-     background-color: ${prop_background};
+     background-color: ${prop_background2};
 }
 </style>
           <section class="form-group mb-4">
@@ -3074,8 +3357,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         const prop_prevYears     =        data.hasOwnProperty("prop_prevYears")      ?  data.prop_prevYears      :  this.DEFULAT_PERV_YEAR;
         const prop_nextYears     =        data.hasOwnProperty("prop_nextYears")      ?  data.prop_nextYears      :  this.DEFULAT_NEXT_YEAR;
 
-        let var_selcted_year  =   data.hasOwnProperty("var_selcted_year")    ?  data.var_selcted_year   :  this.DEFULAT_YEAR;
-        var_selcted_year = parseInt(var_selcted_year) -1;
+        const var_selected_date   =     data.hasOwnProperty("var_selected_date")        ?  data.var_selected_date      :  null;
+        const var_selected_year = var_selected_date != null && var_selected_date.hasOwnProperty("total") &&  var_selected_date.total.hasOwnProperty("year") ?  parseInt(var_selected_date.total.year) -1  : -1;
 
         const getPartDate  = super.getMethod(data , "getPartDate"    , null );
         const datePart = window[getPartDate]();
@@ -3098,7 +3381,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 prop_optionIconColor:"#ffffff" ,
                 prop_titleClass:"text-white text-center" ,
                 prop_optionIcon : "" ,
-                prop_itemSelected: var_selcted_year,
+                prop_itemSelected: var_selected_year,
                 prop_options: listYear ,
                 fn_callback: (index)=>{
                     window[goToYearSelected](index)
@@ -3158,8 +3441,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     }
 
     readySelectOptionMonth = (data , componentSlots , el) => {
-        let var_selcted_month   =   data.hasOwnProperty("var_selcted_month")    ?  data.var_selcted_month   :  1;
-        var_selcted_month = parseInt(var_selcted_month) - 1;
+        const var_selected_date   =     data.hasOwnProperty("var_selected_date")        ?  data.var_selected_date      :  null;
+        const var_selected_month = var_selected_date != null && var_selected_date.hasOwnProperty("total") &&  var_selected_date.total.hasOwnProperty("month") ?  parseInt(var_selected_date.total.month) - 1 : -1;
 
         const goToMonthSelected   =    super.getMethod(data , "goToMonthSelected" , null );
 
@@ -3189,7 +3472,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 prop_titleClass:"text-white text-center" ,
                 prop_optionIcon : "" ,
                 prop_options: listMonth,
-                prop_itemSelected: var_selcted_month,
+                prop_itemSelected: var_selected_month,
                 fn_callback: (index)=>{
                     window[goToMonthSelected](index)
                 }
@@ -3202,10 +3485,33 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     readyTableDays = (data , componentSlots , el) => {
+
+        //---------------
+        const var_selected_date  =   data.hasOwnProperty("var_selected_date")   ?  data.var_selected_date  :  null;
+
+        //---------------
+        const prop_background1 =   data.hasOwnProperty("prop_background1")   ?  data.prop_background1      :  this.DEFULAT_BACKGROUND_1;
+        const prop_background2 =   data.hasOwnProperty("prop_background2")   ?  data.prop_background2      :  this.DEFULAT_BACKGROUND_2;
+        const prop_color       =   data.hasOwnProperty("prop_color")         ?  data.prop_color           :  this.DEFULAT_COLOR;
+
+        const prop_langs       =   data.hasOwnProperty("prop_langs")         ?  data.prop_langs           :  {};
+
+        //---------------
         const goToDaySelected  =    super.getMethod(data , "goToDaySelected"    , null );
 
-        const prop_background  =   data.hasOwnProperty("prop_background") ?  data.prop_background      :  this.defaultBackground;
-        const prop_langs       =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
+        const getJalaliMonthGrid = super.getMethod(data , "getJalaliMonthGrid"    , null );
+        const listWeek = window[getJalaliMonthGrid](
+            var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) : -1 ,
+            var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) -1 : -1
+        );
+
+        console.log(
+            {
+                prop_valueRow : var_selected_date != null && var_selected_date.hasOwnProperty("inMonth") && var_selected_date.inMonth.toString("week") ?   parseInt(var_selected_date.inMonth.week) - 1 : -1 ,
+                prop_valueCol : var_selected_date != null && var_selected_date.hasOwnProperty("inWeek") && var_selected_date.inMonth.toString("inWeek") ?   parseInt(var_selected_date.inWeek.day) : -1 ,
+
+            }
+        )
 
         new window.ComponentTable(
             "table-list-days-in-month" ,
@@ -3213,9 +3519,17 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 classList: "row p-0 m-0"  ,
                 id: "table2" ,
 
+                prop_valueType: 3 ,
+                prop_valueRow : var_selected_date != null && var_selected_date.hasOwnProperty("inMonth") && var_selected_date.inMonth.toString("week") ?   parseInt(var_selected_date.inMonth.week) - 1 : -1 ,
+                prop_valueCol : var_selected_date != null && var_selected_date.hasOwnProperty("inWeek") && var_selected_date.inMonth.toString("inWeek") ?   parseInt(var_selected_date.inWeek.day) : -1 ,
+
+                prop_valueRow_backgroundColor : prop_background1 ,
+                prop_valueCol_backgroundColor : prop_background2 ,
+                prop_valueCol_textColor : prop_color ,
+
                 prop_tableClass : ["border-none"] ,
                 prop_tableStyles : {
-                    "background" : prop_background ,
+                    "background" : prop_background2 ,
                 },
                 prop_tableHeadClass : [ "border-bottom" , "border-white"] ,
                 prop_tableItemHeadClass : [ "text-center" , "text-white"]  ,
@@ -3227,7 +3541,10 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     "width" : "14%" ,
                 },
                 prop_tableBodyClass : [ "bg-white"] ,
-                prop_tableItemBodyClass : [ "text-center" , "text-dark" , "bg-white", "rounded" , "d-block"] ,
+                prop_tableItemBodyClass : [ "text-center" , "rounded" , "d-block"] ,
+                prop_tableItemBodyStyles: {
+                    "color" : "#525252" ,
+                },
                 prop_tableItemBodyHoverStyles : {
                     "background-color" : "#e1e1e1!important" ,
                     "cursor" : "pointer" ,
@@ -3244,16 +3561,10 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     {id:"day_5" , content: prop_langs != null && prop_langs.hasOwnProperty("_day_5") ? prop_langs._day_5 : "پنج شنبه"},
                     {id:"day_6" , content: prop_langs != null && prop_langs.hasOwnProperty("_day_6") ? prop_langs._day_6 : "جمعه"},
                 ] ,
-                prop_data : [
-                    {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
-                    {day_0:8 , day_1:9 , day_2:10 , day_3:11 , day_4:12 , day_5:13 , day_6:14} ,
-                    {day_0:15 , day_1:16 , day_2:17 , day_3:18 , day_4:19 , day_5:20 , day_6:21} ,
-                    {day_0:22 , day_1:23 , day_2:24 , day_3:25 , day_4:26 , day_5:27 , day_6:28} ,
-                    {day_0:29 , day_1:30 , day_2:31 , day_3:null , day_4:null , day_5:null , day_6:null} ,
-                ] ,
+                prop_data : listWeek,
 
-                fn_callback: (dayNum , dayName , weekIndex)=>{
-                    window[goToDaySelected](dayNum , dayName , weekIndex)
+                fn_callback: (dayNum , dayName , dayIndex , weekIndex)=>{
+                    window[goToDaySelected](dayNum , dayName , dayIndex , weekIndex)
                 }
             }
         )
@@ -3265,7 +3576,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
     readyBtnAccept = (data , componentSlots , el) => {
         const acceptBtnSelected    =    super.getMethod(data , "acceptBtnSelected"  , null );
-        const prop_langs       =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
+        const prop_langs           =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
 
         new window.ComponentButton(
             "accept-date-selected" ,
@@ -3283,7 +3594,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
     readyBtnCancel = (data , componentSlots , el) => {
         const cancelBtnSelected    =    super.getMethod(data , "cancelBtnSelected"  , null );
-        const prop_langs       =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
+        const prop_langs           =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
 
         new window.ComponentButton(
             "cancel-date-selected" ,
@@ -3301,7 +3612,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
     readyBtnNow = (data , componentSlots , el) => {
         const nowBtnSelected       =    super.getMethod(data , "nowBtnSelected"  , null );
-        const prop_langs       =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
+        const prop_langs           =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
 
         new window.ComponentButton(
             "now-date-selected" ,

@@ -4,12 +4,50 @@ Developer: Mehdi Maarefian
 Version: 0.1
 */
 
+prop_const = {
+    colors: {
+        Glass1: "rgba(255,255,255,0.1)" ,
+
+        White1: "#fff" ,
+        White2: "#efefef" ,
+        White3: "#ececec" ,
+
+        Orange1: "#fcd4b9" ,
+        Orange2: "#faa46c" ,
+        Orange3: "#f47920" ,
+
+        Green1: "rgba(197,245,236,0.50)" ,
+        Green2: "rgba(145,238,218,0.75)" ,
+        Green3: "rgb(77,227,195)" ,
+        Green4: "#38e1c3" ,
+        Green5: "#20d0b0" ,
+
+
+    } ,
+}
+
 
 tools_const = {
     botResPath: "bot/run/435/res_v2" ,
 
 
     styles: {
+        public:{
+          selected_none_backgroundColor      : prop_const.colors.Glass1 ,
+          selected_num1_backgroundColor      : prop_const.colors.Orange1 ,
+          selected_num2_backgroundColor      : prop_const.colors.Orange2 ,
+          selected_num3_backgroundColor      : prop_const.colors.Orange3 ,
+
+          selected_none_color                : prop_const.colors.Glass1 ,
+          selected_num1_color                : prop_const.colors.White1 ,
+          selected_num2_color                : prop_const.colors.White2 ,
+          selected_num3_color                : prop_const.colors.White3 ,
+        },
+
+
+        table: {
+            backgroundColor: "#e7e7e791"
+        },
         title: {
             backgroundColor: "#e7e7e791"
         },
@@ -355,7 +393,7 @@ tools_converter = {
     },
 
 
-    customUnSerialize: function (input){
+    customUnSerialize: function (input ){
         const str = String(input);
         const obj = {};
         str.split(";").forEach(pair => {
@@ -364,13 +402,35 @@ tools_converter = {
                 if (key) obj[key] = value || "";
             }
         });
+
         return obj;
     },
 
 
 
-    numPersianToEnglish: function (str){
-        return str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+    numPersianToEnglish: function (str, isInt=false){
+        const val = str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+
+        if (isInt){
+            return parseInt(val);
+        }
+        return val;
+    } ,
+
+
+    numEnglishToPersian: function (str, isInt=false){
+        if (typeof str !== 'string') str = String(str);
+
+        const persianNums = '۰۱۲۳۴۵۶۷۸۹';
+        const arabicNums  = '٠١٢٣٤٥٦٧٨٩';
+
+        const val = str.replace(/[۰-۹٠-٩]/g, d => {
+            const index = persianNums.indexOf(d);
+            if (index > -1) return index;
+            return arabicNums.indexOf(d);
+        });
+
+        return isInt ? parseFloat(val) : val;
     }
 
 
