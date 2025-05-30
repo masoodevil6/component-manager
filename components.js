@@ -2525,7 +2525,13 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
                 const enDay = +tools_converter.numPersianToEnglish(day, true);
                 const dayInMonth = enDay + startWeekDay;
-                const week = Math.ceil(dayInMonth / 7);
+                const week = Math.floor(dayInMonth / 7);
+
+                console.log(
+                    dayInMonth ,
+                    week,
+                    dayInMonth - (week)*7,
+                )
 
                 return {
                     total: {
@@ -2535,11 +2541,11 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                         text: persianDate,
                     },
                     inMonth: {
-                        week: week ,
-                        day: dayInMonth ,
+                        week: week+1 ,
+                        day: enDay ,
                     },
                     inWeek:{
-                        day: dayInMonth - (week-1)*7
+                        day: dayInMonth - (week)*7
                     }
                 };
             }
@@ -2589,57 +2595,40 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         methods["jalaliToGregorian"] = {
             name: `jalaliToGregorian${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (jy, jm, jd) => {
+                const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111,
+                    1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178];
+
                 let gy = jy + 621;
-                let days = [
-                    [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334],
-                    [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335]
-                ];
+                let leapJ = -14;
+                let jp = breaks[0];
+                let jump = 0;
 
-                const isLeapJalaliYear  = super.getMethod(config , "isLeapJalaliYear"    , null );
-                let leap = window[isLeapJalaliYear](jy) ? 1 : 0;
-                let march = 21;
-
-                let j_day_no = 365 * (jy - 1) + Math.floor((jy - 1) / 4) - Math.floor((jy - 1) / 100) + Math.floor((jy - 1) / 400);
-                for (let i = 1; i < jm; ++i) {
-                    j_day_no += i <= 6 ? 31 : (i <= 11 ? 30 : (leap ? 30 : 29));
-                }
-                j_day_no += jd;
-
-                let g_day_no = j_day_no + 226895; // offset for 1 farvardin 1 = 622/3/21
-
-                let g_year = 1600 + 400 * Math.floor(g_day_no / 146097);
-                g_day_no = g_day_no % 146097;
-
-                let leap_g = true;
-                if (g_day_no >= 36525) {
-                    g_day_no--;
-                    g_year += 100 * Math.floor(g_day_no / 36524);
-                    g_day_no = g_day_no % 36524;
-
-                    if (g_day_no >= 365) g_day_no++;
-                    else leap_g = false;
+                for (let i = 1; i < breaks.length; i++) {
+                    jump = breaks[i] - jp;
+                    if (jy < breaks[i]) {
+                        break;
+                    }
+                    leapJ = leapJ + Math.floor(jump / 33) * 8 + Math.floor((jump % 33) / 4);
+                    jp = breaks[i];
                 }
 
-                g_year += 4 * Math.floor(g_day_no / 1461);
-                g_day_no %= 1461;
+                let n = jy - jp;
+                leapJ = leapJ + Math.floor(n / 33) * 8 + Math.floor(((n % 33) + 3) / 4);
+                if ((jump % 33 === 4) && (jump - n === 4)) leapJ += 1;
 
-                if (g_day_no >= 366) {
-                    leap_g = false;
-                    g_day_no -= 1;
-                    g_year += Math.floor(g_day_no / 365);
-                    g_day_no = g_day_no % 365;
-                }
+                let march = 20 + leapJ - ((jy + 621) % 4 === 0 ? 1 : 0);
 
-                let months = [31, (leap_g ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                let gm, gd;
-                for (gm = 0; gm < 12 && g_day_no >= months[gm]; gm++) {
-                    g_day_no -= months[gm];
-                }
-                gd = g_day_no + 1;
+                let g_days = (jm <= 6)
+                    ? (jm - 1) * 31 + (jd - 1)
+                    : 6 * 31 + (jm - 7) * 30 + (jd - 1);
 
-                return new Date(g_year, gm, gd);
+                let g_date = new Date(gy, 2, march); // March = month 2 (zero-indexed)
+                g_date.setDate(g_date.getDate() + g_days);
+
+                return g_date;
             }
         };
+
         methods["jalaliToTimeUnix"] = {
             name: `jalaliToTimeUnix${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (jy, jm, jd) => {
