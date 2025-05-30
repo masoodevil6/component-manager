@@ -2448,7 +2448,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         methods["setValue"] = {
             name: `setValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (jy, jm, jd) => {
-                let val = null;
+                /*let val = null;
 
                 let yearSelected = tools_converter.numEnglishToPersian(jy);
                 let monthSelected = jm.toString().length == 1 ? "0"+  tools_converter.numEnglishToPersian(jm)  : tools_converter.numEnglishToPersian(jm);
@@ -2457,11 +2457,11 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 const target = `${yearSelected}/${monthSelected}/${daySelected}`;
                 console.log(jy, tools_converter.numEnglishToPersian(jm), jd ,target)
 
-                /*const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+                /!*const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit'
-                });*/
+                });*!/
 
 
 
@@ -2474,12 +2474,12 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                             const daySelectedInfo = window[getPartDate](d);
                            // console.log(target , daySelectedInfo)
 
-                           /* const parts = formatter.formatToParts(d);
+                           /!* const parts = formatter.formatToParts(d);
                             const y = +parts.find(p => p.type === 'year')?.value;
                             const m = +parts.find(p => p.type === 'month')?.value;
                             const day = +parts.find(p => p.type === 'day')?.value;
 
-                            const shamsi = `${y}/${m.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;*/
+                            const shamsi = `${y}/${m.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;*!/
 
 
 
@@ -2491,7 +2491,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 }
 
                 config.prop_value   =  val
-                //this.changeProperty(config);
+                //this.changeProperty(config);*/
             }
         };
 
@@ -2526,12 +2526,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 const enDay = +tools_converter.numPersianToEnglish(day, true);
                 const dayInMonth = enDay + startWeekDay;
                 const week = Math.floor(dayInMonth / 7);
-
-                console.log(
-                    dayInMonth ,
-                    week,
-                    dayInMonth - (week)*7,
-                )
 
                 return {
                     total: {
@@ -2688,17 +2682,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 const datePart = window[getPartDate](var_date);
 
                 config.var_selected_date   =   datePart;
-                console.log(
-                    config.prop_value ,
-                    datePart
-                )
-                /*config.var_selected_year   =   config.hasOwnProperty("var_selected_year")     ?  config.var_selected_year  :  (datePart != null && datePart.hasOwnProperty("total") && datePart.total.hasOwnProperty("year") ? datePart.total.year : 0);
-                config.var_selected_month  =   config.hasOwnProperty("var_selected_month")    ?  config.var_selected_month :  (datePart != null && datePart.hasOwnProperty("total") && datePart.total.hasOwnProperty("month") ? datePart.total.month : 0);
-                config.var_selected_week   =   config.hasOwnProperty("var_selected_week")    ?  config.var_selected_week   :  (datePart != null && datePart.hasOwnProperty("total") && datePart.total.hasOwnProperty("day") ? datePart.total.day : 0);
-                config.var_selected_dayInMonth    =   config.hasOwnProperty("var_selected_dayInMonth")     ?  config.var_selected_dayInMonth    :  (datePart != null && datePart.hasOwnProperty("inMonth") && datePart.inMonth.hasOwnProperty("week") ? datePart.total.week : 0);
-                config.var_selected_dayInWeek     =   config.hasOwnProperty("var_selected_dayInWeek")      ?  config.var_selected_dayInWeek    :  (datePart != null && datePart.hasOwnProperty("inMonth") && datePart.inMonth.hasOwnProperty("week") ? datePart.total.week : 0);
-                */
-
                 this.changeProperty(config);
             }
         };
