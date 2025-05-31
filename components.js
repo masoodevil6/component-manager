@@ -230,8 +230,6 @@ class ComponentBase{
     readyAttrs(){
         const el = document.getElementById(this.elId);
 
-
-
         if (!el) {
             console.warn(`Element with id '${this.elId}' not found`);
             return;
@@ -1792,15 +1790,6 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
 
 
-
-
-
-
-
-
-
-
-
 /*-------------------------------------
  Component Widget
 -------------------------------------
@@ -2445,197 +2434,25 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     constructor(elId , config) {
 
         let methods = {};
-        methods["setValue"] = {
-            name: `setValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (jy, jm, jd) => {
-                /*let val = null;
-
-                let yearSelected = tools_converter.numEnglishToPersian(jy);
-                let monthSelected = jm.toString().length == 1 ? "0"+  tools_converter.numEnglishToPersian(jm)  : tools_converter.numEnglishToPersian(jm);
-                let daySelected = jd.toString().length == 1 ? "0"+tools_converter.numEnglishToPersian(jd) : tools_converter.numEnglishToPersian(jd);
-
-                const target = `${yearSelected}/${monthSelected}/${daySelected}`;
-                console.log(jy, tools_converter.numEnglishToPersian(jm), jd ,target)
-
-                /!*const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                });*!/
 
 
-
-                for (let gy = 2020; gy <= 2035; gy++) {
-                    for (let gm = 0; gm < 12; gm++) {
-                        for (let gd = 1; gd <= 31; gd++) {
-                            const d = new Date(gy, gm, gd);
-
-                            const getPartDate  = super.getMethod(config , "getPartDate"    , null );
-                            const daySelectedInfo = window[getPartDate](d);
-                           // console.log(target , daySelectedInfo)
-
-                           /!* const parts = formatter.formatToParts(d);
-                            const y = +parts.find(p => p.type === 'year')?.value;
-                            const m = +parts.find(p => p.type === 'month')?.value;
-                            const day = +parts.find(p => p.type === 'day')?.value;
-
-                            const shamsi = `${y}/${m.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;*!/
-
-
-
-                            if (getPartDate != null && getPartDate.hasOwnProperty("total") && getPartDate.total.hasOwnProperty("text") && getPartDate.total.text  === target) {
-                                val = Math.floor(d.getTime() / 1000);
-                            }
-                        }
-                    }
-                }
-
-                config.prop_value   =  val
-                //this.changeProperty(config);*/
-            }
-        };
-
-        methods["getPartDate"] = {
-            name: `getPartDate${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (date = null) => {
-
-                if (date == null){
-                    date = config.hasOwnProperty("prop_value") ? new Date(config.prop_value * 1000) : new Date();
-                }
-
-                const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                });
-
-                const persianDate = formatter.format(date);
-                const [year, month, day] = persianDate.split('/');
-
-                // ساخت تاریخ میلادی معادل اول ماه شمسی
-                const jalaliYear = +tools_converter.numPersianToEnglish(year);
-                const jalaliMonth = +tools_converter.numPersianToEnglish(month);
-                const jalaliDay = 1;
-
-                const jalaliToGregorian  = super.getMethod(config , "jalaliToGregorian"    , null );
-                const firstDayOfJalaliMonth =   window[jalaliToGregorian](jalaliYear, jalaliMonth, jalaliDay);
-
-                // گرفتن روز هفته‌ی میلادی
-                const startWeekDay = firstDayOfJalaliMonth.getDay() + 2; // 0 = Sunday, ..., 6 = Saturday
-
-                const enDay = +tools_converter.numPersianToEnglish(day, true);
-                const dayInMonth = enDay + startWeekDay;
-                const week = Math.floor(dayInMonth / 7);
-
-                return {
-                    total: {
-                        year: tools_converter.numPersianToEnglish(year),
-                        month: tools_converter.numPersianToEnglish(month),
-                        day: tools_converter.numPersianToEnglish(day),
-                        text: persianDate,
-                    },
-                    inMonth: {
-                        week: week+1 ,
-                        day: enDay ,
-                    },
-                    inWeek:{
-                        day: dayInMonth - (week)*7
-                    }
-                };
-            }
-        };
-
-
-        methods["isLeapJalaliYear"] = {
-            name: `isLeapJalaliYear${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (year) => {
-                const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181,
-                    1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394,
-                    2456, 3178];
-                let bl = breaks.length;
-                let gy = year + 621;
-                let leapJ = -14, jp = breaks[0], jump = 0, j = 1;
-
-                while (j < bl && year >= breaks[j]) {
-                    jump = breaks[j] - jp;
-                    leapJ += parseInt(jump / 33) * 8 + parseInt((jump % 33) / 4);
-                    jp = breaks[j];
-                    j++;
-                }
-
-                let n = year - jp;
-                leapJ += parseInt(n / 33) * 8 + parseInt(((n % 33) + 3) / 4);
-
-                if (((jump % 33) === 4) && (jump - n === 4)) leapJ++;
-
-                let leapG = parseInt(gy / 4) - parseInt(((parseInt(gy / 100) + 1) * 3) / 4) - 150;
-                let march = 20 + leapJ - leapG;
-
-                let diff = year - jp;
-                let mod = ((diff % 33) + 33) % 33;
-
-                return mod === 1 || mod === 5 || mod === 9 || mod === 13 || mod === 17 || mod === 22 || mod === 26 || mod === 30;
-            }
-        };
         methods["getDaysInJalaliMonth"] = {
             name: `getDaysInJalaliMonth${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (year, month) => {
-                if (month >= 1 && month <= 6) return 31;
-                if (month >= 7 && month <= 11) return 30;
-                const isLeapJalaliYear  = super.getMethod(config , "isLeapJalaliYear"    , null );
-                return window[isLeapJalaliYear](year) ? 30 : 29;
-            }
-        };
-        methods["jalaliToGregorian"] = {
-            name: `jalaliToGregorian${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (jy, jm, jd) => {
-                const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111,
-                    1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178];
-
-                let gy = jy + 621;
-                let leapJ = -14;
-                let jp = breaks[0];
-                let jump = 0;
-
-                for (let i = 1; i < breaks.length; i++) {
-                    jump = breaks[i] - jp;
-                    if (jy < breaks[i]) {
-                        break;
-                    }
-                    leapJ = leapJ + Math.floor(jump / 33) * 8 + Math.floor((jump % 33) / 4);
-                    jp = breaks[i];
-                }
-
-                let n = jy - jp;
-                leapJ = leapJ + Math.floor(n / 33) * 8 + Math.floor(((n % 33) + 3) / 4);
-                if ((jump % 33 === 4) && (jump - n === 4)) leapJ += 1;
-
-                let march = 20 + leapJ - ((jy + 621) % 4 === 0 ? 1 : 0);
-
-                let g_days = (jm <= 6)
-                    ? (jm - 1) * 31 + (jd - 1)
-                    : 6 * 31 + (jm - 7) * 30 + (jd - 1);
-
-                let g_date = new Date(gy, 2, march); // March = month 2 (zero-indexed)
-                g_date.setDate(g_date.getDate() + g_days);
-
-                return g_date;
+                return jalaali.jalaaliMonthLength(year, month);
             }
         };
 
         methods["jalaliToTimeUnix"] = {
             name: `jalaliToTimeUnix${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (jy, jm, jd) => {
-                let gy = jy + 621;
-                let daysInJalaliMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
-                let dayOfYear = jd;
-                for (let i = 0; i < jm - 1; i++) dayOfYear += daysInJalaliMonth[i];
+                const gDate = jalaali.toGregorian(jy, jm, jd);
+                const date = new Date(gDate.gy, gDate.gm - 1, gDate.gd);
+                const timeUnix = Math.floor(date.getTime() / 1000);
 
-                let gDate = new Date(gy, 2, 21); // 1 Farvardin ≈ 21 March
-                gDate.setDate(gDate.getDate() + dayOfYear - 1);
                 return {
-                    date: gDate,
-                    timeUnix: Math.floor(gDate.getTime() / 1000)
+                    date: date,
+                    timeUnix: timeUnix
                 };
             }
         };
@@ -2643,13 +2460,12 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         methods["getJalaliMonthGrid"] = {
             name: `getJalaliMonthGrid${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (year, month) => {
-
                 const getDaysInJalaliMonth  = super.getMethod(config , "getDaysInJalaliMonth"    , null );
-                const jalaliToGregorian  = super.getMethod(config , "jalaliToGregorian"    , null );
+                const daysInMonth = window[getDaysInJalaliMonth](year+1, month+1);
 
-                const daysInMonth = window[getDaysInJalaliMonth](year, month);
-                const firstDate = window[jalaliToGregorian](year, month, 1);
-                const firstDayOfWeek = firstDate.getDay() ;
+                const gDate = jalaali.toGregorian(year+1, month+1 , 1);
+                const date = new Date(gDate.gy, gDate.gm - 1, gDate.gd);
+                const firstDayOfWeek = date.getDay()+2;
 
                 const offset = (firstDayOfWeek + 6) % 7;
 
@@ -2674,6 +2490,80 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         };
 
+        methods["getPartDate"] = {
+            name: `getPartDate${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (date = null) => {
+
+                if (date == null){
+                    date = config.hasOwnProperty("prop_value") ? new Date(config.prop_value * 1000) : new Date();
+                }
+
+                const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+
+                const persianDate = formatter.format(date);
+                const [year, month, day] = persianDate.split('/');
+
+                const jalaliYear = +tools_converter.numPersianToEnglish(year) -1  ;
+                const jalaliMonth = +tools_converter.numPersianToEnglish(month)  -1 ;
+                const jalaliDay =  +tools_converter.numPersianToEnglish(day) -1;
+
+                const getJalaliMonthGrid  = super.getMethod(config , "getJalaliMonthGrid"    , null );
+                const listWeek = window[getJalaliMonthGrid](jalaliYear, jalaliMonth );
+                let startWeekDay = -1;
+                let totalWeek = 0;
+                if (listWeek != null && Array.isArray(listWeek)){
+                    totalWeek = listWeek.length;
+
+                    for (const weekIndex in listWeek) {
+                        const week =  listWeek[weekIndex];
+                        for (const dayIndex in listWeek[weekIndex]) {
+                            const day =  week[dayIndex];
+                            if (day == null ){
+                                startWeekDay ++;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                const dayInMonth = startWeekDay + jalaliDay + 2 ;
+                let week = Math.floor(dayInMonth / 7);
+
+                let dayInWeek = dayInMonth % 7
+                if (dayInWeek == 0){
+                    week -= 1;
+                    dayInWeek = 6;
+                }
+                else {
+                    dayInWeek = dayInMonth % 7 - 1;
+                }
+
+                return {
+                    total: {
+                        year: tools_converter.numPersianToEnglish(year) -1 ,
+                        month: tools_converter.numPersianToEnglish(month) -1,
+                        day: tools_converter.numPersianToEnglish(day) -1,
+                        text: persianDate,
+                    },
+                    inMonth: {
+                        dayStart : startWeekDay ,
+                        day: jalaliDay ,
+
+                        week: week ,
+                        weekTotal: totalWeek ,
+                    },
+                    inWeek:{
+                        day: dayInWeek
+                    }
+                };
+            }
+        };
         methods["readyDatePicker"] = {
             name: `readyDatePicker${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
@@ -2686,19 +2576,25 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         };
 
+
+
         methods["getDisgitDatePart"] = {
             name: `getDisgitDatePart${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (type , digit) => {
+
+                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
                 let number = 0;
                 let value = 0;
                 if (type == this.TYPE_YAER){
-                    number  =   config.hasOwnProperty("var_selected_year")     ?  config.var_selected_year    : 0;
+                    number = var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?  ( parseInt(var_selected_date.total.year) +1).toString() : -1 ;
                 }
                 else if( type == this.TYPE_MONTH){
-                    number =   config.hasOwnProperty("var_selected_month")    ?  config.var_selected_month   :  0;
+                    const val =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ? (  parseInt(var_selected_date.total.month)+1).toString() : -1 ;
+                    number = val.length == 1 ? "0" +  val : val;
                 }
                 else if(type == this.TYPE_DAY){
-                    number  =   config.hasOwnProperty("var_selected_dayInMonth")      ?  config.var_selected_dayInMonth     :  0;
+                    const val =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?  ( parseInt(var_selected_date.total.day)+1 ).toString(): -1 ;
+                    number = val.length == 1 ? "0" +  val : val;
                 }
 
                 if (number != null && number > 0){
@@ -2712,7 +2608,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         };
 
-
         methods["selectDate"] = {
             name: `selectDate${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (status = null) => {
@@ -2724,30 +2619,30 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         methods["clearInput"] = {
             name: `clearInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
+                const today = new Date();
+                const jToday = jalaali.toJalaali(today);
+
+                const todayGregorian = new Date();
+                const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
+                const value = window[jalaliToTimeUnix](jToday.jy, jToday.jm, jToday.jd);
+                config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                config.var_focusDatePart = null;
+                this.changeProperty(config);
+
                 delete config.var_selected_date;
                 this.changeProperty(config);
 
                 const readyDatePicker  = super.getMethod(config , "readyDatePicker"    , null );
                 window[readyDatePicker]();
 
-                const selectDate  = super.getMethod(config , "selectDate"    , null );
-                window[selectDate](false);
             }
         };
 
         methods["acceptBtnSelected"] = {
             name: `acceptBtnSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-
-            }
-        };
-
-        methods["cancelBtnSelected"] = {
-            name: `cancelBtnSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (event) => {
-
-
-
+                const selectDate  = super.getMethod(config , "selectDate"    , null );
+                window[selectDate](false);
             }
         };
 
@@ -2756,9 +2651,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             fn: (yearNum) => {
                 const clearInput  = super.getMethod(config , "clearInput"    , null );
                 window[clearInput]();
-
-                /*const selectDate  = super.getMethod(config , "selectDate"    , null );
-                window[selectDate](false);*/
             }
         };
 
@@ -2767,35 +2659,15 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         methods["goToYearSelected"] = {
             name: `goToYearSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (yearNum) => {
-                let value = "1404"
-                if (yearNum != null && yearNum>=0){
-                    yearNum = (yearNum + 1).toString() ;
 
+                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
+                let   month       =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) : -1 ;
+                let   day       =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?   parseInt(var_selected_date.total.day) : -1 ;
 
-                    switch (yearNum.length){
-                        case 1:
-                            value = "140" + yearNum
-                            break;
-                        case 2:
-                            value = "14" + yearNum
-                            break;
-                        case 3:
-                            value = "1" + yearNum
-                            break;
-                        case 4:
-                            value = yearNum
-                            break;
-                    }
-                }
-
-                const var_selected_date   =   config.hasOwnProperty("var_selected_date")     ?  config.var_selected_date  : null;
-                const setValue  = super.getMethod(config , "setValue"    , null );
-                window[setValue](
-                    value ,
-                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.hasOwnProperty("month") ? parseInt(var_selected_date.total.month) : 1 ,
-                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.hasOwnProperty("day") ? parseInt(var_selected_date.total.day) : 1 ,
-                );
-
+                const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
+                const value = window[jalaliToTimeUnix](yearNum+1 , month+1 , day+1);
+                config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                config.var_focusDatePart = null;
                 this.changeProperty(config);
             }
         };
@@ -2803,23 +2675,32 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             name: `goToYear${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (isNext = false) => {
 
+                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
+
+                let   year      =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) : -1 ;
+                let   month     =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) : -1 ;
+                let   day       =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?   parseInt(var_selected_date.total.day) : -1 ;
+
                 const prop_prevYears     =        config.hasOwnProperty("prop_prevYears")      ?  config.prop_prevYears                :  this.DEFULAT_PERV_YEAR;
                 const prop_nextYears     =        config.hasOwnProperty("prop_nextYears")      ?  config.prop_nextYears                :  this.DEFULAT_NEXT_YEAR;
-                let   year               =        config.hasOwnProperty("var_selected_year")    ?  parseInt(config.var_selected_year)    : 0;
 
                 const getPartDate  = super.getMethod(config , "getPartDate"    , null );
                 const datePart = window[getPartDate]();
                 const thisYear = datePart != null && datePart.hasOwnProperty("year") ? parseInt(datePart.year) : this.DEFULAT_YEAR;
 
-                if (isNext && year + 1 <= thisYear + prop_nextYears){
+                if (isNext && year + 1 <= thisYear + prop_nextYears -2){
                     year += 1;
                 }
-                else if (!isNext && year - 1 >= thisYear - prop_prevYears){
+                else if (!isNext && year - 1 >= thisYear - prop_prevYears -1){
                     year -= 1;
                 }
 
-                config.var_selected_year = year;
+                const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
+                const value = window[jalaliToTimeUnix](year+1 , month+1 , day+1);
+                config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                config.var_focusDatePart = null;
                 this.changeProperty(config);
+
             }
         };
         methods["showListyears"] = {
@@ -2835,32 +2716,33 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         methods["goToMonthSelected"] = {
             name: `goToMounthSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (monthNum = null) => {
-                let value = "01"
-                if (monthNum != null && monthNum>=0 && monthNum<=11){
-                    monthNum = (monthNum + 1).toString() ;
+                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
+                let   year      =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) : -1 ;
+                let   day       =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?   parseInt(var_selected_date.total.day) : -1 ;
 
-                    switch (monthNum.length){
-                        case 1:
-                            value = "0" + monthNum
-                            break;
-                        case 2:
-                            value = monthNum
-                            break;
-                    }
-                }
-                config.var_selected_month = value;
+                const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
+                const value = window[jalaliToTimeUnix](year+1 , monthNum+1 , day+1);
+                config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                config.var_focusDatePart = null;
                 this.changeProperty(config);
             }
         };
         methods["goToMonth"] = {
             name: `goToMonth${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (isNext = false) => {
-                let   month     =        config.hasOwnProperty("var_selected_month")    ?  parseInt(config.var_selected_month)    : 0;
-                let   year      =        config.hasOwnProperty("var_selected_year")     ?  parseInt(config.var_selected_year)     : 0;
+
+                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
+
+                let   year      =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) : -1 ;
+                let   month     =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) : -1 ;
+                let   day       =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?   parseInt(var_selected_date.total.day) : -1 ;
+
+                const getDaysInJalaliMonth  = super.getMethod(config , "getDaysInJalaliMonth"    , null );
+                const maxDay = window[getDaysInJalaliMonth](year+1 , isNext ? month+1 : month -1);
 
                 if (isNext ){
-                    if (month + 1 >= 12){
-                        month = 1;
+                    if (month + 1 > 11){
+                        month = 0;
                         year += 1;
                     }
                     else {
@@ -2868,8 +2750,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     }
                 }
                 else if (!isNext ){
-                    if (month - 1 <=0 ){
-                        month = 12;
+                    if (month - 1 <0 ){
+                        month = 11;
                         year -= 1;
                     }
                     else {
@@ -2877,9 +2759,14 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     }
                 }
 
-                config.var_selected_year = year;
-                config.var_selected_month = month;
+                day = day > maxDay ? maxDay : day;
+
+                const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
+                const value = window[jalaliToTimeUnix](year+1 , month+1 , day+1);
+                config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                config.var_focusDatePart = null;
                 this.changeProperty(config);
+
             }
         };
         methods["showListMonths"] = {
@@ -2899,12 +2786,138 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
                 const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
                 const value = window[jalaliToTimeUnix](
-                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) : -1 ,
-                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) : -1 ,
+                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) +1 : -1 ,
+                    var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) +1 : -1 ,
                     parseInt(dayNum)
                 )
                 config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                config.var_focusDatePart = null;
                 this.changeProperty(config);
+            }
+        };
+
+
+        methods["onChangeDateDigit"] = {
+            name: `onChangeDateDigit${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            fn: (event , type , index) => {
+
+                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
+                let   year      =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) + 1 : -1 ;
+                let   month     =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) + 1: -1 ;
+                let   day       =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?   parseInt(var_selected_date.total.day) + 1 : -1 ;
+
+                const valPart = event.target.value;
+
+                let number="";
+                if (type == this.TYPE_YAER){
+                    number = year.toString();
+                    let newNumber = number.split('');
+                    newNumber[index-1] = valPart;
+                    newNumber = newNumber.join('');
+                    year = parseInt(newNumber);
+
+                    const prop_prevYears     =        config.hasOwnProperty("prop_prevYears")      ?  config.prop_prevYears                :  this.DEFULAT_PERV_YEAR;
+                    const prop_nextYears     =        config.hasOwnProperty("prop_nextYears")      ?  config.prop_nextYears                :  this.DEFULAT_NEXT_YEAR;
+
+                    const getPartDate  = super.getMethod(config , "getPartDate"    , null );
+                    const datePart = window[getPartDate]();
+                    const thisYear = datePart != null && datePart.hasOwnProperty("year") ? parseInt(datePart.year) : this.DEFULAT_YEAR;
+
+                    if (year > thisYear + prop_nextYears -1 ){
+                        year = thisYear + prop_nextYears -1 ;
+                    }
+                    else if (year < thisYear - prop_prevYears - 1){
+                        year = thisYear - prop_prevYears;
+                    }
+
+                }
+                else if( type == this.TYPE_MONTH){
+                    number =  month.toString().padStart(2, '0');
+
+                    let newNumber = number.split('');
+                    newNumber[index-1] = valPart;
+                    newNumber = newNumber.join('');
+                    month = parseInt(newNumber);
+                    month = month > 12 ? 12 : month;
+                    month = month == 0 ? 1 : month;
+
+                }
+                else if(type == this.TYPE_DAY){
+                    number =  day.toString().padStart(2, '0');
+
+                    let newNumber = number.split('');
+                    newNumber[index-1] = valPart;
+                    newNumber = newNumber.join('');
+                    day = parseInt(newNumber);
+
+                    const getDaysInJalaliMonth  = super.getMethod(config , "getDaysInJalaliMonth"    , null );
+                    const maxDay = window[getDaysInJalaliMonth](year+1 , month+1);
+                    day =  day > maxDay ? maxDay : day;
+                    day =  day == 0 ? 1 : day;
+                }
+
+                const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
+                const value = window[jalaliToTimeUnix](year , month , day);
+
+                config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                this.changeProperty(config);
+
+            }
+        };
+
+
+        methods["moveToNext"] = {
+            name: `moveToNext${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            fn: (event , nextFieldID) => {
+
+                if (event.key !== 'Backspace' && event.target.value !== '') {
+                    if (nextFieldID !== '') {
+                        const el =  document.getElementById(nextFieldID);
+                        if (el != null){
+                            el.focus();
+
+                            config.var_focusDatePart = nextFieldID;
+                            this.changeProperty(config);
+                        }
+                    }
+                }
+
+
+            }
+        };
+        methods["moveToPrev"] = {
+            name: `moveToPrev${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            fn: (event , prevFieldID) => {
+                if (event.key === 'Backspace' && event.target.value === '') {
+                    if (prevFieldID !== '') {
+                        const el = document.getElementById(prevFieldID);
+                        if (el != null){
+                            el.focus();
+
+                            config.var_focusDatePart = nextFieldID;
+                            this.changeProperty(config);
+                        }
+                    }
+                }
+            }
+        };
+        methods["onFocus"] = {
+            name: `onFocus${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            fn: (event , myElId) => {
+                const el = document.getElementById(myElId);
+                if (el != null){
+                    el.select();
+
+                    // if (myElId == "Date_8"){
+                    //     el.select();
+                    // }
+                    // else {
+                    //     el.value = "";
+                    // }
+
+                    config.var_focusDatePart = myElId;
+                    this.changeProperty(config);
+                }
             }
         };
 
@@ -2930,6 +2943,11 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         const prop_langs                =        data.hasOwnProperty("prop_langs")                 ?  data.prop_langs                                    : {};
 
 
+        const moveToNext = super.getMethod(data , "moveToNext" , null);
+        const moveToPrev = super.getMethod(data , "moveToPrev" , null);
+        const onFocus =    super.getMethod(data , "onFocus"    , null);
+        const onChangeDateDigit =    super.getMethod(data , "onChangeDateDigit"    , null);
+
         const getDisgitDatePart  = super.getMethod(data , "getDisgitDatePart"    , null );
         const yearDigitOne   = window[getDisgitDatePart](this.TYPE_YAER , 1);
         const yearDigitTwo   = window[getDisgitDatePart](this.TYPE_YAER , 2);
@@ -2941,6 +2959,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
         const dayDigitOne  = window[getDisgitDatePart](this.TYPE_DAY , 1);
         const dayDigitTwo  = window[getDisgitDatePart](this.TYPE_DAY , 2);
+
 
 
         return `
@@ -3060,6 +3079,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 </div>
 
                 <div class="position-relative">
+                
+                <input name="${prop_name}" value="${prop_value}" type="hidden"/>
 
 <component-button id="btn-clear-date">
 </component-button>  
@@ -3072,34 +3093,82 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                          <div class="row ">
                              <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
                                   <div class="col-3 pe-0 ps-1 m-0">
-                                       <input value="${yearDigitOne}"  type="text"  maxlength="1" class="inputs-date text-center form-control "  />
+                                       <input
+                                             id="Date_1" 
+                                             oninput="${moveToNext}(event , 'Date_2'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 1)" 
+                                             onfocus="${onFocus}(event  , 'Date_1')"
+                                             onkeydown="${moveToPrev}(event  , null)"
+                                             value="${yearDigitOne}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control "  />
                                   </div>
                                   <div class="col-3 pe-0 ps-1 m-0">
-                                       <input value="${yearDigitTwo}" type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                       <input
+                                             id="Date_2" 
+                                             oninput="${moveToNext}(event , 'Date_3'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 2)" 
+                                             onfocus="${onFocus}(event  , 'Date_2')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_1')"
+                                             value="${yearDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
                                   </div>
                                   <div class="col-3 pe-0 ps-1 m-0">
-                                       <input value="${yearDigitThree}" type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                       <input 
+                                             id="Date_3"
+                                             oninput="${moveToNext}(event , 'Date_4'); ${onChangeDateDigit}(event ,'${this.TYPE_YAER}' , 3)" 
+                                             onfocus="${onFocus}(event  , 'Date_3')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_2')"
+                                             value="${yearDigitThree}"
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
                                   </div>
                                   <div class="col-3 pe-0 ps-1 m-0">
-                                       <input value="${yearDigitFour}" type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                       <input 
+                                             id="Date_4" 
+                                             oninput="${moveToNext}(event , 'Date_5'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 4)" 
+                                             onfocus="${onFocus}(event  , 'Date_4')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_3')"
+                                             value="${yearDigitFour}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
                                   </div>
                              </div>
                              
                              <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
                                   <div class="col-6 pe-0 ps-1 m-0">
-                                       <input value="${monthDigitOne}" type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                       <input                                           
+                                             id="Date_5"
+                                             oninput="${moveToNext}(event , 'Date_6'); ${onChangeDateDigit}(event , '${this.TYPE_MONTH}' , 1)" 
+                                             onfocus="${onFocus}(event  , 'Date_5')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_4')"
+                                             value="${monthDigitOne}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
                                   </div>
                                   <div class="col-6 pe-0 ps-1 m-0">
-                                       <input value="${monthDigitTwo}" type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                       <input 
+                                             id="Date_6" 
+                                             oninput="${moveToNext}(event , 'Date_7'); ${onChangeDateDigit}(event , '${this.TYPE_MONTH}' , 2)" 
+                                             onfocus="${onFocus}(event  , 'Date_6')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_5')"
+                                             value="${monthDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
                                   </div>
                              </div>
                              
                              <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
                                   <div class="col-6 pe-0 ps-1 m-0">
-                                       <input value="${dayDigitOne}" type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                       <input 
+                                             id="Date_7" 
+                                             oninput="${moveToNext}(event , 'Date_8'); ${onChangeDateDigit}(event , '${this.TYPE_DAY}' , 1)" 
+                                             onfocus="${onFocus}(event  , 'Date_7')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_6')"
+                                             value="${dayDigitOne}"
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
                                   </div>
                                   <div class="col-6 pe-0 ps-1 m-0">
-                                       <input value="${dayDigitTwo}" type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                       <input 
+                                             id="Date_8" 
+                                             oninput="${moveToNext}(event , null); ${onChangeDateDigit}(event , '${this.TYPE_DAY}' , 2)" 
+                                             onfocus="${onFocus}(event  , 'Date_8')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_7')"
+                                             value="${dayDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
                                   </div>
                              </div>
                          </div>
@@ -3157,8 +3226,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
  </div>
                                
  <div class="col-4">
-       <component-button id="cancel-date-selected">
-        </component-button>
  </div>
                                
  <div class="col-4">
@@ -3181,6 +3248,13 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     }
 
     onRender = (data , componentSlots , el) => {
+
+        const var_focusDatePart  =    data.hasOwnProperty("var_focusDatePart")    ?  data.var_focusDatePart  :  null;
+        if (var_focusDatePart != null){
+            document.getElementById(var_focusDatePart).focus();
+        }
+
+
         const readyDatePicker = super.getMethod(data , "readyDatePicker" , null);
         window[readyDatePicker]()
 
@@ -3199,7 +3273,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         this.readyTableDays(data , componentSlots , el);
 
         this.readyBtnAccept(data , componentSlots , el);
-        this.readyBtnCancel(data , componentSlots , el);
         this.readyBtnNow(data , componentSlots , el);
 
     }
@@ -3216,16 +3289,15 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 styles: {
                     "height" : "38px"
                 }  ,
-
                 prop_btnClass : ["position-absolute"] ,
                 prop_btnStyles : {
                     "z-index" : "11",
-                    "margin" :  "0 !important",
-                    "width" :   "10px",
-                    "line-height" : "30px",
-                    "right" : "20px",
+                    "width" :   "35px",
+                    "line-height" : "20px",
+                    "right" : "5px",
                     "cursor" : "pointer",
-                    "height" : "30px"
+                    "height" : "30px" ,
+                    "margin-top" : "3px!important"
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
@@ -3243,6 +3315,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     readyBtnClearForm  = (data , componentSlots , el) => {
         const clearInput         =    super.getMethod(data , "clearInput"    , null);
 
+        const var_showFormSelector  =    data.hasOwnProperty("var_showFormSelector")    ?  data.var_showFormSelector  :  false;
+
         new window.ComponentButton(
             "btn-clear-date" ,
             {
@@ -3251,15 +3325,17 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     "height" : "38px"
                 }  ,
 
+                prop_show: !var_showFormSelector ,
+
                 prop_btnClass : ["position-absolute"] ,
                 prop_btnStyles : {
                     "z-index" : "11",
-                    "margin" :  "0 !important",
-                    "width" :   "10px",
-                    "line-height" : "30px",
-                    "left" : "10px",
+                    "width" :   "35px",
+                    "line-height" : "20px",
+                    "left" : "5px",
                     "cursor" : "pointer",
-                    "height" : "30px"
+                    "height" : "30px" ,
+                    "margin-top" : "3px!important"
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
@@ -3330,7 +3406,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         const prop_nextYears     =        data.hasOwnProperty("prop_nextYears")      ?  data.prop_nextYears      :  this.DEFULAT_NEXT_YEAR;
 
         const var_selected_date   =     data.hasOwnProperty("var_selected_date")        ?  data.var_selected_date      :  null;
-        const var_selected_year = var_selected_date != null && var_selected_date.hasOwnProperty("total") &&  var_selected_date.total.hasOwnProperty("year") ?  parseInt(var_selected_date.total.year) -1  : -1;
+        const var_selected_year  =   var_selected_date != null && var_selected_date.hasOwnProperty("total") &&  var_selected_date.total.hasOwnProperty("year") ?  parseInt(var_selected_date.total.year)  : -1;
 
         const getPartDate  = super.getMethod(data , "getPartDate"    , null );
         const datePart = window[getPartDate]();
@@ -3414,7 +3490,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
     readySelectOptionMonth = (data , componentSlots , el) => {
         const var_selected_date   =     data.hasOwnProperty("var_selected_date")        ?  data.var_selected_date      :  null;
-        const var_selected_month = var_selected_date != null && var_selected_date.hasOwnProperty("total") &&  var_selected_date.total.hasOwnProperty("month") ?  parseInt(var_selected_date.total.month) - 1 : -1;
+        const var_selected_month = var_selected_date != null && var_selected_date.hasOwnProperty("total") &&  var_selected_date.total.hasOwnProperty("month") ?  parseInt(var_selected_date.total.month) : -1;
 
         const goToMonthSelected   =    super.getMethod(data , "goToMonthSelected" , null );
 
@@ -3471,19 +3547,12 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         //---------------
         const goToDaySelected  =    super.getMethod(data , "goToDaySelected"    , null );
 
+
         const getJalaliMonthGrid = super.getMethod(data , "getJalaliMonthGrid"    , null );
         const listWeek = window[getJalaliMonthGrid](
             var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) : -1 ,
-            var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) -1 : -1
+            var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month)   : -1
         );
-
-        console.log(
-            {
-                prop_valueRow : var_selected_date != null && var_selected_date.hasOwnProperty("inMonth") && var_selected_date.inMonth.toString("week") ?   parseInt(var_selected_date.inMonth.week) - 1 : -1 ,
-                prop_valueCol : var_selected_date != null && var_selected_date.hasOwnProperty("inWeek") && var_selected_date.inMonth.toString("inWeek") ?   parseInt(var_selected_date.inWeek.day) : -1 ,
-
-            }
-        )
 
         new window.ComponentTable(
             "table-list-days-in-month" ,
@@ -3492,8 +3561,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 id: "table2" ,
 
                 prop_valueType: 3 ,
-                prop_valueRow : var_selected_date != null && var_selected_date.hasOwnProperty("inMonth") && var_selected_date.inMonth.toString("week") ?   parseInt(var_selected_date.inMonth.week) - 1 : -1 ,
-                prop_valueCol : var_selected_date != null && var_selected_date.hasOwnProperty("inWeek") && var_selected_date.inMonth.toString("inWeek") ?   parseInt(var_selected_date.inWeek.day) : -1 ,
+                prop_valueRow : var_selected_date != null && var_selected_date.hasOwnProperty("inMonth") && var_selected_date.inMonth.toString("week") ?   parseInt(var_selected_date.inMonth.week) : -1 ,
+                prop_valueCol : var_selected_date != null && var_selected_date.hasOwnProperty("inWeek") && var_selected_date.inMonth.toString("inWeek") ?   parseInt(var_selected_date.inWeek.day)   : -1 ,
 
                 prop_valueRow_backgroundColor : prop_background1 ,
                 prop_valueCol_backgroundColor : prop_background2 ,
@@ -3559,24 +3628,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
                 fn_callback: ()=>{
                     window[acceptBtnSelected]();
-                }
-            }
-        )
-    }
-
-    readyBtnCancel = (data , componentSlots , el) => {
-        const cancelBtnSelected    =    super.getMethod(data , "cancelBtnSelected"  , null );
-        const prop_langs           =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
-
-        new window.ComponentButton(
-            "cancel-date-selected" ,
-            {
-                prop_btnBackgroundColor : "#f3000070" ,
-                prop_btnColor : "white" ,
-                prop_text : prop_langs != null && prop_langs.hasOwnProperty("_btn_cancel_title") ? prop_langs._btn_cancel_title : "لغو" ,
-
-                fn_callback: ()=>{
-                    window[cancelBtnSelected]();
                 }
             }
         )
