@@ -64,6 +64,8 @@
 
 <script>
 
+
+
     tools_component.setup(
         document.getElementById('template-main') ,
         [
@@ -83,7 +85,7 @@
                             classList: "col-md-3 col-12 mt-2"  ,
                             id: "btn" ,
 
-                            prop_text: "asd" ,
+                            prop_title: "asd" ,
                             fn_callback: ()=>{
                                 alert("asd");
                             }
@@ -135,7 +137,7 @@
                             classList: "col-md-3 col-12 mt-2"  ,
                             id: "isEmpty" ,
 
-                            prop_text: "it is a test" ,
+                            prop_title: "it is a test" ,
                         }
                     } ,
 
@@ -147,7 +149,7 @@
                             id: "header" ,
 
                             prop_size: 4,
-                            prop_text: "it is a test header" ,
+                            prop_title: "it is a test header" ,
                         }
                     } ,
 
@@ -158,7 +160,7 @@
                             classList: "col-md-3 col-12 mt-2"  ,
                             id: "collapse" ,
 
-                            prop_text: "asd" ,
+                            prop_title: "asd" ,
                             prop_body: "<h1>hello world</h1>" ,
                         }
                     } ,
@@ -327,7 +329,7 @@
 
 
                     {
-                        component: 'ComponentInput',
+                        component: 'ComponentInputPrice',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
                             id: "input_price" ,
@@ -345,7 +347,7 @@
 
 
                     {
-                        component: 'ComponentInput',
+                        component: 'ComponentInputPrice',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
                             id: "input-text" ,
@@ -455,6 +457,19 @@
                             fn_callback: (val , key)=>{
                                 alert(val + " " + key)
                             }
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentLabel',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "label1" ,
+
+                            prop_title: "test text" ,
+                            prop_for: "test" ,
                         }
                     } ,
 

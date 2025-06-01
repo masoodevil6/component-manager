@@ -20,8 +20,9 @@ if (typeof listComponent === 'undefined') {
         ComponentTabs:              "component-tabs" ,           //11
         ComponentOtp:               "component-otp" ,            //12
         ComponentWidget:            "component-widget" ,         //13
-        ComponentInput:             "component-input" ,          //14
+        ComponentInputPrice:        "component-input-price" ,    //14
         ComponentDate:              "component-date" ,           //15
+        ComponentLabel:             "component-label" ,          //16
     }
 }
 
@@ -105,6 +106,8 @@ class ComponentMaker {
         }
     }
 }
+
+
 
 
 
@@ -729,7 +732,7 @@ window.Component404 = class Component404 extends ComponentBase{
         new window.ComponentButton(
             "form-button-404-"+prop_remdomId ,
             {
-                prop_text:       prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_text")      ? prop_btnRetry.prop_text           : "Retry" ,
+                prop_title:       prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_title")      ? prop_btnRetry.prop_title           : "Retry" ,
                 prop_btnClass:   prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_btnClass")  ? prop_btnRetry.prop_btnClass       : "w-100" ,
                 prop_type:       prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_type")      ? prop_btnRetry.prop_type           : null ,
                 fn_callback: ()=>{
@@ -842,7 +845,7 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
         new window.ComponentButton(
             "form-button-submit" ,
             {
-                prop_text:       prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_text")      ? prop_btnSubmit.prop_text           : "submit" ,
+                prop_title:       prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_title")      ? prop_btnSubmit.prop_title           : "submit" ,
                 prop_btnClass:   prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_btnClass")  ? prop_btnSubmit.prop_btnClass       : "d-inline-block" ,
                 prop_type:       prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_type")      ? prop_btnSubmit.prop_type           : null ,
 
@@ -858,11 +861,10 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
 
 
 
-
 /*-------------------------------------
  Component Is Empty
 -------------------------------------
-@prop_text
+@prop_title
 @prop_iconClass
 -------------------------------------*/
 window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
@@ -876,7 +878,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 
     templateFn(data , componentSlots , el){
 
-        const prop_text =      data.hasOwnProperty("prop_text")      ?  data.prop_text        : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+        const prop_title =      data.hasOwnProperty("prop_title")      ?  data.prop_title        : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
         const prop_iconClass = data.hasOwnProperty("prop_iconClass") ?  data.prop_iconClass   : " font-30pt text-danger";
 
         return `
@@ -892,7 +894,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
     <section >
         <p class="border border-danger text-danger text-center rounded shadow-sm">
             <span class="icon-warning-not-exist-response  ${prop_iconClass}">&#9888;</span>
-            ${prop_text}
+            ${prop_title}
         </p>
     </section>
             `;
@@ -902,11 +904,12 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 
 
 
+
 /*-------------------------------------
  Component Header
 -------------------------------------
 @prop_size
-@prop_text
+@prop_title
 @prop_classList
 -------------------------------------*/
 window.ComponentHeader = class ComponentHeader extends ComponentBase{
@@ -921,13 +924,12 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
     templateFn(data , componentSlots , el){
 
         const prop_size =      data.hasOwnProperty("prop_size")       ?  data.prop_size  : 5;
-        const prop_text =      data.hasOwnProperty("prop_text")       ?  data.prop_text  : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-        const prop_classList = data.hasOwnProperty("prop_classList")  ?  data.prop_classList  : "pb-0 px-2 mb-1 mt-3 border-bottom";
+        const prop_title =      data.hasOwnProperty("prop_title")       ?  data.prop_title  : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+        const prop_classList = data.hasOwnProperty("prop_classList")  ?  data.prop_classList  : "pb-0 px-2 mb-1 border-bottom";
 
-        return `<h${prop_size} class=" ${prop_classList ?? ''} ">${prop_text ?? ''}</h${prop_size}>`;
+        return `<h${prop_size} class=" ${prop_classList ?? ''} ">${prop_title ?? ''}</h${prop_size}>`;
     }
 }
-
 
 
 
@@ -1215,11 +1217,6 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 
 
 
-
-
-
-
-
 /*-------------------------------------
  Component Tabs
 -------------------------------------
@@ -1333,11 +1330,10 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 
 
 
-
 /*-------------------------------------
  Component Collapse
 -------------------------------------
-@prop_text
+@prop_title
 @prop_body
 @prop_bodyShow
 -------------------------------------*/
@@ -1345,27 +1341,13 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
     constructor(elId , config) {
 
         let methods = {};
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
         methods["showOrHideCollapse"] = {
             name: `showOrHideCollapse_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
             fn: () => {
-                const el = document.getElementById(elId);
-                const body = el.getElementsByClassName("body-collapse");
-                const icon = el.getElementsByClassName("icon-collapse");
-                if (body != null){
-                    if ( body[0].classList.contains('d-none')){
-                        body[0].classList.remove('d-none');
-
-                        icon[0].classList.remove('tyf-arrow-down1');
-                        icon[0].classList.add('tyf-arrow-up1');
-                    }
-                    else {
-                        body[0].classList.add('d-none');
-
-                        icon[0].classList.remove('tyf-arrow-up1');
-                        icon[0].classList.add('tyf-arrow-down1');
-                    }
-
-                }
+                config.prop_bodyShow = !config.prop_bodyShow;
+                this.changeProperty(config);
             }
         };
 
@@ -1375,53 +1357,81 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
     }
 
     templateFn(data , componentSlots , el){
-        const tabType  =    data.hasOwnProperty("tabType")      ?  data.tabType      : 0;
 
-        const prop_text =        data.hasOwnProperty("prop_text")       ?  data.prop_text           : null;
-        const prop_body =        data.hasOwnProperty("prop_body")       ?  data.prop_body           :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-        const prop_bodyShow =    data.hasOwnProperty("prop_bodyShow")   ?  data.prop_bodyShow       : false;
+        //------------------
+        const var_randomId     =   data.hasOwnProperty("var_randomId")    ?  data.var_randomId        :  0;
+
+        //------------------
+        const prop_title       =   data.hasOwnProperty("prop_title")      ?  data.prop_title          : null;
+        const prop_body        =   data.hasOwnProperty("prop_body")       ?  data.prop_body           :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+        const prop_bodyShow    =   data.hasOwnProperty("prop_bodyShow")   ?  data.prop_bodyShow       : false;
 
 
-        const showOrHideCollapse = super.getMethod(data , "showOrHideCollapse");
+        if (prop_title != null){
 
-        if (prop_text != null){
 
-            if (tabType == 0){
-
-                return `
+            return `
 <style>
      #${el.id} .title-collapse{
         cursor: pointer;
     }
      #${el.id} .icon-collapse{
-        
-    }
+          font-size: 20pt;
+          margin: 0 10px;
+          top: 0;
+          color: #000000;  
+          left: 0;
+          line-height: ${prop_bodyShow ? "20px" : "10px"};
+          padding-top: ${prop_bodyShow ? "15px" : "0px"};
+     }
      #${el.id} .body-collapse{
         background-color: ${tools_const.styles.collapse.backgroundColor};
     }
 </style>
 <div class="mx-2 mb-3">
-    <p class="title-collapse px-2  border-bottom mx-0 mb-1" onclick="${showOrHideCollapse}">
-        ${prop_text}
-        <span class="icon-collapse float-end mt-1 tyf ${prop_bodyShow ? "tyf-arrow-up1" : "tyf-arrow-down1"}"></span>
-    </p>
 
+<component-label id="label-component-collapse-${var_randomId}" class="position-relative">
+   <component-body>
+       ${prop_title}
+       <span class="icon-collapse float-end position-absolute " > ${prop_bodyShow ? "&#129171;" : "&#129169"}  </span>
+   </component-body>
+</component-label>
+   
     <div class="body-collapse shadow-sm p-2 ${prop_bodyShow ? "" : "d-none"}">
         ${prop_body}
     </div>
 
 </div>      
                 `;
-            }
-
         }
 
-        return body;
+        return prop_body;
+    }
+
+    onRender = (data , componentSlots , el) =>{
+        this.readyLabelInput(data , componentSlots , el);
+    }
+
+    readyLabelInput  = (data , componentSlots , el) => {
+
+        const var_randomId        =   data.hasOwnProperty("var_randomId")    ?  data.var_randomId   :  0;
+
+        const prop_title         =   data.hasOwnProperty("prop_title")       ?  data.prop_title     :  "No Title";
+
+        const showOrHideCollapse = super.getMethod(data , "showOrHideCollapse" , null);
+
+        if (prop_title != null){
+            new window.ComponentLabel(
+                "label-component-collapse-"+var_randomId ,
+                {
+                    fn_callback: ()=>{
+                        window[showOrHideCollapse]()
+                    }
+                }
+            )
+        }
     }
 }
-
-
-
 
 
 
@@ -1430,8 +1440,9 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
  Component Button
 -------------------------------------
 @prop_type
-@prop_text
+@prop_title
 @prop_btnClass
+
 @prop_btnBackgroundColor
 @prop_btnColor
 
@@ -1458,7 +1469,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
     templateFn(data , componentSlots , el){
 
         const prop_type  =          data.hasOwnProperty("prop_type")                 ?  data.prop_type          :  null;
-        const prop_text  =          data.hasOwnProperty("prop_text")                 ?  data.prop_text          :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+        const prop_title  =         data.hasOwnProperty("prop_title")                ?  data.prop_title         :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
 
         const prop_btnClass =       data.hasOwnProperty("prop_btnClass")             ?  data.prop_btnClass      : "w-100"
         const prop_btnStyles        =   data.hasOwnProperty("prop_btnStyles")        ?  data.prop_btnStyles          : null;
@@ -1466,7 +1477,6 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 
         let btnBackgroundColor =  null;
         let btnColor =            null;
-
 
 
         switch (prop_type){
@@ -1498,7 +1508,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 </style>
 <div class="">
      <button class=" ${super.renderListClass(prop_btnClass)} btn-action  shadow-sm border-0 px-2 py-1 rounded " onclick="${buttonClick}">
-         ${prop_text}
+         ${prop_title}
      </button>
 </div>
  
@@ -1509,6 +1519,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 
 
 
+
 /*-------------------------------------
  Component Select Option
 -------------------------------------
@@ -1516,6 +1527,13 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @prop_name
 @prop_title
 @prop_options
+@prop_formClass
+@prop_titleClass
+@prop_optionHeight
+@prop_optionItemBackground
+@prop_optionIcon
+@prop_optionIconColor
+@prop_itemSelected
 
 @fn_callback
 -------------------------------------*/
@@ -1523,8 +1541,10 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     constructor(elId , config) {
 
         let methods = {};
-        methods["showlistOptions"] = {
-            name: `showlistOptions${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        methods["showListOptions"] = {
+            name: `showListOptions${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (status=null) => {
                 config.var_showFormSelector = status != null ? status : !config.var_showFormSelector;
                 this.changeProperty(config);
@@ -1553,8 +1573,8 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                 const setTitleItemSelected   =    super.getMethod(config , "setTitleItemSelected"  ,null );
                 window[setTitleItemSelected](id);
 
-                const showlistOptions       =    super.getMethod(config , "showlistOptions"  ,null );
-                window[showlistOptions](false);
+                const showListOptions       =    super.getMethod(config , "showListOptions"  ,null );
+                window[showListOptions](false);
             }
         };
         methods["setTitleItemSelected"] = {
@@ -1618,8 +1638,9 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     templateFn(data , componentSlots , el){
 
         //------------------
+        const var_randomId              =     data.hasOwnProperty("var_randomId")              ?  data.var_randomId                :  0;
         const var_showFormSelector      =     data.hasOwnProperty("var_showFormSelector")      ?      data.var_showFormSelector    :  false;
-        let   var_titleItemSelected      =     data.hasOwnProperty("var_titleItemSelected")      ?      data.var_titleItemSelected    :  "---";
+        let   var_titleItemSelected     =     data.hasOwnProperty("var_titleItemSelected")     ?      data.var_titleItemSelected   :  "---";
 
         //------------------
         const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type               :  0;
@@ -1639,7 +1660,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         const prop_itemSelected         = data.hasOwnProperty("prop_itemSelected")             ?  data.prop_itemSelected           :  null;
 
         //------------------
-        const showlistOptions           =    super.getMethod(data , "showlistOptions"     , "()" );
+        const showListOptions           =    super.getMethod(data , "showListOptions"     , "()" );
         const selectItemOption          =    super.getMethod(data , "selectItemOption"    , null );
         const changeItemSelected        =    super.getMethod(data , "changeItemSelected"  , "()" );
 
@@ -1677,16 +1698,14 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 </style>
  <section class="form-group mb-4">
         <div class="d-block text-end">
-            <label for="${prop_name}">
-                ${prop_title}
-            </label>
+<component-label id="label-component-select-option-${var_randomId}"></component-label>
         </div>
         
         <div class="position-relative">
               <span class="arrow-selector-option icon-input-arrow position-absolute font-16pt cursor-pointer">${prop_optionIcon}</span>
             
               <select name="${prop_name}" 
-                      id="${prop_name}"
+                      id="${prop_name}-${var_randomId}"
                       value="${prop_itemSelected}"
                       class="form-control custom-select w-100 rounded line-height-30px px-2 text-end"
                       onchange="${changeItemSelected}">
@@ -1718,7 +1737,6 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                     }
                 }
             }
-
 
             return  `
 <style>
@@ -1753,12 +1771,10 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 </style>
 <div class="position-relative ${prop_formClass}">
         <div class="d-block text-end">
-            <label for="${prop_name}">
-                ${prop_title}
-            </label>
-        </div>
+<component-label id="label-component-select-option-${var_randomId}"></component-label>
+       </div>
        <input name="${prop_name}" value="${prop_itemSelected}" type="hidden"/>
-       <b class="select-title w-100 d-block position-relative ${prop_titleClass}" onclick="${showlistOptions}">
+       <b class="select-title w-100 d-block position-relative ${prop_titleClass}" onclick="${showListOptions}">
            ${var_titleItemSelected}
               
            <span class="arrow-selector-option position-absolute ">${prop_optionIcon}</span>
@@ -1775,17 +1791,38 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
     }
 
-    onRender(data , componentSlots , el){
-
+    onRender = (data , componentSlots , el) =>{
+        this.readyLabelInput(data , componentSlots , el);
     }
+
+    readyLabelInput  = (data , componentSlots , el) => {
+
+        const var_randomId        =   data.hasOwnProperty("var_randomId")    ?  data.var_randomId   :  0;
+
+        const prop_name          =   data.hasOwnProperty("prop_name")        ?  data.prop_name      :  "No-Name-input";
+        const prop_title         =   data.hasOwnProperty("prop_title")       ?  data.prop_title     :  "No Title";
+        const prop_type          =     data.hasOwnProperty("prop_type")         ?  data.prop_type      :  0;
+
+        const showListOptions    =    super.getMethod(data , "showListOptions"     , null );
+
+        if (prop_title != null){
+            new window.ComponentLabel(
+                "label-component-select-option-"+var_randomId ,
+                {
+                    prop_title:  prop_title ,
+                    prop_for  :  prop_name+"-"+var_randomId ,
+
+                    fn_callback: ()=>{
+                        if (prop_type != 0){
+                            window[showListOptions]()
+                        }
+                    }
+                }
+            )
+        }
+    }
+
 }
-
-
-
-
-
-
-
 
 
 
@@ -1801,13 +1838,13 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
     constructor(elId , config) {
-        config["prop_rendomId"]= Math.floor(Math.random() * 10000);
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         let methods = {};
         methods["retry404"] = {
             name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
-                const prop_rendomId = config.hasOwnProperty("prop_rendomId") ? config.prop_rendomId : 0;
+                const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
 
                 const onFetchWidget = super.getMethod(config , "onFetchWidget" , null);
                 window[onFetchWidget]();
@@ -1815,7 +1852,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                 tools_component.control(
                     "Component404" ,
                     {
-                        elId : "widget-component-404-"+prop_rendomId
+                        elId : "widget-component-404-"+var_randomId
                     },
                     false
                 )
@@ -1825,17 +1862,17 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
         methods["readyResponse"] = {
             name: `readyResponse_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (response) => {
-                const prop_rendomId = config.hasOwnProperty("prop_rendomId") ? config.prop_rendomId : 0;
+                const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
 
                 const el = document.getElementById(elId);
-                const responseEl = el.getElementsByClassName("response-widget-component-"+prop_rendomId);
+                const responseEl = el.getElementsByClassName("response-widget-component-"+var_randomId);
                 responseEl[0].innerHTML = response
             }
         };''
         methods["onFetchWidget"] = {
             name: `onFetchWidget_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
-                const prop_rendomId = config.hasOwnProperty("prop_rendomId") ? config.prop_rendomId : 0;
+                const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
                 const prop_minHeight = config.hasOwnProperty("prop_minHeight") ? Math.max(config.prop_minHeight , 120) : 120;
                 const prop_error404  = config.hasOwnProperty("prop_error404") ? config.prop_error404 : {};
 
@@ -1850,10 +1887,10 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                             data:prop_fetch != null && prop_fetch.hasOwnProperty("data") ? prop_fetch.data : {} ,
                             callback: window[methods.readyResponse.name] ,
                             componentLoadingData: {
-                                elId : "widget-component-loading-"+prop_rendomId
+                                elId : "widget-component-loading-"+var_randomId
                             },
                             component404Data: {
-                                elId : "widget-component-404-"+prop_rendomId ,
+                                elId : "widget-component-404-"+var_randomId ,
                                 prop_type : prop_error404 != null && prop_error404.hasOwnProperty("type") ? prop_error404.type : 0 ,
                                 prop_width : prop_error404 != null && prop_error404.hasOwnProperty("width") ? prop_error404.width : prop_minHeight*1.3 ,
                                 prop_height : prop_error404 != null && prop_error404.hasOwnProperty("height") ? prop_error404.height :  prop_minHeight*0.62 ,
@@ -1877,11 +1914,11 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
     templateFn(data , componentSlots , el){
 
-        const prop_rendomId = data.hasOwnProperty("prop_rendomId") ? data.prop_rendomId : 0;
+        const var_randomId    = data.hasOwnProperty("var_randomId")   ? data.var_randomId                    : 0;
         //---------------
 
-        const prop_classList = data.hasOwnProperty("prop_classList") ? data.prop_classList : "shadow-sm rounded border";
-        const prop_minHeight = data.hasOwnProperty("prop_minHeight") ? Math.max(data.prop_minHeight , 120) : 120;
+        const prop_classList  = data.hasOwnProperty("prop_classList") ? data.prop_classList                  : "shadow-sm rounded border";
+        const prop_minHeight  = data.hasOwnProperty("prop_minHeight") ? Math.max(data.prop_minHeight , 120)  : 120;
         //---------------
 
         return `
@@ -1892,11 +1929,11 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 </style>
 <section class="widget-component position-relative ${ prop_classList }" >
 
-    <section class="response-widget-component-${prop_rendomId}"></section>
+    <section class="response-widget-component-${var_randomId}"></section>
     
-    <component-404 id="widget-component-404-${prop_rendomId}"></component-404>
+    <component-404 id="widget-component-404-${var_randomId}"></component-404>
 
-    <component-loading id="widget-component-loading-${prop_rendomId}"></component-loading>
+    <component-loading id="widget-component-loading-${var_randomId}"></component-loading>
 </section>
 `;
     }
@@ -1924,31 +1961,26 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
 
 
-
-
-
-
-
-
 /*-------------------------------------
- Component Input
+ Component Input price
 -------------------------------------
-@prop_inputType
 @prop_btnAddStatus
 @prop_btnAddIcon
 @prop_icon
 @prop_name
+@prop_title
 @prop_langs
 @prop_default
 
 @fn_addNewItem
 -------------------------------------*/
-window.ComponentInput = class ComponentInput extends ComponentBase{
+window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 
-    isFocused= false;
+    IS_FOCUS= false;
     value= "";
 
     constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         let methods = {};
         methods["handleInput"] = {
@@ -1960,7 +1992,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         methods["formattedValue"] = {
             name: `formattedValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                if (this.isFocused) return this.value;
+                if (this.IS_FOCUS) return this.value;
 
                 if (!this.value) return '';
 
@@ -1975,13 +2007,13 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         methods["formatValue"] = {
             name: `formatValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
-                this.isFocused = false;
+                this.IS_FOCUS = false;
             }
         };
         methods["unformatValue"] = {
             name: `unformatValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
-                this.isFocused = true;
+                this.IS_FOCUS = true;
             }
         };
 
@@ -2018,18 +2050,19 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             }
         };
 
-        super(elId , config , listComponent[ComponentInput.name] , methods);
+        super(elId , config , listComponent[ComponentInputPrice.name] , methods);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        const prop_inputType      =        data.hasOwnProperty("prop_inputType")            ?  data.prop_inputType                                        :  0;
+        const var_randomId        =        data.hasOwnProperty("var_randomId")               ?  data.var_randomId                                         :  0;
+
         const prop_btnAddStatus   =        data.hasOwnProperty("prop_btnAddStatus")          ?  data.prop_btnAddStatus                                    :  false;
         const prop_btnAddIcon     =        data.hasOwnProperty("prop_btnAddIcon")            ?  data.prop_btnAddIcon                                      :  "&plus;";
         const prop_icon           =        data.hasOwnProperty("prop_icon")                  ?  data.prop_icon                                            :  "";
-        const prop_name           =        data.hasOwnProperty("prop_name")                  ?  data.prop_name                                            :  "No-Name-input-"+Math.floor(Math.random() * 10000);
+        const prop_name           =        data.hasOwnProperty("prop_name")                  ?  data.prop_name                                            :  "No-Name-input";
         const prop_title          =        data.hasOwnProperty("prop_title")                 ?  data.prop_title                                           :  "No Title";
         const prop_langs          =        data.hasOwnProperty("prop_langs")                 ?  data.prop_langs                                           :
             {
@@ -2047,34 +2080,32 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         let btnAddItem = "";
         if (prop_btnAddStatus){
             btnAddItem = `
-            <button class="btn-tools-input btn btn-light border shadow-sm rounded position-absolute px-3 line-height-40px text-center "
-                          onclick="${addNewItem}">
-                   <span class="mx-3">
-                        ${prop_btnAddIcon}
-                   </span>
-                   <span class="d-none d-md-inline">
-                         ${prop_langs != null && prop_langs.hasOwnProperty("_input_btn_add") ? prop_langs._input_btn_add : "addd item"}
-                    </span>
-            </button>
+<component-button id="button-tools-component-input-${var_randomId}">
+     <component-body>
+          <span class="mx-3">
+              ${prop_btnAddIcon}
+          </span>
+          <span class="d-none d-md-inline">
+              ${prop_langs != null && prop_langs.hasOwnProperty("_input_btn_add") ? prop_langs._input_btn_add : "addd item"}
+          </span>
+     </component-body>
+</component-button>
             `
         }
 
-        let inputActions = "";
-        switch (prop_inputType){
-            case 0:
-                const handleInput   =    super.getMethod(data , "handleInput"    , "(event)" );
-                const formatValue   =    super.getMethod(data , "formatValue"    , "()" );
-                const unformatValue =    super.getMethod(data , "unformatValue"  , "()" );
-                const prop_default  =    data.hasOwnProperty("prop_default")     ?  tools_converter.convertPriceToString(data.prop_default)   :  "";
 
-                inputActions = `
+
+        const handleInput   =    super.getMethod(data , "handleInput"    , "(event)" );
+        const formatValue   =    super.getMethod(data , "formatValue"    , "()" );
+        const unformatValue =    super.getMethod(data , "unformatValue"  , "()" );
+        const prop_default  =    data.hasOwnProperty("prop_default")     ?  tools_converter.convertPriceToString(data.prop_default)   :  "";
+
+        const inputActions = `
                 oninput="${handleInput}"
                 onblur="${formatValue}"
                 onfocus="${unformatValue}"
                 value="${prop_default}"
                 `
-                break;
-        }
 
 
         return `
@@ -2100,7 +2131,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
      padding-right: 30px;
      padding-left: ${prop_btnAddStatus ? "180px" : "20px"};
 }
- #${el.id} .btn-tools-input{
+ #${el.id} #btn-tools-input-${var_randomId}{
      z-index: 10;
      left: 0;
      top: 0;
@@ -2113,9 +2144,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             <section class="form-group mb-4">
 
                 <div class="d-block">
-                    <label for="${prop_name}" class="d-block text-end">
-                        ${prop_title}
-                    </label>
+<component-label id="label-component-input-${var_randomId}"></component-label>
                 </div>
 
                 <div class="position-relative">
@@ -2133,7 +2162,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
                     </span>
 
                     <input class="input-editor form-control line-height-30px  position-relative text-center"
-                           id="${prop_name}"  name="${prop_name}"  
+                           id="${prop_name}-${var_randomId}"  name="${prop_name}"  
                            ${inputActions}
                            />
 
@@ -2143,18 +2172,60 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 `;
     }
 
-    onCreate(data , el){
+    onCreate = (data , el) => {
 
     }
 
-    onRender(data , componentSlots , el){
+    onRender = (data , componentSlots , el) => {
+
+        this.readyLabelInput(data , componentSlots , el);
+        this.readyButtonTools(data , componentSlots , el);
 
     }
 
+    readyLabelInput  = (data , componentSlots , el) => {
+
+        const var_randomId    =   data.hasOwnProperty("var_randomId")        ?  data.var_randomId   :  0;
+
+        const prop_name       =   data.hasOwnProperty("prop_name")        ?  data.prop_name      :  "No-Name-input";
+        const prop_title      =   data.hasOwnProperty("prop_title")       ?  data.prop_title     :  "No Title";
+
+        new window.ComponentLabel(
+            "label-component-input-"+var_randomId ,
+            {
+                prop_title:  prop_title ,
+                prop_for  :  prop_name+"-"+var_randomId ,
+            }
+        )
+    }
+
+    readyButtonTools  = (data , componentSlots , el) => {
+
+        const var_randomId    =   data.hasOwnProperty("var_randomId")        ?  data.var_randomId   :  0;
+        const prop_btnAddStatus   =   data.hasOwnProperty("prop_btnAddStatus")  ?  data.prop_btnAddStatus   :  false;
+
+        const addNewItem    =    super.getMethod(data , "addNewItem"     , null );
+
+        if (prop_btnAddStatus){
+            new window.ComponentButton(
+                "button-tools-component-input-"+var_randomId ,
+                {
+                    prop_btnClass: "btn btn-light border shadow-sm position-absolute px-3  text-center" ,
+                    prop_btnBackgroundColor: "",
+                    prop_btnColor: "",
+                    prop_btnStyles: {
+                        "z-index" : "11" ,
+                        "line-height" : "30px" ,
+                    },
+
+                    fn_callback: ()=>{
+                        window[addNewItem]()
+                    }
+                }
+            )
+        }
+    }
 }
-
-
-
 
 
 
@@ -2406,15 +2477,21 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 
 
 
-
-
 /*-------------------------------------
- Component Input
+ Component Date
 -------------------------------------
 @prop_background1
 @prop_background2
+@prop_color
+
 @prop_name
 @prop_title
+@prop_value
+
+@prop_prevYears
+@prop_nextYears
+
+@prop_langs
 
 @fn_addNewItem
 -------------------------------------*/
@@ -2578,8 +2655,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
 
-        methods["getDisgitDatePart"] = {
-            name: `getDisgitDatePart${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+        methods["getDigitDatePart"] = {
+            name: `getDigitDatePart${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (type , digit) => {
 
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
@@ -2930,35 +3007,28 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
     templateFn = (data , componentSlots , el) => {
 
-        const var_showFormSelector          =        data.hasOwnProperty("var_showFormSelector")         ?  data.var_showFormSelector                    :  false;
+        const var_showFormSelector      =        data.hasOwnProperty("var_showFormSelector")         ?  data.var_showFormSelector       :  false;
 
-        const prop_background1          =        data.hasOwnProperty("prop_background1")          ?  data.prop_background1                               :  this.DEFULAT_BACKGROUND_1;
-        const prop_background2          =        data.hasOwnProperty("prop_background2")             ?  data.prop_background2                               :  this.DEFULAT_BACKGROUND_2;
-        const prop_color                =        data.hasOwnProperty("prop_color")                 ?  data.prop_color                                    :  this.DEFULAT_COLOR;
-        const prop_name                 =        data.hasOwnProperty("prop_name")                  ?  data.prop_name                                     :  "No-Name-input-"+Math.floor(Math.random() * 10000);
-        const prop_title                =        data.hasOwnProperty("prop_title")                 ?  data.prop_title                                    :  "No Title";
-        const prop_value                =        data.hasOwnProperty("prop_value")                 ?  data.prop_value                                    :  null;
+        const prop_background2          =        data.hasOwnProperty("prop_background2")             ?  data.prop_background2           :  this.DEFULAT_BACKGROUND_2;
+        const prop_name                 =        data.hasOwnProperty("prop_name")                    ?  data.prop_name                  :  "No-Name-input-"+Math.floor(Math.random() * 10000);
+        const prop_value                =        data.hasOwnProperty("prop_value")                   ?  data.prop_value                 :  null;
 
+        const moveToNext                = super.getMethod(data , "moveToNext" , null);
+        const moveToPrev                = super.getMethod(data , "moveToPrev" , null);
+        const onFocus                   = super.getMethod(data , "onFocus"    , null);
+        const onChangeDateDigit         = super.getMethod(data , "onChangeDateDigit"    , null);
+        const getDigitDatePart         = super.getMethod(data , "getDigitDatePart"    , null );
 
-        const prop_langs                =        data.hasOwnProperty("prop_langs")                 ?  data.prop_langs                                    : {};
+        const yearDigitOne   = window[getDigitDatePart](this.TYPE_YAER , 1);
+        const yearDigitTwo   = window[getDigitDatePart](this.TYPE_YAER , 2);
+        const yearDigitThree = window[getDigitDatePart](this.TYPE_YAER , 3);
+        const yearDigitFour  = window[getDigitDatePart](this.TYPE_YAER , 4);
 
+        const monthDigitOne  = window[getDigitDatePart](this.TYPE_MONTH , 1);
+        const monthDigitTwo  = window[getDigitDatePart](this.TYPE_MONTH , 2);
 
-        const moveToNext = super.getMethod(data , "moveToNext" , null);
-        const moveToPrev = super.getMethod(data , "moveToPrev" , null);
-        const onFocus =    super.getMethod(data , "onFocus"    , null);
-        const onChangeDateDigit =    super.getMethod(data , "onChangeDateDigit"    , null);
-
-        const getDisgitDatePart  = super.getMethod(data , "getDisgitDatePart"    , null );
-        const yearDigitOne   = window[getDisgitDatePart](this.TYPE_YAER , 1);
-        const yearDigitTwo   = window[getDisgitDatePart](this.TYPE_YAER , 2);
-        const yearDigitThree = window[getDisgitDatePart](this.TYPE_YAER , 3);
-        const yearDigitFour  = window[getDisgitDatePart](this.TYPE_YAER , 4);
-
-        const monthDigitOne  = window[getDisgitDatePart](this.TYPE_MONTH , 1);
-        const monthDigitTwo  = window[getDisgitDatePart](this.TYPE_MONTH , 2);
-
-        const dayDigitOne  = window[getDisgitDatePart](this.TYPE_DAY , 1);
-        const dayDigitTwo  = window[getDisgitDatePart](this.TYPE_DAY , 2);
+        const dayDigitOne    = window[getDigitDatePart](this.TYPE_DAY , 1);
+        const dayDigitTwo    = window[getDigitDatePart](this.TYPE_DAY , 2);
 
 
 
@@ -3073,9 +3143,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
           <section class="form-group mb-4">
 
                 <div class="d-block">
-                    <label for="${prop_name}" class="d-block text-end">
-                        ${prop_title}
-                    </label>
+<component-label id="label-input-date"></component-label>
                 </div>
 
                 <div class="position-relative">
@@ -3258,6 +3326,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         const readyDatePicker = super.getMethod(data , "readyDatePicker" , null);
         window[readyDatePicker]()
 
+        this.readyLabelInput(data , componentSlots , el);
+
         this.readyBtnShowDateForm(data , componentSlots , el);
 
         this.readyBtnClearForm(data , componentSlots , el);
@@ -3277,6 +3347,24 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
     }
 
+
+
+    readyLabelInput  = (data , componentSlots , el) => {
+
+        const prop_title    =   data.hasOwnProperty("prop_title")    ?  data.prop_title        :  "No Title";
+        const selectDate    =   super.getMethod(data , "selectDate"    , null );
+
+        new window.ComponentLabel(
+            "label-input-date" ,
+            {
+                prop_title:  prop_title ,
+
+                fn_callback: ()=>{
+                    window[selectDate]();
+                }
+            }
+        )
+    }
 
 
     readyBtnShowDateForm  = (data , componentSlots , el) => {
@@ -3301,7 +3389,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
-                prop_text : "&#128467;" ,
+                prop_title : "&#128467;" ,
 
                 fn_callback: ()=>{
                     window[selectDate]();
@@ -3309,7 +3397,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         )
     }
-
 
 
     readyBtnClearForm  = (data , componentSlots , el) => {
@@ -3339,7 +3426,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
-                prop_text : "&#10540;" ,
+                prop_title : "&#10540;" ,
 
                 fn_callback: ()=>{
                     window[clearInput]();
@@ -3347,8 +3434,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         )
     }
-
-
 
 
     readyBtnPrevYear  = (data , componentSlots , el) => {
@@ -3367,7 +3452,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
-                prop_text : "&#11166;" ,
+                prop_title : "&#11166;" ,
 
                 fn_callback: ()=>{
                     window[goToYear]();
@@ -3391,7 +3476,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
-                prop_text : "&#11164;" ,
+                prop_title : "&#11164;" ,
 
                 fn_callback: ()=>{
                     window[goToYear](true);
@@ -3425,6 +3510,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             "select-option-year" ,
             {
                 prop_type:1 ,
+                prop_title:null ,
                 prop_name:"date-picker-year" ,
                 prop_optionIconColor:"#ffffff" ,
                 prop_titleClass:"text-white text-center" ,
@@ -3438,8 +3524,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         )
 
     }
-
-
 
 
     readyBtnPrevMonth  = (data , componentSlots , el) => {
@@ -3456,7 +3540,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
-                prop_text : "&#11166;" ,
+                prop_title : "&#11166;" ,
 
                 fn_callback: ()=>{
                     window[goToMonth]();
@@ -3479,7 +3563,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
-                prop_text : "&#11164;" ,
+                prop_title : "&#11164;" ,
 
                 fn_callback: ()=>{
                     window[goToMonth](true);
@@ -3515,6 +3599,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             "select-option-month" ,
             {
                 prop_type:1 ,
+                prop_title:null ,
                 prop_name:"date-picker-month" ,
                 prop_optionIconColor:"#ffffff" ,
                 prop_titleClass:"text-white text-center" ,
@@ -3528,8 +3613,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         )
 
     }
-
-
 
 
     readyTableDays = (data , componentSlots , el) => {
@@ -3613,8 +3696,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     }
 
 
-
-
     readyBtnAccept = (data , componentSlots , el) => {
         const acceptBtnSelected    =    super.getMethod(data , "acceptBtnSelected"  , null );
         const prop_langs           =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
@@ -3624,7 +3705,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             {
                 prop_btnBackgroundColor : "#1ec9aa" ,
                 prop_btnColor : "white" ,
-                prop_text : prop_langs != null && prop_langs.hasOwnProperty("_btn_accept_title") ? prop_langs._btn_accept_title : "تایید" ,
+                prop_title : prop_langs != null && prop_langs.hasOwnProperty("_btn_accept_title") ? prop_langs._btn_accept_title : "تایید" ,
 
                 fn_callback: ()=>{
                     window[acceptBtnSelected]();
@@ -3642,7 +3723,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             {
                 prop_btnBackgroundColor : "#1ec9aa" ,
                 prop_btnColor : "white" ,
-                prop_text : prop_langs != null && prop_langs.hasOwnProperty("_btn_now_title") ? prop_langs._btn_now_title : "اکنون" ,
+                prop_title : prop_langs != null && prop_langs.hasOwnProperty("_btn_now_title") ? prop_langs._btn_now_title : "اکنون" ,
 
                 fn_callback: ()=>{
                     window[nowBtnSelected]();
@@ -3650,15 +3731,69 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         )
     }
-
 }
 
 
 
 
 
+/*-------------------------------------
+ Component label
+-------------------------------------
+@prop_title
+@prop_for
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
 
+@fn_callback
+-------------------------------------*/
+window.ComponentLabel  = class ComponentLabel extends ComponentBase{
+    constructor(elId , config) {
 
+        let methods = {};
+        methods["onClickLabel"] = {
+            name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            fn: (event) => {
+                const prop_for    =   config.hasOwnProperty("prop_for")        ?  config.prop_for    :  "";
+                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
+                    config.fn_callback(event , prop_for);
+                }
+            }
+        };
 
+        super(elId , config , listComponent[ComponentLabel.name] , methods);
 
+        this.render()
+    }
 
+    templateFn(data , componentSlots , el){
+
+        const prop_title              =   data.hasOwnProperty("prop_title")              ?  data.prop_title              :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+        const prop_for                =   data.hasOwnProperty("prop_for")                ?  data.prop_for                :  "";
+
+        const prop_labelClass         =   data.hasOwnProperty("prop_labelClass")         ?  data.prop_labelClass         :  "text-end shadow-sm "
+        const prop_labelStyles        =   data.hasOwnProperty("prop_labelStyles")        ?  data.prop_labelStyles        :  null;
+        const prop_labelHoverStyles   =   data.hasOwnProperty("prop_labelHoverStyles")   ?  data.prop_labelHoverStyles   :  null;
+
+        const onClickLabel = super.getMethod(data , "onClickLabel" , `(event , '${prop_for}')`);
+
+        return `
+<style>
+     #${el.id} .component-label{
+          ${super.renderListStyle(prop_labelStyles)}
+          cursor: pointer;
+     }
+     #${el.id} .component-label:hover{
+         ${super.renderListStyle(prop_labelHoverStyles)}
+     }
+</style>
+<section class="">
+     <label for="${prop_for}" class="component-label ${super.renderListClass(prop_labelClass)}   d-block px-2 py-1 " onclick="${onClickLabel}">
+         ${prop_title}
+     </label>
+</section>
+`;
+    }
+
+}
