@@ -20,9 +20,11 @@ if (typeof listComponent === 'undefined') {
         ComponentTabs:              "component-tabs" ,           //11
         ComponentOtp:               "component-otp" ,            //12
         ComponentWidget:            "component-widget" ,         //13
-        ComponentInputPrice:        "component-input-price" ,    //14
-        ComponentDate:              "component-date" ,           //15
-        ComponentLabel:             "component-label" ,          //16
+        ComponentInput:             "component-input" ,          //14
+        ComponentInputPrice:        "component-input-price" ,    //15
+        ComponentDate:              "component-date" ,           //16
+        ComponentLabel:             "component-label" ,          //17
+        ComponentIcon:              "component-icon" ,           //18
     }
 }
 
@@ -81,7 +83,7 @@ class ComponentMaker {
 
                         if (data.hasOwnProperty("prop_show") && data.prop_show){
                             this.innerHTML = templateFn(data, componentSlots , this);
-                        }
+                                                    }
                         else {
                             this.innerHTML = "<!--hidden-component-->";
                         }
@@ -252,7 +254,12 @@ class ComponentBase{
 
 
         if (this.config != null){
-            if (this.config.classList) el.classList = this.renderListClass(this.config.classList);
+            /*const firstChild = el.querySelector('component-element-structure');
+            console.log(el , firstChild)*/
+
+            if (this.config.classList){
+                el.classList = this.renderListClass(this.config.classList);
+            }
 
             if (this.config.styles) {
                 Object.entries(this.config.styles).forEach(([key, value]) => {
@@ -336,7 +343,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
     cursor: pointer;
 }
 </style>
-<div class="form-message ${messageStatusClass} text-direction mt-2" role="alert">
+<div class="component-element-structure mb-2 form-message ${messageStatusClass} text-direction mt-2" role="alert">
      ${data.prop_messages[index]}
       <span class="icon-message  float-end me-1 " onclick="${closeMessage}">&#10005;</span>
 </div>
@@ -439,7 +446,7 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
 }
 </style>
 
-    <section class="form-loading position-absolute  w-100 h-100" >
+    <section class="fcomponent-element-structure orm-loading position-absolute  w-100 h-100" >
         <div class="lds-ring position-absolute"><div></div><div></div><div></div><div></div></div>
     </section>
         `;
@@ -650,7 +657,7 @@ window.Component404 = class Component404 extends ComponentBase{
 }
 </style>
 
-     <section class="form-404-animation w-100 h-100 rounded ">
+     <section class="component-element-structure mb-2 form-404-animation w-100 h-100 rounded ">
 
         <svg id="svgWrap_2" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 700 250">
             <g>
@@ -707,7 +714,7 @@ window.Component404 = class Component404 extends ComponentBase{
 }
 </style>
             
-          <section class="section-404-space-bot position-absolute w-100 rounded py-2">
+          <section class="component-element-structure mb-2 section-404-space-bot position-absolute w-100 rounded py-2">
               <img class="img-404-space-bot d-block mx-auto rounded" src='${tools_const.botResPath}/bot-404.png'/>
             
               <section class="d-block mt-2 mx-5">
@@ -816,7 +823,7 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
 }
 </style>
 
-<section class="form-parent position-relative ${prop_formClass}">
+<section class="component-element-structure mb-2 form-parent position-relative ${prop_formClass}">
     <component-messages id="list-message"></component-messages>
     
     <form class="form-data">
@@ -891,7 +898,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 
 </style>
 
-    <section >
+    <section class="component-element-structure mb-2">
         <p class="border border-danger text-danger text-center rounded shadow-sm">
             <span class="icon-warning-not-exist-response  ${prop_iconClass}">&#9888;</span>
             ${prop_title}
@@ -927,7 +934,7 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
         const prop_title =      data.hasOwnProperty("prop_title")       ?  data.prop_title  : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
         const prop_classList = data.hasOwnProperty("prop_classList")  ?  data.prop_classList  : "pb-0 px-2 mb-1 border-bottom";
 
-        return `<h${prop_size} class=" ${prop_classList ?? ''} ">${prop_title ?? ''}</h${prop_size}>`;
+        return `<h${prop_size} class="component-element-structure mb-2 ${prop_classList ?? ''} ">${prop_title ?? ''}</h${prop_size}>`;
     }
 }
 
@@ -1184,7 +1191,7 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
    color: ${prop_valueCol_textColor}!important;
 }
 </style>
-<table class="element-table ${prop_tableClass} ${tableType} ${tableBordered}
+<table class="component-element-structure mb-2 element-table ${prop_tableClass} ${tableType} ${tableBordered}
               ${ prop_tableStriped ?    'table-striped'    : ''}
               ${ prop_tableHover ?      'table-hover'      : ''} 
               ${ prop_tableBorderless ? 'table-borderless' : ''}
@@ -1320,7 +1327,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
     color :#ffffff !important;
 }
 </style>
-           <section class="row m-0 mb-2">
+           <section class="component-element-structure row m-0 mb-2">
                ${tabHtml}
            </section>
         `
@@ -1388,7 +1395,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
         background-color: ${tools_const.styles.collapse.backgroundColor};
     }
 </style>
-<div class="mx-2 mb-3">
+<div class="component-element-structure mx-2 mb-3">
 
 <component-label id="label-component-collapse-${var_randomId}" class="position-relative">
    <component-body>
@@ -1506,7 +1513,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
          ${super.renderListStyle(prop_btnHoverStyles)}
      }
 </style>
-<div class="">
+<div class="component-element-structure mb-2">
      <button class=" ${super.renderListClass(prop_btnClass)} btn-action  shadow-sm border-0 px-2 py-1 rounded " onclick="${buttonClick}">
          ${prop_title}
      </button>
@@ -1527,7 +1534,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @prop_name
 @prop_title
 @prop_options
-@prop_formClass
+@prop_selectOptionClass
 @prop_titleClass
 @prop_optionHeight
 @prop_optionItemBackground
@@ -1535,9 +1542,14 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @prop_optionIconColor
 @prop_itemSelected
 
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
 @fn_callback
 -------------------------------------*/
 window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase{
+
     constructor(elId , config) {
 
         let methods = {};
@@ -1630,6 +1642,30 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             }
         };
 
+        methods["searchListOptions"] = {
+            name: `searchListOptions${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (value) => {
+                config.var_textSearch = value;
+                this.changeProperty(config);
+            }
+        };
+
+        methods["searchFocus"] = {
+            name: `searchFocus${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (value) => {
+                config.var_focusSearch = true;
+                this.changeProperty(config);
+            }
+        };
+
+        methods["searchBlur"] = {
+            name: `searchBlur${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (value) => {
+                config.var_focusSearch = false;
+                this.changeProperty(config);
+            }
+        };
+
         super(elId , config , listComponent[ComponentSelectOption.name] , methods);
 
         this.render()
@@ -1639,8 +1675,12 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
         //------------------
         const var_randomId              =     data.hasOwnProperty("var_randomId")              ?  data.var_randomId                :  0;
-        const var_showFormSelector      =     data.hasOwnProperty("var_showFormSelector")      ?      data.var_showFormSelector    :  false;
-        let   var_titleItemSelected     =     data.hasOwnProperty("var_titleItemSelected")     ?      data.var_titleItemSelected   :  "---";
+        const var_showFormSelector      =     data.hasOwnProperty("var_showFormSelector")      ?  data.var_showFormSelector        :  false;
+        let   var_titleItemSelected     =     data.hasOwnProperty("var_titleItemSelected")     ?  data.var_titleItemSelected       :  "---";
+        let   var_textSearch            =     data.hasOwnProperty("var_textSearch")            ?  data.var_textSearch              :  "" ;
+        let   var_focusSearch           =     data.hasOwnProperty("var_focusSearch")           ?  data.var_focusSearch             :  false ;
+
+
 
         //------------------
         const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type               :  0;
@@ -1649,7 +1689,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         const prop_title                = data.hasOwnProperty("prop_title")                    ?  data.prop_title                  :  "";
         const prop_options              = data.hasOwnProperty("prop_options")                  ?  data.prop_options                :  (componentSlots != null && componentSlots.hasOwnProperty("options") ? componentSlots.options : '');
 
-        const prop_formClass            = data.hasOwnProperty("prop_formClass")                ?  data.prop_formClass              :  "";
+        const prop_selectOptionClass    = data.hasOwnProperty("prop_selectOptionClass")        ?  data.prop_selectOptionClass      :  "";
         const prop_titleClass           = data.hasOwnProperty("prop_titleClass")               ?  data.prop_titleClass             :  "text-dark text-center border shadow-sm";
         const prop_optionHeight         = data.hasOwnProperty("prop_optionHeight")             ?  data.prop_optionHeight           :   130;
         const prop_optionItemBackground = data.hasOwnProperty("prop_optionItemBackground")     ?  data.prop_optionItemBackground   :  "#13b799";
@@ -1696,7 +1736,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 }
 
 </style>
- <section class="form-group mb-4">
+ <section class="component-element-structure mb-2 form-group mb-4">
         <div class="d-block text-end">
 <component-label id="label-component-select-option-${var_randomId}"></component-label>
         </div>
@@ -1724,15 +1764,18 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                     const item = prop_options[i];
                     if (item.hasOwnProperty("name")){
                         let value = item.hasOwnProperty('id') ? item.id : 0;
-                        // let disabled =  !item.hasOwnProperty('id') ? "style={color:red}" : "" ;
 
-                        optionsStr += `
+
+
+                        if (typeof item.name.includes == "undefined" || item.name.includes(var_textSearch)){
+                            optionsStr += `
 <div class="select-title-inside-title rounded text-center ${prop_itemSelected != null && value == prop_itemSelected ? 'select-title-inside-item_active': ''}"
    onclick="${selectItemOption+`(${item.id})`}"> ${item.name} 
 </div>
                 `
-                        if (prop_itemSelected != null && value == prop_itemSelected ){
-                            var_titleItemSelected = item.name;
+                            if (prop_itemSelected != null && value == prop_itemSelected ){
+                                var_titleItemSelected = item.name;
+                            }
                         }
                     }
                 }
@@ -1758,6 +1801,8 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 }
  #${el.id} .select-title-inside{
      height: ${prop_optionHeight}px;
+     position: relative;
+     z-index: 10;
 }
  #${el.id} .select-title-inside-title:hover{
      background-color: ${prop_optionItemBackground};
@@ -1769,18 +1814,23 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
      color: ${prop_optionIconColor};
 }
 </style>
-<div class="position-relative ${prop_formClass}">
-        <div class="d-block text-end">
+<div class="component-element-structure mb-2 position-relative ${prop_selectOptionClass}">
+       <div class="d-block text-end">
 <component-label id="label-component-select-option-${var_randomId}"></component-label>
        </div>
+       
        <input name="${prop_name}" value="${prop_itemSelected}" type="hidden"/>
+       
        <b class="select-title w-100 d-block position-relative ${prop_titleClass}" onclick="${showListOptions}">
            ${var_titleItemSelected}
               
            <span class="arrow-selector-option position-absolute ">${prop_optionIcon}</span>
        </b>
   
-       <section class="select-title-form position-absolute border shadow rounded bg-white w-100 p-1 ${var_showFormSelector ? '' : 'd-none'}">
+       <section class="select-title-form form-control custom-select w-100 rounded line-height-30px px-2 text-end ${var_showFormSelector ? '' : 'd-none'}">
+<component-input id="input-search-${var_randomId}">
+</component-input>
+       
             <section class="select-title-inside bg-white overflow-auto">
                  ${optionsStr}
             </section>
@@ -1793,17 +1843,23 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
     onRender = (data , componentSlots , el) =>{
         this.readyLabelInput(data , componentSlots , el);
+        this.readyInputSearch(data , componentSlots , el);
+
     }
 
     readyLabelInput  = (data , componentSlots , el) => {
 
-        const var_randomId        =   data.hasOwnProperty("var_randomId")    ?  data.var_randomId   :  0;
+        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
 
-        const prop_name          =   data.hasOwnProperty("prop_name")        ?  data.prop_name      :  "No-Name-input";
-        const prop_title         =   data.hasOwnProperty("prop_title")       ?  data.prop_title     :  "No Title";
-        const prop_type          =     data.hasOwnProperty("prop_type")         ?  data.prop_type      :  0;
+        const prop_name                 =   data.hasOwnProperty("prop_name")                   ?  data.prop_name                          :  "No-Name-input";
+        const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
+        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?  data.prop_type                          :  0;
 
-        const showListOptions    =    super.getMethod(data , "showListOptions"     , null );
+        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  ["text-end"];
+        const prop_labelStyles          =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles                   :  {};
+        const prop_labelHoverStyles     =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_title                         :  {};
+
+        const showListOptions            =    super.getMethod(data , "showListOptions"     , null );
 
         if (prop_title != null){
             new window.ComponentLabel(
@@ -1812,11 +1868,52 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                     prop_title:  prop_title ,
                     prop_for  :  prop_name+"-"+var_randomId ,
 
+                    prop_labelClass:       prop_labelClass ,
+                    prop_labelStyles:      prop_labelStyles ,
+                    prop_labelHoverStyles: prop_labelHoverStyles ,
+
                     fn_callback: ()=>{
                         if (prop_type != 0){
                             window[showListOptions]()
                         }
                     }
+                }
+            )
+        }
+    }
+
+    readyInputSearch  = (data , componentSlots , el) => {
+
+        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+        const var_textSearch            =     data.hasOwnProperty("var_textSearch")            ?  data.var_textSearch                     :  "";
+        const var_focusSearch           =    data.hasOwnProperty("var_focusSearch")            ?  data.var_focusSearch                    :  false;
+
+        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type                      :  0;
+
+        const searchListOptions         =    super.getMethod(data , "searchListOptions"     , null );
+        const searchFocus               =    super.getMethod(data , "searchFocus"           , null );
+        const searchBlur                =    super.getMethod(data , "searchBlur"            , null );
+
+        if (prop_type == 1){
+            new window.ComponentInput(
+                "input-search-"+var_randomId ,
+                {
+                    prop_title: null ,
+                    prop_icon: "&#x2315;" ,
+                    prop_value: var_textSearch ,
+                    prop_isFocus: var_focusSearch ,
+
+                    fn_oninput: (value)=> {
+                        window[searchListOptions](value)
+                    } ,
+
+                    fn_onfocus: (value)=> {
+                        window[searchFocus](value)
+                    } ,
+
+                    /*fn_onblur: (value)=> {
+                        window[searchBlur](value)
+                    }*/
                 }
             )
         }
@@ -1927,7 +2024,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
     min-height: ${prop_minHeight}px;
 }
 </style>
-<section class="widget-component position-relative ${ prop_classList }" >
+<section class="component-element-structure mb-2 widget-component position-relative ${ prop_classList }" >
 
     <section class="response-widget-component-${var_randomId}"></section>
     
@@ -1957,6 +2054,269 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
 }
 
+
+
+
+/*-------------------------------------
+ Component Input
+-------------------------------------
+@prop_type
+@prop_name
+@prop_title
+@prop_icon
+@prop_value
+@prop_isFocus
+
+@prop_inputClass
+@prop_inputStyles
+
+@fn_oninput
+@fn_onfocus
+@fn_onblur
+-------------------------------------*/
+window.ComponentInput = class ComponentInput extends ComponentBase{
+
+    IS_FOCUS= false;
+    value= "";
+
+    constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+        methods["focusToInput"] = {
+            name: `focusToInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+                const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
+                const prop_name     =        config.hasOwnProperty("prop_name")                  ?  config.prop_name                       :  "No-Name-input";
+
+                const el = document.getElementById(`${prop_name}-${var_randomId}`);
+                el.focus();
+            }
+        };
+        methods["clearInput"] = {
+            name: `clearInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+                const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
+                const prop_name     =        config.hasOwnProperty("prop_name")                  ?  config.prop_name                       :  "No-Name-input";
+
+                const el = document.getElementById(`${prop_name}-${var_randomId}`);
+                el.value = "";
+
+                if (config.hasOwnProperty("fn_oninput") && typeof config.fn_oninput != null){
+                    config.fn_oninput("");
+                }
+            }
+        };
+        methods["oninput"] = {
+            name: `oninput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+                const el = event.target;
+                const value = el.value;
+                if (config.hasOwnProperty("fn_oninput") && typeof config.fn_oninput != null){
+                    config.fn_oninput(value);
+                }
+            }
+        };
+        methods["onfocus"] = {
+            name: `onfocus${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+                if (config.hasOwnProperty("fn_onfocus") && typeof config.fn_onfocus != null){
+                    config.fn_onfocus();
+                }
+            }
+        };
+        methods["onblur"] = {
+            name: `onblur${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+                if (config.hasOwnProperty("fn_onblur") && typeof config.fn_onblur != null){
+                    config.fn_onblur();
+                }
+            }
+        };
+
+        super(elId , config , listComponent[ComponentInput.name] , methods);
+
+        this.render()
+    }
+
+    templateFn(data , componentSlots , el){
+
+        //-------------------
+        const var_randomId              =        data.hasOwnProperty("var_randomId")               ?  data.var_randomId                                         :  0;
+
+        //-------------------
+        const prop_type                 =        data.hasOwnProperty("prop_type")                  ?  data.prop_type                                            :  "";
+        const prop_name                 =        data.hasOwnProperty("prop_name")                  ?  data.prop_name                                            :  "No-Name-input";
+        const prop_title                =        data.hasOwnProperty("prop_title")                 ?  data.prop_title                                           :  "No Title";
+        const prop_icon                 =        data.hasOwnProperty("prop_icon")                  ?  data.prop_icon                                            :  "";
+        const prop_value                =        data.hasOwnProperty("prop_value")                 ?  data.prop_value                                           :  "";
+        const prop_isFocus              =        data.hasOwnProperty("prop_isFocus")               ?  data.prop_isFocus                                         :  false;
+
+        const prop_inputClass           =    data.hasOwnProperty("prop_inputClass")                 ?  data.prop_inputClass                                      :  ["text-end"];
+        const prop_inputStyles          =    data.hasOwnProperty("prop_inputStyles")                ?  data.prop_inputStyles                                     :  {};
+
+        const oninput                   =    super.getMethod(data , "oninput"  , "(event)" );
+        const onblur                    =    super.getMethod(data , "onblur"  , "(event)" );
+        const onfocus                   =    super.getMethod(data , "onfocus"  , "(event)" );
+
+        return `
+<style>
+ #${el.id} .compoent-input-${var_randomId}{
+     ${super.renderListStyle(prop_inputStyles)}
+     padding-left: 30px!important;
+     padding-right: ${(prop_icon != null && prop_icon != "") ?  "30px"  : "10px"}!important;
+ }
+</style>
+<section class="component-element-structure mb-2">
+
+<component-label id="label-component-input-${var_randomId}"></component-label>
+
+         <div class="position-relative">
+            <input id="${prop_name}-${var_randomId}"  
+                   oninput="${oninput}" onfocus="${onfocus}" onblur="${onblur}"
+                   type="${prop_type}" name="${prop_name}"  value="${prop_value}"
+                   class="compoent-input-${var_randomId}  ${super.renderListClass(prop_inputClass)} form-control  px-2 " type="password" placeholder="">
+       
+<component-icon id="icon-component-input-${var_randomId}">
+</component-icon>  
+            
+<component-button id="btn-clear-component-input-${var_randomId}">
+</component-button>  
+         </div>
+
+</section>
+        `;
+    }
+
+    onCreate = (data , el) => {
+
+    }
+
+    onRender = (data , componentSlots , el) => {
+
+        this.readyLabelInput(data , componentSlots , el);
+        this.readyBtnClearInput(data , componentSlots , el);
+        this.readyIconInput(data , componentSlots , el);
+
+        const prop_name        =    data.hasOwnProperty("prop_name")              ?  data.prop_name                                            :  "No-Name-input";
+        const var_randomId     =    data.hasOwnProperty("var_randomId")           ?  data.var_randomId                                         :  0;
+        const prop_isFocus     =    data.hasOwnProperty("prop_isFocus")           ?  data.prop_isFocus                                         :  false;
+        const prop_value                =        data.hasOwnProperty("prop_value")                 ?  data.prop_value                                           :  "";
+
+        const elInput = document.getElementById(`${prop_name}-${var_randomId}`);
+        if (elInput != null){
+            if (prop_isFocus){
+                elInput.focus()
+                elInput.setSelectionRange(prop_value.length, prop_value.length);
+            }
+            else {
+                elInput.blur()
+            }
+        }
+
+    }
+
+    readyLabelInput  = (data , componentSlots , el) => {
+
+        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+
+        const prop_name                 =   data.hasOwnProperty("prop_name")                   ?  data.prop_name                          :  "No-Name-input";
+        const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
+        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?  data.prop_type                          :  0;
+
+        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  ["text-end"];
+        const prop_labelStyles          =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles                   :  {};
+        const prop_labelHoverStyles     =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_title                         :  {};
+
+
+        if (prop_title != null){
+            new window.ComponentLabel(
+                "label-component-input-"+var_randomId ,
+                {
+                    prop_title:  prop_title ,
+                    prop_for  :  prop_name+"-"+var_randomId ,
+
+                    prop_labelClass:       prop_labelClass ,
+                    prop_labelStyles:      prop_labelStyles ,
+                    prop_labelHoverStyles: prop_labelHoverStyles ,
+
+                    fn_callback: ()=>{
+
+                    }
+                }
+            )
+        }
+
+    }
+
+    readyBtnClearInput  = (data , componentSlots , el) => {
+
+        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+
+        const clearInput                =    super.getMethod(data , "clearInput"    , null);
+
+        new window.ComponentButton(
+            "btn-clear-component-input-"+var_randomId ,
+            {
+                classList: []  ,
+                styles: {
+                    "height" : "38px"
+                }  ,
+
+                prop_btnClass : ["position-absolute"] ,
+                prop_btnStyles : {
+                    "z-index" : "10",
+                    "width" :   "35px",
+                    "line-height" : "20px",
+                    "left" : "5px",
+                    "cursor" : "pointer",
+                    "height" : "30px" ,
+                    "margin-top" : "3px!important" ,
+                    "top" : "0" ,
+                } ,
+                prop_btnBackgroundColor : "#ffffff00" ,
+                prop_btnColor : "" ,
+                prop_title : "&#10540;" ,
+
+                fn_callback: ()=>{
+                    window[clearInput]();
+                }
+            }
+        )
+    }
+
+    readyIconInput = (data , componentSlots , el) => {
+
+        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+
+        const prop_icon                 =    data.hasOwnProperty("prop_icon")                  ?  data.prop_icon                          :  "";
+        const focusToInput              =    super.getMethod(data , "focusToInput"  , null );
+
+        new window.ComponentIcon(
+            "icon-component-input-"+var_randomId ,
+            {
+                prop_icon: prop_icon ,
+
+                prop_iconClass : ["position-absolute" , "text-center"] ,
+                prop_iconStyles : {
+                    "z-index" : "10",
+                    "margin" : "0",
+                    "width" : "30px",
+                    "line-height" :   "35px",
+                    "right" :   "0",
+                    "cursor" : "pointer",
+                    "font-size" : "20pt;",
+                    "top" : "0" ,
+                } ,
+
+                fn_callback: ()=>{
+                    window[focusToInput]();
+                }
+            }
+        )
+    }
+
+}
 
 
 
@@ -2094,7 +2454,6 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         }
 
 
-
         const handleInput   =    super.getMethod(data , "handleInput"    , "(event)" );
         const formatValue   =    super.getMethod(data , "formatValue"    , "()" );
         const unformatValue =    super.getMethod(data , "unformatValue"  , "()" );
@@ -2141,10 +2500,10 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 }
 </style>
 
-            <section class="form-group mb-4">
+            <section class="component-element-structure form-group mb-2">
 
                 <div class="d-block">
-<component-label id="label-component-input-${var_randomId}"></component-label>
+<component-label id="label-component-input-price-${var_randomId}"></component-label>
                 </div>
 
                 <div class="position-relative">
@@ -2402,7 +2761,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 }
 </style>
 
-<section>
+<section class="component-element-structure mb-2">
    <p class="title-otp text-center mb-0 mx-2 mt-2 rounded">
       ${prop_langs.hasOwnProperty("_title_otp_description") ? prop_langs._title_otp_description : ""} 
       <b style="display:block; direction: ltr">
@@ -2476,7 +2835,6 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 
 
 
-
 /*-------------------------------------
  Component Date
 -------------------------------------
@@ -2487,6 +2845,10 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 @prop_name
 @prop_title
 @prop_value
+
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
 
 @prop_prevYears
 @prop_nextYears
@@ -3031,7 +3393,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         const dayDigitTwo    = window[getDigitDatePart](this.TYPE_DAY , 2);
 
 
-
         return `
 <style>
  #${el.id} .icon-clear-input-date{
@@ -3073,6 +3434,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
  #${el.id} .form-choose-date{
      direction: rtl;
+     z-index: 10;
 }
  #${el.id} .form-choose-date-info-year{
      width: calc(3*14% + 4px);
@@ -3140,7 +3502,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
      background-color: ${prop_background2};
 }
 </style>
-          <section class="form-group mb-4">
+          <section class="component-element-structure form-group mb-2">
 
                 <div class="d-block">
 <component-label id="label-input-date"></component-label>
@@ -3351,13 +3713,21 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
     readyLabelInput  = (data , componentSlots , el) => {
 
-        const prop_title    =   data.hasOwnProperty("prop_title")    ?  data.prop_title        :  "No Title";
-        const selectDate    =   super.getMethod(data , "selectDate"    , null );
+        const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
+
+        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  ["text-end"];
+        const prop_labelStyles          =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles                   :  {};
+        const prop_labelHoverStyles     =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_title                         :  {};
+
+        const selectDate                =   super.getMethod(data , "selectDate"    , null );
 
         new window.ComponentLabel(
             "label-input-date" ,
             {
-                prop_title:  prop_title ,
+                prop_title:            prop_title ,
+                prop_labelClass:       prop_labelClass ,
+                prop_labelStyles:      prop_labelStyles ,
+                prop_labelHoverStyles: prop_labelHoverStyles ,
 
                 fn_callback: ()=>{
                     window[selectDate]();
@@ -3379,7 +3749,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 }  ,
                 prop_btnClass : ["position-absolute"] ,
                 prop_btnStyles : {
-                    "z-index" : "11",
+                    "z-index" : "10",
                     "width" :   "35px",
                     "line-height" : "20px",
                     "right" : "5px",
@@ -3416,7 +3786,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
                 prop_btnClass : ["position-absolute"] ,
                 prop_btnStyles : {
-                    "z-index" : "11",
+                    "z-index" : "10",
                     "width" :   "35px",
                     "line-height" : "20px",
                     "left" : "5px",
@@ -3772,7 +4142,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
         const prop_title              =   data.hasOwnProperty("prop_title")              ?  data.prop_title              :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
         const prop_for                =   data.hasOwnProperty("prop_for")                ?  data.prop_for                :  "";
 
-        const prop_labelClass         =   data.hasOwnProperty("prop_labelClass")         ?  data.prop_labelClass         :  "text-end shadow-sm "
+        const prop_labelClass         =   data.hasOwnProperty("prop_labelClass")         ?  data.prop_labelClass         :  "text-end shadow-sm px-2 py-1"
         const prop_labelStyles        =   data.hasOwnProperty("prop_labelStyles")        ?  data.prop_labelStyles        :  null;
         const prop_labelHoverStyles   =   data.hasOwnProperty("prop_labelHoverStyles")   ?  data.prop_labelHoverStyles   :  null;
 
@@ -3788,11 +4158,76 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
          ${super.renderListStyle(prop_labelHoverStyles)}
      }
 </style>
-<section class="">
-     <label for="${prop_for}" class="component-label ${super.renderListClass(prop_labelClass)}   d-block px-2 py-1 " onclick="${onClickLabel}">
+<section class="component-element-structure mb-2">
+     <label for="${prop_for}" class="component-label ${super.renderListClass(prop_labelClass)}   d-block  " onclick="${onClickLabel}">
          ${prop_title}
      </label>
 </section>
+`;
+    }
+
+}
+
+
+
+
+
+/*-------------------------------------
+ Component Icon
+-------------------------------------
+@prop_icon
+@prop_isItalik
+
+@prop_iconClass
+@prop_iconStyles
+
+@fn_callback
+-------------------------------------*/
+window.ComponentIcon  = class ComponentIcon extends ComponentBase{
+    constructor(elId , config) {
+
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+        methods["onClickToIcon"] = {
+            name: `onClickToIcon${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
+                    config.fn_callback();
+                }
+            }
+        };
+
+        super(elId , config , listComponent[ComponentIcon.name] , methods);
+
+        this.render()
+    }
+
+    templateFn(data , componentSlots , el){
+
+        //-------------------
+        const var_randomId             =        data.hasOwnProperty("var_randomId")              ?  data.var_randomId                                         :  0;
+
+        //-------------------
+        const prop_icon                =      data.hasOwnProperty("prop_icon")                   ?  data.prop_icon                                            :  "";
+        const prop_isItalik            =      data.hasOwnProperty("prop_isItalik")               ?  data.prop_isItalik                                        :  false;
+
+        const prop_iconClass           =   data.hasOwnProperty("prop_iconClass")                 ?  data.prop_iconClass                                       :  [];
+        const prop_iconStyles          =   data.hasOwnProperty("prop_iconStyles")                ?  data.prop_iconStyles                                      :  {};
+
+        const onClickToIcon            =    super.getMethod(data , "onClickToIcon"   , "(event)" );
+
+
+        return `
+<style>
+ #${el.id} .component-icon-${var_randomId}{
+     ${super.renderListStyle(prop_iconStyles)}
+ }
+</style>
+<${prop_isItalik ? "i" : "span"} class="component-icon-${var_randomId} ${super.renderListClass(prop_iconClass)}" 
+      onclick="${onClickToIcon}">
+           ${prop_icon}
+</${prop_isItalik ? "i" : "span"}>
 `;
     }
 
