@@ -1,27 +1,29 @@
-created components with js pure:
+***created components with js pure:***
+
 
 **List Of Components:**
 ```
 if (typeof listComponent === 'undefined') {
     var listComponent = {
-        ComponentMessages:          "component-messages" ,       //1
-        ComponentLoading:           "component-loading" ,        //2
-        Component404:               "component-404" ,            //3
-        ComponentForm:              "component-form" ,           //4
-        ComponentIsEmpty:           "component-is-empty" ,       //5
-        ComponentHeader:            "component-header" ,         //6
-        ComponentCollapse:          "component-collapse" ,       //7
-        ComponentTable:             "component-table" ,          //8
-        ComponentButton:            "component-button" ,         //9
-        ComponentSelectOption:      "component-select-option" ,  //10
-        ComponentTabs:              "component-tabs" ,           //11
-        ComponentOtp:               "component-otp" ,            //12
-        ComponentWidget:            "component-widget" ,         //13
-        ComponentInput:             "component-input" ,          //14
-        ComponentInputPrice:        "component-input-price" ,    //15
-        ComponentDate:              "component-date" ,           //16
-        ComponentLabel:             "component-label" ,          //17
-        ComponentIcon:              "component-icon" ,           //18
+        ComponentMessages:                   "component-messages" ,                       //1
+        ComponentLoading:                    "component-loading" ,                        //2
+        Component404:                        "component-404" ,                            //3
+        ComponentForm:                       "component-form" ,                           //4
+        ComponentIsEmpty:                    "component-is-empty" ,                       //5
+        ComponentHeader:                     "component-header" ,                         //6
+        ComponentCollapse:                   "component-collapse" ,                       //7
+        ComponentTable:                      "component-table" ,                          //8
+        ComponentButton:                     "component-button" ,                         //9
+        ComponentSelectOption:               "component-select-option" ,                  //10
+        ComponentTabs:                       "component-tabs" ,                           //11
+        ComponentOtp:                        "component-otp" ,                            //12
+        ComponentWidget:                     "component-widget" ,                         //13
+        ComponentInput:                      "component-input" ,                          //14
+        ComponentInputPrice:                 "component-input-price" ,                    //15
+        ComponentDate:                       "component-date" ,                           //16
+        ComponentLabel:                      "component-label" ,                          //17
+        ComponentIcon:                       "component-icon" ,                           //18
+        ComponentPositionElement:            "component-position-element" ,               //19
     }
 }
 ```
@@ -59,6 +61,7 @@ if (typeof listComponent === 'undefined') {
     @prop_name
     @prop_title
     @prop_options
+    @prop_optionWidth
     @prop_selectOptionClass
     @prop_titleClass
     @prop_optionHeight
@@ -145,6 +148,8 @@ if (typeof listComponent === 'undefined') {
     /*-------------------------------------
      Component Date
     -------------------------------------
+    @prop_type
+    
     @prop_background1
     @prop_background2
     @prop_color
@@ -216,6 +221,34 @@ if (typeof listComponent === 'undefined') {
 @fn_callback
 -------------------------------------*/
     new window.ComponentIcon(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+**19) Component Position Element:**
+```
+/*-------------------------------------
+ Component Position Element
+-------------------------------------
+@prop_elementClass
+@prop_elementStyles
+@prop_content || component-body
+
+@prop_positionTop
+@prop_positionLeft
+@prop_positionBottom
+@prop_positionRight
+
+@prop_width
+@prop_height
+-------------------------------------*/
+    new window.ComponentPositionElement(
         "element_id" ,
         {
             

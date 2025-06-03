@@ -7,24 +7,25 @@ Version: 0.1
 
 if (typeof listComponent === 'undefined') {
     var listComponent = {
-        ComponentMessages:          "component-messages" ,       //1
-        ComponentLoading:           "component-loading" ,        //2
-        Component404:               "component-404" ,            //3
-        ComponentForm:              "component-form" ,           //4
-        ComponentIsEmpty:           "component-is-empty" ,       //5
-        ComponentHeader:            "component-header" ,         //6
-        ComponentCollapse:          "component-collapse" ,       //7
-        ComponentTable:             "component-table" ,          //8
-        ComponentButton:            "component-button" ,         //9
-        ComponentSelectOption:      "component-select-option" ,  //10
-        ComponentTabs:              "component-tabs" ,           //11
-        ComponentOtp:               "component-otp" ,            //12
-        ComponentWidget:            "component-widget" ,         //13
-        ComponentInput:             "component-input" ,          //14
-        ComponentInputPrice:        "component-input-price" ,    //15
-        ComponentDate:              "component-date" ,           //16
-        ComponentLabel:             "component-label" ,          //17
-        ComponentIcon:              "component-icon" ,           //18
+        ComponentMessages:                   "component-messages" ,                       //1
+        ComponentLoading:                    "component-loading" ,                        //2
+        Component404:                        "component-404" ,                            //3
+        ComponentForm:                       "component-form" ,                           //4
+        ComponentIsEmpty:                    "component-is-empty" ,                       //5
+        ComponentHeader:                     "component-header" ,                         //6
+        ComponentCollapse:                   "component-collapse" ,                       //7
+        ComponentTable:                      "component-table" ,                          //8
+        ComponentButton:                     "component-button" ,                         //9
+        ComponentSelectOption:               "component-select-option" ,                  //10
+        ComponentTabs:                       "component-tabs" ,                           //11
+        ComponentOtp:                        "component-otp" ,                            //12
+        ComponentWidget:                     "component-widget" ,                         //13
+        ComponentInput:                      "component-input" ,                          //14
+        ComponentInputPrice:                 "component-input-price" ,                    //15
+        ComponentDate:                       "component-date" ,                           //16
+        ComponentLabel:                      "component-label" ,                          //17
+        ComponentIcon:                       "component-icon" ,                           //18
+        ComponentPositionElement:            "component-position-element" ,               //19
     }
 }
 
@@ -56,6 +57,12 @@ class ComponentMaker {
                     }
 
 
+                  /*  constructor() {
+                        super();
+                        this.container = document.createElement("div");
+                        this.appendChild(this.container);
+                    }*/
+
                     static get observedAttributes() {
                         return ['data' ];
                     }
@@ -82,18 +89,27 @@ class ComponentMaker {
                         }
 
                         if (data.hasOwnProperty("prop_show") && data.prop_show){
-                            this.innerHTML = templateFn(data, componentSlots , this);
-                                                    }
+                            const html = templateFn(data, componentSlots , this);
+                            if (this.innerHTML !== html) {
+                                this.innerHTML = html;
+                            }
+                        }
                         else {
                             this.innerHTML = "<!--hidden-component-->";
                         }
 
-                        setTimeout(
-                            ()=>{
-                                if (typeof onRender === 'function') {
-                                    onRender(data , componentSlots , this );
-                                }
-                            } , 0)
+
+                        Promise.resolve().then(() => {
+                            if (typeof onRender === 'function') {
+                                onRender(data, componentSlots, this);
+                            }
+                        });
+
+                        /*requestAnimationFrame(() => {
+                            if (typeof onRender === 'function') {
+                                onRender(data, componentSlots, this);
+                            }
+                        });*/
                     }
 
                     connectedCallback() {
@@ -1534,6 +1550,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @prop_name
 @prop_title
 @prop_options
+@prop_optionWidth
 @prop_selectOptionClass
 @prop_titleClass
 @prop_optionHeight
@@ -1688,6 +1705,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         const prop_name                 = data.hasOwnProperty("prop_name")                     ?  data.prop_name                   :  "";
         const prop_title                = data.hasOwnProperty("prop_title")                    ?  data.prop_title                  :  "";
         const prop_options              = data.hasOwnProperty("prop_options")                  ?  data.prop_options                :  (componentSlots != null && componentSlots.hasOwnProperty("options") ? componentSlots.options : '');
+        const prop_optionWidth          = data.hasOwnProperty("prop_optionWidth")              ?  data.prop_optionWidth            :  "100%";
 
         const prop_selectOptionClass    = data.hasOwnProperty("prop_selectOptionClass")        ?  data.prop_selectOptionClass      :  "";
         const prop_titleClass           = data.hasOwnProperty("prop_titleClass")               ?  data.prop_titleClass             :  "text-dark text-center border shadow-sm";
@@ -1781,6 +1799,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                 }
             }
 
+
             return  `
 <style>
  #${el.id} .select-title{
@@ -1788,10 +1807,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     line-height: 35px;
     cursor: pointer;
 }
- #${el.id} .select-title-form{
-     
-}
-#${el.id} .arrow-selector-option {
+ #${el.id} .arrow-selector-option {
    font-size: 20pt;
    line-height: 40pt;
    margin: 0 10px;
@@ -1827,14 +1843,17 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
            <span class="arrow-selector-option position-absolute ">${prop_optionIcon}</span>
        </b>
   
-       <section class="select-title-form form-control custom-select w-100 rounded line-height-30px px-2 text-end ${var_showFormSelector ? '' : 'd-none'}">
-<component-input id="input-search-${var_randomId}">
-</component-input>
-       
-            <section class="select-title-inside bg-white overflow-auto">
-                 ${optionsStr}
-            </section>
-       </section>
+<component-position-element id="form-position-select-option-${var_randomId}">
+    <component-body>
+        <component-input id="input-search-${var_randomId}">
+        </component-input>
+    
+        <section class="select-title-inside bg-white overflow-auto">
+             ${optionsStr}
+        </section>
+    </component-body>
+</component-position-element>
+    
 </div>
             `
         }
@@ -1844,7 +1863,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     onRender = (data , componentSlots , el) =>{
         this.readyLabelInput(data , componentSlots , el);
         this.readyInputSearch(data , componentSlots , el);
-
+        this.readyElementPosition(data , componentSlots , el);
     }
 
     readyLabelInput  = (data , componentSlots , el) => {
@@ -1877,6 +1896,27 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                             window[showListOptions]()
                         }
                     }
+                }
+            )
+        }
+    }
+
+    readyElementPosition  = (data , componentSlots , el) => {
+        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+        const var_showFormSelector      =     data.hasOwnProperty("var_showFormSelector")      ?  data.var_showFormSelector               :  false;
+
+        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type                      :  0;
+        const prop_optionWidth          = data.hasOwnProperty("prop_optionWidth")              ?  data.prop_optionWidth                   :  "100%";
+
+
+        if (prop_type == 1){
+            new window.ComponentPositionElement(
+                "form-position-select-option-"+var_randomId ,
+                {
+                    prop_show: var_showFormSelector,
+
+                    prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2" , "text-end"] ,
+                    prop_width: prop_optionWidth,
                 }
             )
         }
@@ -2838,6 +2878,8 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 /*-------------------------------------
  Component Date
 -------------------------------------
+@prop_type
+
 @prop_background1
 @prop_background2
 @prop_color
@@ -2863,6 +2905,11 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     TYPE_MONTH = "MONTH";
     TYPE_DAY = "DAY";
 
+    TYPE_INPUT_ONE_DIGIT = 0;
+    TYPE_INPUT_PART_DIGIT = 1;
+    TYPE_INPUT_FULL_DIGIT = 2;
+    TYPE_INPUT_FRIZE_DIGIT = 3;
+
     DEFULAT_COLOR = prop_const.colors.White1;
     DEFULAT_BACKGROUND_1 = prop_const.colors.Green1;
     DEFULAT_BACKGROUND_2 = prop_const.colors.Green5;
@@ -2870,10 +2917,13 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     DEFULAT_NEXT_YEAR = 25;
     DEFULAT_YEAR = 1400;
 
+    statusChange = null;
+    statusChangeDuration = 1000;
+
     constructor(elId , config) {
 
         let methods = {};
-
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         methods["getDaysInJalaliMonth"] = {
             name: `getDaysInJalaliMonth${Date.now()}_${Math.floor(Math.random() * 10000)}`,
@@ -2933,18 +2983,28 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             name: `getPartDate${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (date = null) => {
 
+
                 if (date == null){
                     date = config.hasOwnProperty("prop_value") ? new Date(config.prop_value * 1000) : new Date();
                 }
 
-                const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+                let gYear = date.getFullYear();
+                let gMonth = date.getMonth() + 1; // از 0 شروع میشه
+                let gDay = date.getDate();
+
+                let  { jy, jm, jd } = jalaali.toJalaali(gYear, gMonth, gDay);
+                let [year, month, day] = [jy.toString() , jm.toString().padStart(2, '0') , jd.toString().padStart(2, '0')];
+               const persianDate = `${jy}/${jm.toString().padStart(2, '0')}/${jd.toString().padStart(2, '0')}`
+
+
+                /*const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit'
                 });
 
                 const persianDate = formatter.format(date);
-                const [year, month, day] = persianDate.split('/');
+                const [year, month, day] = persianDate.split('/');*/
 
                 const jalaliYear = +tools_converter.numPersianToEnglish(year) -1  ;
                 const jalaliMonth = +tools_converter.numPersianToEnglish(month)  -1 ;
@@ -3016,37 +3076,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
 
-
-        methods["getDigitDatePart"] = {
-            name: `getDigitDatePart${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (type , digit) => {
-
-                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
-                let number = 0;
-                let value = 0;
-                if (type == this.TYPE_YAER){
-                    number = var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?  ( parseInt(var_selected_date.total.year) +1).toString() : -1 ;
-                }
-                else if( type == this.TYPE_MONTH){
-                    const val =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ? (  parseInt(var_selected_date.total.month)+1).toString() : -1 ;
-                    number = val.length == 1 ? "0" +  val : val;
-                }
-                else if(type == this.TYPE_DAY){
-                    const val =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?  ( parseInt(var_selected_date.total.day)+1 ).toString(): -1 ;
-                    number = val.length == 1 ? "0" +  val : val;
-                }
-
-                if (number != null && number > 0){
-                    number = number.toString();
-                    if (number.length > digit-1){
-                        value = number[digit-1]
-                    }
-                }
-
-                return value;
-            }
-        };
-
         methods["selectDate"] = {
             name: `selectDate${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (status = null) => {
@@ -3092,7 +3121,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 window[clearInput]();
             }
         };
-
 
 
         methods["goToYearSelected"] = {
@@ -3149,7 +3177,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 this.changeProperty(config);
             }
         };
-
 
 
         methods["goToMonthSelected"] = {
@@ -3236,127 +3263,347 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
 
+
+        methods["getDigitDatePart"] = {
+            name: `getDigitDatePart${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (type=null , digit=null) => {
+
+                const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date     :  null;
+                const prop_type          =   config.hasOwnProperty("prop_type")           ?  config.prop_type             :  this.TYPE_INPUT_ONE_DIGIT;
+
+                let number = 0;
+                let value = 0;
+
+                if (prop_type == this.TYPE_INPUT_ONE_DIGIT){
+                    if (type == this.TYPE_YAER){
+                        number = var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?  ( parseInt(var_selected_date.total.year) +1).toString() : -1 ;
+                    }
+                    else if( type == this.TYPE_MONTH){
+                        const val =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ? (  parseInt(var_selected_date.total.month)+1).toString() : -1 ;
+                        number = val.length == 1 ? "0" +  val : val;
+                    }
+                    else if(type == this.TYPE_DAY){
+                        const val =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?  ( parseInt(var_selected_date.total.day)+1 ).toString(): -1 ;
+                        number = val.length == 1 ? "0" +  val : val;
+                    }
+
+                    if (number != null && number > 0){
+                        number = number.toString();
+                        if (number.length > digit-1){
+                            value = number[digit-1]
+                        }
+                    }
+                }
+                else if (prop_type == this.TYPE_INPUT_PART_DIGIT || prop_type == this.TYPE_INPUT_FRIZE_DIGIT){
+                    if (type == this.TYPE_YAER){
+                        number = var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?  ( parseInt(var_selected_date.total.year) +1).toString() : -1 ;
+                    }
+                    else if( type == this.TYPE_MONTH){
+                        const val =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ? (  parseInt(var_selected_date.total.month)+1).toString() : -1 ;
+                        number = val.length == 1 ? "0" +  val : val;
+                    }
+                    else if(type == this.TYPE_DAY){
+                        const val =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?  ( parseInt(var_selected_date.total.day)+1 ).toString(): -1 ;
+                        number = val.length == 1 ? "0" +  val : val;
+                    }
+
+                    value = number.toString();
+                }
+                else if (prop_type == this.TYPE_INPUT_FULL_DIGIT){
+
+                    let yearStr = var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?  ( parseInt(var_selected_date.total.year) +1).toString() : -1 ;
+
+                    let monthStr =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ? (  parseInt(var_selected_date.total.month)+1).toString() : -1 ;
+                    monthStr = monthStr.length == 1 ? "0" +  monthStr : monthStr;
+
+                    let dayStr =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?  ( parseInt(var_selected_date.total.day)+1 ).toString(): -1 ;
+                    dayStr = dayStr.length == 1 ? "0" +  dayStr : dayStr;
+
+                    value = yearStr + "/" + monthStr + "/" + dayStr;
+                }
+
+                return value;
+            }
+        };
+
         methods["onChangeDateDigit"] = {
             name: `onChangeDateDigit${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
-            fn: (event , type , index) => {
+            fn: (event , type=null , index=null) => {
 
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
                 let   year      =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) + 1 : -1 ;
                 let   month     =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month) + 1: -1 ;
                 let   day       =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("day") ?   parseInt(var_selected_date.total.day) + 1 : -1 ;
 
+                const prop_type  =   config.hasOwnProperty("prop_type")    ?  config.prop_type   :  this.TYPE_INPUT_ONE_DIGIT;
+
+                const commitNewTime  = super.getMethod(config , "commitNewTime"    , null );
+
                 const valPart = event.target.value;
+                let statusChange = null;
 
                 let number="";
-                if (type == this.TYPE_YAER){
-                    number = year.toString();
-                    let newNumber = number.split('');
-                    newNumber[index-1] = valPart;
-                    newNumber = newNumber.join('');
-                    year = parseInt(newNumber);
+                if (prop_type == this.TYPE_INPUT_ONE_DIGIT){
 
-                    const prop_prevYears     =        config.hasOwnProperty("prop_prevYears")      ?  config.prop_prevYears                :  this.DEFULAT_PERV_YEAR;
-                    const prop_nextYears     =        config.hasOwnProperty("prop_nextYears")      ?  config.prop_nextYears                :  this.DEFULAT_NEXT_YEAR;
-
-                    const getPartDate  = super.getMethod(config , "getPartDate"    , null );
-                    const datePart = window[getPartDate]();
-                    const thisYear = datePart != null && datePart.hasOwnProperty("year") ? parseInt(datePart.year) : this.DEFULAT_YEAR;
-
-                    if (year > thisYear + prop_nextYears -1 ){
-                        year = thisYear + prop_nextYears -1 ;
+                    if (type == this.TYPE_YAER){
+                        number = year.toString();
+                        let newNumber = number.split('');
+                        newNumber[index-1] = valPart;
+                        newNumber = newNumber.join('');
+                        year = parseInt(newNumber);
                     }
-                    else if (year < thisYear - prop_prevYears - 1){
-                        year = thisYear - prop_prevYears;
+                    else if( type == this.TYPE_MONTH){
+                        number =  month.toString().padStart(2, '0');
+
+                        let newNumber = number.split('');
+                        newNumber[index-1] = valPart;
+                        newNumber = newNumber.join('');
+                        month = parseInt(newNumber);
+                    }
+                    else if(type == this.TYPE_DAY){
+                        number =  day.toString().padStart(2, '0');
+
+                        let newNumber = number.split('');
+                        newNumber[index-1] = valPart;
+                        newNumber = newNumber.join('');
+                        day = parseInt(newNumber);
+                    }
+
+                    window[commitNewTime](year , month , day , index);
+                }
+                else if (prop_type == this.TYPE_INPUT_PART_DIGIT){
+
+                    if (type == this.TYPE_YAER){
+                        year = parseInt(valPart);
+
+                        if (valPart.toString().length == 4){
+                            window[commitNewTime](year , month , day , index);
+                        }
+
+                    }
+                    else if( type == this.TYPE_MONTH){
+                        month = parseInt(valPart);
+
+                        if (this.statusChange != null){
+                            clearTimeout(this.statusChange);
+                        }
+                        if (valPart.toString().length == 2){
+                            window[commitNewTime](year , month , day , index);
+                        }
+                        else{
+                            this.statusChange = setTimeout(()=>{
+                                window[commitNewTime](year , month , day , index);
+                            } , this.statusChangeDuration)
+                        }
+
+                    }
+                    else if(type == this.TYPE_DAY){
+                       day =  parseInt(valPart);
+
+                        if (this.statusChange != null){
+                            clearTimeout(this.statusChange);
+                        }
+                        if (valPart.toString().length == 2){
+                            window[commitNewTime](year , month , day , index);
+                        }
+                        else{
+                            this.statusChange = setTimeout(()=>{
+                                window[commitNewTime](year , month , day , index);
+                            } , this.statusChangeDuration)
+                        }
+
                     }
 
                 }
-                else if( type == this.TYPE_MONTH){
-                    number =  month.toString().padStart(2, '0');
+                else if (prop_type == this.TYPE_INPUT_FULL_DIGIT){
+                    let val = valPart.replace(/\D/g, ''); // فقط عددها
 
-                    let newNumber = number.split('');
-                    newNumber[index-1] = valPart;
-                    newNumber = newNumber.join('');
-                    month = parseInt(newNumber);
-                    month = month > 12 ? 12 : month;
-                    month = month == 0 ? 1 : month;
+                    if (val.length > 8) val = val.slice(0, 8);
 
-                }
-                else if(type == this.TYPE_DAY){
-                    number =  day.toString().padStart(2, '0');
-
-                    let newNumber = number.split('');
-                    newNumber[index-1] = valPart;
-                    newNumber = newNumber.join('');
-                    day = parseInt(newNumber);
-
-                    const getDaysInJalaliMonth  = super.getMethod(config , "getDaysInJalaliMonth"    , null );
-                    const maxDay = window[getDaysInJalaliMonth](year+1 , month+1);
-                    day =  day > maxDay ? maxDay : day;
-                    day =  day == 0 ? 1 : day;
+                    if (val.length >= 4) year = parseInt(val.slice(0, 4));
+                    if (val.length >= 6) month = parseInt(val.slice(4, 6));
+                    if (val.length >= 8) day = parseInt(val.slice(6, 8));
                 }
 
-                const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
-                const value = window[jalaliToTimeUnix](year , month , day);
-
-                config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
-                this.changeProperty(config);
 
             }
         };
 
+        methods["commitNewTime"] = {
+            name: `commitNewTime${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            fn: (year , month , day , index) => {
+
+                /// year
+                year = parseInt(year);
+                const prop_prevYears     =        config.hasOwnProperty("prop_prevYears")      ?  config.prop_prevYears                :  this.DEFULAT_PERV_YEAR;
+                const prop_nextYears     =        config.hasOwnProperty("prop_nextYears")      ?  config.prop_nextYears                :  this.DEFULAT_NEXT_YEAR;
+
+                const getPartDate  = super.getMethod(config , "getPartDate"    , null );
+                const datePart = window[getPartDate]();
+                const thisYear = datePart != null && datePart.hasOwnProperty("year") ? parseInt(datePart.year) : this.DEFULAT_YEAR;
+
+                if (year > thisYear + prop_nextYears -1 ){
+                    year = thisYear + prop_nextYears -1 ;
+                }
+                else if (year < thisYear - prop_prevYears - 1){
+                    year = thisYear - prop_prevYears;
+                }
+
+                /// month
+                month = parseInt(month).toString().padStart(2, '0');
+                month = parseInt(month);
+                month = month > 12 ? 12 : month;
+                month = month == 0 ? 1 : month;
+
+                /// day
+                day =  parseInt(day).toString().padStart(2, '0');
+                day =  parseInt(day);
+
+                const getDaysInJalaliMonth  = super.getMethod(config , "getDaysInJalaliMonth"    , null );
+                const maxDay = window[getDaysInJalaliMonth](year+1 , month+1);
+                day =  day > maxDay ? maxDay : day;
+                day =  day == 0 ? 1 : day;
+
+
+                if (year >0 && month>0 && day>0){
+                    /// value
+                    const jalaliToTimeUnix  = super.getMethod(config , "jalaliToTimeUnix"    , null );
+                    const value = window[jalaliToTimeUnix](year , month , day);
+
+                    config.prop_value = value != null && value.hasOwnProperty("timeUnix") ? value.timeUnix : null;
+                    this.changeProperty(config);
+                }
+            }
+        };
 
         methods["moveToNext"] = {
             name: `moveToNext${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
-            fn: (event , nextFieldID) => {
+            fn: (event , nextFieldID , type=null) => {
+                const prop_type          =   config.hasOwnProperty("prop_type")           ?  config.prop_type             :  this.TYPE_INPUT_ONE_DIGIT;
 
-                if (event.key !== 'Backspace' && event.target.value !== '') {
-                    if (nextFieldID !== '') {
-                        const el =  document.getElementById(nextFieldID);
-                        if (el != null){
-                            el.focus();
+                let statusMove = false;
+                const valPart = event.target.value;
 
-                            config.var_focusDatePart = nextFieldID;
-                            this.changeProperty(config);
+                if (prop_type == this.TYPE_INPUT_ONE_DIGIT){
+                    statusMove = true;
+                }
+                else if (prop_type == this.TYPE_INPUT_PART_DIGIT){
+
+                    let number = 0;
+                    if (type == this.TYPE_YAER){
+                        if (valPart.length == 4){
+                            statusMove = true
+                        }
+                    }
+                    else if( type == this.TYPE_MONTH){
+                        if (valPart.length == 2){
+                            statusMove = true
+                        }
+                    }
+                    else if(type == this.TYPE_DAY){
+                        if (valPart.length == 2){
+                            statusMove = true
                         }
                     }
                 }
 
+                if (statusMove){
+                    if (event.key !== 'Backspace' && event.target.value !== '') {
+                        if (nextFieldID !== '') {
+                            const el =  document.getElementById(nextFieldID);
 
+                            if (el != null){
+                                el.focus();
+
+                                config.var_focusDatePart = nextFieldID;
+                                this.changeProperty(config);
+                            }
+                        }
+                    }
+                }
             }
         };
+
         methods["moveToPrev"] = {
             name: `moveToPrev${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
-            fn: (event , prevFieldID) => {
-                if (event.key === 'Backspace' && event.target.value === '') {
-                    if (prevFieldID !== '') {
-                        const el = document.getElementById(prevFieldID);
-                        if (el != null){
-                            el.focus();
+            fn: (event , prevFieldID , type=null , digit=null) => {
 
-                            config.var_focusDatePart = nextFieldID;
-                            this.changeProperty(config);
+                const prop_type  =   config.hasOwnProperty("prop_type")    ?  config.prop_type   :  this.TYPE_INPUT_ONE_DIGIT;
+
+                let statusMove = false;
+                const valPart = event.target.value;
+
+                if (prop_type == this.TYPE_INPUT_ONE_DIGIT){
+                    statusMove = true;
+                }
+                else if (prop_type == this.TYPE_INPUT_PART_DIGIT){
+                    statusMove = true
+                }
+
+
+                if (statusMove){
+                    if (event.key === 'Backspace' && event.target.value === '') {
+                        if (prevFieldID !== '') {
+                            const el = document.getElementById(prevFieldID);
+                            if (el != null){
+                                el.focus();
+
+                                config.var_focusDatePart = prevFieldID;
+                                this.changeProperty(config);
+                            }
                         }
                     }
                 }
             }
         };
+
+        methods["commitNewDate"] = {
+            name: `commitNewDate${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            fn: (event) => {
+                const commitNewTime  = super.getMethod(config , "commitNewTime"    , null );
+
+                let year = 0;
+                let month = 0;
+                let day = 0;
+                if (event.key === "Enter") {
+                    let val = event.target.value.replace(/\D/g, '');
+
+                    if (val.length > 8) val = val.slice(0, 8);
+
+                    if (val.length >= 4) year = parseInt(val.slice(0, 4));
+                    if (val.length >= 6) month = parseInt(val.slice(4, 6));
+                    if (val.length >= 8) day = val.slice(6, 8);
+
+                    window[commitNewTime](year , month , day , null);
+                }
+            }
+        };
+
         methods["onFocus"] = {
             name: `onFocus${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
             fn: (event , myElId) => {
-                const el = document.getElementById(myElId);
-                if (el != null){
-                    el.select();
 
-                    // if (myElId == "Date_8"){
-                    //     el.select();
-                    // }
-                    // else {
-                    //     el.value = "";
-                    // }
+                const prop_type  =   config.hasOwnProperty("prop_type")    ?  config.prop_type   :  this.TYPE_INPUT_ONE_DIGIT;
 
-                    config.var_focusDatePart = myElId;
-                    this.changeProperty(config);
+                if (prop_type == this.TYPE_INPUT_ONE_DIGIT || prop_type == this.TYPE_INPUT_PART_DIGIT){
+
+                    const el = document.getElementById(myElId);
+                    if (el != null){
+                        el.select();
+
+                        // if (myElId == "Date_8"){
+                        //     el.select();
+                        // }
+                        // else {
+                        //     el.value = "";
+                        // }
+
+                        config.var_focusDatePart = myElId;
+                        this.changeProperty(config);
+                    }
+
                 }
+
             }
         };
 
@@ -3370,28 +3617,230 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     templateFn = (data , componentSlots , el) => {
 
         const var_showFormSelector      =        data.hasOwnProperty("var_showFormSelector")         ?  data.var_showFormSelector       :  false;
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
+        const prop_type                 =        data.hasOwnProperty("prop_type")                    ?  data.prop_type                  :  this.TYPE_INPUT_ONE_DIGIT;
 
         const prop_background2          =        data.hasOwnProperty("prop_background2")             ?  data.prop_background2           :  this.DEFULAT_BACKGROUND_2;
         const prop_name                 =        data.hasOwnProperty("prop_name")                    ?  data.prop_name                  :  "No-Name-input-"+Math.floor(Math.random() * 10000);
         const prop_value                =        data.hasOwnProperty("prop_value")                   ?  data.prop_value                 :  null;
 
+
         const moveToNext                = super.getMethod(data , "moveToNext" , null);
         const moveToPrev                = super.getMethod(data , "moveToPrev" , null);
         const onFocus                   = super.getMethod(data , "onFocus"    , null);
         const onChangeDateDigit         = super.getMethod(data , "onChangeDateDigit"    , null);
-        const getDigitDatePart         = super.getMethod(data , "getDigitDatePart"    , null );
+        const getDigitDatePart          = super.getMethod(data , "getDigitDatePart"     , null );
+        const commitNewDate             = super.getMethod(data , "commitNewDate"     , null );
 
-        const yearDigitOne   = window[getDigitDatePart](this.TYPE_YAER , 1);
-        const yearDigitTwo   = window[getDigitDatePart](this.TYPE_YAER , 2);
-        const yearDigitThree = window[getDigitDatePart](this.TYPE_YAER , 3);
-        const yearDigitFour  = window[getDigitDatePart](this.TYPE_YAER , 4);
+        const selectDate                = super.getMethod(data , "selectDate" );
 
-        const monthDigitOne  = window[getDigitDatePart](this.TYPE_MONTH , 1);
-        const monthDigitTwo  = window[getDigitDatePart](this.TYPE_MONTH , 2);
+        let inputs = "";
+        if (prop_type == this.TYPE_INPUT_ONE_DIGIT){
 
-        const dayDigitOne    = window[getDigitDatePart](this.TYPE_DAY , 1);
-        const dayDigitTwo    = window[getDigitDatePart](this.TYPE_DAY , 2);
+            const yearDigitOne   = window[getDigitDatePart](this.TYPE_YAER , 1);
+            const yearDigitTwo   = window[getDigitDatePart](this.TYPE_YAER , 2);
+            const yearDigitThree = window[getDigitDatePart](this.TYPE_YAER , 3);
+            const yearDigitFour  = window[getDigitDatePart](this.TYPE_YAER , 4);
 
+            const monthDigitOne  = window[getDigitDatePart](this.TYPE_MONTH , 1);
+            const monthDigitTwo  = window[getDigitDatePart](this.TYPE_MONTH , 2);
+
+            const dayDigitOne    = window[getDigitDatePart](this.TYPE_DAY , 1);
+            const dayDigitTwo    = window[getDigitDatePart](this.TYPE_DAY , 2);
+
+            inputs = `
+                    <div class="row parts-form-input-date">
+                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                                  <div class="col-3 pe-0 ps-1 m-0">
+                                       <input
+                                             id="Date_1-${var_randomId}" 
+                                             oninput="${moveToNext}(event , 'Date_2-${var_randomId}'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 1)" 
+                                             onfocus="${onFocus}(event  , 'Date_1-${var_randomId}')"
+                                             onkeydown="${moveToPrev}(event  , null)"
+                                             value="${yearDigitOne}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control "  />
+                                  </div>
+                                  <div class="col-3 pe-0 ps-1 m-0">
+                                       <input
+                                             id="Date_2-${var_randomId}" 
+                                             oninput="${moveToNext}(event , 'Date_3-${var_randomId}'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 2)" 
+                                             onfocus="${onFocus}(event  , 'Date_2-${var_randomId}')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_1-${var_randomId}')"
+                                             value="${yearDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                  </div>
+                                  <div class="col-3 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_3-${var_randomId}"
+                                             oninput="${moveToNext}(event , 'Date_4-${var_randomId}'); ${onChangeDateDigit}(event ,'${this.TYPE_YAER}' , 3)" 
+                                             onfocus="${onFocus}(event  , 'Date_3-${var_randomId}')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_2-${var_randomId}')"
+                                             value="${yearDigitThree}"
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                  </div>
+                                  <div class="col-3 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_4-${var_randomId}" 
+                                             oninput="${moveToNext}(event , 'Date_5-${var_randomId}'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 4)" 
+                                             onfocus="${onFocus}(event  , 'Date_4-${var_randomId}')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_3-${var_randomId}')"
+                                             value="${yearDigitFour}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
+                                  <div class="col-6 pe-0 ps-1 m-0">
+                                       <input                                           
+                                             id="Date_5-${var_randomId}"
+                                             oninput="${moveToNext}(event , 'Date_6-${var_randomId}'); ${onChangeDateDigit}(event , '${this.TYPE_MONTH}' , 1)" 
+                                             onfocus="${onFocus}(event  , 'Date_5-${var_randomId}')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_4-${var_randomId}')"
+                                             value="${monthDigitOne}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                  </div>
+                                  <div class="col-6 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_6-${var_randomId}" 
+                                             oninput="${moveToNext}(event , 'Date_7-${var_randomId}'); ${onChangeDateDigit}(event , '${this.TYPE_MONTH}' , 2)" 
+                                             onfocus="${onFocus}(event  , 'Date_6-${var_randomId}')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_5-${var_randomId}')"
+                                             value="${monthDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                                  <div class="col-6 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_7-${var_randomId}" 
+                                             oninput="${moveToNext}(event , 'Date_8-${var_randomId}'); ${onChangeDateDigit}(event , '${this.TYPE_DAY}' , 1)" 
+                                             onfocus="${onFocus}(event  , 'Date_7-${var_randomId}')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_6-${var_randomId}')"
+                                             value="${dayDigitOne}"
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                  </div>
+                                  <div class="col-6 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_8-${var_randomId}" 
+                                             oninput="${moveToNext}(event , null); ${onChangeDateDigit}(event , '${this.TYPE_DAY}' , 2)" 
+                                             onfocus="${onFocus}(event  , 'Date_8-${var_randomId}')"
+                                             onkeydown="${moveToPrev}(event  , 'Date_7-${var_randomId}')"
+                                             value="${dayDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                  </div>
+                             </div>
+                         </div>
+            `;
+        }
+        else if (prop_type == this.TYPE_INPUT_PART_DIGIT){
+
+            const yearDigitOne   = window[getDigitDatePart](this.TYPE_YAER);
+
+            const monthDigitOne  = window[getDigitDatePart](this.TYPE_MONTH);
+
+            const dayDigitOne    = window[getDigitDatePart](this.TYPE_DAY);
+
+            inputs = `
+                    <div class="row parts-form-input-date">
+                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <input
+                                             id="Date_1-${var_randomId}" 
+                                             oninput="${moveToNext}(event , 'Date_2-${var_randomId}'  , '${this.TYPE_YAER}'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 1)" 
+                                             onfocus="${onFocus}(event  , 'Date_1-${var_randomId}' , '${this.TYPE_YAER}')"
+                                             onkeydown="${moveToPrev}(event  , null)"
+                                             value="${yearDigitOne}" 
+                                             type="text"  maxlength="4" class="inputs-date text-center form-control "  />
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <input                                           
+                                             id="Date_2-${var_randomId}" 
+                                             oninput="${moveToNext}(event , 'Date_3-${var_randomId}'  , '${this.TYPE_MONTH}'); ${onChangeDateDigit}(event , '${this.TYPE_MONTH}' , 2)" 
+                                             onfocus="${onFocus}(event  , 'Date_2-${var_randomId}' , '${this.TYPE_MONTH}' )"
+                                             onkeydown="${moveToPrev}(event  , 'Date_1-${var_randomId}')"
+                                             value="${monthDigitOne}" 
+                                             type="text"  maxlength="2" class="inputs-date text-center form-control"  />
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_3-${var_randomId}" 
+                                             oninput="${moveToNext}(event , null  , '${this.TYPE_DAY}'); ${onChangeDateDigit}(event , '${this.TYPE_DAY}' , 3)" 
+                                             onfocus="${onFocus}(event  , 'Date_3-${var_randomId}' , '${this.TYPE_DAY}' )"
+                                             onkeydown="${moveToPrev}(event  , 'Date_2-${var_randomId}')"
+                                             value="${dayDigitOne}"
+                                             type="text"  maxlength="2" class="inputs-date text-center form-control"  />
+                                  </div>
+                             </div>
+                     </div>
+            `;
+        }
+        else if (prop_type == this.TYPE_INPUT_FULL_DIGIT){
+            const digitAll   = window[getDigitDatePart]();
+            inputs = `
+                    <div class="row parts-form-input-date">
+                    
+                           <input
+                                 id="Date_1-${var_randomId}" 
+                                 oninput="${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 1)" 
+                                 onfocus="${onFocus}(event)"
+                                 onkeydown="${commitNewDate}(event)"
+                                 value="${digitAll}" 
+                                 type="text"  maxlength="10" class="inputs-date text-center form-control "  />
+                                 
+                    </div>
+            `;
+        }
+        else if (prop_type == this.TYPE_INPUT_FRIZE_DIGIT){
+            const yearDigitOne   = window[getDigitDatePart](this.TYPE_YAER);
+
+            const monthDigitOne  = window[getDigitDatePart](this.TYPE_MONTH);
+
+            const dayDigitOne    = window[getDigitDatePart](this.TYPE_DAY);
+
+            inputs = `
+                    <div class="row parts-form-input-date" onclick="${selectDate}">
+                          
+                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <span class="inputs-date text-center form-control">
+                                               ${yearDigitOne}
+                                        </span>
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <span class="inputs-date text-center form-control">
+                                               ${monthDigitOne}
+                                        </span>
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                         <span class="inputs-date text-center form-control">
+                                               ${dayDigitOne}
+                                        </span>
+                                  </div>
+                             </div>
+                     </div>
+            `;
+        }
+
+
+        // <component-position-element id="form-position-date-${var_randomId}">
+        //     <component-body>
+        //
+        //     </component-body>
+        // </component-position-element>
 
         return `
 <style>
@@ -3413,11 +3862,15 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     font-size: 15pt;
 }
  #${el.id} .form-input-date{
-     padding-right: calc(30px + 10%);
-     padding-left: calc(20px + 10%);
+     padding-right: calc(30px + 20%);
+     padding-left: calc(20px + 20%);
      padding-top: 2px;
      padding-bottom: 2px;
      height: 38px;
+}
+ #${el.id} .parts-form-input-date{
+     width: 175px;
+     margin: auto;
 }
  #${el.id} .part-form-input-date-1:after , .part-form-input-date-2:after{
     content: "/";
@@ -3430,6 +3883,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
      line-height: 30px;
      padding: 0;
      margin: 0;
+     border: none;
+     outline: none;
 }
 
  #${el.id} .form-choose-date{
@@ -3505,104 +3960,25 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
           <section class="component-element-structure form-group mb-2">
 
                 <div class="d-block">
-<component-label id="label-input-date"></component-label>
+<component-label id="label-input-date-${var_randomId}"></component-label>
                 </div>
 
                 <div class="position-relative">
                 
                 <input name="${prop_name}" value="${prop_value}" type="hidden"/>
 
-<component-button id="btn-clear-date">
+<component-button id="btn-clear-date-${var_randomId}">
 </component-button>  
                     
                    
-<component-button id="btn-show-date-form">
+<component-button id="btn-show-date-form-${var_randomId}">
 </component-button>  
 
                     <div class="form-input-date form-control  line-height-30px  position-relative text-center">
-                         <div class="row ">
-                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
-                                  <div class="col-3 pe-0 ps-1 m-0">
-                                       <input
-                                             id="Date_1" 
-                                             oninput="${moveToNext}(event , 'Date_2'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 1)" 
-                                             onfocus="${onFocus}(event  , 'Date_1')"
-                                             onkeydown="${moveToPrev}(event  , null)"
-                                             value="${yearDigitOne}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control "  />
-                                  </div>
-                                  <div class="col-3 pe-0 ps-1 m-0">
-                                       <input
-                                             id="Date_2" 
-                                             oninput="${moveToNext}(event , 'Date_3'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 2)" 
-                                             onfocus="${onFocus}(event  , 'Date_2')"
-                                             onkeydown="${moveToPrev}(event  , 'Date_1')"
-                                             value="${yearDigitTwo}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
-                                  </div>
-                                  <div class="col-3 pe-0 ps-1 m-0">
-                                       <input 
-                                             id="Date_3"
-                                             oninput="${moveToNext}(event , 'Date_4'); ${onChangeDateDigit}(event ,'${this.TYPE_YAER}' , 3)" 
-                                             onfocus="${onFocus}(event  , 'Date_3')"
-                                             onkeydown="${moveToPrev}(event  , 'Date_2')"
-                                             value="${yearDigitThree}"
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
-                                  </div>
-                                  <div class="col-3 pe-0 ps-1 m-0">
-                                       <input 
-                                             id="Date_4" 
-                                             oninput="${moveToNext}(event , 'Date_5'); ${onChangeDateDigit}(event , '${this.TYPE_YAER}' , 4)" 
-                                             onfocus="${onFocus}(event  , 'Date_4')"
-                                             onkeydown="${moveToPrev}(event  , 'Date_3')"
-                                             value="${yearDigitFour}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
-                                  </div>
-                             </div>
-                             
-                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
-                                  <div class="col-6 pe-0 ps-1 m-0">
-                                       <input                                           
-                                             id="Date_5"
-                                             oninput="${moveToNext}(event , 'Date_6'); ${onChangeDateDigit}(event , '${this.TYPE_MONTH}' , 1)" 
-                                             onfocus="${onFocus}(event  , 'Date_5')"
-                                             onkeydown="${moveToPrev}(event  , 'Date_4')"
-                                             value="${monthDigitOne}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
-                                  </div>
-                                  <div class="col-6 pe-0 ps-1 m-0">
-                                       <input 
-                                             id="Date_6" 
-                                             oninput="${moveToNext}(event , 'Date_7'); ${onChangeDateDigit}(event , '${this.TYPE_MONTH}' , 2)" 
-                                             onfocus="${onFocus}(event  , 'Date_6')"
-                                             onkeydown="${moveToPrev}(event  , 'Date_5')"
-                                             value="${monthDigitTwo}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
-                                  </div>
-                             </div>
-                             
-                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
-                                  <div class="col-6 pe-0 ps-1 m-0">
-                                       <input 
-                                             id="Date_7" 
-                                             oninput="${moveToNext}(event , 'Date_8'); ${onChangeDateDigit}(event , '${this.TYPE_DAY}' , 1)" 
-                                             onfocus="${onFocus}(event  , 'Date_7')"
-                                             onkeydown="${moveToPrev}(event  , 'Date_6')"
-                                             value="${dayDigitOne}"
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
-                                  </div>
-                                  <div class="col-6 pe-0 ps-1 m-0">
-                                       <input 
-                                             id="Date_8" 
-                                             oninput="${moveToNext}(event , null); ${onChangeDateDigit}(event , '${this.TYPE_DAY}' , 2)" 
-                                             onfocus="${onFocus}(event  , 'Date_8')"
-                                             onkeydown="${moveToPrev}(event  , 'Date_7')"
-                                             value="${dayDigitTwo}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
-                                  </div>
-                             </div>
-                         </div>
+                         ${inputs}
                     </div>
+                    
+
                     
                     <section class="form-choose-date position-absolute rounded border shadow-sm w-100  overflow-hidden ${var_showFormSelector ? '' : 'd-none'}">
                     
@@ -3611,30 +3987,30 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                               
                               <div class="form-choose-date-info-year  row  p-0 m-0 border-end border-white ">
                                    <div class="col-3">
-<component-button id="prev-year-selected">
+<component-button id="prev-year-selected-${var_randomId}">
 </component-button>  
                                    </div>
                                    <div class="col-6 position-relative">
-<component-select-option id="select-option-year">
+<component-select-option id="select-option-year-${var_randomId}">
 </component-select-option>
                                    </div>
                                     <div class="col-3">
-<component-button id="next-year-selected">
+<component-button id="next-year-selected-${var_randomId}">
 </component-button>
                                    </div>
                               </div>
                               
                               <div class="form-choose-date-info-month row  p-0 m-0 row  p-0 m-0 border-end border-white">
                                    <div class="col-3">
-<component-button id="prev-month-selected">
+<component-button id="prev-month-selected-${var_randomId}">
 </component-button>  
                                    </div>
                                    <div class="col-6 position-relative">
-<component-select-option id="select-option-month">
+<component-select-option id="select-option-month-${var_randomId}">
 </component-select-option>
                                    </div>
                                    <div class="col-3">
-<component-button id="next-month-selected">
+<component-button id="next-month-selected-${var_randomId}">
 </component-button>
                                    </div>
                               </div>
@@ -3643,7 +4019,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                          
                          
                          <section class="form-choose-date-middle row p-0 border-bottom border-white px-2">
-<component-table id="table-list-days-in-month">
+<component-table id="table-list-days-in-month-${var_randomId}">
 </component-table>
                          </section>
                          
@@ -3651,7 +4027,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                          <section class="form-choose-date-bottom row p-0 border-top border-white px-2 py-1">
                                
 <div class="col-4">
-      <component-button id="accept-date-selected">
+      <component-button id="accept-date-selected-${var_randomId}">
       </component-button>
  </div>
                                
@@ -3659,7 +4035,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
  </div>
                                
  <div class="col-4">
-        <component-button id="now-date-selected">
+        <component-button id="now-date-selected-${var_randomId}">
         </component-button>
  </div>
                                
@@ -3712,6 +4088,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     readyLabelInput  = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
 
         const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
 
@@ -3722,7 +4099,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         const selectDate                =   super.getMethod(data , "selectDate"    , null );
 
         new window.ComponentLabel(
-            "label-input-date" ,
+            "label-input-date-"+var_randomId ,
             {
                 prop_title:            prop_title ,
                 prop_labelClass:       prop_labelClass ,
@@ -3738,10 +4115,12 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     readyBtnShowDateForm  = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const selectDate         =    super.getMethod(data , "selectDate"    , null );
 
         new window.ComponentButton(
-            "btn-show-date-form" ,
+            "btn-show-date-form-"+var_randomId ,
             {
                 classList: []  ,
                 styles: {
@@ -3755,7 +4134,9 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     "right" : "5px",
                     "cursor" : "pointer",
                     "height" : "30px" ,
-                    "margin-top" : "3px!important"
+                    "margin-top" : "3px!important" ,
+                    "border" : "none" ,
+                    "outline" : "none" ,
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
@@ -3770,12 +4151,14 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     readyBtnClearForm  = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const clearInput         =    super.getMethod(data , "clearInput"    , null);
 
         const var_showFormSelector  =    data.hasOwnProperty("var_showFormSelector")    ?  data.var_showFormSelector  :  false;
 
         new window.ComponentButton(
-            "btn-clear-date" ,
+            "btn-clear-date-"+var_randomId ,
             {
                 classList: []  ,
                 styles: {
@@ -3792,7 +4175,9 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     "left" : "5px",
                     "cursor" : "pointer",
                     "height" : "30px" ,
-                    "margin-top" : "3px!important"
+                    "margin-top" : "3px!important",
+                    "border" : "none" ,
+                    "outline" : "none" ,
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
@@ -3807,6 +4192,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     readyBtnPrevYear  = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const goToYear  =    super.getMethod(data , "goToYear"  , null );
 
         const goToYearSelectedPrev   =    super.getMethod(data , "goToYearSelected"   , null );
@@ -3818,7 +4205,9 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 prop_btnStyles : {
                     "line-height" : "35px" ,
                     "font-size" : "14pt" ,
-                    "cursor" : "pointer"
+                    "cursor" : "pointer",
+                    "border" : "none" ,
+                    "outline" : "none" ,
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
@@ -3832,17 +4221,21 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     }
 
     readyBtnNextYear  = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const goToYear  =    super.getMethod(data , "goToYear"  , null );
 
         const goToYearSelectedNext   =    super.getMethod(data , "goToYearSelected" , null );
         new window.ComponentButton(
-            "next-year-selected" ,
+            "next-year-selected-"+var_randomId ,
             {
                 prop_btnClass : ["text-white text-center d-block"] ,
                 prop_btnStyles : {
                     "line-height" : "35px" ,
                     "font-size" : "14pt" ,
-                    "cursor" : "pointer"
+                    "cursor" : "pointer",
+                    "border" : "none" ,
+                    "outline" : "none" ,
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
@@ -3856,6 +4249,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     }
 
     readySelectOptionYear  = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
 
         const prop_prevYears     =        data.hasOwnProperty("prop_prevYears")      ?  data.prop_prevYears      :  this.DEFULAT_PERV_YEAR;
         const prop_nextYears     =        data.hasOwnProperty("prop_nextYears")      ?  data.prop_nextYears      :  this.DEFULAT_NEXT_YEAR;
@@ -3877,10 +4271,11 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         const goToYearSelected   =    super.getMethod(data , "goToYearSelected" , null );
 
         new window.ComponentSelectOption(
-            "select-option-year" ,
+            "select-option-year-"+var_randomId ,
             {
                 prop_type:1 ,
                 prop_title:null ,
+                prop_optionWidth : "150px" ,
                 prop_name:"date-picker-year" ,
                 prop_optionIconColor:"#ffffff" ,
                 prop_titleClass:"text-white text-center" ,
@@ -3897,16 +4292,20 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     readyBtnPrevMonth  = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const goToMonth  =    super.getMethod(data , "goToMonth"  , null );
 
         new window.ComponentButton(
-            "prev-month-selected" ,
+            "prev-month-selected-"+var_randomId ,
             {
                 prop_btnClass : ["text-white text-center d-block"] ,
                 prop_btnStyles : {
                     "line-height" : "35px" ,
                     "font-size" : "14pt" ,
-                    "cursor" : "pointer"
+                    "cursor" : "pointer",
+                    "border" : "none" ,
+                    "outline" : "none" ,
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
@@ -3920,16 +4319,20 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     }
 
     readyBtnNextMonth  = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const goToMonth  =    super.getMethod(data , "goToMonth"  , null );
 
         new window.ComponentButton(
-            "next-month-selected" ,
+            "next-month-selected-"+var_randomId ,
             {
                 prop_btnClass : ["text-white text-center d-block"] ,
                 prop_btnStyles : {
                     "line-height" : "35px" ,
                     "font-size" : "14pt" ,
-                    "cursor" : "pointer"
+                    "cursor" : "pointer",
+                    "border" : "none" ,
+                    "outline" : "none" ,
                 } ,
                 prop_btnBackgroundColor : "#ffffff00" ,
                 prop_btnColor : "" ,
@@ -3943,6 +4346,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     }
 
     readySelectOptionMonth = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const var_selected_date   =     data.hasOwnProperty("var_selected_date")        ?  data.var_selected_date      :  null;
         const var_selected_month = var_selected_date != null && var_selected_date.hasOwnProperty("total") &&  var_selected_date.total.hasOwnProperty("month") ?  parseInt(var_selected_date.total.month) : -1;
 
@@ -3966,11 +4371,12 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         ]
 
         new window.ComponentSelectOption(
-            "select-option-month" ,
+            "select-option-month-"+var_randomId ,
             {
                 prop_type:1 ,
                 prop_title:null ,
                 prop_name:"date-picker-month" ,
+                prop_optionWidth : "150px" ,
                 prop_optionIconColor:"#ffffff" ,
                 prop_titleClass:"text-white text-center" ,
                 prop_optionIcon : "" ,
@@ -3986,6 +4392,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     readyTableDays = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
 
         //---------------
         const var_selected_date  =   data.hasOwnProperty("var_selected_date")   ?  data.var_selected_date  :  null;
@@ -4008,7 +4415,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         );
 
         new window.ComponentTable(
-            "table-list-days-in-month" ,
+            "table-list-days-in-month-"+var_randomId ,
             {
                 classList: "row p-0 m-0"  ,
                 id: "table2" ,
@@ -4067,15 +4474,21 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     readyBtnAccept = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const acceptBtnSelected    =    super.getMethod(data , "acceptBtnSelected"  , null );
         const prop_langs           =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
 
         new window.ComponentButton(
-            "accept-date-selected" ,
+            "accept-date-selected-"+var_randomId ,
             {
                 prop_btnBackgroundColor : "#1ec9aa" ,
                 prop_btnColor : "white" ,
                 prop_title : prop_langs != null && prop_langs.hasOwnProperty("_btn_accept_title") ? prop_langs._btn_accept_title : "تایید" ,
+                prop_btnStyles : {
+                    "border" : "none" ,
+                    "outline" : "none" ,
+                } ,
 
                 fn_callback: ()=>{
                     window[acceptBtnSelected]();
@@ -4085,11 +4498,13 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     }
 
     readyBtnNow = (data , componentSlots , el) => {
+        const var_randomId              =        data.hasOwnProperty("var_randomId")                 ?  data.var_randomId               :  0;
+
         const nowBtnSelected       =    super.getMethod(data , "nowBtnSelected"  , null );
         const prop_langs           =   data.hasOwnProperty("prop_langs")      ?  data.prop_langs           :  {};
 
         new window.ComponentButton(
-            "now-date-selected" ,
+            "now-date-selected-"+var_randomId ,
             {
                 prop_btnBackgroundColor : "#1ec9aa" ,
                 prop_btnColor : "white" ,
@@ -4228,6 +4643,76 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
       onclick="${onClickToIcon}">
            ${prop_icon}
 </${prop_isItalik ? "i" : "span"}>
+`;
+    }
+
+}
+
+
+
+
+/*-------------------------------------
+ Component Position Element
+-------------------------------------
+@prop_elementClass
+@prop_elementStyles
+@prop_content || component-body
+
+@prop_positionTop
+@prop_positionLeft
+@prop_positionBottom
+@prop_positionRight
+
+@prop_width
+@prop_height
+-------------------------------------*/
+window.ComponentPositionElement  = class ComponentPositionElement extends ComponentBase{
+
+   constructor(elId , config) {
+
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+
+        super(elId , config , listComponent[ComponentPositionElement.name] , methods);
+
+        this.render()
+    }
+
+    templateFn(data , componentSlots , el){
+
+        //-------------------
+        const var_randomId                  =        data.hasOwnProperty("var_randomId")              ?  data.var_randomId              :  0;
+
+        //-------------------
+        const prop_elementClass             =        data.hasOwnProperty("prop_elementClass")         ?  data.prop_elementClass         :  ["border" , "shadow-sm" , "bg-white" ,"px-2" , "py-1" , "rounded"];
+        const prop_elementStyles            =        data.hasOwnProperty("prop_elementStyles")        ?  data.prop_elementStyles        :  {};
+        const prop_content                  =        data.hasOwnProperty("prop_content")              ?  data.prop_content              :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+
+        const prop_positionTop              =        data.hasOwnProperty("prop_positionTop")          ?  data.prop_positionTop          :  "";
+        const prop_positionLeft             =        data.hasOwnProperty("prop_positionLeft")         ?  data.prop_positionLeft         :  "";
+        const prop_positionBottom           =        data.hasOwnProperty("prop_positionBottom")       ?  data.prop_positionBottom       :  "";
+        const prop_positionRight            =        data.hasOwnProperty("prop_positionRight")        ?  data.prop_positionRight        :  "";
+
+        const prop_width                    =        data.hasOwnProperty("prop_width")                ?  data.prop_width         :  "100%";
+        const prop_height                   =        data.hasOwnProperty("prop_height")               ?  data.prop_elementHeight        :  "200px";
+
+        return `
+<style>
+ #${el.id} .component-element-position-${var_randomId}{
+     ${super.renderListStyle(prop_elementStyles)}
+     z-index: 11;
+     width:  ${prop_width};
+     height: ${prop_height};
+     top:    ${prop_positionTop};
+     left:   ${prop_positionLeft};
+     bottom: ${prop_positionBottom};
+     right:  ${prop_positionRight};
+ }
+</style>
+<section class="component-element-position-${var_randomId} position-absolute ${super.renderListClass(prop_elementClass)}">
+     ${prop_content}
+</section>
 `;
     }
 
