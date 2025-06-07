@@ -79,6 +79,136 @@
                 children: [
 
 
+
+
+                    {
+                        component: 'ComponentSelectOption',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "selectOption" ,
+
+                            prop_name:"asd" ,
+                            prop_title:"asd" ,
+                            prop_itemSelected: 1 ,
+                            prop_options: [
+                                {
+                                    id:1 ,
+                                    name: "sasd"
+                                } ,
+                                {
+                                    id:2 ,
+                                    name: "213245"
+                                }
+                            ] ,
+                            fn_callback: (index)=>{
+                                alert(index)
+                            }
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentSelectOption',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "selectOption2" ,
+
+                            prop_type:1 ,
+                            prop_name:"asd" ,
+                            prop_title:"asd" ,
+                            prop_itemSelected:1 ,
+                            prop_options: [
+                                {
+                                    id:1 ,
+                                    name: "ssss"
+                                } ,
+                                {
+                                    id:2 ,
+                                    name: "aaaa"
+                                },
+                                {
+                                    id:3 ,
+                                    name: "1111"
+                                }
+                            ] ,
+                            fn_callback: (index)=>{
+                                //alert(index)
+                            }
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentSelectOption',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "selectOption3" ,
+
+                            prop_type:1 ,
+                            prop_name:"asd" ,
+                            prop_title:"asd" ,
+
+                            prop_icon: "&#10127;" ,
+                            prop_itemSelected:1 ,
+                            prop_options: [
+                                {
+                                    id:1 ,
+                                    name: "ssss" ,
+                                    data: {
+                                        id:1 ,
+                                        name: "massod" ,
+                                        family: "maref" ,
+                                        age: 30 ,
+                                    }
+                                } ,
+                                {
+                                    id:2 ,
+                                    name: "aaaa",
+                                    data: {
+                                        id:1 ,
+                                        name: "massod" ,
+                                        family: "maref" ,
+                                        age: 31 ,
+                                    }
+                                },
+                                {
+                                    id:3 ,
+                                    name: "1111",
+                                    data: {
+                                        id:1 ,
+                                        name: "massod" ,
+                                        family: "maref" ,
+                                        age: 32 ,
+                                    }
+                                }
+                            ] ,
+                            fn_callback: (index , data)=>{
+                                console.log(index , data)
+                            },
+
+                            prop_btnAddStatus: true ,
+                            prop_btnAddTitle: "asd" ,
+                            fn_clickBtnTools: () =>{
+                                alert("asd")
+                            } ,
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentInfo',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "info1" ,
+
+                            prop_icon: "&#10127;" ,
+                            prop_title: "<b>213123</b>"
+                        }
+                    } ,
+
+
+
                     {
                         component: 'ComponentPositionElement',
                         props: {
@@ -138,6 +268,23 @@
                             prop_messages: [
                                 "a" , "b" , "c"
                             ]
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentIsEmpty',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "isEmpty2" ,
+
+                            prop_title: "it is a test" ,
+                            prop_btnAddStatus: true ,
+                            prop_btnAddTitle : "asd",
+
+                            fn_callback: ()=>{
+                                alert("aaa")
+                            }
                         }
                     } ,
 
@@ -207,30 +354,75 @@
                     } ,
 
 
+
                     {
-                        component: 'ComponentSelectOption',
+                        component: 'ComponentInputPrice',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
-                            id: "selectOption" ,
+                            id: "input-text-price-22222222222" ,
 
-                            prop_name:"asd" ,
-                            prop_title:"asd" ,
-                            prop_itemSelected: 1 ,
-                            prop_options: [
+                            prop_name: "input_price" ,
+                            prop_default: "123456789" ,
+                            prop_icon: "&#10127;" ,
+                            prop_title: "asd" ,
+                            prop_btnAddStatus: true ,
+                            prop_information : [
                                 {
-                                    id:1 ,
-                                    name: "sasd"
-                                } ,
-                                {
-                                    id:2 ,
-                                    name: "213245"
+                                    title: "test 1" ,
+                                    title_backgroundColor: "#b6b6b6" ,
+                                    title_color: "#ffffff" ,
+                                    value: "12554" ,
+                                    value_backgroundColor: "#e7e7e7" ,
+                                    value_color: "#343434" ,
                                 }
                             ] ,
-                            fn_callback: (index)=>{
-                                alert(index)
-                            }
+                            fn_clickBtnTools: () =>{
+                                alert("asd")
+                            } ,
+
+                            fn_changeValue: (val) =>{
+                                console.log(val)
+                            } ,
+
                         }
                     } ,
+
+
+                    {
+                        component: 'ComponentInputPrice',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-text-price-1" ,
+
+                            prop_name: "input" ,
+                            prop_title: "asd" ,
+                            prop_default: "123456789" ,
+                            prop_icon: "&#10126;" ,
+                            prop_information : [
+                                {
+                                    title: "test 1" ,
+                                    title_backgroundColor: "#b6b6b6" ,
+                                    title_color: "#ffffff" ,
+                                    value: "12554" ,
+                                    value_backgroundColor: "#e7e7e7" ,
+                                    value_color: "#343434" ,
+                                }
+                            ]
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentInput',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "input-text" ,
+
+                            prop_title: "test text" ,
+                            prop_icon: "&#10124;" ,
+                        }
+                    } ,
+
 
 
                     {
@@ -290,116 +482,9 @@
                     } ,
 
 
-                    {
-                        component: 'ComponentWidget',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "w1" ,
-
-                            prop_minHeight: 150 ,
-                        },
-                        children:[
-                            {
-                                component: 'body',
-                                children: [
-                                    {
-                                        component: 'h1',
-                                        props: {
-                                            text: "hello world"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    } ,
-
-
-                    {
-                        component: 'ComponentForm',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "form" ,
 
 
 
-                        },
-                        children:[
-                            {
-                                component: 'body',
-                                children: [
-                                    {
-                                        component: 'h1',
-                                        props: {
-                                            text: "hello world"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    } ,
-
-
-                    {
-                        component: 'ComponentInputPrice',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "input-text-price-22222222222" ,
-
-                            prop_name: "input_price" ,
-                            prop_default: "123456789" ,
-                            prop_icon: "&#10127;" ,
-                            prop_btnAddStatus: true ,
-                            fn_addNewItem: () =>{
-                                alert("asd")
-                            } ,
-
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentInputPrice',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "input-text-price-1" ,
-
-                            prop_name: "input" ,
-                            prop_default: "123456789" ,
-                            prop_icon: "&#10126;" ,
-
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentSelectOption',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "selectOption2" ,
-
-                            prop_type:1 ,
-                            prop_name:"asd" ,
-                            prop_title:"asd" ,
-                            prop_itemSelected:1 ,
-                            prop_options: [
-                                {
-                                    id:1 ,
-                                    name: "ssss"
-                                } ,
-                                {
-                                    id:2 ,
-                                    name: "aaaa"
-                                },
-                                {
-                                    id:3 ,
-                                    name: "1111"
-                                }
-                            ] ,
-                            fn_callback: (index)=>{
-                                //alert(index)
-                            }
-                        }
-                    } ,
 
 
 
@@ -448,26 +533,56 @@
 
 
 
-                    {
-                        component: 'ComponentInput',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
-                            id: "input-text" ,
 
-                            prop_title: "test text" ,
-                            prop_icon: "&#10124;" ,
-                        }
+
+
+
+                    {
+                        component: 'ComponentWidget',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "w1" ,
+
+                            prop_minHeight: 150 ,
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
                     } ,
 
 
                     {
-                        component: 'ComponentIcon',
+                        component: 'ComponentForm',
                         props: {
-                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
-                            id: "input-icon" ,
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "form" ,
 
-                            prop_icon: " &#x2315; " ,
-                        }
+
+
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
                     } ,
 
 
@@ -527,8 +642,6 @@
                         }
                     } ,
 
-
-
                     {
                         component: 'ComponentLabel',
                         props: {
@@ -540,6 +653,16 @@
                         }
                     } ,
 
+
+                    {
+                        component: 'ComponentIcon',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "input-icon" ,
+
+                            prop_icon: " &#x2315; " ,
+                        }
+                    } ,
 
 
 

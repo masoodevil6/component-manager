@@ -384,7 +384,12 @@ tools_converter = {
         return result;
     } ,
 
-    convertPriceToString: function(value, createViewComponent = true) {
+    convertPriceToString: function(value) {
+        if (typeof value !== 'string' && typeof value !== 'number') return null;
+
+        if (typeof value === 'number'){
+            value = value.toString()
+        }
 
         let val =value
             .replace(/,/g, '')        // حذف کاماها
@@ -397,6 +402,17 @@ tools_converter = {
         return  decimalPart !== undefined
             ? `${intPart}.${decimalPart}`
             : intPart;
+
+        return  value;
+    },
+    convertStringToPrice: function(input) {
+        if (typeof input !== 'string' && typeof input !== 'number') return null;
+
+        const cleaned = String(input).replace(/,/g, '');
+
+        if (!/^\d+(\.\d+)?$/.test(cleaned)) return null;
+
+        return Number(cleaned);
     },
 
 

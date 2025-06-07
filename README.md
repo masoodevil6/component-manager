@@ -24,8 +24,36 @@ if (typeof listComponent === 'undefined') {
         ComponentLabel:                      "component-label" ,                          //17
         ComponentIcon:                       "component-icon" ,                           //18
         ComponentPositionElement:            "component-position-element" ,               //19
+        ComponentInfo:                       "component-info" ,                           //20
     }
 }
+```
+
+
+
+
+**5) Component Is Empty:**
+```
+   /*-------------------------------------
+    Component Collapse
+    -------------------------------------
+    @prop_title
+    @prop_icon
+    @prop_iconClass
+
+    @prop_btnAddStatus
+    @prop_btnAddIcon
+    @prop_btnAddTitle
+    @prop_btnAddClass
+
+    @fn_callback
+    -------------------------------------*/
+    new window.ComponentIsEmpty(
+        "element_id" ,
+        {
+
+        }
+    )
 ```
 
 
@@ -52,30 +80,41 @@ if (typeof listComponent === 'undefined') {
 
 
 
+
+
 **10) Component Select Option:**
 ```
-    /*-------------------------------------
-     Component Select Option
-    -------------------------------------
-    @prop_type
-    @prop_name
-    @prop_title
-    @prop_options
-    @prop_optionWidth
-    @prop_selectOptionClass
-    @prop_titleClass
-    @prop_optionHeight
-    @prop_optionItemBackground
-    @prop_optionIcon
-    @prop_optionIconColor
-    @prop_itemSelected
-    
-    @prop_labelClass
-    @prop_labelStyles
-    @prop_labelHoverStyles
+/*-------------------------------------
+ Component Select Option
+-------------------------------------
+@prop_type
+@prop_name
+@prop_title
+@prop_placeholder
 
-    @fn_callback
-    -------------------------------------*/
+@prop_options
+@prop_optionWidth
+@prop_optionHeight
+@prop_optionIcon
+@prop_optionIconColor
+@prop_optionItemBackground
+
+@prop_itemSelected
+@prop_selectOptionClass
+@prop_titleClass
+
+@prop_btnAddStatus
+@prop_btnAddIcon
+@prop_btnAddClass
+@prop_btnAddTitle
+
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@fn_callback
+@fn_clickBtnTools
+-------------------------------------*/
     new window.ComponentSelectOption(
         "element_id" ,
         {
@@ -85,9 +124,26 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
+**11) Component Tabs:**
+```
+   /*-------------------------------------
+     Component Tabs
+   -------------------------------------
+   @prop_tabs           {id   icon}
+   @prop_tabSelected
+
+   @fn_callback
+   -------------------------------------*/
+    new window.ComponentTabs(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
 
 
-**14) Component Input Price:**
+**14) Component Input:**
 ```
 /*-------------------------------------
  Component Input
@@ -122,10 +178,11 @@ if (typeof listComponent === 'undefined') {
     -------------------------------------
     @prop_btnAddStatus
     @prop_btnAddIcon
+    @prop_btnAddClass
+    @@prop_btnAddClass
     @prop_icon
     @prop_name
     @prop_title
-    @prop_langs
     @prop_default
 
     @fn_addNewItem
@@ -249,6 +306,26 @@ if (typeof listComponent === 'undefined') {
 @prop_height
 -------------------------------------*/
     new window.ComponentPositionElement(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**20) Component Info:**
+```
+
+/*-------------------------------------
+ Component Info
+-------------------------------------
+@prop_icon
+@prop_title
+@prop_iconClass
+@prop_iconStyles
+-------------------------------------*/
+    new window.ComponentInfo(
         "element_id" ,
         {
             
