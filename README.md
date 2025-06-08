@@ -93,6 +93,7 @@ if (typeof listComponent === 'undefined') {
 @prop_placeholder
 
 @prop_options
+@prop_optionStyles
 @prop_optionWidth
 @prop_optionHeight
 @prop_optionIcon
@@ -102,6 +103,7 @@ if (typeof listComponent === 'undefined') {
 @prop_itemSelected
 @prop_selectOptionClass
 @prop_titleClass
+@prop_titleStyles
 
 @prop_btnAddStatus
 @prop_btnAddIcon

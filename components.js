@@ -29,6 +29,9 @@ if (typeof listComponent === 'undefined') {
         ComponentInfo:                       "component-info" ,                           //20
     }
 }
+if (typeof components === 'undefined') {
+    var components = {}
+}
 
 
 
@@ -37,7 +40,7 @@ if (typeof listComponent === 'undefined') {
  Component Make:
 ------------------------------------- */
 class ComponentMaker {
-    define(elId , props , componentName, templateFn , onCreate , onRender) {
+    define(elId , props , randomId , componentName, templateFn , onCreate , onRender) {
 
         if (!customElements.get(componentName)) {
 
@@ -77,6 +80,7 @@ class ComponentMaker {
 
 
                     render() {
+
                         const data = JSON.parse(this.getAttribute('data') || '{}');
 
                         let componentSlots = {};
@@ -92,13 +96,26 @@ class ComponentMaker {
                         }
 
                         if (data.hasOwnProperty("prop_show") && data.prop_show){
-                            const html = templateFn(data, componentSlots , this);
+                            const html = templateFn(data, componentSlots , this );
 
-                            const direction = data.hasOwnProperty("prop_direction") ? data.prop_direction : "rtl"
+                            const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : true
 
                             if (this.innerHTML !== html) {
                                 this.innerHTML = html;
-                                this.style.direction = direction
+
+                                const parents = this.querySelectorAll(".component-element-structure");
+
+                                if (parent != null ){
+                                    for (const index in parents) {
+                                        const itemParent = parents[index];
+                                        if (typeof itemParent.style != "undefined"){
+                                            itemParent.style.setProperty('direction', directionRtl ? 'rtl' : 'ltr' , 'important');
+                                            itemParent.style.setProperty('text-align', directionRtl ? 'right' : 'left' , 'important');
+                                        }
+                                    }
+
+                                }
+
                             }
                         }
                         else {
@@ -108,7 +125,7 @@ class ComponentMaker {
 
                         Promise.resolve().then(() => {
                             if (typeof onRender === 'function') {
-                                onRender(data, componentSlots, this);
+                                onRender(data, componentSlots, this );
                             }
                         });
 
@@ -125,6 +142,7 @@ class ComponentMaker {
                             onCreate(data ,this);
                         }
                     }
+
 
                 }
             );
@@ -143,14 +161,17 @@ class ComponentBase{
 
     config = {}
 
-    constructor(elId , config , componentName , methods) {
+    constructor(elId , config , componentName , methods , randomId = null ) {
 
         this.elId = elId;
+        this.randomId = Math.floor(Math.random() * 10000);;
         this.config = this.readyStaticConfig(config);
         this.componentName = componentName // +"-" + Math.floor(Math.random() * 10000);
 
      /*   let el = document.getElementById(elId);
         el = this.replaceTag(elId , this.componentName)*/
+
+        components[randomId] = config;
 
         this.setMethods(methods);
     }
@@ -228,6 +249,8 @@ class ComponentBase{
 
 
 
+
+
     setMethods(methods){
         this.methods = {};
         if (methods != null && typeof methods == "object"){
@@ -294,7 +317,7 @@ class ComponentBase{
 
     }
 
-    render(){
+    render(props){
         this.readyAttrs();
 
         const maker = new ComponentMaker()
@@ -304,6 +327,7 @@ class ComponentBase{
         return maker.define(
             this.elId ,
             this.config ,
+            this.randomId ,
             this.componentName,
             typeof this.templateFn != "undifine" ? this.templateFn : (data ,slots , el) => {
                 return "";
@@ -367,9 +391,9 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
     cursor: pointer;
 }
 </style>
-<div class="component-element-structure mb-2 form-message ${messageStatusClass} text-direction mt-2" role="alert">
+<div class="component-element-structure mb-2 form-message ${messageStatusClass}  mt-2" role="alert">
      ${data.prop_messages[index]}
-      <span class="icon-message  float-end me-1 " onclick="${closeMessage}">&#10005;</span>
+      <span class="icon-message  float-end mx-2 " onclick="${closeMessage}">&#10005;</span>
 </div>
 `;
             }
@@ -968,6 +992,10 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
         return `
 <style>
 
+#${el.id} .form-warning-not-exist-response-${var_randomId}{
+    text-align: center!important;
+}
+
 #${el.id} .icon-warning-not-exist-response-${var_randomId}{
     font-size: 30px;
     display: block;
@@ -976,7 +1004,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 </style>
 
     <section class="component-element-structure mb-2">
-        <section class="border border-danger text-danger text-center rounded shadow-sm">
+        <section class="form-warning-not-exist-response-${var_randomId} border border-danger text-danger  rounded shadow-sm">
             <p class="">
                <span class="icon-warning-not-exist-response-${var_randomId}  ${prop_iconClass}">${prop_icon}</span>
                ${prop_title}
@@ -1015,6 +1043,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
                         "cursor" : "pointer" ,
                         "width" : "160px" ,
                         "height" : "32px" ,
+                        "text-align" : "center!important" ,
                     },
 
                     fn_callback: ()=>{
@@ -1295,6 +1324,8 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 }
 #${el.id} .element-item-body-table span{
    ${super.renderListStyle(prop_tableItemBodyStyles)}
+   
+   text-align: center!important;
 }
 #${el.id} .element-item-body-table:hover span{
    ${super.renderListStyle(prop_tableItemBodyHoverStyles)}
@@ -1462,97 +1493,143 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 @prop_bodyShow
 -------------------------------------*/
 window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
-    constructor(elId , config) {
 
-        let methods = {};
+    props = {};
+
+    constructor(elId , config) {
         config["var_randomId"]= Math.floor(Math.random() * 10000);
 
+        let methods = {};
         methods["showOrHideCollapse"] = {
             name: `showOrHideCollapse_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
             fn: () => {
-                config.prop_bodyShow = !config.prop_bodyShow;
-                this.changeProperty(config);
+                const var_randomId    =        config.hasOwnProperty("var_randomId")        ?  config.var_randomId            :  0;
+
+               if ( components.hasOwnProperty(var_randomId)){
+                    const componentData    =  components[var_randomId];
+
+                    componentData.prop_bodyShow = !componentData.prop_bodyShow;
+
+                    const el = document.getElementById(elId);
+                    const body = el.querySelector(`.body-collapse-${var_randomId}`);
+
+                    if (componentData.prop_bodyShow){
+                        body.classList.remove("d-none");
+                    }
+                    else {
+                        body.classList.add("d-none");
+                    }
+
+                    this.readyLabelIcon(var_randomId);
+
+                }
             }
         };
 
-        super(elId , config , listComponent[ComponentCollapse.name] , methods);
+        super(elId , config , listComponent[ComponentCollapse.name] , methods ,  config["var_randomId"]);
 
-        this.render()
+        this.render();
     }
 
-    templateFn(data , componentSlots , el){
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
 
-        //------------------
-        const var_randomId     =   data.hasOwnProperty("var_randomId")    ?  data.var_randomId        :  0;
+        if ( components.hasOwnProperty(var_randomId)){
 
-        //------------------
-        const prop_title       =   data.hasOwnProperty("prop_title")      ?  data.prop_title          : null;
-        const prop_body        =   data.hasOwnProperty("prop_body")       ?  data.prop_body           :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-        const prop_bodyShow    =   data.hasOwnProperty("prop_bodyShow")   ?  data.prop_bodyShow       : false;
-
-
-        if (prop_title != null){
+            const componentData    =  components[var_randomId];
+            const prop_title       =  componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title          : null;
+            const prop_body        =  componentData.hasOwnProperty("prop_body")        ?  componentData.prop_body           :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_bodyShow    =  componentData.hasOwnProperty("prop_bodyShow")    ?  componentData.prop_bodyShow       : false;
+            console.log(componentData)
 
 
-            return `
+            if ( prop_title != null){
+
+                return `
 <style>
-     #${el.id} .title-collapse{
+     #${el.id} .title-collapse-${  var_randomId}{
         cursor: pointer;
     }
-     #${el.id} .icon-collapse{
-          font-size: 20pt;
-          margin: 0 10px;
-          top: 0;
-          color: #000000;  
-          left: 0;
-          line-height: ${prop_bodyShow ? "20px" : "10px"};
-          padding-top: ${prop_bodyShow ? "15px" : "0px"};
-     }
-     #${el.id} .body-collapse{
+     
+     #${el.id} .body-collapse-${  var_randomId}{
         background-color: ${tools_const.styles.collapse.backgroundColor};
     }
 </style>
 <div class="component-element-structure mx-2 mb-3">
 
-<component-label id="label-component-collapse-${var_randomId}" class="position-relative">
+<component-label id="label-component-collapse-${  var_randomId}" class="position-relative">
    <component-body>
-       ${prop_title}
-       <span class="icon-collapse float-end position-absolute " > ${prop_bodyShow ? "&#129171;" : "&#129169"}  </span>
+       ${ prop_title }
+       
+       <component-icon id="icon-collapse-${  var_randomId}"></component-icon>
+       
    </component-body>
 </component-label>
    
-    <div class="body-collapse shadow-sm p-2 ${prop_bodyShow ? "" : "d-none"}">
-        ${prop_body}
+    <div class="body-collapse-${  var_randomId} shadow-sm p-2 ${prop_bodyShow ? "" : "d-none"}">
+        ${  prop_body }
     </div>
 
 </div>      
                 `;
+            }
+
+            return prop_body;
+
         }
 
-        return prop_body;
     }
 
     onRender = (data , componentSlots , el) =>{
-        this.readyLabelInput(data , componentSlots , el);
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        this.readyLabelInput(var_randomId);
+        this.readyLabelIcon(var_randomId);
     }
 
-    readyLabelInput  = (data , componentSlots , el) => {
+    readyLabelInput  = (var_randomId)  => {
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const var_randomId        =   data.hasOwnProperty("var_randomId")    ?  data.var_randomId   :  0;
+            const componentData = components[var_randomId];
+            const prop_title          =  componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title          : null;
+            const showOrHideCollapse  = super.getMethod(componentData , "showOrHideCollapse" , null);
 
-        const prop_title         =   data.hasOwnProperty("prop_title")       ?  data.prop_title     :  "No Title";
-
-        const showOrHideCollapse = super.getMethod(data , "showOrHideCollapse" , null);
-
-        if (prop_title != null){
-            new window.ComponentLabel(
-                "label-component-collapse-"+var_randomId ,
-                {
-                    fn_callback: ()=>{
-                        window[showOrHideCollapse]()
+            if (prop_title != null){
+                new window.ComponentLabel(
+                    "label-component-collapse-"+  var_randomId ,
+                    {
+                        fn_callback: ()=>{
+                            window[showOrHideCollapse]()
+                        }
                     }
+                )
+            }
+        }
+    }
+
+    readyLabelIcon  = (var_randomId)  => {
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData         = components[var_randomId];
+            const prop_bodyShow         =  componentData.hasOwnProperty("prop_bodyShow")    ?  componentData.prop_bodyShow       : false;
+
+            new window.ComponentIcon(
+                `icon-collapse-${var_randomId}` ,
+                {
+                    prop_icon : prop_bodyShow  ? "&#129171;" : "&#129169" ,
+                    prop_iconClass : ["float-end" , "position-absolute"] ,
+                    prop_iconStyles : {
+                        "font-size" : "20pt",
+                        "margin" : "0 10px",
+                        "top" : "0",
+                        "left" : "0",
+                        "color" : "#000000",
+                        "line-height" :prop_bodyShow  ? "20px" : "10px",
+                        "padding-top" :prop_bodyShow  ? "15px" : "0px"
+                    } ,
                 }
             )
+
         }
     }
 }
@@ -1621,17 +1698,15 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
         return `
 <style>
      #${el.id} .btn-action{
-          ${super.renderListStyle(prop_btnStyles)}
           background-color: ${btnBackgroundColor};
           color:            ${btnColor};
-          
      }
      #${el.id} .btn-action:hover{
          ${super.renderListStyle(prop_btnHoverStyles)}
      }
 </style>
-<div class="component-element-structure mb-2">
-     <button class=" ${super.renderListClass(prop_btnClass)} btn-action  shadow-sm border-0 px-2 py-1 rounded " onclick="${buttonClick}">
+<div class="<!--component-element-structure--> mb-2">
+     <button class=" ${super.renderListClass(prop_btnClass)} btn-action  shadow-sm border-0 px-2 py-1 rounded " style="${super.renderListStyle(prop_btnStyles)}" onclick="${buttonClick}">
          ${prop_title}
      </button>
 </div>
@@ -1653,6 +1728,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @prop_placeholder
 
 @prop_options
+@prop_optionStyles
 @prop_optionWidth
 @prop_optionHeight
 @prop_optionIcon
@@ -1662,6 +1738,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @prop_itemSelected
 @prop_selectOptionClass
 @prop_titleClass
+@prop_titleStyles
 
 @prop_btnAddStatus
 @prop_btnAddIcon
@@ -1865,8 +1942,10 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         const prop_options              = data.hasOwnProperty("prop_options")                  ?  data.prop_options                :  (componentSlots != null && componentSlots.hasOwnProperty("options") ? componentSlots.options : '');
         const prop_optionWidth          = data.hasOwnProperty("prop_optionWidth")              ?  data.prop_optionWidth            :  "100%";
 
+
         const prop_selectOptionClass    = data.hasOwnProperty("prop_selectOptionClass")        ?  data.prop_selectOptionClass      :  "";
-        const prop_titleClass           = data.hasOwnProperty("prop_titleClass")               ?  data.prop_titleClass             :  "text-dark text-center border shadow-sm";
+        const prop_titleClass           = data.hasOwnProperty("prop_titleClass")               ?  data.prop_titleClass             :  "text-dark  border shadow-sm";
+        const prop_titleStyles          = data.hasOwnProperty("prop_titleStyles")              ?  data.prop_titleStyles            :  {};
         const prop_optionHeight         = data.hasOwnProperty("prop_optionHeight")             ?  data.prop_optionHeight           :   130;
         const prop_optionItemBackground = data.hasOwnProperty("prop_optionItemBackground")     ?  data.prop_optionItemBackground   :  "#13b799";
 
@@ -1923,7 +2002,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
    line-height: 40pt;
    height: 34px;
    margin: 0 10px;  
-   color: ${prop_optionIconColor};
+   color: ${prop_optionIconColor}; 
    left: ${prop_btnAddStatus ? "165px" : "10px"};
 }
  #${el.id} .custom-select-${var_randomId}{
@@ -1943,7 +2022,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 }
 </style>
  <section class="component-element-structure mb-2 form-group mb-4 position-relative">
-        <div class="d-block text-end">
+        <div class="d-block ">
 <component-label id="label-component-select-option-${var_randomId}"></component-label>
         </div>
         
@@ -1953,7 +2032,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
               <select name="${prop_name}" 
                       id="${prop_name}-${var_randomId}"
                       value="${prop_itemSelected}"
-                      class="custom-select-${var_randomId} form-control  w-100 rounded line-height-30px text-end"
+                      class="custom-select-${var_randomId} form-control  w-100 rounded line-height-30px "
                       onchange="${changeItemSelected}">
                  ${optionsStr}
               </select>  
@@ -1976,7 +2055,7 @@ ${btnAddItem}
                         let value = item.hasOwnProperty('id') ? item.id : 0;
                         if (typeof item.name.includes == "undefined" || item.name.includes(var_textSearch)){
                             optionsStr += `
-<div class="select-title-inside-title-${var_randomId} rounded text-center ${prop_itemSelected != null && value == prop_itemSelected ? 'select-title-inside-item_active-'+var_randomId : ''}"
+<div class="select-title-inside-title-${var_randomId} rounded  ${prop_itemSelected != null && value == prop_itemSelected ? 'select-title-inside-item_active-'+var_randomId : ''}"
    onclick="${selectItemOption+`(${item.id} , event)`}"> ${item.name} 
 </div>
                 `
@@ -1993,11 +2072,13 @@ ${btnAddItem}
 <style>
  #${el.id} .select-title-${var_randomId}{
     width: 10px;
-    line-height: 20px;
-    height: 35px;
+    line-height: 30px;
+    height: 35px; 
     cursor: pointer;
     padding-left: ${prop_btnAddStatus ? "180px" : "20px"};
     padding-right: 30px;
+    background-color: white;
+    ${super.renderListStyle(prop_titleStyles)}
 }
  #${el.id} .arrow-selector-option-${var_randomId} {
    font-size: 20pt;
@@ -2013,6 +2094,9 @@ ${btnAddItem}
      position: relative;
      z-index: 10;
 }
+ #${el.id} .select-title-inside-title-${var_randomId}{
+     padding: 0 10px !important;
+}
  #${el.id} .select-title-inside-title-${var_randomId}:hover{
      background-color: ${prop_optionItemBackground};
      color: white;
@@ -2024,25 +2108,25 @@ ${btnAddItem}
 }
  #${el.id} .icon-select-title-${var_randomId} {
     z-index: 10;
-    margin: 0 !important;
-    width: 30px;
-    line-height: 20px;
+    margin: 0 5px !important;
+    width: 20px;
+    line-height: 30px;
     right: 0;
     cursor: pointer;
     font-size: 20pt;
 }
 </style>
 <div class="component-element-structure mb-2 position-relative ${prop_selectOptionClass}">
-       <div class="d-block text-end">
+       <div class="d-block ">
 <component-label id="label-component-select-option-${var_randomId}"></component-label>
        </div>
        
        <input name="${prop_name}" value="${prop_itemSelected}" type="hidden"/>
        
-       <b class="select-title-${var_randomId} form-control w-100 d-block position-relative ${prop_titleClass}" onclick="${showListOptions}">
+       <b class="select-title-${var_randomId}  w-100 d-block position-relative ${prop_titleClass}" onclick="${showListOptions}">
            ${var_titleItemSelected}
               
-              <span class="icon-select-title-${var_randomId} position-absolute text-center" 
+              <span class="icon-select-title-${var_randomId} position-absolute " 
                      onclick="${showListOptions}">
                    ${prop_icon}
               </span>
@@ -2087,7 +2171,7 @@ ${btnAddItem}
         const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
         const prop_type                 =     data.hasOwnProperty("prop_type")                 ?  data.prop_type                          :  0;
 
-        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  ["text-end" , "text-end" , "shadow-sm" , "px-2" ,"py-1" , "d-block "];
+        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  [ "shadow-sm" , "px-2" ,"py-1" , "d-block "];
         const prop_labelStyles          =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles                   :  {};
         const prop_labelHoverStyles     =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_title                         :  {};
 
@@ -2120,6 +2204,7 @@ ${btnAddItem}
 
         const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type                      :  0;
         const prop_optionWidth          = data.hasOwnProperty("prop_optionWidth")              ?  data.prop_optionWidth                   :  "100%";
+        const prop_optionStyles         = data.hasOwnProperty("prop_optionStyles")             ?  data.prop_optionStyles                  :  {};
 
         if (prop_type == 1){
             new window.ComponentPositionElement(
@@ -2127,7 +2212,8 @@ ${btnAddItem}
                 {
                     prop_show: var_showFormSelectOption,
 
-                    prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2" , "text-end"] ,
+                    prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2"] ,
+                    prop_elementStyles: prop_optionStyles ,
                     prop_width: prop_optionWidth,
                 }
             )
@@ -2187,7 +2273,7 @@ ${btnAddItem}
             new window.ComponentButton(
                 "button-tools-component-input-"+var_randomId ,
                 {
-                    prop_btnClass: "border shadow-sm position-absolute px-3  text-center " + prop_btnAddClass.join(" ") ,
+                    prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
                     prop_btnBackgroundColor: "",
                     prop_title: `
 <span class="mx-3">
@@ -2449,7 +2535,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         const prop_value                =        data.hasOwnProperty("prop_value")                 ?  data.prop_value                                           :  "";
         const prop_isFocus              =        data.hasOwnProperty("prop_isFocus")               ?  data.prop_isFocus                                         :  false;
 
-        const prop_inputClass           =    data.hasOwnProperty("prop_inputClass")                 ?  data.prop_inputClass                                      :  ["text-end"];
+        const prop_inputClass           =    data.hasOwnProperty("prop_inputClass")                 ?  data.prop_inputClass                                      :  [];
         const prop_inputStyles          =    data.hasOwnProperty("prop_inputStyles")                ?  data.prop_inputStyles                                     :  {};
 
         const oninput                   =    super.getMethod(data , "oninput"  , "(event)" );
@@ -2521,7 +2607,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
         const prop_type                 =     data.hasOwnProperty("prop_type")                 ?  data.prop_type                          :  0;
 
-        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  ["text-end"];
+        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  [];
         const prop_labelStyles          =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles                   :  {};
         const prop_labelHoverStyles     =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_title                         :  {};
 
@@ -2594,10 +2680,10 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             {
                 prop_icon: prop_icon ,
 
-                prop_iconClass : ["position-absolute" , "text-center"] ,
+                prop_iconClass : ["position-absolute" , ""] ,
                 prop_iconStyles : {
                     "z-index" : "10",
-                    "margin" : "0",
+                    "margin" : "0 5px",
                     "width" : "30px",
                     "line-height" :   "35px",
                     "right" :   "0",
@@ -2819,7 +2905,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 }
  #${el.id} .icon-input-editor-${var_randomId} {
     z-index: 10;
-    margin: 0 !important;
+    margin: 0 5px !important;
     width: 30px;
     line-height: 35px;
     right: 0;
@@ -2849,12 +2935,12 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                               &#10540;
                     </span>
                     
-                    <span class="icon-input-editor-${var_randomId} position-absolute text-center" 
+                    <span class="icon-input-editor-${var_randomId} position-absolute " 
                            onclick="${focustoInput}">
                               ${prop_icon}
                     </span>
 
-                    <input class="input-editor-${var_randomId} form-control  position-relative text-center"
+                    <input class="input-editor-${var_randomId} form-control  position-relative "
                            id="${prop_name}-${var_randomId}" 
                            name="${prop_name}"  
                            ${inputActions}
@@ -2907,7 +2993,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             new window.ComponentButton(
                 "button-tools-component-input-"+var_randomId ,
                 {
-                    prop_btnClass: "border shadow-sm position-absolute px-3  text-center " + prop_btnAddClass.join(" ") ,
+                    prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
                     prop_btnBackgroundColor: "",
                     prop_btnColor: "",
                     prop_btnStyles: {
@@ -2939,7 +3025,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
      <p class=" rounded text-center p-0 m-0" style="background-color: ${itemInfo.hasOwnProperty("title_backgroundColor") ? itemInfo.title_backgroundColor : null}; color: ${itemInfo.hasOwnProperty("title_color") ? itemInfo.title_color : null}; ">
             ${itemInfo.title}
      </p>
-     <p class="text-center p-0 m-0" style="color: ${itemInfo.hasOwnProperty("value_color") ? itemInfo.value_color : null}; ">
+     <p class=" p-0 m-0 text-center" style="color: ${itemInfo.hasOwnProperty("value_color") ? itemInfo.value_color : null}; ">
             ${itemInfo.hasOwnProperty("value") ? itemInfo.value : "---"}
      </p>
 </div>
@@ -2964,8 +3050,6 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                 }
             )
         }
-
-
 
     }
 
@@ -3152,7 +3236,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 </style>
 
 <section class="component-element-structure mb-2">
-   <p class="title-otp text-center mb-0 mx-2 mt-2 rounded">
+   <p class="title-otp text-center  mb-0 px-2 mx-2 mt-2 rounded">
       ${prop_langs.hasOwnProperty("_title_otp_description") ? prop_langs._title_otp_description : ""} 
       <b style="display:block; direction: ltr">
         ${prop_input}
@@ -3177,7 +3261,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         onkeydown="${data.moveToPrev}" 
         onfocus="${data.onfocus}"
         type="text"  maxlength="1"
-        class="input-otp my-1 mx-2  text-center form-control rounded line-height-35px border rounded shadow-sm font-10pt"  />
+        class="input-otp my-1 mx-2 text-center  form-control rounded line-height-35px border rounded shadow-sm font-10pt"  />
 `;
         }
 
@@ -3186,7 +3270,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 
   </div>
 
-  <div class="mt-1 text-center text-direction">
+  <div class="mt-1  text-center">
       <p  id="form-timer-otp"  class="d-inline-block">
         <span  class="countdown bg-secondary rounded text-white px-2 mx-2">
           00:00
@@ -3994,7 +4078,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_1-${var_randomId}')"
                                              onkeydown="${moveToPrev}(event  , null)"
                                              value="${yearDigitOne}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control "  />
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
                                   </div>
                                   <div class="col-3 pe-0 ps-1 m-0">
                                        <input
@@ -4003,7 +4087,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_2-${var_randomId}')"
                                              onkeydown="${moveToPrev}(event  , 'Date_1-${var_randomId}')"
                                              value="${yearDigitTwo}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
                                   </div>
                                   <div class="col-3 pe-0 ps-1 m-0">
                                        <input 
@@ -4012,7 +4096,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_3-${var_randomId}')"
                                              onkeydown="${moveToPrev}(event  , 'Date_2-${var_randomId}')"
                                              value="${yearDigitThree}"
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
                                   </div>
                                   <div class="col-3 pe-0 ps-1 m-0">
                                        <input 
@@ -4021,7 +4105,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_4-${var_randomId}')"
                                              onkeydown="${moveToPrev}(event  , 'Date_3-${var_randomId}')"
                                              value="${yearDigitFour}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
                                   </div>
                              </div>
                              
@@ -4033,7 +4117,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_5-${var_randomId}')"
                                              onkeydown="${moveToPrev}(event  , 'Date_4-${var_randomId}')"
                                              value="${monthDigitOne}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
                                   </div>
                                   <div class="col-6 pe-0 ps-1 m-0">
                                        <input 
@@ -4042,7 +4126,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_6-${var_randomId}')"
                                              onkeydown="${moveToPrev}(event  , 'Date_5-${var_randomId}')"
                                              value="${monthDigitTwo}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
                                   </div>
                              </div>
                              
@@ -4054,7 +4138,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_7-${var_randomId}')"
                                              onkeydown="${moveToPrev}(event  , 'Date_6-${var_randomId}')"
                                              value="${dayDigitOne}"
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
                                   </div>
                                   <div class="col-6 pe-0 ps-1 m-0">
                                        <input 
@@ -4063,7 +4147,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_8-${var_randomId}')"
                                              onkeydown="${moveToPrev}(event  , 'Date_7-${var_randomId}')"
                                              value="${dayDigitTwo}" 
-                                             type="text"  maxlength="1" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
                                   </div>
                              </div>
                          </div>
@@ -4087,7 +4171,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_1-${var_randomId}' , '${this.TYPE_YAER}')"
                                              onkeydown="${moveToPrev}(event  , null)"
                                              value="${yearDigitOne}" 
-                                             type="text"  maxlength="4" class="inputs-date text-center form-control "  />
+                                             type="text"  maxlength="4" class="inputs-date  form-control text-center"  />
                                   </div>
                              </div>
                              
@@ -4099,7 +4183,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_2-${var_randomId}' , '${this.TYPE_MONTH}' )"
                                              onkeydown="${moveToPrev}(event  , 'Date_1-${var_randomId}')"
                                              value="${monthDigitOne}" 
-                                             type="text"  maxlength="2" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="2" class="inputs-date  form-control text-center"  />
                                   </div>
                              </div>
                              
@@ -4111,7 +4195,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                              onfocus="${onFocus}(event  , 'Date_3-${var_randomId}' , '${this.TYPE_DAY}' )"
                                              onkeydown="${moveToPrev}(event  , 'Date_2-${var_randomId}')"
                                              value="${dayDigitOne}"
-                                             type="text"  maxlength="2" class="inputs-date text-center form-control"  />
+                                             type="text"  maxlength="2" class="inputs-date  form-control text-center"  />
                                   </div>
                              </div>
                      </div>
@@ -4128,7 +4212,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                                  onfocus="${onFocus}(event)"
                                  onkeydown="${commitNewDate}(event)"
                                  value="${digitAll}" 
-                                 type="text"  maxlength="10" class="inputs-date text-center form-control "  />
+                                 type="text"  maxlength="10" class="inputs-date  form-control text-center "  />
                                  
                     </div>
             `;
@@ -4145,7 +4229,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                           
                              <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
                                   <div class="col-12 pe-0 ps-1 m-0">
-                                       <span class="inputs-date text-center form-control">
+                                       <span class="inputs-date  form-control text-center">
                                                ${yearDigitOne}
                                         </span>
                                   </div>
@@ -4153,7 +4237,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                              
                              <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
                                   <div class="col-12 pe-0 ps-1 m-0">
-                                       <span class="inputs-date text-center form-control">
+                                       <span class="inputs-date  form-control text-center">
                                                ${monthDigitOne}
                                         </span>
                                   </div>
@@ -4161,7 +4245,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                              
                              <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
                                   <div class="col-12 pe-0 ps-1 m-0">
-                                         <span class="inputs-date text-center form-control">
+                                         <span class="inputs-date  form-control text-center">
                                                ${dayDigitOne}
                                         </span>
                                   </div>
@@ -4171,70 +4255,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         }
 
 
-        /*<section
-            className="form-choose-date position-absolute rounded border shadow-sm w-100  overflow-hidden ${var_showFormSelector ? '' : 'd-none'}">
-
-
-            <section className="form-choose-date-info row p-0 border-bottom border-white px-2">
-
-                <div className="form-choose-date-info-year  row  p-0 m-0 border-end border-white ">
-                    <div className="col-3">
-                        <component-button id="prev-year-selected-${var_randomId}">
-                        </component-button>
-                    </div>
-                    <div className="col-6 position-relative">
-                        <component-select-option id="select-option-year-${var_randomId}">
-                        </component-select-option>
-                    </div>
-                    <div className="col-3">
-                        <component-button id="next-year-selected-${var_randomId}">
-                        </component-button>
-                    </div>
-                </div>
-
-                <div className="form-choose-date-info-month row  p-0 m-0 row  p-0 m-0 border-end border-white">
-                    <div className="col-3">
-                        <component-button id="prev-month-selected-${var_randomId}">
-                        </component-button>
-                    </div>
-                    <div className="col-6 position-relative">
-                        <component-select-option id="select-option-month-${var_randomId}">
-                        </component-select-option>
-                    </div>
-                    <div className="col-3">
-                        <component-button id="next-month-selected-${var_randomId}">
-                        </component-button>
-                    </div>
-                </div>
-
-            </section>
-
-
-            <section className="form-choose-date-middle row p-0 border-bottom border-white px-2">
-                <component-table id="table-list-days-in-month-${var_randomId}">
-                </component-table>
-            </section>
-
-
-            <section className="form-choose-date-bottom row p-0 border-top border-white px-2 py-1">
-
-                <div className="col-4">
-                    <component-button id="accept-date-selected-${var_randomId}">
-                    </component-button>
-                </div>
-
-                <div className="col-4">
-                </div>
-
-                <div className="col-4">
-                    <component-button id="now-date-selected-${var_randomId}">
-                    </component-button>
-                </div>
-
-            </section>
-
-        </section>
-*/
         return `
 <style>
  #${el.id} .icon-clear-input-date{
@@ -4350,7 +4370,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
      background-color: ${prop_background2};
 }
 </style>
-          <section class="component-element-structure form-group mb-2">
+          <section class="<!--component-element-structure--> form-group mb-2">
 
                 <div class="d-block">
 <component-label id="label-input-date-${var_randomId}"></component-label>
@@ -4367,16 +4387,16 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 <component-button id="btn-show-date-form-${var_randomId}">
 </component-button>  
 
-                    <div class="form-input-date form-control  line-height-30px  position-relative text-center">
+                    <div class="form-input-date form-control  line-height-30px  position-relative ">
                          ${inputs}
                     </div>
                     
 <component-position-element id="form-position-date-${var_randomId}">
     <component-body>
          
-         <section class="form-choose-date-info row p-0 border-bottom border-white px-2">
+         <section class="form-choose-date-info row p-0 border-bottom border-white ">
                               
-                              <div class="form-choose-date-info-year  row  p-0 m-0 border-end border-white ">
+                              <div class="form-choose-date-info-year  row  p-0 m-0   ">
                                    <div class="col-3">
 <component-button id="prev-year-selected-${var_randomId}">
 </component-button>  
@@ -4409,13 +4429,13 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                          </section>
                          
                          
-                         <section class="form-choose-date-middle row p-0 border-bottom border-white px-2">
+                         <section class="form-choose-date-middle row p-0 border-bottom border-white ">
 <component-table id="table-list-days-in-month-${var_randomId}">
 </component-table>
                          </section>
                          
                          
-                         <section class="form-choose-date-bottom row p-0 border-top border-white px-2 py-1">
+                         <section class="form-choose-date-bottom row p-0 border-top border-white  py-1">
                                
                                <div class="col-4">
 <component-button id="accept-date-selected-${var_randomId}">
@@ -4507,7 +4527,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
         const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
 
-        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  ["text-end"];
+        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  [];
         const prop_labelStyles          =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles                   :  {};
         const prop_labelHoverStyles     =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_title                         :  {};
 
@@ -4616,7 +4636,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         new window.ComponentButton(
             "prev-year-selected-"+var_randomId ,
             {
-                prop_btnClass : ["text-white text-center d-block"] ,
+                prop_btnClass : ["text-white  d-block"] ,
                 prop_btnStyles : {
                     "line-height" : "35px" ,
                     "font-size" : "14pt" ,
@@ -4644,7 +4664,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         new window.ComponentButton(
             "next-year-selected-"+var_randomId ,
             {
-                prop_btnClass : ["text-white text-center d-block"] ,
+                prop_btnClass : ["text-white  d-block"] ,
                 prop_btnStyles : {
                     "line-height" : "35px" ,
                     "font-size" : "14pt" ,
@@ -4693,7 +4713,14 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 prop_optionWidth : "150px" ,
                 prop_name:"date-picker-year" ,
                 prop_optionIconColor:"#ffffff" ,
-                prop_titleClass:"text-white text-center" ,
+                prop_titleClass:"text-white " ,
+                prop_optionStyles: {
+                    "left" : "-32px"
+                } ,
+                prop_titleStyles: {
+                    "line-height" : "35px!important",
+                    "background-color" : "#ffffff00!important"
+                } ,
                 prop_optionIcon : "" ,
                 prop_itemSelected: var_selected_year,
                 prop_options: listYear ,
@@ -4714,7 +4741,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         new window.ComponentButton(
             "prev-month-selected-"+var_randomId ,
             {
-                prop_btnClass : ["text-white text-center d-block"] ,
+                prop_btnClass : ["text-white  d-block"] ,
                 prop_btnStyles : {
                     "line-height" : "35px" ,
                     "font-size" : "14pt" ,
@@ -4741,7 +4768,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         new window.ComponentButton(
             "next-month-selected-"+var_randomId ,
             {
-                prop_btnClass : ["text-white text-center d-block"] ,
+                prop_btnClass : ["text-white  d-block"] ,
                 prop_btnStyles : {
                     "line-height" : "35px" ,
                     "font-size" : "14pt" ,
@@ -4793,7 +4820,14 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                 prop_name:"date-picker-month" ,
                 prop_optionWidth : "150px" ,
                 prop_optionIconColor:"#ffffff" ,
-                prop_titleClass:"text-white text-center" ,
+                prop_titleClass:"text-white " ,
+                prop_optionStyles: {
+                    "left" : "-32px"
+                } ,
+                prop_titleStyles: {
+                    "line-height" : "35px!important" ,
+                    "background-color" : "#ffffff00!important"
+                } ,
                 prop_optionIcon : "" ,
                 prop_options: listMonth,
                 prop_itemSelected: var_selected_month,
@@ -4848,16 +4882,18 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
                     "background" : prop_background2 ,
                 },
                 prop_tableHeadClass : [ "border-bottom" , "border-white"] ,
-                prop_tableItemHeadClass : [ "text-center" , "text-white"]  ,
+                prop_tableItemHeadClass : [ "" , "text-white"]  ,
                 prop_tableItemHeadStyles : {
                     "font-size" : "8pt" ,
                     "line-height" : "25px" ,
                     "border-left" : "white solid 1px" ,
+                    "border-right" : "white solid 1px" ,
                     "border-bottom" : "white solid 1px" ,
                     "width" : "14%" ,
+                    "text-align" : "center !important" ,
                 },
                 prop_tableBodyClass : [ "bg-white"] ,
-                prop_tableItemBodyClass : [ "text-center" , "rounded" , "d-block"] ,
+                prop_tableItemBodyClass : [ "" , "rounded" , "d-block"] ,
                 prop_tableItemBodyStyles: {
                     "color" : "#525252" ,
                 },
@@ -4972,7 +5008,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
         const prop_title              =   data.hasOwnProperty("prop_title")              ?  data.prop_title              :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
         const prop_for                =   data.hasOwnProperty("prop_for")                ?  data.prop_for                :  "";
 
-        const prop_labelClass         =   data.hasOwnProperty("prop_labelClass")         ?  data.prop_labelClass         :  "text-end shadow-sm px-2 py-1"
+        const prop_labelClass         =   data.hasOwnProperty("prop_labelClass")         ?  data.prop_labelClass         :  "shadow-sm px-2 py-1"
         const prop_labelStyles        =   data.hasOwnProperty("prop_labelStyles")        ?  data.prop_labelStyles        :  null;
         const prop_labelHoverStyles   =   data.hasOwnProperty("prop_labelHoverStyles")   ?  data.prop_labelHoverStyles   :  null;
 
@@ -5022,13 +5058,19 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
         methods["onClickToIcon"] = {
             name: `onClickToIcon${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
-                    config.fn_callback();
+
+                const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    if (componentData.hasOwnProperty("fn_callback") && typeof componentData.fn_callback != null){
+                        componentData.fn_callback();
+                    }
                 }
             }
         };
 
-        super(elId , config , listComponent[ComponentIcon.name] , methods);
+        super(elId , config , listComponent[ComponentIcon.name] , methods , config["var_randomId"]);
 
         this.render()
     }
@@ -5038,27 +5080,34 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
         //-------------------
         const var_randomId             =        data.hasOwnProperty("var_randomId")              ?  data.var_randomId                                         :  0;
 
-        //-------------------
-        const prop_icon                =      data.hasOwnProperty("prop_icon")                   ?  data.prop_icon                                            :  "";
-        const prop_isItalik            =      data.hasOwnProperty("prop_isItalik")               ?  data.prop_isItalik                                        :  false;
 
-        const prop_iconClass           =   data.hasOwnProperty("prop_iconClass")                 ?  data.prop_iconClass                                       :  [];
-        const prop_iconStyles          =   data.hasOwnProperty("prop_iconStyles")                ?  data.prop_iconStyles                                      :  {};
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const onClickToIcon            =    super.getMethod(data , "onClickToIcon"   , "(event)" );
+            const componentData = components[var_randomId];
+            const prop_icon                =  componentData.hasOwnProperty("prop_icon")                       ?  data.prop_icon                                            :  "";
+            const prop_isItalik            =  componentData.hasOwnProperty("prop_isItalik")                   ?  data.prop_isItalik                                        :  false;
 
+            const prop_iconClass           =   componentData.hasOwnProperty("prop_iconClass")                 ?  data.prop_iconClass                                       :  [];
+            const prop_iconStyles          =   componentData.hasOwnProperty("prop_iconStyles")                ?  data.prop_iconStyles                                      :  {};
 
-        return `
+            const onClickToIcon            =   super.getMethod(componentData , "onClickToIcon"   , "(event)" );
+
+            return `
 <style>
  #${el.id} .component-icon-${var_randomId}{
      ${super.renderListStyle(prop_iconStyles)}
  }
 </style>
-<${prop_isItalik ? "i" : "span"} class="component-icon-${var_randomId} ${super.renderListClass(prop_iconClass)}" 
+<section class="component-element-structure">
+    <${prop_isItalik ? "i" : "span"} class="component-icon-${var_randomId} ${super.renderListClass(prop_iconClass)}" 
       onclick="${onClickToIcon}">
            ${prop_icon}
-</${prop_isItalik ? "i" : "span"}>
+    </${prop_isItalik ? "i" : "span"}>
+</section>
 `;
+        }
+
+
     }
 
 }
@@ -5083,36 +5132,36 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
 -------------------------------------*/
 window.ComponentPositionElement  = class ComponentPositionElement extends ComponentBase{
 
-   constructor(elId , config) {
+    props = {};
 
+    constructor(elId , config) {
         config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         let methods = {};
+        super(elId , config , listComponent[ComponentPositionElement.name] , methods , config["var_randomId"]);
 
-        super(elId , config , listComponent[ComponentPositionElement.name] , methods);
+        //this.props.var_randomId         = Math.floor(Math.random() * 10000);
 
         this.render()
     }
 
-    templateFn(data , componentSlots , el){
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
 
-        //-------------------
-        const var_randomId                  =        data.hasOwnProperty("var_randomId")              ?  data.var_randomId              :  0;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        //-------------------
-        const prop_elementClass             =        data.hasOwnProperty("prop_elementClass")         ?  data.prop_elementClass         :  ["border" , "shadow-sm" , "bg-white" ,"px-2" , "py-1" , "rounded"];
-        const prop_elementStyles            =        data.hasOwnProperty("prop_elementStyles")        ?  data.prop_elementStyles        :  {};
-        const prop_content                  =        data.hasOwnProperty("prop_content")              ?  data.prop_content              :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const componentData = components[var_randomId];
+            const prop_content            =  data.hasOwnProperty("prop_content")                    ?  data.prop_content              :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_elementClass       =  data.hasOwnProperty("prop_elementClass")               ?  data.prop_elementClass         :  ["border" , "shadow-sm" , "bg-white" ,"px-2" , "py-1" , "rounded"];
+            const prop_elementStyles      =  data.hasOwnProperty("prop_elementStyles")              ?  data.prop_elementStyles        :  {};
+            const prop_positionTop        =  data.hasOwnProperty("prop_positionTop")                ?  data.prop_positionTop          :  "";
+            const prop_positionLeft       =  data.hasOwnProperty("prop_positionLeft")               ?  data.prop_positionLeft         :  "";
+            const prop_positionBottom     =  data.hasOwnProperty("prop_positionBottom")             ?  data.prop_positionBottom       :  "";
+            const prop_positionRight      =  data.hasOwnProperty("prop_positionRight")              ?  data.prop_positionRight        :  "";
+            const prop_width              =  data.hasOwnProperty("prop_width")                      ?  data.prop_width                :  "100%";
+            const prop_height             =  data.hasOwnProperty("prop_height")                     ?  data.prop_height               :   "200px";
 
-        const prop_positionTop              =        data.hasOwnProperty("prop_positionTop")          ?  data.prop_positionTop          :  "";
-        const prop_positionLeft             =        data.hasOwnProperty("prop_positionLeft")         ?  data.prop_positionLeft         :  "";
-        const prop_positionBottom           =        data.hasOwnProperty("prop_positionBottom")       ?  data.prop_positionBottom       :  "";
-        const prop_positionRight            =        data.hasOwnProperty("prop_positionRight")        ?  data.prop_positionRight        :  "";
-
-        const prop_width                    =        data.hasOwnProperty("prop_width")                ?  data.prop_width                :  "100%";
-        const prop_height                   =        data.hasOwnProperty("prop_height")               ?  data.prop_elementHeight        :  "200px";
-
-        return `
+            return `
 <style>
  #${el.id} .component-element-position-${var_randomId}{
      ${super.renderListStyle(prop_elementStyles)}
@@ -5120,15 +5169,20 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
      width:  ${prop_width};
      height: ${prop_height};
      top:    ${prop_positionTop};
-     left:   ${prop_positionLeft};
+     left:   ${prop_positionLeft };
      bottom: ${prop_positionBottom};
-     right:  ${prop_positionRight};
+     right:  ${ prop_positionRight};
  }
 </style>
-<section class="component-element-position-${var_randomId} position-absolute ${super.renderListClass(prop_elementClass)}">
+<section class="component-element-structure">
+   <section class="component-element-position-${var_randomId} position-absolute ${super.renderListClass(prop_elementClass)}">
      ${prop_content}
+   </section>
 </section>
+
 `;
+        }
+
     }
 
 }
@@ -5146,71 +5200,82 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 @prop_iconStyles
 -------------------------------------*/
 window.ComponentInfo = class ComponentInfo extends ComponentBase{
+
+    props = {};
+
     constructor(elId , config) {
         config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         let methods = {};
-        super(elId , config , listComponent[ComponentInfo.name] , methods);
+        super(elId , config , listComponent[ComponentInfo.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
-    templateFn(data , componentSlots , el){
-        //-------------------
-        const var_randomId                  =        data.hasOwnProperty("var_randomId")              ?  data.var_randomId              :  0;
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
 
-        //-------------------
-        const prop_title               =      data.hasOwnProperty("prop_title")                  ?  data.prop_title                   : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-        const prop_iconClass           =   data.hasOwnProperty("prop_iconClass")                 ?  data.prop_iconClass               :  [];
-        const prop_iconStyles          =   data.hasOwnProperty("prop_iconStyles")                ?  data.prop_iconStyles              :  {};
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        return `
+            const componentData = components[var_randomId];
+            const prop_title          =  componentData.hasOwnProperty("prop_title")             ?  componentData.prop_title          : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_iconClass      =  componentData.hasOwnProperty("prop_iconClass")         ?  componentData.prop_iconClass      :  [];
+            const prop_iconStyles     =  componentData.hasOwnProperty("prop_iconStyles")        ?  componentData.prop_iconStyles     :  {};
+            const prop_icon           =  componentData.hasOwnProperty("prop_icon")              ?  componentData.prop_icon           :  "";
+
+            return `
 <style>
- #${el.id} .component-info-text-${var_randomId}{
+ #${el.id} .component-info-text-${ var_randomId }{
        ${super.renderListStyle(prop_iconStyles)}
  }
 </style>
 <section class="component-element-structure mb-2">
-   <p class="component-info-${var_randomId}">
+   <p class="component-info-${   var_randomId }">
    
-<component-icon id="component-info-icon-${var_randomId}"></component-icon>
-
-      <section class="component-info-text-${var_randomId} ${super.renderListClass(prop_iconClass)} text-end">
-         ${prop_title}
+<component-icon id="component-info-icon-${   var_randomId }"></component-icon>
+      <section class="component-info-text-${   var_randomId } ${super.renderListClass(prop_iconClass)} ">
+         ${prop_title }
       </section>
-      
    </p>
 </section>
         `;
+        }
+
+
+
     }
 
 
     onRender = (data , componentSlots , el) => {
-        this.readyIconInput(data , componentSlots , el);
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        this.readyIconInput(var_randomId);
     }
 
-    readyIconInput = (data , componentSlots , el) => {
+    readyIconInput = (var_randomId) => {
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+            const componentData = components[var_randomId];
+            const prop_icon           =  componentData.hasOwnProperty("prop_icon")              ?  componentData.prop_icon           :  "";
 
-        const prop_icon                 =    data.hasOwnProperty("prop_icon")                  ?  data.prop_icon                          :  "";
+            new window.ComponentIcon(
+                "component-info-icon-"+  var_randomId  ,
+                {
+                    prop_icon:     prop_icon  ,
 
-        new window.ComponentIcon(
-            "component-info-icon-"+var_randomId ,
-            {
-                prop_icon: prop_icon ,
+                    prop_iconClass : ["font-12pt" , "mx-2" , "float-end"] ,
+                    prop_iconStyles : {
+                        "margin" : "0",
+                        "width" : "25px",
+                        "line-height" :   "25px",
+                        "right" :   "0",
+                        "font-size" : "20pt;",
+                        "top" : "0" ,
+                    } ,
 
-                prop_iconClass : ["font-12pt" , "mx-2" , "float-end"] ,
-                prop_iconStyles : {
-                    "margin" : "0",
-                    "width" : "25px",
-                    "line-height" :   "25px",
-                    "right" :   "0",
-                    "font-size" : "20pt;",
-                    "top" : "0" ,
-                } ,
+                }
+            )
+        }
 
-            }
-        )
     }
 }
