@@ -50,7 +50,7 @@ class ComponentMaker {
 
                     constructor() {
                         super();
-                        this.el = document.createElement("div");
+                        //this.el = document.createElement("div");
 
                        //  this.el.className = className;
 
@@ -98,7 +98,7 @@ class ComponentMaker {
                         if (data.hasOwnProperty("prop_show") && data.prop_show){
                             const html = templateFn(data, componentSlots , this );
 
-                            const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : true
+                            const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : component_props.directionRtl
 
                             if (this.innerHTML !== html) {
                                 this.innerHTML = html;
@@ -279,42 +279,44 @@ class ComponentBase{
     }*/
 
     readyAttrs(){
-        const el = document.getElementById(this.elId);
+       // const el = document.getElementById(this.elId);
 
-        if (!el) {
-            console.warn(`Element with id '${this.elId}' not found`);
-            return;
-        }
+        const els = document.querySelectorAll(`#${this.elId}`);
+        els.forEach(el => {
 
-
-        this.config.methods = this.methods;
-        const newData = JSON.stringify(this.config);
-        const currentData = el.getAttribute("data");
-
-        // اگر مقدار جدید همان مقدار قبلی است، نیازی به set نیست
-        if (currentData === newData) {
-            return;
-        }
-
-        el.setAttribute("data", newData);
-
-
-        if (this.config != null){
-            /*const firstChild = el.querySelector('component-element-structure');
-            console.log(el , firstChild)*/
-
-            if (this.config.classList){
-                el.classList = this.renderListClass(this.config.classList);
+            if (!el) {
+                console.warn(`Element with id '${this.elId}' not found`);
+                return;
             }
 
-            if (this.config.styles) {
-                Object.entries(this.config.styles).forEach(([key, value]) => {
-                    el.style[key] = value;
-                });
+
+            this.config.methods = this.methods;
+            const newData = JSON.stringify(this.config);
+            const currentData = el.getAttribute("data");
+
+            // اگر مقدار جدید همان مقدار قبلی است، نیازی به set نیست
+            if (currentData === newData) {
+                return;
             }
-        }
+
+            el.setAttribute("data", newData);
 
 
+            if (this.config != null){
+                /*const firstChild = el.querySelector('component-element-structure');
+                console.log(el , firstChild)*/
+
+                if (this.config.classList){
+                    el.classList = this.renderListClass(this.config.classList);
+                }
+
+                if (this.config.styles) {
+                    Object.entries(this.config.styles).forEach(([key, value]) => {
+                        el.style[key] = value;
+                    });
+                }
+            }
+        });
     }
 
     render(props){
@@ -352,6 +354,8 @@ class ComponentBase{
  Component Messages
 -------------------------------------
 @prop_status
+@prop_background
+@prop_color
 @prop_messages
 -------------------------------------*/
 window.ComponentMessages = class ComponentMessages extends ComponentBase{
@@ -359,61 +363,119 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
     constructor(elId , config) {
 
         let methods = {};
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+
         methods["closeMessage"] = {
             name: `closeMessage_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
-            fn: () => {
-                const el = document.getElementById(elId);
-                const formMessage = el.getElementsByClassName("form-message");
-                if (formMessage != null){
-                    formMessage[0].remove();
+            fn: (index) => {
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const el = document.getElementById(elId);
+                    const formMessage = el.getElementsByClassName(`text-message-${var_randomId}-${index}`);
+                    if (formMessage != null){
+                        formMessage[0].remove();
+                    }
                 }
+
             }
         };
 
-        super(elId , config , listComponent[ComponentMessages.name] , methods);
+        super(elId , config , listComponent[ComponentMessages.name] , methods ,  config["var_randomId"]);
 
         this.render()
     }
 
-    templateFn(data , componentSlots , el){
-        const messageStatusClass = data.hasOwnProperty("prop_status") && data.prop_status ? 'element-info alert alert-info' : 'element-errors alert alert-danger';
+    templateFn =(data , componentSlots , el) => {
 
-        if (data.hasOwnProperty("prop_messages")){
-            let html = ``;
-            html += `<div class="mx-2 px-2 ">`;
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
 
-            const closeMessage = super.getMethod(data , "closeMessage");
+        if ( components.hasOwnProperty(var_randomId)) {
 
-            for (const index in data.prop_messages) {
-                html += `
+            const componentData = components[var_randomId];
+
+            const prop_status =       componentData.hasOwnProperty("prop_status")             ?          componentData.prop_status        :  true;
+            const prop_background =   componentData.hasOwnProperty("prop_background")         ?          componentData.prop_background    :  (prop_status ? tools_const.styles.message.backgroundColor_success: tools_const.styles.message.backgroundColor_error);
+            const prop_color =        componentData.hasOwnProperty("prop_color")              ?          componentData.prop_color         :  (prop_status ?    tools_const.styles.message.color_success: tools_const.styles.message.color_error);
+
+            if (data.hasOwnProperty("prop_messages")){
+                let html = ``;
+                html += `<div class="mx-2 px-2 ">`;
+
+             /*   const closeMessage = super.getMethod(data , "closeMessage");*/
+                /*<span class="   " onclick="${closeMessage}">&#10005;</span>*/
+                for (const index in data.prop_messages) {
+                    html += `
 <style>
-#${el.id} .icon-message{
-    cursor: pointer;
+#${el.id} .text-message-${var_randomId}-${index}{
+     background-color: ${prop_background};
+     color: ${prop_color};
 }
 </style>
-<div class="component-element-structure mb-2 form-message ${messageStatusClass}  mt-2" role="alert">
-     ${data.prop_messages[index]}
-      <span class="icon-message  float-end mx-2 " onclick="${closeMessage}">&#10005;</span>
+<div class="component-element-structure mb-2 text-message-${var_randomId}-${index}    mt-2" role="alert">
+    <p class="text-message-${var_randomId}-${index} alert shadow-sm">
+      ${data.prop_messages[index]}
+<component-icon id="icon-message-${var_randomId}-${index}"></component-icon>
+    </p>
 </div>
 `;
+                }
+
+                html += `</div>`;
+
+                return html;
+            }
+            return  "";
+        }
+
+
+    }
+
+
+    onRender = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        this.readyIconInput(var_randomId);
+    }
+
+    readyIconInput = (var_randomId) => {
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_messages =  componentData.hasOwnProperty("prop_messages")     ?  componentData.prop_messages        :  0;
+            const directionRtl =   componentData.hasOwnProperty("directionRtl")      ?  componentData.directionRtl         :  component_props.directionRtl
+
+            const closeMessage = super.getMethod(componentData , "closeMessage" , null);
+
+            for (const index in prop_messages) {
+
+
+                new window.ComponentIcon(
+                    "icon-message-"+  var_randomId + "-"+ index  ,
+                    {
+                        classList:     [ directionRtl ? "float-start" :  "float-end" ] ,
+                        prop_icon:     "&#10005"  ,
+
+                        prop_iconClass : ["mx-2" ] ,
+                        prop_iconStyles : {
+                            "cursor" : "pointer"
+                        } ,
+
+                        fn_callback: () =>{
+                            window[closeMessage](index)
+                        }
+                    }
+                )
             }
 
-            html += `</div>`;
-
-            return html;
         }
-        return  "";
-    }
-
-    onCreate(el){
-
-    }
-
-    onRender(data ,slots , el){
 
     }
 
 }
+
 
 
 
@@ -421,8 +483,8 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 /*-------------------------------------
  Component Loading
 -------------------------------------
-@prop_bgColor
-@prop_color
+@prop_background_loading
+@prop_background_shadow
 -------------------------------------*/
 window.ComponentLoading = class ComponentLoading extends ComponentBase{
 
@@ -431,32 +493,35 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
         config["var_randomId"]= Math.floor(Math.random() * 10000);
         let methods = {};
 
-        super(elId , config , listComponent[ComponentLoading.name] , methods);
+        super(elId , config , listComponent[ComponentLoading.name] , methods ,  config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        //------------------
         const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        //------------------
-        const prop_bgColor = data.hasOwnProperty("prop_bgColor") ? data.bgColor : tools_const.styles.backShadow.backgroundColor;
-        const prop_color = data.hasOwnProperty("prop_color") ? data.color : tools_const.styles.loading.backgroundColor;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        return  `
+            const componentData = components[var_randomId];
+
+            const prop_background_loading = componentData.hasOwnProperty("prop_background_loading") ? componentData.prop_background_loading : tools_const.styles.loading.backgroundColor_shadow;
+            const prop_background_shadow  = componentData.hasOwnProperty("prop_background_shadow")   ? componentData.prop_background_shadow   : tools_const.styles.loading.backgroundColor_loading;
+
+
+            return  `
 <style>
 #${el.id} .form-loading-${var_randomId}{
     left: 0;
     top: 0;
     z-index: 5000;
-    background-color: ${prop_bgColor};
+    background-color: ${prop_background_loading};
 }
 
 #${el.id} .lds-ring-${var_randomId} {
     z-index: 12;
-    color: ${prop_color};
+    color: ${prop_background_shadow};
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%)
@@ -506,16 +571,14 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
         <div class="lds-ring-${var_randomId} position-absolute"><div></div><div></div><div></div><div></div></div>
     </section>
         `;
-    }
+        }
 
-    onCreate(data , el){
-
-    }
-
-    onRender(data ,slots , el){
 
     }
+
 }
+
+
 
 
 
@@ -533,48 +596,58 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
 window.Component404 = class Component404 extends ComponentBase{
 
     constructor(elId , config) {
-        config["prop_remdomId"]= Math.floor(Math.random() * 10000);
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         let methods = {};
         methods["button404Retry"] = {
             name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
             fn: () => {
-                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
-                    config.fn_callback();
+
+                const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
+
+                if ( components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+
+                    if (componentData.hasOwnProperty("fn_callback") && typeof componentData.fn_callback != null){
+                        componentData.fn_callback();
+                    }
+
                 }
             }
         };
 
-        super(elId , config , listComponent[Component404.name] , methods);
+        super(elId , config , listComponent[Component404.name] , methods ,  config["var_randomId"]);
 
         this.render()
     }
 
-    templateFn(data , componentSlots , el){
-        const prop_type =      data.hasOwnProperty("prop_type")      ?   data.prop_type : 0;
+    templateFn = (data , componentSlots , el) => {
 
-        const prop_width = data.hasOwnProperty("prop_width") ? data.prop_width : 250;
-        const prop_height = data.hasOwnProperty("prop_height") ? data.prop_height : 100;
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        const prop_remdomId = data.hasOwnProperty("prop_remdomId") ? data.prop_remdomId : 0;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const button404Retry = super.getMethod(data , "button404Retry");
+            const componentData = components[var_randomId];
+            const prop_type =      componentData.hasOwnProperty("prop_type")      ?   componentData.prop_type             : 0;
 
-        if (prop_type == 0){
+            const prop_width =     componentData.hasOwnProperty("prop_width")     ? componentData.prop_width     : 250;
+            const prop_height =    componentData.hasOwnProperty("prop_height")    ? componentData.prop_height    : 100;
 
-            return `
+
+            const button404Retry = super.getMethod(componentData , "button404Retry");
+
+            if (prop_type == 0){
+
+                return `
 <style>
 #${el.id} .form-404-animation{
     top: 0;
     left: 0;
     position: absolute;
-    background-color: ${tools_const.styles.backShadow.backgroundColor};
+    background-color: ${tools_const.styles.state404.backgroundColor_shadow};
 }
 
-#${el.id} .btn-404-animation{
-    background-color: ${tools_const.styles.button.backgroundColor};
-    color:            ${tools_const.styles.button.color};
-}
 
 #${el.id} #svgWrap_1,
 #${el.id} #svgWrap_2{
@@ -743,22 +816,19 @@ window.Component404 = class Component404 extends ComponentBase{
         
         
         <section class="d-block mt-2 mx-5">
-           <component-button id="form-button-404-${prop_remdomId}" ></component-button>
+           <component-button id="form-button-404-${var_randomId}" ></component-button>
         </section>
          
 
     </section>
             `
-        }
-        else if (prop_type == 1){
+            }
+            else if (prop_type == 1){
 
 
-            return `
+                return `
 <style>
- #${el.id} .btn-404-animation{
-    background-color: ${tools_const.styles.button.backgroundColor};
-    color:            ${tools_const.styles.button.color};
-}
+
  #${el.id} .section-404-space-bot{
     min-height: 200px;
     background-color: ${tools_const.styles.backShadow.backgroundColor};
@@ -774,38 +844,49 @@ window.Component404 = class Component404 extends ComponentBase{
               <img class="img-404-space-bot d-block mx-auto rounded" src='${tools_const.botResPath}/bot-404.png'/>
             
               <section class="d-block mt-2 mx-5">
-                 <component-button id="form-button-404-${prop_remdomId}"></component-button>
+                 <component-button id="form-button-404-${var_randomId}"></component-button>
               </section>
           </section>
 `
+            }
+
+            return "[404]"
         }
 
-        return "[404]"
     }
 
-    onCreate(data , el){
 
+    onRender = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        this.readyBbbtnRetry(var_randomId);
     }
 
-    onRender(data , componentSlots , el){
-        const prop_remdomId = data.hasOwnProperty("prop_remdomId") ? data.prop_remdomId : 0;
-        const prop_btnRetry =  data.hasOwnProperty("prop_btnRetry")  ?   data.prop_btnRetry : {};
+    readyBbbtnRetry = (var_randomId) => {
 
-        const button404Retry = super.getMethod(data , "button404Retry" , null);
-        new window.ComponentButton(
-            "form-button-404-"+prop_remdomId ,
-            {
-                prop_title:       prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_title")      ? prop_btnRetry.prop_title           : "Retry" ,
-                prop_btnClass:   prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_btnClass")  ? prop_btnRetry.prop_btnClass       : "w-100" ,
-                prop_type:       prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_type")      ? prop_btnRetry.prop_type           : null ,
-                fn_callback: ()=>{
-                    window[button404Retry]();
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+            const prop_btnRetry =  componentData.hasOwnProperty("prop_btnRetry")  ?   componentData.prop_btnRetry : {};
+
+            const button404Retry = super.getMethod(componentData , "button404Retry" , null);
+            new window.ComponentButton(
+                "form-button-404-"+var_randomId ,
+                {
+                    prop_title:       prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_title")      ? prop_btnRetry.prop_title           : "Retry" ,
+                    prop_btnClass:    prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_btnClass")   ? prop_btnRetry.prop_btnClass        : "w-100" ,
+                    prop_type:        prop_btnRetry != null && prop_btnRetry.hasOwnProperty("prop_type")       ? prop_btnRetry.prop_type            : null ,
+                    fn_callback: ()=>{
+                        window[button404Retry]();
+                    }
                 }
-            }
-        )
-    }
+            )
+        }
 
+    }
 }
+
+
 
 
 
@@ -819,104 +900,143 @@ window.Component404 = class Component404 extends ComponentBase{
 -------------------------------------*/
 window.ComponentForm = class ComponentForm extends ComponentBase{
     constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
 
         let methods = {};
         methods["button404Retry"] = {
-            name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `button404Retry${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
+                const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
 
-                tools_component.control(
-                    "Component404" ,
-                    {
-                        elId : "template-error-404"
-                    },
-                    false
-                )
+                if ( components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+
+                    tools_component.control(
+                        "Component404" ,
+                        {
+                            elId : "template-error-404-"+var_randomId
+                        },
+                        false
+                    )
+                }
             }
         };
         methods["buttonSubmitForm"] = {
-            name: `submitForm_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
-            fn:() => {
-                const elementForm = document.getElementById(elId).getElementsByClassName("form-data");
-                let formData = [] ;
-                if (elementForm != null && elementForm.length > 0){
-                    formData = elementForm[0] ;
+            name: `buttonSubmitForm${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: () => {
+
+                const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
+
+                if (components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+
+                    const elementForm =  document.getElementById(elId).getElementsByClassName("form-data-" + var_randomId);
+                    let formData = [];
+                    if (elementForm != null && elementForm.length > 0) {
+                        formData = elementForm[0];
+                    }
+
+
+                    tools_submit.fetcth(
+                        config.hasOwnProperty("url") ? config.url : "",
+                        {
+                            data: {
+                                formData: formData,
+                                data: componentData.hasOwnProperty("data") ? componentData.data : []
+                            },
+                            componentMessagesData: {elId: "list-message-" + var_randomId},
+                            componentLoadingData: {elId: "template-loading-" + var_randomId},
+                            component404Data: {
+                                elId: "template-error-404-" + var_randomId,
+                                fn_callback: window[methods.button404Retry.name]
+                            },
+                        });
                 }
-
-
-                tools_submit.fetcth(
-                    config.hasOwnProperty("url") ? config.url : "" ,
-                    {
-                        data:{
-                            formData : formData ,
-                            data : config.hasOwnProperty("data") ? config.data : []
-                        } ,
-                        componentMessagesData: { elId : "list-message"},
-                        componentLoadingData: { elId : "template-loading"},
-                        component404Data: {
-                            elId : "template-error-404" ,
-                            fn_callback: window[methods.button404Retry.name]
-                        },
-                    });
             }
         };
 
-        super(elId , config , listComponent[ComponentForm.name] , methods);
+        super(elId , config , listComponent[ComponentForm.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
-        const prop_forms =     data.hasOwnProperty("prop_forms")       ? data.bgColor           : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-        const prop_formClass = data.hasOwnProperty("prop_formClass")   ? data.prop_formClass    : "border shadow-sm round mx-2 my-2 bg-white py-2 px-3";
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        const methodSubmit = super.getMethod(data , "buttonSubmitForm");
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        return  `
+            const componentData = components[var_randomId];
+
+            const prop_forms =     componentData.hasOwnProperty("prop_forms")       ? componentData.bgColor           : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_formClass = componentData.hasOwnProperty("prop_formClass")   ? componentData.prop_formClass    : "border shadow-sm round mx-2 my-2 bg-white py-2 px-3";
+
+            const methodSubmit = super.getMethod(componentData , "buttonSubmitForm");
+
+            return  `
 <style>
-  #${el.id} .form-parent{
+  #${el.id} .form-parent-${var_randomId}{
     min-hight: 100px
 }
 </style>
 
 <section class="component-element-structure mb-2 form-parent position-relative ${prop_formClass}">
-    <component-messages id="list-message"></component-messages>
+    <component-messages id="list-message-${var_randomId}"></component-messages>
     
-    <form class="form-data">
+    <form class="form-data-${var_randomId}">
        ${prop_forms}
     </form>
     
     <section class="row">
-         <component-button id="form-button-submit"></component-button>
+         <component-button id="form-button-submit-${var_randomId}"></component-button>
     </section>
 
-    <component-404 id="template-error-404"></component-404>
+    <component-404 id="template-error-404-${var_randomId}"></component-404>
 
-    <component-loading id="template-loading"></component-loading>
+    <component-loading id="template-loading-${var_randomId}"></component-loading>
 </section>
         `;
+        }
+
     }
 
     onCreate(data , el){
 
     }
 
-    onRender(data ,slots , el){
-        const buttonSubmitForm = super.getMethod(data , "buttonSubmitForm" , null);
-        const prop_btnSubmit =  data.hasOwnProperty("prop_btnSubmit")  ?   data.prop_btnSubmit : {};
 
-        new window.ComponentButton(
-            "form-button-submit" ,
-            {
-                prop_title:       prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_title")      ? prop_btnSubmit.prop_title           : "submit" ,
-                prop_btnClass:   prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_btnClass")  ? prop_btnSubmit.prop_btnClass       : "d-inline-block" ,
-                prop_type:       prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_type")      ? prop_btnSubmit.prop_type           : null ,
+    onRender = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
 
-                fn_callback: ()=>{
-                    window[buttonSubmitForm]();
+        this.readyBbbtnSubmit(var_randomId);
+    }
+
+    readyBbbtnSubmit = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const buttonSubmitForm = super.getMethod(componentData , "buttonSubmitForm" , null);
+            const prop_btnSubmit =  componentData.hasOwnProperty("prop_btnSubmit")  ?   componentData.prop_btnSubmit : {};
+
+            new window.ComponentButton(
+                "form-button-submit-"+var_randomId ,
+                {
+                    prop_title:       prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_title")      ? prop_btnSubmit.prop_title           : "submit" ,
+                    prop_btnClass:    prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_btnClass")   ? prop_btnSubmit.prop_btnClass        : "d-inline-block" ,
+                    prop_type:        prop_btnSubmit != null && prop_btnSubmit.hasOwnProperty("prop_type")       ? prop_btnSubmit.prop_type            : null ,
+
+                    fn_callback: ()=>{
+                        window[buttonSubmitForm]();
+                    }
                 }
-            }
-        )
+            )
+
+        }
+
     }
 
 }
@@ -1143,9 +1263,9 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
         let   prop_valueCol                   =     data.hasOwnProperty("prop_valueCol")               ?      data.prop_valueCol             :  null;
 
         const prop_valueType                  =   data.hasOwnProperty("prop_valueType")                ?  data.prop_valueType                : this.TYPE_SELECTED_NONE;
-        const prop_valueRow_backgroundColor   =   data.hasOwnProperty("prop_valueRow_backgroundColor") ?  data.prop_valueRow_backgroundColor : tools_const.styles.public.selected_num1_backgroundColor;
-        const prop_valueCol_backgroundColor   =   data.hasOwnProperty("prop_valueCol_backgroundColor") ?  data.prop_valueCol_backgroundColor : tools_const.styles.public.selected_num3_backgroundColor;
-        const prop_valueCol_textColor         =   data.hasOwnProperty("prop_valueCol_textColor")       ?  data.prop_valueCol_textColor       : tools_const.styles.public.selected_num1_color;
+        const prop_valueRow_backgroundColor   =   data.hasOwnProperty("prop_valueRow_backgroundColor") ?  data.prop_valueRow_backgroundColor : tools_const.styles.table.backgroundColor_rowSelected;
+        const prop_valueCol_backgroundColor   =   data.hasOwnProperty("prop_valueCol_backgroundColor") ?  data.prop_valueCol_backgroundColor : tools_const.styles.table.backgroundColor_columnSelected;
+        const prop_valueCol_textColor         =   data.hasOwnProperty("prop_valueCol_textColor")       ?  data.prop_valueCol_textColor       : tools_const.styles.table.backgroundColor_textSelected;
 
         const prop_order                      =   data.hasOwnProperty("prop_order")                    ?  data.prop_order                    : [];
         const prop_data                       =   data.hasOwnProperty("prop_data")                     ?  data.prop_data                     : [];
@@ -5240,8 +5360,6 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
 </section>
         `;
         }
-
-
 
     }
 

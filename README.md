@@ -32,6 +32,73 @@ if (typeof listComponent === 'undefined') {
 
 
 
+**1) Component Message:**
+```
+/*-------------------------------------
+ Component Messages
+-------------------------------------
+@prop_status
+@prop_background
+@prop_color
+@prop_messages
+-------------------------------------*/
+    new window.ComponentMessages(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+
+
+**2) Component Loading:**
+```
+/*-------------------------------------
+ Component Loading
+-------------------------------------
+@prop_background_loading
+@prop_background_shadow
+-------------------------------------*/
+    new window.ComponentLoading(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+
+**3) Component 404:**
+```
+/*-------------------------------------
+ Component 404
+-------------------------------------
+@prop_type
+@prop_btnRetry    prop_type  prop_title  prop_btnClass
+@prop_width
+@prop_height
+
+@fn_callback
+-------------------------------------*/
+    new window.Component404(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+
+
+
+
 **5) Component Is Empty:**
 ```
    /*-------------------------------------

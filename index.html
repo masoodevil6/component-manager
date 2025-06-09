@@ -79,6 +79,93 @@
                 children: [
 
 
+                    {
+                        component: 'ComponentMessages',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "messages" ,
+
+                            prop_status: true ,
+                            prop_messages: [
+                                "a" , "b" , "c"
+                            ]
+                        }
+                    } ,
+
+
+                    {
+
+                        component: 'div',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 position-relative",
+                        },
+                        children: [
+                            {
+                                component: 'ComponentLoading',
+                                props: {
+                                    classList: "col-md-3 col-12 d-block mt-2"  ,
+                                    styles: {
+                                        "height" : "200px"
+                                    },
+                                    id: "loading"
+                                }
+                            }
+                        ]
+
+                    } ,
+
+
+
+                    {
+                        component: 'div',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 position-relative"  ,
+                        },
+                        children: [
+                            {
+                                component: 'Component404',
+                                props: {
+                                    classList: "col-md-4 col-12 mt-2"  ,
+                                    id: "error404" ,
+
+                                    fn_callback: ()=>{
+                                        alert("asd");
+                                    },
+                                    prop_width: 200 ,
+                                    prop_height: 150 ,
+                                    prop_type: 0
+                                }
+                            } ,
+                        ]
+                    } ,
+
+
+
+
+
+                    {
+                        component: 'ComponentForm',
+                        props: {
+                            classList: "col-md-3 col-12  mt-2"  ,
+                            id: "form"
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    } ,
+
+
+/*
 
 
                     {
@@ -246,42 +333,9 @@
                     } ,
 
 
-                    {
-                        component: 'div',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2 position-relative"  ,
-                        },
-                        children: [
-                            {
-                                component: 'Component404',
-                                props: {
-                                    classList: "col-md-4 col-12 mt-2"  ,
-                                    id: "error404" ,
-
-                                    fn_callback: ()=>{
-                                        alert("asd");
-                                    },
-                                    prop_width: 200 ,
-                                    prop_height: 150 ,
-                                    prop_type: 0
-                                }
-                            } ,
-                        ]
-                    } ,
 
 
-                    {
-                        component: 'ComponentMessages',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "messages" ,
 
-                            prop_status: true ,
-                            prop_messages: [
-                                "a" , "b" , "c"
-                            ]
-                        }
-                    } ,
 
 
                     {
@@ -586,29 +640,7 @@
                     } ,
 
 
-                    {
-                        component: 'ComponentForm',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "form" ,
 
-
-
-                        },
-                        children:[
-                            {
-                                component: 'body',
-                                children: [
-                                    {
-                                        component: 'h1',
-                                        props: {
-                                            text: "hello world"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    } ,
 
 
 
@@ -688,6 +720,7 @@
                             prop_icon: " &#x2315; " ,
                         }
                     } ,
+*/
 
 
 

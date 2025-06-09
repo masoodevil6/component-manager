@@ -4,82 +4,117 @@ Developer: Mehdi Maarefian
 Version: 0.1
 */
 
-prop_const = {
-    colors: {
-        Glass1: "rgba(255,255,255,0.1)" ,
-
-        White1: "#fff" ,
-        White2: "#efefef" ,
-        White3: "#ececec" ,
-
-        Orange1: "#fcd4b9" ,
-        Orange2: "#faa46c" ,
-        Orange3: "#f47920" ,
-
-        Green1: "rgba(197,245,236,0.50)" ,
-        Green2: "rgba(145,238,218,0.75)" ,
-        Green3: "rgb(77,227,195)" ,
-        Green4: "#38e1c3" ,
-        Green5: "#20d0b0" ,
+ component_props = {
+    directionRtl: true,
 
 
-    } ,
+    // -----------------------
+    primaryColor1: "#f47920",
+    primaryColor2: "#faa46c",
+
+    secondaryColor1: "#38e1c3",
+    secondaryColor2: "#78f1db",
+
+    errorColor1: "#dc3545",
+    errorColor2: "#e8616f",
+
+    warningColor1: "#f47920",
+    warningColor2: "#fd9248",
+
+    successColor1: "#9eeaf9",
+    successColor2: "#c7f4ff",
+
+    shadowColor1: "rgba(98,98,98,0.2)",
+    shadowColor2: "rgba(98,98,98,0.07)",
+
+    darkColor1: "rgb(0,0,0)",
+    darkColor2: "rgb(42,42,42)",
+
+    shanColor1: "#ffffff",
+    shanColor2: "rgba(255,255,255,0.74)",
+    // -----------------------
+
 }
 
 
-tools_const = {
-    botResPath: "bot/run/435/res_v2" ,
 
+ tools_const = {};
+ tools_init = {
+    renderComponentProps : function(config){
 
-    styles: {
-        public:{
-          selected_none_backgroundColor      : prop_const.colors.Glass1 ,
-          selected_num1_backgroundColor      : prop_const.colors.Orange1 ,
-          selected_num2_backgroundColor      : prop_const.colors.Orange2 ,
-          selected_num3_backgroundColor      : prop_const.colors.Orange3 ,
-
-          selected_none_color                : prop_const.colors.Glass1 ,
-          selected_num1_color                : prop_const.colors.White1 ,
-          selected_num2_color                : prop_const.colors.White2 ,
-          selected_num3_color                : prop_const.colors.White3 ,
-        },
-
-
-        table: {
-            backgroundColor: "#e7e7e791"
-        },
-        title: {
-            backgroundColor: "#e7e7e791"
-        },
-        collapse: {
-            backgroundColor: "#e7e7e75c"
-        },
-        backShadow: {
-            backgroundColor: "#e7e7e7b5"
-        },
-        loading: {
-            backgroundColor: "#f47920"
-        },
-        button: {
-            backgroundColor: "#f47920",
-            color: "#ffffff",
-        },
-        buttonError: {
-            backgroundColor: "#dc3545",
-            color: "#ffffff",
-        },
+        if (config != null && typeof config == "object"){
+            Object.keys(config).forEach( (keyConfig) => {
+                Object.keys(component_props).forEach( (keyProp) => {
+                    if (keyConfig == keyProp){
+                        component_props[keyConfig] = config[keyConfig];
+                        return;
+                    }
+                })
+            })
+        }
+        tools_init.renderToolsConst()
     } ,
 
+    renderToolsConst : function(){
+        tools_const = {
+            botResPath: "bot/run/435/res_v2" ,
+
+            styles: {
+
+                message: {
+                    backgroundColor_success: component_props.successColor1 ,
+                    color_success: component_props.darkColor1 ,
+                    backgroundColor_error: component_props.errorColor1 ,
+                    color_error: component_props.shanColor1 ,
+                },
+
+                loading: {
+                    backgroundColor_loading:  component_props.primaryColor1 ,
+                    backgroundColor_shadow:   component_props.shadowColor1
+                },
+
+                state404: {
+                    backgroundColor_shadow:  component_props.shadowColor1 ,
+                },
 
 
-    contentTypes : {
-        html: "text/html" , json: "application/json" ,
-    } ,
-};
+                table: {
+                    backgroundColor: component_props.shanColor1 ,
+                    backgroundColor_rowSelected: component_props.primaryColor1 ,
+                    backgroundColor_columnSelected: component_props.secondaryColor1 ,
+                    backgroundColor_textSelected: component_props.shanColor1 ,
+                },
+                title: {
+                    backgroundColor: component_props.shanColor1
+                },
+                collapse: {
+                    backgroundColor: component_props.shanColor1
+                },
+                backShadow: {
+                    backgroundColor: component_props.shadowColor1
+                },
+                button: {
+                    backgroundColor:  component_props.primaryColor1,
+                    color: component_props.shanColor1,
+                },
+                buttonError: {
+                    backgroundColor: component_props.errorColor1 ,
+                    color: component_props.shanColor1,
+                },
+            } ,
+
+
+            contentTypes : {
+                html: "text/html" , json: "application/json" ,
+            },
+        };
+    }
+}
+tools_init.renderToolsConst();
 
 
 
-tools_component = {
+ tools_component = {
 
     setup: function (container , tree , withPrefix=null){
 
@@ -168,7 +203,7 @@ tools_component = {
 
 
 
-tools_submit = {
+ tools_submit = {
 
     fetcth: async function(url='' , args={}){
         let data                  = args.hasOwnProperty("data") ? args.data: {} ;
@@ -285,7 +320,7 @@ tools_submit = {
 
 
 
-tools_vue = {
+ tools_vue = {
 
     renderDynamicComponent: function(view, createViewComponent = true) {
         let {template, script} = this.extractComponentParts(view);
@@ -356,7 +391,7 @@ tools_vue = {
 
 
 
-tools_converter = {
+ tools_converter = {
 
     serializeArray: function (formElement){
         const result = [];
@@ -474,3 +509,17 @@ tools_converter = {
 
 
 };
+
+
+
+ tools_validate = {
+
+    isEmpty: function (value){
+        return (
+            value == null || // null یا undefined
+            (Array.isArray(value) && value.length === 0) || // آرایه خالی
+            (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) // آبجکت خالی
+        );
+    }
+
+}
