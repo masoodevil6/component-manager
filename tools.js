@@ -5,7 +5,7 @@ Version: 0.1
 */
 
  component_props = {
-    directionRtl: true,
+    directionRtl: false,
 
 
     // -----------------------
@@ -63,9 +63,9 @@ Version: 0.1
 
                 message: {
                     backgroundColor_success: component_props.successColor1 ,
-                    color_success: component_props.darkColor1 ,
-                    backgroundColor_error: component_props.errorColor1 ,
-                    color_error: component_props.shanColor1 ,
+                    color_success:           component_props.darkColor1 ,
+                    backgroundColor_error:   component_props.errorColor1 ,
+                    color_error:             component_props.shanColor1 ,
                 },
 
                 loading: {
@@ -77,6 +77,26 @@ Version: 0.1
                     backgroundColor_shadow:  component_props.shadowColor1 ,
                 },
 
+                title: {
+                    backgroundColor: component_props.shanColor1
+                },
+
+                collapse: {
+                    backgroundColor: component_props.shanColor1
+                },
+
+                button: {
+                    default:{
+                        backgroundColor:       component_props.primaryColor1,
+                        backgroundColorHover:  component_props.primaryColor2,
+                        color:                 component_props.shanColor1,
+                    } ,
+                    error:{
+                        backgroundColor:       component_props.errorColor1,
+                        backgroundColorHover:  component_props.errorColor2,
+                        color:                 component_props.shanColor1,
+                    }
+                },
 
                 table: {
                     backgroundColor: component_props.shanColor1 ,
@@ -84,18 +104,16 @@ Version: 0.1
                     backgroundColor_columnSelected: component_props.secondaryColor1 ,
                     backgroundColor_textSelected: component_props.shanColor1 ,
                 },
-                title: {
-                    backgroundColor: component_props.shanColor1
+
+                selectOption: {
+                    backgroundColor_itemSelected: component_props.primaryColor1 ,
+                    color_icon: component_props.darkColor1
                 },
-                collapse: {
-                    backgroundColor: component_props.shanColor1
-                },
+
+
+
                 backShadow: {
                     backgroundColor: component_props.shadowColor1
-                },
-                button: {
-                    backgroundColor:  component_props.primaryColor1,
-                    color: component_props.shanColor1,
                 },
                 buttonError: {
                     backgroundColor: component_props.errorColor1 ,

@@ -95,6 +95,25 @@ if (typeof listComponent === 'undefined') {
 
 
 
+**4) Component Form:**
+```
+/*-------------------------------------
+ Component Form
+-------------------------------------
+@prop_btnSubmit   prop_type  prop_title  prop_btnClass
+@prop_formClass
+@prop_forms
+-------------------------------------*/
+    new window.ComponentForm(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
 
 
 
@@ -126,6 +145,27 @@ if (typeof listComponent === 'undefined') {
 
 
 
+
+**6) Component Header:**
+```
+/*-------------------------------------
+ Component Header
+-------------------------------------
+@prop_size
+@prop_title
+@prop_classList
+-------------------------------------*/
+    new window.ComponentHeader(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+
 **7) Component Collapse:**
 ```
    /*-------------------------------------
@@ -142,6 +182,92 @@ if (typeof listComponent === 'undefined') {
         }
     )
 ```
+
+
+
+
+
+
+
+**8) Component Table:**
+```
+/*-------------------------------------
+ Component Table
+-------------------------------------
+@prop_tableType
+@prop_tableBordered
+@prop_tableStriped
+@prop_tableHover
+@prop_tableBorderless
+@prop_order
+@prop_data
+@prop_header
+-------------------------------------*/
+    new window.ComponentTable(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+
+
+
+**9) Component Button:**
+```
+/*-------------------------------------
+ Component Button
+-------------------------------------
+@prop_type
+@prop_title
+@prop_btnClass
+
+@prop_btnBackgroundColor
+@prop_btnBackgroundColor_hover
+@prop_btnColor
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentButton(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+
+
+
+**10) Component Tab:**
+```
+/*-------------------------------------
+ Component Tabs
+-------------------------------------
+@prop_tabs           {id   icon}
+@prop_tabSelected
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentTab(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+
+
+
+
 
 
 
@@ -203,7 +329,7 @@ if (typeof listComponent === 'undefined') {
 
    @fn_callback
    -------------------------------------*/
-    new window.ComponentTabs(
+    new window.ComponentTabsComponentTabs(
         "element_id" ,
         {
             

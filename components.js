@@ -894,14 +894,13 @@ window.Component404 = class Component404 extends ComponentBase{
 /*-------------------------------------
  Component Form
 -------------------------------------
-@prop_btnSubmit
+@prop_btnSubmit    prop_type  prop_title  prop_btnClass
 @prop_formClass
 @prop_forms
 -------------------------------------*/
 window.ComponentForm = class ComponentForm extends ComponentBase{
     constructor(elId , config) {
         config["var_randomId"]= Math.floor(Math.random() * 10000);
-
 
         let methods = {};
         methods["button404Retry"] = {
@@ -1062,42 +1061,52 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
     constructor(elId , config) {
 
         config["var_randomId"]= Math.floor(Math.random() * 10000);
+
         let methods = {};
         methods["callback"] = {
             name: `callback${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
-                    config.fn_callback();
+
+                const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
+
+                if (components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+                    if (componentData.hasOwnProperty("fn_callback") && typeof componentData.fn_callback != null){
+                        componentData.fn_callback();
+                    }
                 }
             }
         };
 
-        super(elId , config , listComponent[ComponentIsEmpty.name] , methods);
+        super(elId , config , listComponent[ComponentIsEmpty.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        //------------------
-        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+        const var_randomId = data.hasOwnProperty("var_randomId") ? data.var_randomId : 0;
 
-        //------------------
-        const prop_title         =      data.hasOwnProperty("prop_title")                   ?  data.prop_title        : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-        const prop_icon          =      data.hasOwnProperty("prop_icon")                    ?  data.prop_icon         : "&#9888;";
-        const prop_iconClass     =      data.hasOwnProperty("prop_iconClass")               ?  data.prop_iconClass    : " font-30pt text-danger";
+        if (components.hasOwnProperty(var_randomId)) {
 
-        const prop_btnAddStatus  =        data.hasOwnProperty("prop_btnAddStatus")          ?  data.prop_btnAddStatus           :  false;
-        const prop_btnAddIcon    =        data.hasOwnProperty("prop_btnAddIcon")            ?  data.prop_btnAddIcon             :  "&#10082;";
-        const prop_btnAddTitle   =        data.hasOwnProperty("prop_btnAddTitle")           ?  data.prop_btnAddTitle            :  "add item";
+            const componentData = components[var_randomId];
+            //------------------
+            const prop_title         =      componentData.hasOwnProperty("prop_title")                   ?  componentData.prop_title                  : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_icon          =      componentData.hasOwnProperty("prop_icon")                    ?  componentData.prop_icon                   : "&#9888;";
+            const prop_iconClass     =      componentData.hasOwnProperty("prop_iconClass")               ?  componentData.prop_iconClass              : " font-30pt text-danger";
+
+            const prop_btnAddStatus  =      componentData.hasOwnProperty("prop_btnAddStatus")            ?  componentData.prop_btnAddStatus           :  false;
+            const prop_btnAddIcon    =      componentData.hasOwnProperty("prop_btnAddIcon")              ?  componentData.prop_btnAddIcon             :  "&#10082;";
+            const prop_btnAddTitle   =      componentData.hasOwnProperty("prop_btnAddTitle")             ?  componentData.prop_btnAddTitle            :  "add item";
 
 
-        let btnAddStatus = "";
-        if (prop_btnAddStatus){
-            btnAddStatus = `
+            let btnAddStatus = "";
+            if (prop_btnAddStatus){
+                btnAddStatus = `
 <component-button id="button-tools-component-input-${var_randomId}">
      <component-body>
-          <span class="mx-3">
+          <span class="mx-1">
               ${prop_btnAddIcon}
           </span>
           <span class="d-none d-md-inline">
@@ -1106,10 +1115,10 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
      </component-body>
 </component-button>
             `
-        }
+            }
 
 
-        return `
+            return `
 <style>
 
 #${el.id} .form-warning-not-exist-response-${var_randomId}{
@@ -1125,7 +1134,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 
     <section class="component-element-structure mb-2">
         <section class="form-warning-not-exist-response-${var_randomId} border border-danger text-danger  rounded shadow-sm">
-            <p class="">
+            <p class="mb-1">
                <span class="icon-warning-not-exist-response-${var_randomId}  ${prop_iconClass}">${prop_icon}</span>
                ${prop_title}
             </p>
@@ -1138,40 +1147,47 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
          
     </section>
             `;
+        }
 
     }
 
     onRender = (data , componentSlots , el) => {
-        this.readyButtonTools(data , componentSlots , el);
+        const var_randomId    =   data.hasOwnProperty("var_randomId")        ?  data.var_randomId   :  0;
+
+        this.readyButtonTools(var_randomId);
     }
 
-    readyButtonTools  = (data , componentSlots , el) => {
+    readyButtonTools  = (var_randomId) => {
 
-        const var_randomId    =   data.hasOwnProperty("var_randomId")        ?  data.var_randomId   :  0;
-        const prop_btnAddStatus   =   data.hasOwnProperty("prop_btnAddStatus")  ?  data.prop_btnAddStatus   :  false;
+        if (components.hasOwnProperty(var_randomId)) {
 
-        const callback    =    super.getMethod(data , "callback"     , null );
+            const componentData = components[var_randomId];
+            const prop_btnAddStatus   =   componentData.hasOwnProperty("prop_btnAddStatus")  ?  componentData.prop_btnAddStatus   :  false;
+            const prop_btnAddClass    =   componentData.hasOwnProperty("prop_btnAddClass")   ?  componentData.prop_btnAddClass    :  ["btn" , "btn-light"];
+            const callback    =    super.getMethod(componentData , "callback"     , null );
 
-        const prop_btnAddClass    =   data.hasOwnProperty("prop_btnAddClass")  ?  data.prop_btnAddClass   :  ["btn" , "btn-light"];
+            if (prop_btnAddStatus){
+                new window.ComponentButton(
+                    "button-tools-component-input-"+var_randomId ,
+                    {
+                        prop_btnClass: prop_btnAddClass ,
+                        prop_btnStyles: {
+                            "cursor" : "pointer" ,
+                            "width" : "160px" ,
+                            "height" : "32px" ,
+                            "text-align" : "center!important" ,
+                        },
 
-        if (prop_btnAddStatus){
-            new window.ComponentButton(
-                "button-tools-component-input-"+var_randomId ,
-                {
-                    prop_btnClass: prop_btnAddClass ,
-                    prop_btnStyles: {
-                        "cursor" : "pointer" ,
-                        "width" : "160px" ,
-                        "height" : "32px" ,
-                        "text-align" : "center!important" ,
-                    },
-
-                    fn_callback: ()=>{
-                        window[callback]()
+                        fn_callback: ()=>{
+                            window[callback]()
+                        }
                     }
-                }
-            )
+                )
+            }
         }
+
+
+
     }
 }
 
@@ -1187,22 +1203,184 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 -------------------------------------*/
 window.ComponentHeader = class ComponentHeader extends ComponentBase{
     constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         let methods = {};
-        super(elId , config , listComponent[ComponentHeader.name] , methods);
+        super(elId , config , listComponent[ComponentHeader.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        const prop_size =      data.hasOwnProperty("prop_size")       ?  data.prop_size  : 5;
-        const prop_title =      data.hasOwnProperty("prop_title")       ?  data.prop_title  : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-        const prop_classList = data.hasOwnProperty("prop_classList")  ?  data.prop_classList  : "pb-0 px-2 mb-1 border-bottom";
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        return `<h${prop_size} class="component-element-structure mb-2 ${prop_classList ?? ''} ">${prop_title ?? ''}</h${prop_size}>`;
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_size =      componentData.hasOwnProperty("prop_size")        ?  componentData.prop_size  : 5;
+            const prop_title =     componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title  : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_classList = componentData.hasOwnProperty("prop_classList")   ?  componentData.prop_classList  : "pb-0 px-2 mb-1 border-bottom";
+
+            return `<h${prop_size} class="component-element-structure mb-2 ${prop_classList ?? ''} ">${prop_title ?? ''}</h${prop_size}>`;
+        }
+
     }
 }
+
+
+
+
+
+/*-------------------------------------
+ Component Collapse
+-------------------------------------
+@prop_title
+@prop_body
+@prop_bodyShow
+-------------------------------------*/
+window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
+
+    props = {};
+
+    constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+        methods["showOrHideCollapse"] = {
+            name: `showOrHideCollapse_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            fn: () => {
+                const var_randomId    =        config.hasOwnProperty("var_randomId")        ?  config.var_randomId            :  0;
+
+                if ( components.hasOwnProperty(var_randomId)){
+                    const componentData    =  components[var_randomId];
+
+                    componentData.prop_bodyShow = !componentData.prop_bodyShow;
+
+                    const el = document.getElementById(elId);
+                    const body = el.querySelector(`.body-collapse-${var_randomId}`);
+
+                    if (componentData.prop_bodyShow){
+                        body.classList.remove("d-none");
+                    }
+                    else {
+                        body.classList.add("d-none");
+                    }
+
+                    this.readyLabelIcon(var_randomId);
+                }
+            }
+        };
+
+        super(elId , config , listComponent[ComponentCollapse.name] , methods ,  config["var_randomId"]);
+
+        this.render();
+    }
+
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        if ( components.hasOwnProperty(var_randomId)){
+
+            const componentData    =  components[var_randomId];
+            const prop_title       =  componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title          : null;
+            const prop_body        =  componentData.hasOwnProperty("prop_body")        ?  componentData.prop_body           :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_bodyShow    =  componentData.hasOwnProperty("prop_bodyShow")    ?  componentData.prop_bodyShow       : false;
+
+            if ( prop_title != null){
+
+                return `
+<style>
+     #${el.id} .title-collapse-${  var_randomId}{
+        cursor: pointer;
+    }
+     
+     #${el.id} .body-collapse-${  var_randomId}{
+        background-color: ${tools_const.styles.collapse.backgroundColor};
+    }
+</style>
+<div class="component-element-structure mx-2 mb-3">
+
+<component-label id="label-component-collapse-${  var_randomId}" class="position-relative">
+   <component-body>
+       ${ prop_title }
+       
+       <component-icon id="icon-collapse-${  var_randomId}"></component-icon>
+       
+   </component-body>
+</component-label>
+   
+    <div class="body-collapse-${  var_randomId} shadow-sm p-2 ${prop_bodyShow ? "" : "d-none"}">
+        ${  prop_body }
+    </div>
+
+</div>      
+                `;
+            }
+
+            return prop_body;
+        }
+    }
+
+    onRender = (data , componentSlots , el) =>{
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        this.readyLabelInput(var_randomId);
+        this.readyLabelIcon(var_randomId);
+    }
+
+    readyLabelInput  = (var_randomId)  => {
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+            const prop_title          =  componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title          : null;
+            const showOrHideCollapse  = super.getMethod(componentData , "showOrHideCollapse" , null);
+
+            if (prop_title != null){
+                new window.ComponentLabel(
+                    "label-component-collapse-"+  var_randomId ,
+                    {
+                        fn_callback: ()=>{
+                            window[showOrHideCollapse]()
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    readyLabelIcon  = (var_randomId)  => {
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData         = components[var_randomId];
+            const prop_bodyShow         = componentData.hasOwnProperty("prop_bodyShow")     ?  componentData.prop_bodyShow       : false;
+            const directionRtl          = componentData.hasOwnProperty("directionRtl")      ? componentData.directionRtl         : component_props.directionRtl
+
+            new window.ComponentIcon(
+                `icon-collapse-${var_randomId}` ,
+                {
+                    classList: [ directionRtl ? "float-start" : "float-end"] ,
+
+                    prop_icon : prop_bodyShow  ? "&#129171;" : "&#129169" ,
+                    prop_iconClass : [] ,
+                    prop_iconStyles : {
+                        "font-size" : "20pt",
+                        "margin" : "0 10px",
+                        "color" : "#000000",
+                        "line-height" :prop_bodyShow  ? "" : "0",
+                        "padding-top" :prop_bodyShow  ? "15px" : "0px"
+                    } ,
+                }
+            )
+
+        }
+    }
+}
+
+
+
+
 
 
 
@@ -1227,201 +1405,217 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
     TYPE_SELECTED_BOTH = 3;
 
     constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         let methods = {};
         methods["onSelectCol"] = {
             name: `onSelectCol${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event , key  , colIndex, rowIndex) => {
-                const el = event.target;
-                const value = el.innerHTML.trim();
+                const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
 
-                config.prop_valueRow = rowIndex;
-                config.prop_valueCol = colIndex;
-                this.changeProperty(config);
+                if ( components.hasOwnProperty(var_randomId)) {
 
-                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
-                    config.fn_callback(value , key , colIndex , rowIndex);
+                    const componentData = components[var_randomId];
+
+                    const el = event.target;
+                    const value = el.innerHTML.trim();
+
+                    componentData.prop_valueRow = rowIndex;
+                    componentData.prop_valueCol = colIndex;
+                    this.changeProperty(componentData);
+
+                    if (componentData.hasOwnProperty("fn_callback") && typeof componentData.fn_callback != null){
+                        componentData.fn_callback(value , key , colIndex , rowIndex);
+                    }
                 }
+
+
             }
         };
 
-        super(elId , config , listComponent[ComponentTable.name] , methods);
+        super(elId , config , listComponent[ComponentTable.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
     templateFn = (data , componentSlots , el) => {
 
-        //----------------
-        const prop_tableType                  =   data.hasOwnProperty("prop_tableType")                ?  data.prop_tableType                : 0;
-        const prop_tableBordered              =   data.hasOwnProperty("prop_tableBordered")            ?  data.prop_tableBordered            : 0;
-        const prop_tableStriped               =   data.hasOwnProperty("prop_tableStriped")             ?  data.prop_tableStriped             : false;
-        const prop_tableHover                 =   data.hasOwnProperty("prop_tableHover")               ?  data.prop_tableHover               : false;
-        const prop_tableBorderless            =   data.hasOwnProperty("prop_tableBorderless")          ?  data.prop_tableBorderless          : false;
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        let   prop_valueRow                   =     data.hasOwnProperty("prop_valueRow")               ?      data.prop_valueRow             :  null;
-        let   prop_valueCol                   =     data.hasOwnProperty("prop_valueCol")               ?      data.prop_valueCol             :  null;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const prop_valueType                  =   data.hasOwnProperty("prop_valueType")                ?  data.prop_valueType                : this.TYPE_SELECTED_NONE;
-        const prop_valueRow_backgroundColor   =   data.hasOwnProperty("prop_valueRow_backgroundColor") ?  data.prop_valueRow_backgroundColor : tools_const.styles.table.backgroundColor_rowSelected;
-        const prop_valueCol_backgroundColor   =   data.hasOwnProperty("prop_valueCol_backgroundColor") ?  data.prop_valueCol_backgroundColor : tools_const.styles.table.backgroundColor_columnSelected;
-        const prop_valueCol_textColor         =   data.hasOwnProperty("prop_valueCol_textColor")       ?  data.prop_valueCol_textColor       : tools_const.styles.table.backgroundColor_textSelected;
+            const componentData = components[var_randomId];
 
-        const prop_order                      =   data.hasOwnProperty("prop_order")                    ?  data.prop_order                    : [];
-        const prop_data                       =   data.hasOwnProperty("prop_data")                     ?  data.prop_data                     : [];
-        const prop_header                     =   data.hasOwnProperty("prop_header")                   ?  data.prop_header                   : [];
+            //----------------
+            const prop_tableType                  =   componentData.hasOwnProperty("prop_tableType")                  ?  componentData.prop_tableType                   : 0;
+            const prop_tableBordered              =   componentData.hasOwnProperty("prop_tableBordered")              ?  componentData.prop_tableBordered               : 0;
+            const prop_tableStriped               =   componentData.hasOwnProperty("prop_tableStriped")               ?  componentData.prop_tableStriped                : false;
+            const prop_tableHover                 =   componentData.hasOwnProperty("prop_tableHover")                 ?  componentData.prop_tableHover                  : false;
+            const prop_tableBorderless            =   componentData.hasOwnProperty("prop_tableBorderless")            ?  componentData.prop_tableBorderless             : false;
 
-        const prop_tableClass                 =   data.hasOwnProperty("prop_tableClass")              ?  data.prop_tableClass               : ["table"];
-        const prop_tableStyles                =   data.hasOwnProperty("prop_tableStyles")             ?  data.prop_tableStyles              : null;
+            let   prop_valueRow                   =   componentData.hasOwnProperty("prop_valueRow")                   ?  componentData.prop_valueRow                    :  null;
+            let   prop_valueCol                   =   componentData.hasOwnProperty("prop_valueCol")                   ?  componentData.prop_valueCol                    :  null;
 
-        const prop_tableHeadClass             =   data.hasOwnProperty("prop_tableHeadClass")          ?  data.prop_tableHeadClass           : [];
-        const prop_tableHeadStyles            =   data.hasOwnProperty("prop_tableHeadStyles")         ?  data.prop_tableHeadStyles          : null;
+            const prop_valueType                  =   componentData.hasOwnProperty("prop_valueType")                  ?  componentData.prop_valueType                   : this.TYPE_SELECTED_NONE;
+            const prop_valueRow_backgroundColor   =   componentData.hasOwnProperty("prop_valueRow_backgroundColor")   ?  componentData.prop_valueRow_backgroundColor    : tools_const.styles.table.backgroundColor_rowSelected;
+            const prop_valueCol_backgroundColor   =   componentData.hasOwnProperty("prop_valueCol_backgroundColor")   ?  componentData.prop_valueCol_backgroundColor    : tools_const.styles.table.backgroundColor_columnSelected;
+            const prop_valueCol_textColor         =   componentData.hasOwnProperty("prop_valueCol_textColor")         ?  componentData.prop_valueCol_textColor          : tools_const.styles.table.backgroundColor_textSelected;
 
-        const prop_tableItemHeadClass         =   data.hasOwnProperty("prop_tableItemHeadClass")      ?  data.prop_tableItemHeadClass       : [];
-        const prop_tableItemHeadStyles        =   data.hasOwnProperty("prop_tableItemHeadStyles")     ?  data.prop_tableItemHeadStyles      : null;
+            const prop_order                      =   componentData.hasOwnProperty("prop_order")                      ?  componentData.prop_order                       : [];
+            const prop_data                       =   componentData.hasOwnProperty("prop_data")                       ?  componentData.prop_data                        : [];
+            const prop_header                     =   componentData.hasOwnProperty("prop_header")                     ?  componentData.prop_header                      : [];
 
-        const prop_tableBodyClass             =   data.hasOwnProperty("prop_tableBodyClass")          ?  data.prop_tableBodyClass           : [];
-        const prop_tableBodyStyles            =   data.hasOwnProperty("prop_tableBodyStyles")         ?  data.prop_tableBodyStyles          : null;
+            const prop_tableClass                 =   componentData.hasOwnProperty("prop_tableClass")                 ?  componentData.prop_tableClass                  : ["table"];
+            const prop_tableStyles                =   componentData.hasOwnProperty("prop_tableStyles")                ?  componentData.prop_tableStyles                 : null;
 
-        const prop_tableItemBodyClass         =   data.hasOwnProperty("prop_tableItemBodyClass")         ?  data.prop_tableItemBodyClass           : [];
-        const prop_tableItemBodyStyles        =   data.hasOwnProperty("prop_tableItemBodyStyles")        ?  data.prop_tableItemBodyStyles          : null;
-        const prop_tableItemBodyHoverStyles   =   data.hasOwnProperty("prop_tableItemBodyHoverStyles")   ?  data.prop_tableItemBodyHoverStyles     : null;
+            const prop_tableHeadClass             =   componentData.hasOwnProperty("prop_tableHeadClass")             ?  componentData.prop_tableHeadClass              : [];
+            const prop_tableHeadStyles            =   componentData.hasOwnProperty("prop_tableHeadStyles")            ?  componentData.prop_tableHeadStyles             : null;
 
-        //----------------
-        const onSelectCol = super.getMethod(data , "onSelectCol"    , null);
+            const prop_tableItemHeadClass         =   componentData.hasOwnProperty("prop_tableItemHeadClass")         ?  componentData.prop_tableItemHeadClass          : [];
+            const prop_tableItemHeadStyles        =   componentData.hasOwnProperty("prop_tableItemHeadStyles")        ?  data.prop_tableItemHeadStyles                  : null;
 
-        //----------------
-        const tableDataOreder = [];
-        if (prop_data != null){
-            for (const tableDataKey in prop_data) {
-                const itemData = prop_data[tableDataKey];
-                const itemDataOrder = {};
-                for (const tableHeaderKey in prop_header) {
-                    const itemHeader = prop_header[tableHeaderKey]
-                    if (itemHeader.hasOwnProperty("id") && itemData.hasOwnProperty(itemHeader.id)){
-                        const value = itemData[itemHeader.id];
+            const prop_tableBodyClass             =   componentData.hasOwnProperty("prop_tableBodyClass")             ?  componentData.prop_tableBodyClass              : [];
+            const prop_tableBodyStyles            =   componentData.hasOwnProperty("prop_tableBodyStyles")            ?  componentData.prop_tableBodyStyles             : null;
+
+            const prop_tableItemBodyClass         =   componentData.hasOwnProperty("prop_tableItemBodyClass")         ?  componentData.prop_tableItemBodyClass           : [];
+            const prop_tableItemBodyStyles        =   componentData.hasOwnProperty("prop_tableItemBodyStyles")        ?  componentData.prop_tableItemBodyStyles          : null;
+            const prop_tableItemBodyHoverStyles   =   componentData.hasOwnProperty("prop_tableItemBodyHoverStyles")   ?  componentData.prop_tableItemBodyHoverStyles     : null;
+
+            //----------------
+            const onSelectCol = super.getMethod(componentData , "onSelectCol"    , null);
+
+            //----------------
+            const tableDataOreder = [];
+            if (prop_data != null){
+                for (const tableDataKey in prop_data) {
+                    const itemData = prop_data[tableDataKey];
+                    const itemDataOrder = {};
+                    for (const tableHeaderKey in prop_header) {
+                        const itemHeader = prop_header[tableHeaderKey]
+                        if (itemHeader.hasOwnProperty("id") && itemData.hasOwnProperty(itemHeader.id)){
+                            const value = itemData[itemHeader.id];
 
 
-                        if (value != null){
-                            if (value.hasOwnProperty("content") ){
-                                if (typeof value.content == "boolean"){
-                                    if (value.content){
-                                        itemDataOrder[itemHeader.id] = {content: '<span class="icon-true-table">&#9745;</span>' };
+                            if (value != null){
+                                if (value.hasOwnProperty("content") ){
+                                    if (typeof value.content == "boolean"){
+                                        if (value.content){
+                                            itemDataOrder[itemHeader.id] = {content: '<span class="icon-true-table">&#9745;</span>' };
+                                        }
+                                        else {
+                                            itemDataOrder[itemHeader.id] = {content: '<span class="icon-false-table">&#9744;</span>' };
+                                        }
                                     }
                                     else {
-                                        itemDataOrder[itemHeader.id] = {content: '<span class="icon-false-table">&#9744;</span>' };
+                                        itemDataOrder[itemHeader.id] = value;
                                     }
                                 }
                                 else {
-                                    itemDataOrder[itemHeader.id] = value;
+                                    if (typeof value == "boolean"){
+                                        if (value){
+                                            itemDataOrder[itemHeader.id] = {content: '<span class="icon-true-table">&#9745;</span>' };
+                                        }
+                                        else {
+                                            itemDataOrder[itemHeader.id] = {content: '<span class="icon-false-table">&#9744;</span>' };
+                                        }
+                                    }
+                                    else{
+                                        itemDataOrder[itemHeader.id] = {content: value };
+                                    }
                                 }
                             }
                             else {
-                                if (typeof value == "boolean"){
-                                    if (value){
-                                        itemDataOrder[itemHeader.id] = {content: '<span class="icon-true-table">&#9745;</span>' };
-                                    }
-                                    else {
-                                        itemDataOrder[itemHeader.id] = {content: '<span class="icon-false-table">&#9744;</span>' };
-                                    }
-                                }
-                                else{
-                                    itemDataOrder[itemHeader.id] = {content: value };
-                                }
+                                itemDataOrder[itemHeader.id] = {content: "" };
                             }
                         }
-                        else {
-                            itemDataOrder[itemHeader.id] = {content: "" };
+                    }
+                    tableDataOreder.push(itemDataOrder)
+                }
+            }
+
+            let htmlHeader = "";
+            let htmlBody = "";
+            if (prop_header != null && Array.isArray(prop_header)){
+                let orderHedar = [];
+                for (const orderIndex in prop_order) {
+                    const orderKey = prop_order[orderIndex]
+                    for (const headerIndex in prop_header) {
+                        const itemHeader = prop_header[headerIndex];
+                        if (itemHeader != null && itemHeader.hasOwnProperty("id") && orderKey == itemHeader.id ){
+                            orderHedar.push(itemHeader)
                         }
                     }
                 }
-                tableDataOreder.push(itemDataOrder)
-            }
-        }
+                for (const headerIndex in orderHedar) {
 
-        let htmlHeader = "";
-        let htmlBody = "";
-        if (prop_header != null && Array.isArray(prop_header)){
-            let orderHedar = [];
-            for (const orderIndex in prop_order) {
-                const orderKey = prop_order[orderIndex]
-                for (const headerIndex in prop_header) {
-                    const itemHeader = prop_header[headerIndex];
-                    if (itemHeader != null && itemHeader.hasOwnProperty("id") && orderKey == itemHeader.id ){
-                        orderHedar.push(itemHeader)
-                    }
-                }
-            }
-            for (const headerIndex in orderHedar) {
-
-                const itemHeader = orderHedar[headerIndex];
-                htmlHeader += `
+                    const itemHeader = orderHedar[headerIndex];
+                    htmlHeader += `
 <th class="element-item-header-table ${super.renderListClass(prop_tableItemHeadClass)}" 
    scope="col">
      ${itemHeader.hasOwnProperty("content") ? itemHeader.content : '#'}
 </th>`
-            }
+                }
 
-            if (tableDataOreder != null && Array.isArray(tableDataOreder)){
-                for (const bodyIndex in tableDataOreder) {
-                    const itemBody = tableDataOreder[bodyIndex];
+                if (tableDataOreder != null && Array.isArray(tableDataOreder)){
+                    for (const bodyIndex in tableDataOreder) {
+                        const itemBody = tableDataOreder[bodyIndex];
 
-                    let classSelected = "";
-                    if (prop_valueRow == bodyIndex &&  (prop_valueType == this.TYPE_SELECTED_ROW || prop_valueType == this.TYPE_SELECTED_BOTH)){
-                        classSelected = "selected_table_row"
-                    }
+                        let classSelected = "";
+                        if (prop_valueRow == bodyIndex &&  (prop_valueType == this.TYPE_SELECTED_ROW || prop_valueType == this.TYPE_SELECTED_BOTH)){
+                            classSelected = "selected_table_row"
+                        }
 
-                    htmlBody += `<tr class="${classSelected} rounded">`
-                    for (const headerIndex in orderHedar) {
-                        const itemHeader = orderHedar[headerIndex];
-                        if (itemHeader != null && itemHeader.hasOwnProperty("id") && itemBody.hasOwnProperty(itemHeader.id) && itemBody[itemHeader.id].hasOwnProperty("content")){
+                        htmlBody += `<tr class="${classSelected} rounded">`
+                        for (const headerIndex in orderHedar) {
+                            const itemHeader = orderHedar[headerIndex];
+                            if (itemHeader != null && itemHeader.hasOwnProperty("id") && itemBody.hasOwnProperty(itemHeader.id) && itemBody[itemHeader.id].hasOwnProperty("content")){
 
-                            let colClassSelected = "";
-                            if (prop_valueRow == bodyIndex && prop_valueCol == headerIndex && (prop_valueType == this.TYPE_SELECTED_COL || prop_valueType == this.TYPE_SELECTED_BOTH)){
-                                colClassSelected = "selected_table_col"
-                            }
+                                let colClassSelected = "";
+                                if (prop_valueRow == bodyIndex && prop_valueCol == headerIndex && (prop_valueType == this.TYPE_SELECTED_COL || prop_valueType == this.TYPE_SELECTED_BOTH)){
+                                    colClassSelected = "selected_table_col"
+                                }
 
-                            htmlBody += `
+                                htmlBody += `
 <td class="element-item-body-table " >
     <span class="${colClassSelected} ${super.renderListClass(prop_tableItemBodyClass)}" onclick="${onSelectCol}(event , '${itemHeader.id}', '${headerIndex}' , '${bodyIndex}')")">
         ${itemBody[itemHeader.id].content}
     </span>
 </td>
 `;
+                            }
                         }
-                    }
-                    htmlBody += `</tr>`
+                        htmlBody += `</tr>`
 
+                    }
                 }
             }
-        }
 
 
-        let tableType = "";
-        switch (prop_tableType){
-            case 1: tableType = "table-dark"; break;
-            case 2: tableType = "table-primary"; break;
-            case 3: tableType = "table-secondary"; break;
-            case 4: tableType = "table-success"; break;
-            case 5: tableType = "table-danger"; break;
-            case 6: tableType = "table-warning"; break;
-            case 7: tableType = "table-info"; break;
-            case 8: tableType = "table-light"; break;
-        }
+            let tableType = "";
+            switch (prop_tableType){
+                case 1: tableType = "table-dark"; break;
+                case 2: tableType = "table-primary"; break;
+                case 3: tableType = "table-secondary"; break;
+                case 4: tableType = "table-success"; break;
+                case 5: tableType = "table-danger"; break;
+                case 6: tableType = "table-warning"; break;
+                case 7: tableType = "table-info"; break;
+                case 8: tableType = "table-light"; break;
+            }
 
-        let tableBordered = "";
-        switch (prop_tableBordered){
-            case 1: tableBordered += "table-bordered  border-dark"; break;
-            case 2: tableBordered += "table-bordered  border-primary"; break;
-            case 3: tableBordered += "table-bordered  border-secondary"; break;
-            case 4: tableBordered += "table-bordered  border-success"; break;
-            case 5: tableBordered += "table-bordered  border-danger"; break;
-            case 6: tableBordered += "table-bordered  border-warning"; break;
-            case 7: tableBordered += "table-bordered  border-info"; break;
-            case 8: tableBordered += "table-bordered  border-light"; break;
-        }
+            let tableBordered = "";
+            switch (prop_tableBordered){
+                case 1: tableBordered += "table-bordered  border-dark"; break;
+                case 2: tableBordered += "table-bordered  border-primary"; break;
+                case 3: tableBordered += "table-bordered  border-secondary"; break;
+                case 4: tableBordered += "table-bordered  border-success"; break;
+                case 5: tableBordered += "table-bordered  border-danger"; break;
+                case 6: tableBordered += "table-bordered  border-warning"; break;
+                case 7: tableBordered += "table-bordered  border-info"; break;
+                case 8: tableBordered += "table-bordered  border-light"; break;
+            }
 
-        return `
+            return `
 <style>
  #${el.id} .icon-false-table{
    font-size: 15pt;
@@ -1475,284 +1669,25 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 </table>
             `
 
-        /*// with teamyar
-        else if (prop_type == 1){
-            return ` <div class="mx-2 mb-2">`+
-                 $.Teamyar.table({
-                     arrayId:    prop_order,
-                     objData:    tableDataOreder,
-                     objHeader:  prop_header,
-                 })
-                 +` </div>`;
-        }*/
-
-    }
-}
-
-
-
-
-/*-------------------------------------
- Component Tabs
--------------------------------------
-@prop_tabs           {id   icon}
-@prop_tabSelected
-
-@fn_callback
--------------------------------------*/
-window.ComponentTabs = class ComponentTabs extends ComponentBase{
-    constructor(elId , config) {
-
-        let methods = {};
-        methods["onSelectTab"] = {
-            name: `onSelectTab${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-            fn: (tabIndex) => {
-
-                config.prop_tabSelected = tabIndex;
-                const newData = JSON.stringify(config);
-                const el = document.getElementById(elId);
-                el.setAttribute("data" , newData);
-
-                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
-                    config.fn_callback(tabIndex);
-                }
-            }
-        };
-
-        super(elId , config , listComponent[ComponentTabs.name] , methods);
-
-        this.render()
-    }
-
-    templateFn(data , componentSlots , el){
-
-        const prop_tabs          =   data.hasOwnProperty("prop_tabs")         ?  data.prop_tabs          :  [];
-        const prop_tabSelected   =   data.hasOwnProperty("prop_tabSelected")  ?  data.prop_tabSelected   :  null;
-
-        const onSelectTab = super.getMethod(data , "onSelectTab"    , null);
-
-        let tabHtml = "";
-        if (prop_tabs != null){
-            let tabClassCol = "";
-            switch (prop_tabs.length){
-                case 4:
-                    tabClassCol = "col-md-3";
-                    break;
-                case 3:
-                    tabClassCol = "col-md-4";
-                    break;
-                case 2:
-                    tabClassCol ="col-md-6";
-                    break;
-                case 1:
-                    tabClassCol = "col-md-12";
-                    break;
-            }
-
-            for (let i = 0; i < prop_tabs.length; i++) {
-                const itemTab = prop_tabs[i];
-                if (itemTab.hasOwnProperty("title")){
-                    let icon = itemTab.hasOwnProperty("icon") ? `<img src="${itemTab.icon}" alt=" ">` : ``;
-                    const tabId =  itemTab.hasOwnProperty("id")  ?  itemTab.id  :  i;
-                    let classActive = prop_tabSelected != null && prop_tabSelected == tabId ? 'btn-tab-types-active' : '';
-
-                    tabHtml += `
-                      <div class="${tabClassCol} px-1 col-12 position-relative">
-                          <button type="button"
-                                onclick="${onSelectTab}(${tabId})"
-                                class="${classActive} btn-tab-types btn btn-light w-100 border shadow-sm line-height-30px">
-                            ${icon}
-                            ${itemTab.title}
-                         </button>
-                     </div>
-                `;
-                }
-
-            }
+            /*// with teamyar
+            else if (prop_type == 1){
+                return ` <div class="mx-2 mb-2">`+
+                     $.Teamyar.table({
+                         arrayId:    prop_order,
+                         objData:    tableDataOreder,
+                         objHeader:  prop_header,
+                     })
+                     +` </div>`;
+            }*/
 
         }
 
-        return `
-<style>
-.btn-tab-types{
-    background-color: #c7c7c7;
-    height: 60px;
-}
-.btn-tab-types:before{
-    content: "";
-    width: 100%;
-    height: 115%;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #ffffff29;
-    clip-path: ellipse(100% 50% at 50% 0);
-}
 
-.btn-tab-types-active{
-    background-color:#0A1225 !important;
-    color :#ffffff !important;
-}
-</style>
-           <section class="component-element-structure row m-0 mb-2">
-               ${tabHtml}
-           </section>
-        `
     }
 }
 
 
 
-
-/*-------------------------------------
- Component Collapse
--------------------------------------
-@prop_title
-@prop_body
-@prop_bodyShow
--------------------------------------*/
-window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
-
-    props = {};
-
-    constructor(elId , config) {
-        config["var_randomId"]= Math.floor(Math.random() * 10000);
-
-        let methods = {};
-        methods["showOrHideCollapse"] = {
-            name: `showOrHideCollapse_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
-            fn: () => {
-                const var_randomId    =        config.hasOwnProperty("var_randomId")        ?  config.var_randomId            :  0;
-
-               if ( components.hasOwnProperty(var_randomId)){
-                    const componentData    =  components[var_randomId];
-
-                    componentData.prop_bodyShow = !componentData.prop_bodyShow;
-
-                    const el = document.getElementById(elId);
-                    const body = el.querySelector(`.body-collapse-${var_randomId}`);
-
-                    if (componentData.prop_bodyShow){
-                        body.classList.remove("d-none");
-                    }
-                    else {
-                        body.classList.add("d-none");
-                    }
-
-                    this.readyLabelIcon(var_randomId);
-
-                }
-            }
-        };
-
-        super(elId , config , listComponent[ComponentCollapse.name] , methods ,  config["var_randomId"]);
-
-        this.render();
-    }
-
-    templateFn = (data , componentSlots , el) => {
-        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
-
-        if ( components.hasOwnProperty(var_randomId)){
-
-            const componentData    =  components[var_randomId];
-            const prop_title       =  componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title          : null;
-            const prop_body        =  componentData.hasOwnProperty("prop_body")        ?  componentData.prop_body           :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-            const prop_bodyShow    =  componentData.hasOwnProperty("prop_bodyShow")    ?  componentData.prop_bodyShow       : false;
-            console.log(componentData)
-
-
-            if ( prop_title != null){
-
-                return `
-<style>
-     #${el.id} .title-collapse-${  var_randomId}{
-        cursor: pointer;
-    }
-     
-     #${el.id} .body-collapse-${  var_randomId}{
-        background-color: ${tools_const.styles.collapse.backgroundColor};
-    }
-</style>
-<div class="component-element-structure mx-2 mb-3">
-
-<component-label id="label-component-collapse-${  var_randomId}" class="position-relative">
-   <component-body>
-       ${ prop_title }
-       
-       <component-icon id="icon-collapse-${  var_randomId}"></component-icon>
-       
-   </component-body>
-</component-label>
-   
-    <div class="body-collapse-${  var_randomId} shadow-sm p-2 ${prop_bodyShow ? "" : "d-none"}">
-        ${  prop_body }
-    </div>
-
-</div>      
-                `;
-            }
-
-            return prop_body;
-
-        }
-
-    }
-
-    onRender = (data , componentSlots , el) =>{
-        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
-
-        this.readyLabelInput(var_randomId);
-        this.readyLabelIcon(var_randomId);
-    }
-
-    readyLabelInput  = (var_randomId)  => {
-        if ( components.hasOwnProperty(var_randomId)) {
-
-            const componentData = components[var_randomId];
-            const prop_title          =  componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title          : null;
-            const showOrHideCollapse  = super.getMethod(componentData , "showOrHideCollapse" , null);
-
-            if (prop_title != null){
-                new window.ComponentLabel(
-                    "label-component-collapse-"+  var_randomId ,
-                    {
-                        fn_callback: ()=>{
-                            window[showOrHideCollapse]()
-                        }
-                    }
-                )
-            }
-        }
-    }
-
-    readyLabelIcon  = (var_randomId)  => {
-        if ( components.hasOwnProperty(var_randomId)) {
-
-            const componentData         = components[var_randomId];
-            const prop_bodyShow         =  componentData.hasOwnProperty("prop_bodyShow")    ?  componentData.prop_bodyShow       : false;
-
-            new window.ComponentIcon(
-                `icon-collapse-${var_randomId}` ,
-                {
-                    prop_icon : prop_bodyShow  ? "&#129171;" : "&#129169" ,
-                    prop_iconClass : ["float-end" , "position-absolute"] ,
-                    prop_iconStyles : {
-                        "font-size" : "20pt",
-                        "margin" : "0 10px",
-                        "top" : "0",
-                        "left" : "0",
-                        "color" : "#000000",
-                        "line-height" :prop_bodyShow  ? "20px" : "10px",
-                        "padding-top" :prop_bodyShow  ? "15px" : "0px"
-                    } ,
-                }
-            )
-
-        }
-    }
-}
 
 
 
@@ -1765,6 +1700,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
 @prop_btnClass
 
 @prop_btnBackgroundColor
+@prop_btnBackgroundColor_hover
 @prop_btnColor
 
 @fn_callback
@@ -1772,56 +1708,75 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
 window.ComponentButton = class ComponentButton extends ComponentBase{
     constructor(elId , config) {
 
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
         let methods = {};
         methods["buttonClick"] = {
             name: `buttonClick_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
-                    config.fn_callback(event);
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+
+                if ( components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+                    if (componentData.hasOwnProperty("fn_callback") && typeof componentData.fn_callback != null){
+                        componentData.fn_callback(event);
+                    }
                 }
             }
         };
 
-        super(elId , config , listComponent[ComponentButton.name] , methods);
+        super(elId , config , listComponent[ComponentButton.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        const prop_type  =          data.hasOwnProperty("prop_type")                 ?  data.prop_type          :  null;
-        const prop_title  =         data.hasOwnProperty("prop_title")                ?  data.prop_title         :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
 
-        const prop_btnClass =       data.hasOwnProperty("prop_btnClass")             ?  data.prop_btnClass      : "w-100"
-        const prop_btnStyles        =   data.hasOwnProperty("prop_btnStyles")        ?  data.prop_btnStyles          : null;
-        const prop_btnHoverStyles   =   data.hasOwnProperty("prop_btnHoverStyles")   ?  data.prop_btnHoverStyles     : null;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        let btnBackgroundColor =  null;
-        let btnColor =            null;
+            const componentData = components[var_randomId];
 
+            const prop_type             =   componentData.hasOwnProperty("prop_type")                 ?  componentData.prop_type          :  null;
+            const prop_title            =   componentData.hasOwnProperty("prop_title")                ?  componentData.prop_title         :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
 
-        switch (prop_type){
-            case "error" :
-                btnBackgroundColor = tools_const.styles.buttonError.backgroundColor;
-                btnColor =           tools_const.styles.buttonError.color;
-                break;
-            default:
-                btnBackgroundColor =  data.hasOwnProperty("prop_btnBackgroundColor")   ?  data.prop_btnBackgroundColor      : tools_const.styles.button.backgroundColor;
-                btnColor =            data.hasOwnProperty("prop_btnColor")             ?  data.prop_btnColor                : tools_const.styles.button.color;
-                break;
-        }
+            const prop_btnClass         =   componentData.hasOwnProperty("prop_btnClass")             ?  componentData.prop_btnClass      : "w-100"
+            const prop_btnStyles        =   componentData.hasOwnProperty("prop_btnStyles")            ?  componentData.prop_btnStyles          : null;
+            const prop_btnHoverStyles   =   componentData.hasOwnProperty("prop_btnHoverStyles")       ?  componentData.prop_btnHoverStyles     : null;
+
+            let btnBackgroundColor =  null;
+            let btnBackgroundColor_hover =  null;
+            let btnColor =            null;
 
 
-        const buttonClick = super.getMethod(data , "buttonClick" , "(event)");
+            switch (prop_type){
+                case "error" :
+                    btnBackgroundColor       = tools_const.styles.button.error.backgroundColor;
+                    btnBackgroundColor_hover = tools_const.styles.button.error.backgroundColorHover;
+                    btnColor                 = tools_const.styles.button.error.color;
+                    break;
+                default:
+                    btnBackgroundColor       = data.hasOwnProperty("prop_btnBackgroundColor")         ?  data.prop_btnBackgroundColor          : tools_const.styles.button.default.backgroundColor;
+                    btnBackgroundColor_hover = data.hasOwnProperty("prop_btnBackgroundColor_hover")   ?  data.prop_btnBackgroundColor_hover    : tools_const.styles.button.default.backgroundColorHover;
+                    btnColor                 = data.hasOwnProperty("prop_btnColor")                   ?  data.prop_btnColor                    : tools_const.styles.button.default.color;
+                    break;
+            }
 
 
-        return `
+            const buttonClick = super.getMethod(data , "buttonClick" , "(event)");
+
+
+            return `
 <style>
      #${el.id} .btn-action{
           background-color: ${btnBackgroundColor};
           color:            ${btnColor};
      }
      #${el.id} .btn-action:hover{
+        transition: background-color 200ms ease;
+        background-color: ${btnBackgroundColor_hover};
          ${super.renderListStyle(prop_btnHoverStyles)}
      }
 </style>
@@ -1830,11 +1785,19 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
          ${prop_title}
      </button>
 </div>
- 
 `;
+
+        }
+
+
     }
 
 }
+
+
+
+
+
 
 
 
@@ -1872,7 +1835,10 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @fn_callback
 @fn_clickBtnTools
 -------------------------------------*/
-window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase{
+window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
+
+
+{
 
     constructor(elId , config) {
 
@@ -1883,8 +1849,12 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             name: `clickBtnTools${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
                 event.stopPropagation();
-                if (config.hasOwnProperty("fn_clickBtnTools") && typeof config.fn_clickBtnTools != null){
-                    config.fn_clickBtnTools();
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+                    if (componentData.hasOwnProperty("fn_clickBtnTools") && typeof componentData.fn_clickBtnTools != null){
+                        componentData.fn_clickBtnTools();
+                    }
                 }
             }
         };
@@ -1892,8 +1862,12 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         methods["showListOptions"] = {
             name: `showListOptions${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (status=null) => {
-                config.var_showFormSelectOption = status != null ? status : !config.var_showFormSelectOption;
-                this.changeProperty(config);
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+                    componentData.var_showFormSelectOption = status != null ? status : !componentData.var_showFormSelectOption;
+                    this.changeProperty(componentData);
+                }
             }
         };
         methods["selectItemOption"] = {
@@ -1904,218 +1878,256 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                     event.stopPropagation();
                 }
 
-                const elParent = document.getElementById(elId);
-                const prop_name = config.hasOwnProperty("prop_name")    ?  config.prop_name   :  "";
-                let elSelect = null;
-                if (prop_name != null){
-                    elSelect = elParent.querySelector(`input[name=${prop_name}]`)
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    const elParent = document.getElementById(elId);
+                    const prop_name = componentData.hasOwnProperty("prop_name")    ?  componentData.prop_name   :  "";
+                    let elSelect = null;
+                    if (prop_name != null){
+                        elSelect = elParent.querySelector(`input[name=${prop_name}]`)
+                    }
+                    else {
+                        elSelect =elParent.querySelector(`input`)
+                    }
+
+                    componentData.prop_itemSelected = id;
+                    this.changeProperty(componentData);
+
+                    const changeItemSelected     =    super.getMethod(componentData , "changeItemSelected"  ,null );
+                    window[changeItemSelected](id);
+
+                    const setTitleItemSelected   =    super.getMethod(componentData , "setTitleItemSelected"  ,null );
+                    window[setTitleItemSelected](id , event);
+
+                    const showListOptions       =    super.getMethod(componentData , "showListOptions"  ,null );
+                    window[showListOptions](false);
+
                 }
-                else {
-                    elSelect =elParent.querySelector(`input`)
-                }
 
-                config.prop_itemSelected = id;
-                this.changeProperty(config);
-
-                const changeItemSelected     =    super.getMethod(config , "changeItemSelected"  ,null );
-                window[changeItemSelected](id);
-
-                const setTitleItemSelected   =    super.getMethod(config , "setTitleItemSelected"  ,null );
-                window[setTitleItemSelected](id , event);
-
-                const showListOptions       =    super.getMethod(config , "showListOptions"  ,null );
-                window[showListOptions](false);
             }
         };
         methods["setTitleItemSelected"] = {
             name: `selectItemOption${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (id = null , data=null) => {
 
-                if (id != null){
-                    const prop_options = config.hasOwnProperty("prop_options")       ?  config.prop_options      :  null;
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
 
-                    let itemSelected = "---";
-                    let dataSelected = null;
-                    if (prop_options != null && Array.isArray(prop_options)){
-                        for (let i=0; i < prop_options.length; i++){
-                            const item = prop_options[i];
-                            if (item.hasOwnProperty("name")){
-                                let value = item.hasOwnProperty('id') ? item.id : 0;
-                                let data = item.hasOwnProperty('data') ? item.data : null;
-                                if (item.hasOwnProperty('id') && item.hasOwnProperty('name') && item.id == id ){
-                                    itemSelected = item.name;
-                                    dataSelected = data;
-                                    break;
+                    if (id != null){
+                        const prop_options = componentData.hasOwnProperty("prop_options")       ?  componentData.prop_options      :  null;
+
+                        let itemSelected = "---";
+                        let dataSelected = null;
+                        if (prop_options != null && Array.isArray(prop_options)){
+                            for (let i=0; i < prop_options.length; i++){
+                                const item = prop_options[i];
+                                if (item.hasOwnProperty("name")){
+                                    let value = item.hasOwnProperty('id') ? item.id : 0;
+                                    let data = item.hasOwnProperty('data') ? item.data : null;
+                                    if (item.hasOwnProperty('id') && item.hasOwnProperty('name') && item.id == id ){
+                                        itemSelected = item.name;
+                                        dataSelected = data;
+                                        break;
+                                    }
                                 }
                             }
                         }
+
+                        componentData.var_titleItemSelected = itemSelected;
+                        this.changeProperty(componentData);
                     }
 
-                    config.var_titleItemSelected = itemSelected;
-                    this.changeProperty(config);
                 }
+
             }
         };
 
         methods["changeItemSelected"] = {
             name: `changeItemSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (id=null , event=null) => {
-                if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
 
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
 
-                    if (event != null){
-                        event.stopPropagation();
-                    }
+                    if (componentData.hasOwnProperty("fn_callback") && typeof componentData.fn_callback != null){
 
-
-                    if (id == null){
-                        const elParent = document.getElementById(elId);
-                        const prop_name = config.hasOwnProperty("prop_name")    ?  config.prop_name   :  "";
-                        let elSelect = null;
-                        if (name != null){
-                            elSelect = elParent.querySelector(`select[name=${prop_name}]`)
-                        }
-                        else {
-                            elSelect =elParent.querySelector(`select`)
+                        if (event != null){
+                            event.stopPropagation();
                         }
 
-                        id = elSelect != null ? elSelect.value : null;
-                    }
+
+                        if (id == null){
+                            const elParent = document.getElementById(elId);
+                            const prop_name = componentData.hasOwnProperty("prop_name")    ?  componentData.prop_name   :  "";
+                            let elSelect = null;
+                            if (name != null){
+                                elSelect = elParent.querySelector(`select[name=${prop_name}]`)
+                            }
+                            else {
+                                elSelect =elParent.querySelector(`select`)
+                            }
+
+                            id = elSelect != null ? elSelect.value : null;
+                        }
 
 
-                    const prop_options = config.hasOwnProperty("prop_options")       ?  config.prop_options      :  null;
+                        const prop_options = componentData.hasOwnProperty("prop_options")       ?  componentData.prop_options      :  null;
 
-                    let exist = false;
-                    let dataSelected = null;
-                    if (prop_options != null && Array.isArray(prop_options)){
-                        for (let i=0; i < prop_options.length; i++){
-                            const item = prop_options[i];
-                            if (item.hasOwnProperty("name")){
-                                let value = item.hasOwnProperty('id') ? item.id : 0;
-                                let data = item.hasOwnProperty('data') ? item.data : null;
-                                if (item.hasOwnProperty('id') && item.hasOwnProperty('name') && item.id == id ){
-                                    exist = true;
-                                    dataSelected = data;
-                                    break;
+                        let exist = false;
+                        let dataSelected = null;
+                        if (prop_options != null && Array.isArray(prop_options)){
+                            for (let i=0; i < prop_options.length; i++){
+                                const item = prop_options[i];
+                                if (item.hasOwnProperty("name")){
+                                    let value = item.hasOwnProperty('id') ? item.id : 0;
+                                    let data = item.hasOwnProperty('data') ? item.data : null;
+                                    if (item.hasOwnProperty('id') && item.hasOwnProperty('name') && item.id == id ){
+                                        exist = true;
+                                        dataSelected = data;
+                                        break;
+                                    }
                                 }
                             }
                         }
+
+
+                        if (exist && id != null){
+                            componentData.fn_callback( id , dataSelected);
+                        }
+
                     }
-
-
-                    if (exist && id != null){
-                        config.fn_callback( id , dataSelected);
-                    }
-
                 }
+
+
             }
         };
 
         methods["searchListOptions"] = {
             name: `searchListOptions${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (value) => {
-                config.var_textSearch = value;
-                this.changeProperty(config);
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    componentData.var_textSearch = value;
+                    this.changeProperty(componentData);
+                }
             }
         };
 
         methods["searchFocus"] = {
             name: `searchFocus${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (value) => {
-                config.var_focusSearch = true;
-                this.changeProperty(config);
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    componentData.var_focusSearch = true;
+                    this.changeProperty(componentData);
+                }
+
             }
         };
 
         methods["searchBlur"] = {
             name: `searchBlur${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (value) => {
-                config.var_focusSearch = false;
-                this.changeProperty(config);
+                const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    componentData.var_focusSearch = false;
+                    this.changeProperty(componentData);
+                }
             }
         };
 
-        super(elId , config , listComponent[ComponentSelectOption.name] , methods);
+        super(elId , config , listComponent[ComponentSelectOption.name] , methods ,  config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        //------------------
-        const var_randomId              =     data.hasOwnProperty("var_randomId")              ?  data.var_randomId                :  0;
-        const var_showFormSelectOption  =     data.hasOwnProperty("var_showFormSelectOption")  ?  data.var_showFormSelectOption    :  false;
-        let   var_titleItemSelected     =     data.hasOwnProperty("var_titleItemSelected")     ?  data.var_titleItemSelected       :  (data.hasOwnProperty("prop_placeholder")   ?  data.prop_placeholder :  "---");
-        let   var_textSearch            =     data.hasOwnProperty("var_textSearch")            ?  data.var_textSearch              :  "" ;
-        let   var_focusSearch           =     data.hasOwnProperty("var_focusSearch")           ?  data.var_focusSearch             :  false ;
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            //------------------
+            const var_showFormSelectOption  =  componentData.hasOwnProperty("var_showFormSelectOption")      ?  componentData.var_showFormSelectOption    :  false;
+            let   var_titleItemSelected     =  componentData.hasOwnProperty("var_titleItemSelected")         ?  componentData.var_titleItemSelected       :  (componentData.hasOwnProperty("prop_placeholder")   ?  componentData.prop_placeholder :  "---");
+            let   var_textSearch            =  componentData.hasOwnProperty("var_textSearch")                ?  componentData.var_textSearch              :  "" ;
+            let   var_focusSearch           =  componentData.hasOwnProperty("var_focusSearch")               ?  componentData.var_focusSearch             :  false ;
+
+            //------------------
+            const prop_type                 =  componentData.hasOwnProperty("prop_type")                     ?  componentData.prop_type                   :  0;
+
+            const prop_name                 =  componentData.hasOwnProperty("prop_name")                     ?  componentData.prop_name                   :  "";
+            const prop_title                =  componentData.hasOwnProperty("prop_title")                    ?  componentData.prop_title                  :  "";
+            const prop_placeholder          =  componentData.hasOwnProperty("prop_placeholder")              ?  componentData.prop_placeholder            :  "";
+            const prop_icon                 =  componentData.hasOwnProperty("prop_icon")                     ?  componentData.prop_icon                   :  "";
+
+            const prop_options              =  componentData.hasOwnProperty("prop_options")                  ?  componentData.prop_options                :  (componentSlots != null && componentSlots.hasOwnProperty("options") ? componentSlots.options : '');
+            const prop_optionWidth          =  componentData.hasOwnProperty("prop_optionWidth")              ?  componentData.prop_optionWidth            :  "100%";
 
 
+            const prop_selectOptionClass    =  componentData.hasOwnProperty("prop_selectOptionClass")        ?  componentData.prop_selectOptionClass      :  "";
+            const prop_titleClass           =  componentData.hasOwnProperty("prop_titleClass")               ?  componentData.prop_titleClass             :  "text-dark  border shadow-sm";
+            const prop_titleStyles          =  componentData.hasOwnProperty("prop_titleStyles")              ?  componentData.prop_titleStyles            :  {};
+            const prop_optionHeight         =  componentData.hasOwnProperty("prop_optionHeight")             ?  componentData.prop_optionHeight           :  130;
+            const prop_optionItemBackground =  componentData.hasOwnProperty("prop_optionItemBackground")     ?  componentData.prop_optionItemBackground   :  tools_const.styles.selectOption.backgroundColor_itemSelected;
 
-        //------------------
-        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type               :  0;
+            const prop_optionIcon           =  componentData.hasOwnProperty("prop_optionIcon")               ?  componentData.prop_optionIcon             :  "&#129171";
+            const prop_optionIconColor      =  componentData.hasOwnProperty("prop_optionIconColor")          ?  componentData.prop_optionIconColor        :  tools_const.styles.selectOption.color_icon;
 
-        const prop_name                 = data.hasOwnProperty("prop_name")                     ?  data.prop_name                   :  "";
-        const prop_title                = data.hasOwnProperty("prop_title")                    ?  data.prop_title                  :  "";
-        const prop_placeholder          = data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder            :  "";
-        const prop_icon                 = data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                   :  "";
+            const prop_itemSelected         =  componentData.hasOwnProperty("prop_itemSelected")             ?  componentData.prop_itemSelected           :  null;
 
-        const prop_options              = data.hasOwnProperty("prop_options")                  ?  data.prop_options                :  (componentSlots != null && componentSlots.hasOwnProperty("options") ? componentSlots.options : '');
-        const prop_optionWidth          = data.hasOwnProperty("prop_optionWidth")              ?  data.prop_optionWidth            :  "100%";
+            const prop_btnAddStatus         =  componentData.hasOwnProperty("prop_btnAddStatus")             ?  componentData.prop_btnAddStatus           :  false;
 
-
-        const prop_selectOptionClass    = data.hasOwnProperty("prop_selectOptionClass")        ?  data.prop_selectOptionClass      :  "";
-        const prop_titleClass           = data.hasOwnProperty("prop_titleClass")               ?  data.prop_titleClass             :  "text-dark  border shadow-sm";
-        const prop_titleStyles          = data.hasOwnProperty("prop_titleStyles")              ?  data.prop_titleStyles            :  {};
-        const prop_optionHeight         = data.hasOwnProperty("prop_optionHeight")             ?  data.prop_optionHeight           :   130;
-        const prop_optionItemBackground = data.hasOwnProperty("prop_optionItemBackground")     ?  data.prop_optionItemBackground   :  "#13b799";
-
-        const prop_optionIcon           = data.hasOwnProperty("prop_optionIcon")               ?  data.prop_optionIcon             :  "&#129171";
-        const prop_optionIconColor      = data.hasOwnProperty("prop_optionIconColor")          ?  data.prop_optionIconColor        :  "#000000";
-
-        const prop_itemSelected         = data.hasOwnProperty("prop_itemSelected")             ?  data.prop_itemSelected           :  null;
+            const directionRtl              =   componentData.hasOwnProperty("directionRtl")                ?  componentData.directionRtl                 : component_props.directionRtl
+            //------------------
+            const showListOptions           =    super.getMethod(data , "showListOptions"     , "()" );
+            const selectItemOption          =    super.getMethod(data , "selectItemOption"    , null );
+            const changeItemSelected        =    super.getMethod(data , "changeItemSelected"  , "(null , event)" );
 
 
-        const prop_btnAddStatus         =        data.hasOwnProperty("prop_btnAddStatus")      ?  data.prop_btnAddStatus           :  false;
-
-        //------------------
-        const showListOptions           =    super.getMethod(data , "showListOptions"     , "()" );
-        const selectItemOption          =    super.getMethod(data , "selectItemOption"    , null );
-        const changeItemSelected        =    super.getMethod(data , "changeItemSelected"  , "(null , event)" );
-
-
-
-
-        let btnAddItem = "";
-        if (prop_btnAddStatus) {
-            btnAddItem = `
+            let btnAddItem = "";
+            if (prop_btnAddStatus) {
+                btnAddItem = `
 <component-button id="button-tools-component-input-${var_randomId}">
 </component-button>
             `;
-        }
+            }
 
 
-        if (prop_type == 0){
+            if (prop_type == 0){
 
-            let optionsStr = "";
-            if (prop_options != null && Array.isArray(prop_options)){
-                for (let i=0; i < prop_options.length; i++){
-                    const item = prop_options[i];
-                    if (item.hasOwnProperty("name")){
-                        let value = item.hasOwnProperty('id') ? item.id : 0;
-                        optionsStr += `
+                let optionsStr = "";
+                if (prop_options != null && Array.isArray(prop_options)){
+                    for (let i=0; i < prop_options.length; i++){
+                        const item = prop_options[i];
+                        if (item.hasOwnProperty("name")){
+                            let value = item.hasOwnProperty('id') ? item.id : 0;
+                            optionsStr += `
 <option value="${value}" >
     ${item.name}
 </option>
                 `
+                        }
                     }
                 }
-            }
-            else if (typeof prop_options == "string") {
-                optionsStr = prop_options;
-            }
+                else if (typeof prop_options == "string") {
+                    optionsStr = prop_options;
+                }
 
 
-            return `
+                return `
 <style>
  #${el.id} .arrow-selector-option-${var_randomId} {
    font-size: 20pt;
@@ -2123,7 +2135,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
    height: 34px;
    margin: 0 10px;  
    color: ${prop_optionIconColor}; 
-   left: ${prop_btnAddStatus ? "165px" : "10px"};
+   ${directionRtl ? "left" : "right"}: ${prop_btnAddStatus ? "165px" : "10px"};
 }
  #${el.id} .custom-select-${var_randomId}{
     line-height: 20px;
@@ -2151,7 +2163,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             
               <select name="${prop_name}" 
                       id="${prop_name}-${var_randomId}"
-                      value="${prop_itemSelected}"
+                      value="${prop_itemSelected != null ? prop_itemSelected : '' }"
                       class="custom-select-${var_randomId} form-control  w-100 rounded line-height-30px "
                       onchange="${changeItemSelected}">
                  ${optionsStr}
@@ -2164,40 +2176,43 @@ ${btnAddItem}
  </section>
         `
 
-        }
-        else if (prop_type == 1) {
+            }
+            else if (prop_type == 1) {
 
-            let optionsStr = "";
-            if (prop_options != null && Array.isArray(prop_options)){
-                for (let i=0; i < prop_options.length; i++){
-                    const item = prop_options[i];
-                    if (item.hasOwnProperty("name")){
-                        let value = item.hasOwnProperty('id') ? item.id : 0;
-                        if (typeof item.name.includes == "undefined" || item.name.includes(var_textSearch)){
-                            optionsStr += `
+                let optionsStr = "";
+                if (prop_options != null && Array.isArray(prop_options)){
+                    for (let i=0; i < prop_options.length; i++){
+                        const item = prop_options[i];
+                        if (item.hasOwnProperty("name")){
+                            let value = item.hasOwnProperty('id') ? item.id : 0;
+                            if (typeof item.name.includes == "undefined" || item.name.includes(var_textSearch)){
+                                optionsStr += `
 <div class="select-title-inside-title-${var_randomId} rounded  ${prop_itemSelected != null && value == prop_itemSelected ? 'select-title-inside-item_active-'+var_randomId : ''}"
    onclick="${selectItemOption+`(${item.id} , event)`}"> ${item.name} 
 </div>
                 `
-                            if (prop_itemSelected != null && value == prop_itemSelected ){
-                                var_titleItemSelected = item.name;
+                                if (prop_itemSelected != null && value == prop_itemSelected ){
+                                    var_titleItemSelected = item.name;
+                                }
                             }
                         }
                     }
                 }
-            }
 
 
-            return  `
+                return  `
 <style>
  #${el.id} .select-title-${var_randomId}{
     width: 10px;
     line-height: 30px;
     height: 35px; 
     cursor: pointer;
-    padding-left: ${prop_btnAddStatus ? "180px" : "20px"};
-    padding-right: 30px;
+    ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? "180px" : "20px"};
+    ${directionRtl ? "padding-right" : "padding-left"} : 30px;
     background-color: white;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;  
     ${super.renderListStyle(prop_titleStyles)}
 }
  #${el.id} .arrow-selector-option-${var_randomId} {
@@ -2206,8 +2221,8 @@ ${btnAddItem}
    line-height: 40pt;
    margin: 0 10px;
    top: 0;
-   color: ${prop_optionIconColor};
-   left: ${prop_btnAddStatus ? "165px" : "10px"};
+   
+    ${directionRtl ? "left" : "right"}: ${prop_btnAddStatus ? "165px" : "10px"};
 }
  #${el.id} .select-title-inside-${var_randomId}{
      height: ${prop_optionHeight}px;
@@ -2224,16 +2239,16 @@ ${btnAddItem}
 }
  #${el.id} .select-title-inside-item_active{
      background-color: ${prop_optionItemBackground};
-     color: ${prop_optionIconColor};
 }
  #${el.id} .icon-select-title-${var_randomId} {
     z-index: 10;
     margin: 0 5px !important;
     width: 20px;
     line-height: 30px;
-    right: 0;
+    ${directionRtl ? "right" : "left"} : 0;
     cursor: pointer;
     font-size: 20pt;
+    color: ${prop_optionIconColor};
 }
 </style>
 <div class="component-element-structure mb-2 position-relative ${prop_selectOptionClass}">
@@ -2241,7 +2256,7 @@ ${btnAddItem}
 <component-label id="label-component-select-option-${var_randomId}"></component-label>
        </div>
        
-       <input name="${prop_name}" value="${prop_itemSelected}" type="hidden"/>
+       <input name="${prop_name}"  value="${prop_itemSelected != null ? prop_itemSelected : '' }" type="hidden"/>
        
        <b class="select-title-${var_randomId}  w-100 d-block position-relative ${prop_titleClass}" onclick="${showListOptions}">
            ${var_titleItemSelected}
@@ -2272,130 +2287,167 @@ ${btnAddItem}
 
 </div>
             `
+            }
         }
-
     }
 
     onRender = (data , componentSlots , el) =>{
-        this.readyLabelInput(data , componentSlots , el);
-        this.readyInputSearch(data , componentSlots , el);
-        this.readyElementPosition(data , componentSlots , el);
-        this.readyButtonTools(data , componentSlots , el);
+
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        this.readyLabelInput(var_randomId);
+        this.readyInputSearch(var_randomId);
+        this.readyElementPosition(var_randomId);
+        this.readyButtonTools(var_randomId);
     }
 
-    readyLabelInput  = (data , componentSlots , el) => {
+    readyLabelInput  = (var_randomId) => {
 
-        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const prop_name                 =   data.hasOwnProperty("prop_name")                   ?  data.prop_name                          :  "No-Name-input";
-        const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
-        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?  data.prop_type                          :  0;
+            const componentData = components[var_randomId];
 
-        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  [ "shadow-sm" , "px-2" ,"py-1" , "d-block "];
-        const prop_labelStyles          =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles                   :  {};
-        const prop_labelHoverStyles     =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_title                         :  {};
+            const prop_name                 =   componentData.hasOwnProperty("prop_name")                   ?  componentData.prop_name                          :  "No-Name-input";
+            const prop_title                =   componentData.hasOwnProperty("prop_title")                  ?  componentData.prop_title                         :  "No Title";
+            const prop_type                 =   componentData.hasOwnProperty("prop_type")                   ?  componentData.prop_type                          :  0;
 
-        const showListOptions            =    super.getMethod(data , "showListOptions"     , null );
+            const prop_labelClass           =   componentData.hasOwnProperty("prop_labelClass")             ?  componentData.prop_labelClass                    :  [ "shadow-sm" , "px-2" ,"py-1" , "d-block "];
+            const prop_labelStyles          =   componentData.hasOwnProperty("prop_labelStyles")            ?  componentData.prop_labelStyles                   :  {};
+            const prop_labelHoverStyles     =   componentData.hasOwnProperty("prop_labelHoverStyles")       ?  componentData.prop_title                         :  {};
 
-        if (prop_title != null){
-            new window.ComponentLabel(
-                "label-component-select-option-"+var_randomId ,
-                {
-                    prop_title:  prop_title ,
-                    prop_for  :  prop_name+"-"+var_randomId ,
+            const showListOptions            =    super.getMethod(componentData , "showListOptions"     , null );
 
-                    prop_labelClass:       prop_labelClass ,
-                    prop_labelStyles:      prop_labelStyles ,
-                    prop_labelHoverStyles: prop_labelHoverStyles ,
+            if (prop_title != null){
+                new window.ComponentLabel(
+                    "label-component-select-option-"+var_randomId ,
+                    {
+                        prop_title:  prop_title ,
+                        prop_for  :  prop_name+"-"+var_randomId ,
 
-                    fn_callback: ()=>{
-                        if (prop_type != 0){
-                            window[showListOptions]()
+                        prop_labelClass:       prop_labelClass ,
+                        prop_labelStyles:      prop_labelStyles ,
+                        prop_labelHoverStyles: prop_labelHoverStyles ,
+
+                        fn_callback: ()=>{
+                            if (prop_type != 0){
+                                window[showListOptions]()
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
+        }
+
+    }
+
+    readyElementPosition  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const var_showFormSelectOption  =  componentData.hasOwnProperty("var_showFormSelectOption")      ?  componentData.var_showFormSelectOption           :  false;
+
+            const prop_type                 =  componentData.hasOwnProperty("prop_type")                     ?  componentData.prop_type                          :  0;
+            const prop_optionWidth          =  componentData.hasOwnProperty("prop_optionWidth")              ?  componentData.prop_optionWidth                   :  "100%";
+            const prop_optionStyles         =  componentData.hasOwnProperty("prop_optionStyles")             ?  componentData.prop_optionStyles                  :  {};
+
+            if (prop_type == 1){
+                new window.ComponentPositionElement(
+                    "form-position-select-option-"+var_randomId ,
+                    {
+                        prop_show: var_showFormSelectOption,
+
+                        prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2"] ,
+                        prop_elementStyles: prop_optionStyles ,
+                        prop_width: prop_optionWidth,
+                    }
+                )
+            }
         }
     }
 
-    readyElementPosition  = (data , componentSlots , el) => {
-        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
-        const var_showFormSelectOption  =     data.hasOwnProperty("var_showFormSelectOption")  ?  data.var_showFormSelectOption           :  false;
+    readyInputSearch  = (var_randomId) => {
 
-        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type                      :  0;
-        const prop_optionWidth          = data.hasOwnProperty("prop_optionWidth")              ?  data.prop_optionWidth                   :  "100%";
-        const prop_optionStyles         = data.hasOwnProperty("prop_optionStyles")             ?  data.prop_optionStyles                  :  {};
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        if (prop_type == 1){
-            new window.ComponentPositionElement(
-                "form-position-select-option-"+var_randomId ,
-                {
-                    prop_show: var_showFormSelectOption,
+            const componentData = components[var_randomId];
 
-                    prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2"] ,
-                    prop_elementStyles: prop_optionStyles ,
-                    prop_width: prop_optionWidth,
-                }
-            )
+            const var_textSearch            =    componentData.hasOwnProperty("var_textSearch")             ?  componentData.var_textSearch           :  "";
+            const var_focusSearch           =    componentData.hasOwnProperty("var_focusSearch")            ?  componentData.var_focusSearch          :  false;
+
+            const prop_type                 =    componentData.hasOwnProperty("prop_type")                  ?  componentData.prop_type                :  0;
+
+            const searchListOptions         =    super.getMethod(componentData , "searchListOptions"     , null );
+            const searchFocus               =    super.getMethod(componentData , "searchFocus"           , null );
+            const searchBlur                =    super.getMethod(componentData , "searchBlur"            , null );
+
+            if (prop_type == 1){
+                new window.ComponentInput(
+                    "input-search-"+var_randomId ,
+                    {
+                        prop_title: null ,
+                        prop_icon: "&#x2315;" ,
+                        prop_value: var_textSearch ,
+                        prop_isFocus: var_focusSearch ,
+
+                        fn_oninput: (value)=> {
+                            window[searchListOptions](value)
+                        } ,
+
+                        fn_onfocus: (value)=> {
+                            window[searchFocus](value)
+                        } ,
+
+                        /*fn_onblur: (value)=> {
+                            window[searchBlur](value)
+                        }*/
+                    }
+                )
+            }
         }
+
+
     }
 
-    readyInputSearch  = (data , componentSlots , el) => {
+    readyButtonTools  = (var_randomId) => {
 
-        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
-        const var_textSearch            =     data.hasOwnProperty("var_textSearch")            ?  data.var_textSearch                     :  "";
-        const var_focusSearch           =    data.hasOwnProperty("var_focusSearch")            ?  data.var_focusSearch                    :  false;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?      data.prop_type                      :  0;
+            const componentData = components[var_randomId];
 
-        const searchListOptions         =    super.getMethod(data , "searchListOptions"     , null );
-        const searchFocus               =    super.getMethod(data , "searchFocus"           , null );
-        const searchBlur                =    super.getMethod(data , "searchBlur"            , null );
+            const prop_btnAddStatus   =   componentData.hasOwnProperty("prop_btnAddStatus")      ?  componentData.prop_btnAddStatus       :  false;
+            const prop_btnAddIcon     =   componentData.hasOwnProperty("prop_btnAddIcon")        ?  componentData.prop_btnAddIcon         :  "&plus;";
+            const prop_btnAddTitle    =   componentData.hasOwnProperty("prop_btnAddTitle")       ?  componentData.prop_btnAddTitle        :  "add item";
+            const prop_btnAddClass    =   componentData.hasOwnProperty("prop_btnAddClass")       ?  componentData.prop_btnAddClass        :  [];
+            const directionRtl        =   componentData.hasOwnProperty("directionRtl")           ?  componentData.directionRtl            : component_props.directionRtl
 
-        if (prop_type == 1){
-            new window.ComponentInput(
-                "input-search-"+var_randomId ,
-                {
-                    prop_title: null ,
-                    prop_icon: "&#x2315;" ,
-                    prop_value: var_textSearch ,
-                    prop_isFocus: var_focusSearch ,
+            const clickBtnTools       =   super.getMethod(componentData , "clickBtnTools"     , null );
 
-                    fn_oninput: (value)=> {
-                        window[searchListOptions](value)
-                    } ,
+            if (prop_btnAddStatus){
 
-                    fn_onfocus: (value)=> {
-                        window[searchFocus](value)
-                    } ,
-
-                    /*fn_onblur: (value)=> {
-                        window[searchBlur](value)
-                    }*/
+                let styles =  {
+                    "z-index" : "10" ,
+                    "top" : "0" ,
+                    "cursor" : "pointer" ,
+                    "width" : "160px" ,
+                    "height" : "33px" ,
+                    "line-height" : "25px" ,
+                    };
+                if (directionRtl){
+                    styles["left"] = "0";
                 }
-            )
-        }
-    }
-
-    readyButtonTools  = (data , componentSlots , el) => {
-
-        const var_randomId    =   data.hasOwnProperty("var_randomId")        ?  data.var_randomId   :  0;
-        const prop_btnAddStatus   =   data.hasOwnProperty("prop_btnAddStatus")  ?  data.prop_btnAddStatus   :  false;
-        const prop_btnAddIcon     =        data.hasOwnProperty("prop_btnAddIcon")        ?  data.prop_btnAddIcon             :  "&plus;";
-        const prop_btnAddTitle    =        data.hasOwnProperty("prop_btnAddTitle")       ?  data.prop_btnAddTitle            :  "add item";
+                else {
+                    styles["right"] = "0";
+                }
 
 
-        const clickBtnTools    =    super.getMethod(data , "clickBtnTools"     , null );
-
-        const prop_btnAddClass    =   data.hasOwnProperty("prop_btnAddClass")  ?  data.prop_btnAddClass   :  ["btn" , "btn-light"];
-
-        if (prop_btnAddStatus){
-            new window.ComponentButton(
-                "button-tools-component-input-"+var_randomId ,
-                {
-                    prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
-                    prop_btnBackgroundColor: "",
-                    prop_title: `
+                new window.ComponentButton(
+                    "button-tools-component-input-"+var_randomId ,
+                    {
+                        prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
+                        //prop_btnBackgroundColor: "",
+                        prop_title: `
 <span class="mx-3">
     ${prop_btnAddIcon}
 </span>
@@ -2403,26 +2455,153 @@ ${btnAddItem}
     ${prop_btnAddTitle}
 </span>
                     `,
-                    prop_btnColor: "",
-                    prop_btnStyles: {
-                        "z-index" : "10" ,
-                        "left" : "0" ,
-                        "top" : "0" ,
-                        "cursor" : "pointer" ,
-                        "width" : "160px" ,
-                        "height" : "32px" ,
-                    },
+                        //prop_btnColor: "",
+                        prop_btnStyles: styles,
 
-                    fn_callback: (event)=>{
-                        window[clickBtnTools](event)
+                        fn_callback: (event)=>{
+                            window[clickBtnTools](event)
+                        }
                     }
-                }
-            )
+                )
+            }
         }
+
     }
 
 
 }
+
+
+
+
+/*-------------------------------------
+ Component Tabs
+-------------------------------------
+@prop_tabs           {id   icon}
+@prop_tabSelected
+
+@fn_callback
+-------------------------------------*/
+window.ComponentTabs = class ComponentTabs extends ComponentBase{
+    constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+        methods["onSelectTab"] = {
+            name: `onSelectTab${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (tabIndex) => {
+
+                const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
+
+                if ( components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+
+                    componentData.prop_tabSelected = tabIndex;
+                    this.changeProperty(componentData);
+
+                    if (componentData.hasOwnProperty("fn_callback") && typeof componentData.fn_callback != null){
+                        componentData.fn_callback(tabIndex);
+                    }
+
+                }
+
+            }
+        };
+
+        super(elId , config , listComponent[ComponentTabs.name] , methods , config["var_randomId"]);
+
+        this.render()
+    }
+
+    templateFn(data , componentSlots , el){
+
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_tabs          =   componentData.hasOwnProperty("prop_tabs")         ?  componentData.prop_tabs          :  [];
+            const prop_tabSelected   =   componentData.hasOwnProperty("prop_tabSelected")  ?  componentData.prop_tabSelected   :  null;
+
+            const onSelectTab = super.getMethod(componentData , "onSelectTab"    , null);
+
+            let tabHtml = "";
+            if (prop_tabs != null){
+                let tabClassCol = "";
+                switch (prop_tabs.length){
+                    case 4:
+                        tabClassCol = "col-md-3";
+                        break;
+                    case 3:
+                        tabClassCol = "col-md-4";
+                        break;
+                    case 2:
+                        tabClassCol ="col-md-6";
+                        break;
+                    case 1:
+                        tabClassCol = "col-md-12";
+                        break;
+                }
+
+                for (let i = 0; i < prop_tabs.length; i++) {
+                    const itemTab = prop_tabs[i];
+                    if (itemTab.hasOwnProperty("title")){
+                        let icon = itemTab.hasOwnProperty("icon") ? `<img src="${itemTab.icon}" alt=" ">` : ``;
+                        const tabId =  itemTab.hasOwnProperty("id")  ?  itemTab.id  :  i;
+                        let classActive = prop_tabSelected != null && prop_tabSelected == tabId ? 'btn-tab-types-active' : '';
+
+                        tabHtml += `
+                      <div class="${tabClassCol} px-1 col-12 position-relative">
+                          <button type="button"
+                                onclick="${onSelectTab}(${tabId})"
+                                class="${classActive} btn-tab-types btn btn-light w-100 border shadow-sm line-height-30px">
+                            ${icon}
+                            ${itemTab.title}
+                         </button>
+                     </div>
+                `;
+                    }
+
+                }
+
+            }
+
+            return `
+<style>
+.btn-tab-types{
+    background-color: #c7c7c7;
+    height: 60px;
+}
+.btn-tab-types:before{
+    content: "";
+    width: 100%;
+    height: 115%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #ffffff29;
+    clip-path: ellipse(100% 50% at 50% 0);
+}
+
+.btn-tab-types-active{
+    background-color:#0A1225 !important;
+    color :#ffffff !important;
+}
+</style>
+           <section class="component-element-structure row m-0 mb-2">
+               ${tabHtml}
+           </section>
+        `
+        }
+
+
+    }
+}
+
+
 
 
 
@@ -2554,7 +2733,6 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
         }
     }
 
-
 }
 
 
@@ -2590,84 +2768,126 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             name: `focusToInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
                 const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
-                const prop_name     =        config.hasOwnProperty("prop_name")                  ?  config.prop_name                       :  "No-Name-input";
 
-                const el = document.getElementById(`${prop_name}-${var_randomId}`);
-                el.focus();
+                if ( components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+
+                    const prop_name     =        componentData.hasOwnProperty("prop_name")                  ?  componentData.prop_name                       :  "No-Name-input";
+
+                    const el = document.getElementById(`${prop_name}-${var_randomId}`);
+                    el.focus();
+                }
+
+
             }
         };
         methods["clearInput"] = {
             name: `clearInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
                 const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
-                const prop_name     =        config.hasOwnProperty("prop_name")                  ?  config.prop_name                       :  "No-Name-input";
 
-                const el = document.getElementById(`${prop_name}-${var_randomId}`);
-                el.value = "";
+                if ( components.hasOwnProperty(var_randomId)) {
 
-                if (config.hasOwnProperty("fn_oninput") && typeof config.fn_oninput != null){
-                    config.fn_oninput("");
+                    const componentData = components[var_randomId];
+
+                    const prop_name     =  componentData.hasOwnProperty("prop_name")                  ?  componentData.prop_name                       :  "No-Name-input";
+
+                    const el = document.getElementById(`${prop_name}-${var_randomId}`);
+                    el.value = "";
+
+                    if (componentData.hasOwnProperty("fn_oninput") && typeof componentData.fn_oninput != null){
+                        componentData.fn_oninput("");
+                    }
                 }
             }
         };
         methods["oninput"] = {
             name: `oninput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                const el = event.target;
-                const value = el.value;
-                if (config.hasOwnProperty("fn_oninput") && typeof config.fn_oninput != null){
-                    config.fn_oninput(value);
+
+                const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
+
+                if ( components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+
+                    const el = event.target;
+                    const value = el.value;
+                    if (componentData.hasOwnProperty("fn_oninput") && typeof componentData.fn_oninput != null){
+                        componentData.fn_oninput(value);
+                    }
                 }
             }
         };
         methods["onfocus"] = {
             name: `onfocus${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                if (config.hasOwnProperty("fn_onfocus") && typeof config.fn_onfocus != null){
-                    config.fn_onfocus();
+                const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
+
+                if ( components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+
+                    if (componentData.hasOwnProperty("fn_onfocus") && typeof componentData.fn_onfocus != null){
+                        componentData.fn_onfocus();
+                    }
                 }
+
+
             }
         };
         methods["onblur"] = {
             name: `onblur${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                if (config.hasOwnProperty("fn_onblur") && typeof config.fn_onblur != null){
-                    config.fn_onblur();
+                const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
+
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    if (componentData.hasOwnProperty("fn_onblur") && typeof componentData.fn_onblur != null){
+                        componentData.fn_onblur();
+                    }
                 }
             }
         };
 
-        super(elId , config , listComponent[ComponentInput.name] , methods);
+        super(elId , config , listComponent[ComponentInput.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        //-------------------
-        const var_randomId              =        data.hasOwnProperty("var_randomId")               ?  data.var_randomId                                         :  0;
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        //-------------------
-        const prop_type                 =        data.hasOwnProperty("prop_type")                  ?  data.prop_type                                            :  "";
-        const prop_name                 =        data.hasOwnProperty("prop_name")                  ?  data.prop_name                                            :  "No-Name-input";
-        const prop_title                =        data.hasOwnProperty("prop_title")                 ?  data.prop_title                                           :  "No Title";
-        const prop_icon                 =        data.hasOwnProperty("prop_icon")                  ?  data.prop_icon                                            :  "";
-        const prop_value                =        data.hasOwnProperty("prop_value")                 ?  data.prop_value                                           :  "";
-        const prop_isFocus              =        data.hasOwnProperty("prop_isFocus")               ?  data.prop_isFocus                                         :  false;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const prop_inputClass           =    data.hasOwnProperty("prop_inputClass")                 ?  data.prop_inputClass                                      :  [];
-        const prop_inputStyles          =    data.hasOwnProperty("prop_inputStyles")                ?  data.prop_inputStyles                                     :  {};
+            const componentData = components[var_randomId];
 
-        const oninput                   =    super.getMethod(data , "oninput"  , "(event)" );
-        const onblur                    =    super.getMethod(data , "onblur"  , "(event)" );
-        const onfocus                   =    super.getMethod(data , "onfocus"  , "(event)" );
+            //-------------------
+            const prop_type                 =   componentData.hasOwnProperty("prop_type")                  ?  componentData.prop_type                    :  "";
+            const prop_name                 =   componentData.hasOwnProperty("prop_name")                  ?  componentData.prop_name                    :  "No-Name-input";
+            const prop_title                =   componentData.hasOwnProperty("prop_title")                 ?  componentData.prop_title                   :  "No Title";
+            const prop_icon                 =   componentData.hasOwnProperty("prop_icon")                  ?  componentData.prop_icon                    :  "";
+            const prop_value                =   componentData.hasOwnProperty("prop_value")                 ?  componentData.prop_value                   :  "";
+            const prop_isFocus              =   componentData.hasOwnProperty("prop_isFocus")               ?  componentData.prop_isFocus                 :  false;
 
-        return `
+            const prop_inputClass           =   componentData.hasOwnProperty("prop_inputClass")            ?  componentData.prop_inputClass              :  [];
+            const prop_inputStyles          =   componentData.hasOwnProperty("prop_inputStyles")           ?  componentData.prop_inputStyles             :  {};
+
+            const directionRtl              =   componentData.hasOwnProperty("directionRtl")               ?  componentData.directionRtl                 : component_props.directionRtl
+
+            const oninput                   =   super.getMethod(componentData , "oninput"  , "(event)" );
+            const onblur                    =   super.getMethod(componentData , "onblur"  , "(event)" );
+            const onfocus                   =   super.getMethod(componentData , "onfocus"  , "(event)" );
+
+            return `
 <style>
  #${el.id} .compoent-input-${var_randomId}{
      ${super.renderListStyle(prop_inputStyles)}
-     padding-left: 30px!important;
-     padding-right: ${(prop_icon != null && prop_icon != "") ?  "30px"  : "10px"}!important;
+     ${directionRtl ? "padding-left" : "padding-right"} : 30px!important;
+     ${directionRtl ? "padding-right" : "padding-left"}: ${(prop_icon != null && prop_icon != "") ?  "30px"  : "10px"}!important;
  }
 </style>
 <section class="component-element-structure mb-2">
@@ -2689,6 +2909,8 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 
 </section>
         `;
+        }
+
     }
 
     onCreate = (data , el) => {
@@ -2697,126 +2919,166 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 
     onRender = (data , componentSlots , el) => {
 
-        this.readyLabelInput(data , componentSlots , el);
-        this.readyBtnClearInput(data , componentSlots , el);
-        this.readyIconInput(data , componentSlots , el);
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        const prop_name        =    data.hasOwnProperty("prop_name")              ?  data.prop_name                                            :  "No-Name-input";
-        const var_randomId     =    data.hasOwnProperty("var_randomId")           ?  data.var_randomId                                         :  0;
-        const prop_isFocus     =    data.hasOwnProperty("prop_isFocus")           ?  data.prop_isFocus                                         :  false;
-        const prop_value                =        data.hasOwnProperty("prop_value")                 ?  data.prop_value                                           :  "";
+        this.focusOrBlur(var_randomId);
+        this.readyLabelInput(var_randomId);
+        this.readyBtnClearInput(var_randomId);
+        this.readyIconInput(var_randomId);
+    }
 
-        const elInput = document.getElementById(`${prop_name}-${var_randomId}`);
-        if (elInput != null){
-            if (prop_isFocus){
-                elInput.focus()
-                elInput.setSelectionRange(prop_value.length, prop_value.length);
+
+    focusOrBlur  = (var_randomId) => {
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_name        =    componentData.hasOwnProperty("prop_name")              ?  componentData.prop_name                   :  "No-Name-input";
+            const prop_isFocus     =    componentData.hasOwnProperty("prop_isFocus")           ?  componentData.prop_isFocus                :  false;
+            const prop_value       =    componentData.hasOwnProperty("prop_value")             ?  componentData.prop_value                  :  "";
+
+            const elInput = document.getElementById(`${prop_name}-${var_randomId}`);
+            if (elInput != null){
+                if (prop_isFocus){
+                    elInput.focus()
+                    elInput.setSelectionRange(prop_value.length, prop_value.length);
+                }
+                else {
+                    elInput.blur()
+                }
             }
-            else {
-                elInput.blur()
+        }
+    }
+
+    readyLabelInput  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_name                 =   componentData.hasOwnProperty("prop_name")                   ?  componentData.prop_name                          :  "No-Name-input";
+            const prop_title                =   componentData.hasOwnProperty("prop_title")                  ?  componentData.prop_title                         :  "No Title";
+            const prop_type                 =   componentData.hasOwnProperty("prop_type")                   ?  componentData.prop_type                          :  0;
+
+            const prop_labelClass           =   componentData.hasOwnProperty("prop_labelClass")             ?  componentData.prop_labelClass                    :  [];
+            const prop_labelStyles          =   componentData.hasOwnProperty("prop_labelStyles")            ?  componentData.prop_labelStyles                   :  {};
+            const prop_labelHoverStyles     =   componentData.hasOwnProperty("prop_labelHoverStyles")       ?  componentData.prop_title                         :  {};
+
+            if (prop_title != null){
+                new window.ComponentLabel(
+                    "label-component-input-"+var_randomId ,
+                    {
+                        prop_title:  prop_title ,
+                        prop_for  :  prop_name+"-"+var_randomId ,
+
+                        prop_labelClass:       prop_labelClass ,
+                        prop_labelStyles:      prop_labelStyles ,
+                        prop_labelHoverStyles: prop_labelHoverStyles ,
+
+                        fn_callback: ()=>{
+
+                        }
+                    }
+                )
             }
         }
 
+
     }
 
-    readyLabelInput  = (data , componentSlots , el) => {
+    readyBtnClearInput  = (var_randomId) => {
 
-        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const prop_name                 =   data.hasOwnProperty("prop_name")                   ?  data.prop_name                          :  "No-Name-input";
-        const prop_title                =   data.hasOwnProperty("prop_title")                  ?  data.prop_title                         :  "No Title";
-        const prop_type                 =     data.hasOwnProperty("prop_type")                 ?  data.prop_type                          :  0;
+            const componentData = components[var_randomId];
+            const directionRtl              =   componentData.hasOwnProperty("directionRtl")               ?  componentData.directionRtl                 : component_props.directionRtl
 
-        const prop_labelClass           =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass                    :  [];
-        const prop_labelStyles          =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles                   :  {};
-        const prop_labelHoverStyles     =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_title                         :  {};
+            const clearInput                =    super.getMethod(componentData , "clearInput"    , null);
 
+            let styles = {
+                "z-index" : "10",
+                    "width" :   "35px",
+                    "line-height" : "20px",
+                    "cursor" : "pointer",
+                    "height" : "30px" ,
+                    "margin-top" : "3px!important" ,
+                    "top" : "0" ,
+            };
+            if (directionRtl){
+                styles["left"]= "5px"
+            }
+            else {
+                styles["right"]= "5px"
+            }
 
-        if (prop_title != null){
-            new window.ComponentLabel(
-                "label-component-input-"+var_randomId ,
+            new window.ComponentButton(
+                "btn-clear-component-input-"+var_randomId ,
                 {
-                    prop_title:  prop_title ,
-                    prop_for  :  prop_name+"-"+var_randomId ,
+                    classList: []  ,
+                    styles: {
+                        "height" : "38px"
+                    }  ,
 
-                    prop_labelClass:       prop_labelClass ,
-                    prop_labelStyles:      prop_labelStyles ,
-                    prop_labelHoverStyles: prop_labelHoverStyles ,
+                    prop_btnClass : ["position-absolute"] ,
+                    prop_btnStyles : styles ,
+                    prop_btnBackgroundColor : "#ffffff00" ,
+                    prop_btnColor : "" ,
+                    prop_title : "&#10540;" ,
 
                     fn_callback: ()=>{
-
+                        window[clearInput]();
                     }
                 }
             )
         }
 
+
+
     }
 
-    readyBtnClearInput  = (data , componentSlots , el) => {
+    readyIconInput = (var_randomId) => {
 
-        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const clearInput                =    super.getMethod(data , "clearInput"    , null);
+            const componentData = components[var_randomId];
 
-        new window.ComponentButton(
-            "btn-clear-component-input-"+var_randomId ,
-            {
-                classList: []  ,
-                styles: {
-                    "height" : "38px"
-                }  ,
+            const prop_icon                 =   componentData.hasOwnProperty("prop_icon")                   ?  componentData.prop_icon                    :  "";
+            const directionRtl              =   componentData.hasOwnProperty("directionRtl")                ?  componentData.directionRtl                 : component_props.directionRtl
 
-                prop_btnClass : ["position-absolute"] ,
-                prop_btnStyles : {
-                    "z-index" : "10",
-                    "width" :   "35px",
-                    "line-height" : "20px",
-                    "left" : "5px",
-                    "cursor" : "pointer",
-                    "height" : "30px" ,
-                    "margin-top" : "3px!important" ,
-                    "top" : "0" ,
-                } ,
-                prop_btnBackgroundColor : "#ffffff00" ,
-                prop_btnColor : "" ,
-                prop_title : "&#10540;" ,
+            const focusToInput              =    super.getMethod(componentData , "focusToInput"  , null );
 
-                fn_callback: ()=>{
-                    window[clearInput]();
-                }
+            let styles = {
+                "z-index" : "10",
+                "margin" : "0 5px",
+                "width" : "30px",
+                "line-height" :   "35px",
+                "cursor" : "pointer",
+                "font-size" : "20pt;",
+                "top" : "0" ,
             }
-        )
-    }
-
-    readyIconInput = (data , componentSlots , el) => {
-
-        const var_randomId              =   data.hasOwnProperty("var_randomId")                ?  data.var_randomId                       :  0;
-
-        const prop_icon                 =    data.hasOwnProperty("prop_icon")                  ?  data.prop_icon                          :  "";
-        const focusToInput              =    super.getMethod(data , "focusToInput"  , null );
-
-        new window.ComponentIcon(
-            "icon-component-input-"+var_randomId ,
-            {
-                prop_icon: prop_icon ,
-
-                prop_iconClass : ["position-absolute" , ""] ,
-                prop_iconStyles : {
-                    "z-index" : "10",
-                    "margin" : "0 5px",
-                    "width" : "30px",
-                    "line-height" :   "35px",
-                    "right" :   "0",
-                    "cursor" : "pointer",
-                    "font-size" : "20pt;",
-                    "top" : "0" ,
-                } ,
-
-                fn_callback: ()=>{
-                    window[focusToInput]();
-                }
+            if (directionRtl){
+                styles["right"]= "0"
             }
-        )
+            else {
+                styles["left"]= "0"
+            }
+
+            new window.ComponentIcon(
+                "icon-component-input-"+var_randomId ,
+                {
+                    prop_icon: prop_icon ,
+
+                    prop_iconClass : ["position-absolute" , ""] ,
+                    prop_iconStyles : styles ,
+
+                    fn_callback: ()=>{
+                        window[focusToInput]();
+                    }
+                }
+            )
+        }
+
+
     }
 
 }
@@ -2853,13 +3115,19 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             name: `setValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (value) => {
                 const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
-                this.value = value;
 
-                const el = document.getElementById(elId);
-                const input = el.querySelector(`.input-editor-${var_randomId}`);
-                input.value = tools_converter.convertPriceToString(this.value);
+                if ( components.hasOwnProperty(var_randomId)) {
 
-                window[this.methods["changeValue_commit"]]()
+                    const componentData = components[var_randomId];
+                    const changeValue_commit   =   super.getMethod(componentData , "changeValue_commit"     , null );
+
+                    this.value = value;
+                    const el = document.getElementById(elId);
+                    const input = el.querySelector(`.input-editor-${var_randomId}`);
+                    input.value = tools_converter.convertPriceToString(this.value);
+
+                    window[changeValue_commit]()
+                }
             }
         };
 
@@ -2890,35 +3158,34 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             name: `formatValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
                 this.IS_FOCUS = false;
-
-                this.readyElementPosition(
-                    config.hasOwnProperty("var_randomId")                ?  config.var_randomId                       :  0 ,
-                    config.hasOwnProperty("prop_information")            ?  config.prop_information                   : null ,
-                    this.IS_FOCUS
-                )
+                const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
+                this.readyElementPosition(var_randomId , this.IS_FOCUS)
             }
         };
         methods["unformatValue"] = {
             name: `unformatValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
                 this.IS_FOCUS = true;
-
-                this.readyElementPosition(
-                    config.hasOwnProperty("var_randomId")                ?  config.var_randomId                       :  0 ,
-                    config.hasOwnProperty("prop_information")            ?  config.prop_information                   : null ,
-                    this.IS_FOCUS
-                )
+                const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
+                this.readyElementPosition(var_randomId , this.IS_FOCUS)
             }
         };
 
         methods["clearInput"] = {
             name: `clearInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                window[this.methods["setValue"]](0)
+
+                const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
+
+                if ( components.hasOwnProperty(var_randomId)) {
+
+                    const componentData = components[var_randomId];
+                    const setValue = super.getMethod(componentData, "setValue", null);
+
+                    window[setValue](0)
+                }
             }
         };
-
-
 
         methods["focustoInput"] = {
             name: `focustoInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
@@ -2935,8 +3202,12 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         methods["clickBtnTools"] = {
             name: `clickBtnTools${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
-                if (config.hasOwnProperty("fn_clickBtnTools") && typeof config.fn_clickBtnTools != null){
-                    config.fn_clickBtnTools();
+                const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+                    if (componentData.hasOwnProperty("fn_clickBtnTools") && typeof componentData.fn_clickBtnTools != null){
+                        componentData.fn_clickBtnTools();
+                    }
                 }
             }
         };
@@ -2945,48 +3216,64 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             name: `changeValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (event) => {
                 this.value = event.target.value;
-                window[this.methods["changeValue_commit"]]();
+
+                const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+                    const changeValue_commit = super.getMethod(componentData, "changeValue_commit", null);
+
+                    window[changeValue_commit]();
+                }
             }
         };
 
         methods["changeValue_commit"] = {
             name: `changeValue_commit${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
-                if (config.hasOwnProperty("fn_changeValue") && typeof config.fn_changeValue != null){
-                    config.fn_changeValue(tools_converter.convertStringToPrice(this.value));
+
+                const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+                    if (componentData.hasOwnProperty("fn_changeValue") && typeof componentData.fn_changeValue != null){
+                        componentData.fn_changeValue(tools_converter.convertStringToPrice(this.value));
+                    }
                 }
             }
         };
 
-        super(elId , config , listComponent[ComponentInputPrice.name] , methods);
+        super(elId , config , listComponent[ComponentInputPrice.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        const var_randomId        =        data.hasOwnProperty("var_randomId")               ?  data.var_randomId                                         :  0;
-        const var_showInfoInput         =   data.hasOwnProperty("var_showInfoInput")          ?  data.var_showInfoInput                  :  false;
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        const prop_btnAddStatus   =        data.hasOwnProperty("prop_btnAddStatus")          ?  data.prop_btnAddStatus                                    :  false;
-        const prop_btnAddIcon     =        data.hasOwnProperty("prop_btnAddIcon")            ?  data.prop_btnAddIcon                                      :  "&plus;";
-        const prop_btnAddTitle     =        data.hasOwnProperty("prop_btnAddTitle")            ?  data.prop_btnAddTitle                                   :  "add item";
-        const prop_icon           =        data.hasOwnProperty("prop_icon")                  ?  data.prop_icon                                            :  "";
-        const prop_name           =        data.hasOwnProperty("prop_name")                  ?  data.prop_name                                            :  "No-Name-input";
-        const prop_title          =        data.hasOwnProperty("prop_title")                 ?  data.prop_title                                           :  "No Title";
-        const prop_value          =        data.hasOwnProperty("prop_value")                 ?  data.prop_value                                           :  0;
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_btnAddStatus         =   componentData.hasOwnProperty("prop_btnAddStatus")          ?  componentData.prop_btnAddStatus                                    :  false;
+            const prop_btnAddIcon           =   componentData.hasOwnProperty("prop_btnAddIcon")            ?  componentData.prop_btnAddIcon                                      :  "&plus;";
+            const prop_btnAddTitle          =   componentData.hasOwnProperty("prop_btnAddTitle")           ?  componentData.prop_btnAddTitle                                   :  "add item";
+            const prop_icon                 =   componentData.hasOwnProperty("prop_icon")                  ?  componentData.prop_icon                                            :  "";
+            const prop_name                 =   componentData.hasOwnProperty("prop_name")                  ?  componentData.prop_name                                            :  "No-Name-input";
+            const prop_title                =   componentData.hasOwnProperty("prop_title")                 ?  componentData.prop_title                                           :  "No Title";
+            const prop_value                =   componentData.hasOwnProperty("prop_value")                 ?  componentData.prop_value                                           :  0;
+
+            const directionRtl              =   componentData.hasOwnProperty("directionRtl")               ?  componentData.directionRtl                 : component_props.directionRtl
+
+            const formattedValue            =   super.getMethod(componentData , "formattedValue" , "()" );
+
+            const clearInput                =   super.getMethod(componentData , "clearInput"     , "(event)" );
+            const focustoInput              =   super.getMethod(componentData , "focustoInput"   , "(event)" );
+            const fn_clickBtnTools          =   super.getMethod(componentData , "fn_clickBtnTools"     , "()" );
 
 
-        const formattedValue =   super.getMethod(data , "formattedValue" , "()" );
-
-        const clearInput    =    super.getMethod(data , "clearInput"     , "(event)" );
-        const focustoInput  =    super.getMethod(data , "focustoInput"   , "(event)" );
-        const fn_clickBtnTools    =    super.getMethod(data , "fn_clickBtnTools"     , "()" );
-
-
-        let btnAddItem = "";
-        if (prop_btnAddStatus){
-            btnAddItem = `
+            let btnAddItem = "";
+            if (prop_btnAddStatus){
+                btnAddItem = `
 <component-button id="button-tools-component-input-${var_randomId}">
      <component-body>
           <span class="mx-3">
@@ -2998,29 +3285,29 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
      </component-body>
 </component-button>
             `
-        }
+            }
 
 
-        const changeValue   =    super.getMethod(data , "changeValue"    , "(event)" );
-        const handleInput   =    super.getMethod(data , "handleInput"    , "(event)" );
-        const formatValue   =    super.getMethod(data , "formatValue"    , "()" );
-        const unformatValue =    super.getMethod(data , "unformatValue"  , "()" );
+            const changeValue   =    super.getMethod(data , "changeValue"    , "(event)" );
+            const handleInput   =    super.getMethod(data , "handleInput"    , "(event)" );
+            const formatValue   =    super.getMethod(data , "formatValue"    , "()" );
+            const unformatValue =    super.getMethod(data , "unformatValue"  , "()" );
 
-        const inputActions = `
+            const inputActions = `
                 oninput="${handleInput} ; ${changeValue}"
                 onblur="${formatValue}"
                 onfocus="${unformatValue}"
                 value="${prop_value}"
                 `
 
-        return `
+            return `
 <style>
  #${el.id} .icon-clear-input-editor-${var_randomId} {
     z-index: 10;
     margin: 0 !important;
     width: 10px;
-    line-height: 40px;
-    left: ${prop_btnAddStatus ? "165px" : "10px"};
+    line-height: 34px;
+    ${directionRtl ? "left": "right" }: ${prop_btnAddStatus ? "165px" : "10px"};
     cursor: pointer;
 }
  #${el.id} .icon-input-editor-${var_randomId} {
@@ -3028,14 +3315,14 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
     margin: 0 5px !important;
     width: 30px;
     line-height: 35px;
-    right: 0;
+    ${directionRtl ? "right": "left" } : 0;
     cursor: pointer;
     font-size: 20pt;
 }
  #${el.id} .input-editor-${var_randomId} {
-     padding-right: 30px;
+     ${directionRtl ? "padding-right" : "padding-left" }: 30px;
      height: 35px;
-     padding-left: ${prop_btnAddStatus ? "180px" : "20px"};
+     ${directionRtl ? "padding-left" : "padding-right" }: ${prop_btnAddStatus ? "180px" : "20px"};
      z-index: 1;
 }
 </style>
@@ -3073,6 +3360,9 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 
             </section>
 `;
+
+        }
+
     }
 
     onCreate = (data , el) => {
@@ -3080,67 +3370,92 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
     }
 
     onRender = (data , componentSlots , el) => {
-        this.readyLabelInput(data , componentSlots , el);
-        this.readyButtonTools(data , componentSlots , el);
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        this.readyLabelInput(var_randomId);
+        this.readyButtonTools(var_randomId);
     }
 
-    readyLabelInput  = (data , componentSlots , el) => {
+    readyLabelInput  = (var_randomId) => {
 
-        const var_randomId    =   data.hasOwnProperty("var_randomId")        ?  data.var_randomId   :  0;
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        const prop_name       =   data.hasOwnProperty("prop_name")        ?  data.prop_name      :  "No-Name-input";
-        const prop_title      =   data.hasOwnProperty("prop_title")       ?  data.prop_title     :  "No Title";
+            const componentData = components[var_randomId];
 
-        new window.ComponentLabel(
-            "label-component-input-price-"+var_randomId ,
-            {
-                prop_title:  prop_title ,
-                prop_for  :  prop_name+"-"+var_randomId ,
-            }
-        )
-    }
+            const prop_name       =   componentData.hasOwnProperty("prop_name")        ?  componentData.prop_name      :  "No-Name-input";
+            const prop_title      =   componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title     :  "No Title";
 
-    readyButtonTools  = (data , componentSlots , el) => {
-
-        const var_randomId    =   data.hasOwnProperty("var_randomId")        ?  data.var_randomId   :  0;
-        const prop_btnAddStatus   =   data.hasOwnProperty("prop_btnAddStatus")  ?  data.prop_btnAddStatus   :  false;
-
-        const clickBtnTools    =    super.getMethod(data , "clickBtnTools"     , null );
-
-        const prop_btnAddClass    =   data.hasOwnProperty("prop_btnAddClass")  ?  data.prop_btnAddClass   :  ["btn" , "btn-light"];
-
-        if (prop_btnAddStatus){
-            new window.ComponentButton(
-                "button-tools-component-input-"+var_randomId ,
+            new window.ComponentLabel(
+                "label-component-input-price-"+var_randomId ,
                 {
-                    prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
-                    prop_btnBackgroundColor: "",
-                    prop_btnColor: "",
-                    prop_btnStyles: {
-                        "z-index" : "10" ,
-                        "left" : "0" ,
-                        "top" : "1px" ,
-                        "cursor" : "pointer" ,
-                        "width" : "160px" ,
-                        "height" : "32px" ,
-                    },
-
-                    fn_callback: ()=>{
-                        window[clickBtnTools]()
-                    }
+                    prop_title:  prop_title ,
+                    prop_for  :  prop_name+"-"+var_randomId ,
                 }
             )
         }
+
     }
 
-    readyElementPosition  = (var_randomId  , prop_information , var_showInfoInput) => {
+    readyButtonTools = (var_randomId) => {
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        if (prop_information != null && Array.isArray(prop_information)){
-            let infoHtml = "";
-            for (const indexInfo in prop_information) {
-                const itemInfo = prop_information[indexInfo];
-                if (itemInfo.hasOwnProperty("title")){
-                    infoHtml += `
+            const componentData = components[var_randomId];
+
+            const prop_btnAddStatus   =   componentData.hasOwnProperty("prop_btnAddStatus")  ?  componentData.prop_btnAddStatus   :  false;
+            const prop_btnAddClass    =   componentData.hasOwnProperty("prop_btnAddClass")   ?  componentData.prop_btnAddClass    :  ["btn" , "btn-light"];
+            const directionRtl        =   componentData.hasOwnProperty("directionRtl")       ?  componentData.directionRtl        : component_props.directionRtl
+
+            const clickBtnTools       =    super.getMethod(componentData , "clickBtnTools"     , null );
+
+            if (prop_btnAddStatus){
+
+                let style = {
+                    "z-index" : "10" ,
+                    "top" : "1px" ,
+                    "cursor" : "pointer" ,
+                    "width" : "160px" ,
+                    "height" : "32px" ,
+                };
+                if (directionRtl){
+                    style["left"] = 0
+                }
+                else {
+                    style["right"] = 0
+                }
+
+                new window.ComponentButton(
+                    "button-tools-component-input-"+var_randomId ,
+                    {
+                        prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
+                        prop_btnStyles: style,
+
+                        fn_callback: ()=>{
+                            window[clickBtnTools]()
+                        }
+                    }
+                )
+            }
+        }
+
+
+    }
+
+    readyElementPosition  = (var_randomId , var_showInfoInput) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_information       =   componentData.hasOwnProperty("prop_information")        ?  componentData.prop_information      :  null;
+            const directionRtl           =   componentData.hasOwnProperty("directionRtl")            ?  componentData.directionRtl          : component_props.directionRtl
+
+
+            if (prop_information != null && Array.isArray(prop_information)){
+                let infoHtml = "";
+                for (const indexInfo in prop_information) {
+                    const itemInfo = prop_information[indexInfo];
+                    if (itemInfo.hasOwnProperty("title")){
+                        infoHtml += `
 <div class="rounded border d-md-block mb-1" style="background-color: ${itemInfo.hasOwnProperty("value_backgroundColor") ? itemInfo.value_backgroundColor : null}; ">
      <p class=" rounded text-center p-0 m-0" style="background-color: ${itemInfo.hasOwnProperty("title_backgroundColor") ? itemInfo.title_backgroundColor : null}; color: ${itemInfo.hasOwnProperty("title_color") ? itemInfo.title_color : null}; ">
             ${itemInfo.title}
@@ -3150,27 +3465,33 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
      </p>
 </div>
                     `
+                    }
                 }
-            }
 
-            new window.ComponentPositionElement(
-                "form-information-input-price-"+var_randomId ,
-                {
+                let props = {
                     prop_show: var_showInfoInput,
                     prop_width: "250px",
                     prop_height: null,
                     prop_content: infoHtml ,
-
                     prop_elementClass: [" border" , "shadow-sm" , "bg-white" , "px-2" , "py-1"] ,
                     prop_elementStyles: {
-                        'direction' : "rtl" ,
                         'z-index' : "11" ,
                     } ,
 
                 }
-            )
-        }
+                if (directionRtl){
+                    props["prop_positionLeft"] = 0;
+                }
+                else {
+                    props["prop_positionRight"] = 0;
+                }
 
+                new window.ComponentPositionElement(
+                    "form-information-input-price-"+var_randomId ,
+                    props
+                )
+            }
+        }
     }
 
 
@@ -3464,9 +3785,9 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
     TYPE_INPUT_FULL_DIGIT = 2;
     TYPE_INPUT_FRIZE_DIGIT = 3;
 
-    DEFULAT_COLOR = prop_const.colors.White1;
-    DEFULAT_BACKGROUND_1 = prop_const.colors.Green1;
-    DEFULAT_BACKGROUND_2 = prop_const.colors.Green5;
+    DEFULAT_COLOR = component_props.shanColor1;
+    DEFULAT_BACKGROUND_1 = component_props.primaryColor2;
+    DEFULAT_BACKGROUND_2 = component_props.primaryColor1;
     DEFULAT_PERV_YEAR = 100;
     DEFULAT_NEXT_YEAR = 25;
     DEFULAT_YEAR = 1400;

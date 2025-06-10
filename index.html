@@ -165,7 +165,169 @@
                     } ,
 
 
-/*
+
+
+                    {
+                        component: 'ComponentIsEmpty',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "isEmpty2" ,
+
+                            prop_title: "it is a test" ,
+                            prop_btnAddStatus: true ,
+                            prop_btnAddTitle : "asd",
+
+                            fn_callback: ()=>{
+                                alert("aaa")
+                            }
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentIsEmpty',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "isEmpty" ,
+
+                            prop_title: "it is a test" ,
+                        }
+                    } ,
+
+
+
+
+
+                    {
+                        component: 'ComponentHeader',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "header" ,
+
+                            prop_size: 4,
+                            prop_title: "it is a test header" ,
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentCollapse',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "collapse2" ,
+
+                            prop_title: "asd" ,
+                            prop_body: "<h1>hello 123123</h1>" ,
+                            prop_bodyShow: false ,
+                        }
+                    } ,
+
+
+
+
+
+                    {
+                        component: 'ComponentTable',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "table" ,
+
+
+                            prop_tableType: 0 ,
+                            prop_tableBordered: 1 ,
+
+                            //prop_tableStriped: true ,
+                            //prop_tableHover: true ,
+                            //prop_tableBorderless: true ,
+
+                            prop_order : ["id" , "name" , "family" , "has"] ,
+                            prop_header : [
+                                {id:"id" , content: "id"},
+
+                                {id:"has" , content: "has"},
+                                {id:"name" , content: "name"},
+                                {id:"family" , content: "family"},
+                            ] ,
+                            prop_data : [
+                                {id:1 , name:"mehdi" , family:"marefiyan" , has:false} ,
+                                {id:2 , name:"ali"   , family:"sadegi"    , has:true} ,
+                            ] ,
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentTable',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "table2" ,
+
+                            prop_valueType: 3 ,
+
+                            prop_tableClass : ["border-none"] ,
+                            prop_tableStyles : {
+                                "background" : "darkcyan" ,
+                            },
+                            prop_tableHeadClass : [ "border-bottom" , "border-white"] ,
+                            prop_tableItemHeadClass : [ "text-center" , "text-white"]  ,
+                            prop_tableItemHeadStyles : {
+                                "font-size" : "8pt" ,
+                                "line-height" : "25px" ,
+                                "border-left" : "white solid 1px" ,
+                                "border-bottom" : "white solid 1px" ,
+                                "width" : "14%" ,
+                            },
+                            prop_tableBodyClass : [ "bg-white"] ,
+                            prop_tableItemBodyClass : [ "text-center" , "rounded" , "d-block"] ,
+                            prop_tableItemBodyStyles: {
+                                "color" : "#525252" ,
+                            },
+                            prop_tableItemBodyHoverStyles : {
+                                "background-color" : "#e1e1e1!important" ,
+                                "cursor" : "pointer" ,
+                            },
+
+
+                            prop_order : ["day_0" , "day_1" , "day_2" , "day_3", "day_4" , "day_5", "day_6" ] ,
+                            prop_header : [
+                                {id:"day_0" , content: "ش"},
+                                {id:"day_1" , content: "ی"},
+                                {id:"day_2" , content: "د"},
+                                {id:"day_3" , content: "س"},
+                                {id:"day_4" , content: "چ"},
+                                {id:"day_5" , content: "پ"},
+                                {id:"day_6" , content: "ج"},
+                            ] ,
+                            prop_data : [
+                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
+                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
+                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
+                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
+                            ] ,
+
+                            fn_callback: (val , key)=>{
+                                alert(val + " " + key)
+                            }
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentButton',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "btn" ,
+
+                            prop_title: "asd" ,
+                            fn_callback: ()=>{
+                                alert("asd");
+                            }
+                        }
+                    } ,
+
 
 
                     {
@@ -176,7 +338,7 @@
 
                             prop_name:"asd" ,
                             prop_title:"asd" ,
-                            prop_itemSelected: 1 ,
+                            //prop_itemSelected: 1 ,
                             prop_options: [
                                 {
                                     id:1 ,
@@ -203,7 +365,7 @@
                             prop_type:1 ,
                             prop_name:"asd" ,
                             prop_title:"asd" ,
-                            prop_itemSelected:1 ,
+                            //prop_itemSelected:1 ,
                             prop_options: [
                                 {
                                     id:1 ,
@@ -283,51 +445,26 @@
 
 
 
+
                     {
-                        component: 'ComponentInfo',
+                        component: 'ComponentTabs',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
-                            id: "info1" ,
+                            id: "tabs" ,
 
-                            prop_icon: "&#10127;" ,
-                            prop_title: "<b>213123</b>"
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentInfo',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "info2" ,
-
-                            prop_icon: "&#10127;" ,
-                            prop_title: "<b>213123</b>"
-                        }
-                    } ,
-
-
-
-                    {
-                        component: 'ComponentPositionElement',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2 position-relative"  ,
-                            id: "element-position" ,
-
-                            prop_content: "asd"
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentButton',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "btn" ,
-
-                            prop_title: "asd" ,
-                            fn_callback: ()=>{
-                                alert("asd");
+                            prop_tabSelected: 1 ,
+                            prop_tabs: [
+                                {
+                                    id:1 ,
+                                    title: "tab 1",
+                                } ,
+                                {
+                                    id:2 ,
+                                    title: "tab 2",
+                                }
+                            ] ,
+                            fn_callback: (tabIndex) =>{
+                                alert(tabIndex)
                             }
                         }
                     } ,
@@ -338,97 +475,15 @@
 
 
 
-                    {
-                        component: 'ComponentIsEmpty',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "isEmpty2" ,
-
-                            prop_title: "it is a test" ,
-                            prop_btnAddStatus: true ,
-                            prop_btnAddTitle : "asd",
-
-                            fn_callback: ()=>{
-                                alert("aaa")
-                            }
-                        }
-                    } ,
-
 
                     {
-                        component: 'ComponentIsEmpty',
+                        component: 'ComponentInput',
                         props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "isEmpty" ,
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "input-text" ,
 
-                            prop_title: "it is a test" ,
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentHeader',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "header" ,
-
-                            prop_size: 4,
-                            prop_title: "it is a test header" ,
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentCollapse',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "collapse" ,
-
-                            prop_title: "asd" ,
-                            prop_body: "<h1>hello world</h1>" ,
-                            prop_bodyShow: true ,
-                        }
-                    } ,
-
-                    {
-                        component: 'ComponentCollapse',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "collapse2" ,
-
-                            prop_title: "asd" ,
-                            prop_body: "<h1>hello 123123</h1>" ,
-                            prop_bodyShow: false ,
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentTable',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "table" ,
-
-
-                            prop_tableType: 0 ,
-                            prop_tableBordered: 1 ,
-
-                            //prop_tableStriped: true ,
-                            //prop_tableHover: true ,
-                            //prop_tableBorderless: true ,
-
-                            prop_order : ["id" , "name" , "family" , "has"] ,
-                            prop_header : [
-                                {id:"id" , content: "id"},
-
-                                {id:"has" , content: "has"},
-                                {id:"name" , content: "name"},
-                                {id:"family" , content: "family"},
-                            ] ,
-                            prop_data : [
-                                {id:1 , name:"mehdi" , family:"marefiyan" , has:false} ,
-                                {id:2 , name:"ali"   , family:"sadegi"    , has:true} ,
-                            ] ,
+                            prop_title: "test text" ,
+                            prop_icon: "&#10124;" ,
                         }
                     } ,
 
@@ -476,31 +531,76 @@
                             prop_name: "input" ,
                             prop_title: "asd" ,
                             prop_default: "123456789" ,
-                            prop_icon: "&#10126;" ,
-                            prop_information : [
-                                {
-                                    title: "test 1" ,
-                                    title_backgroundColor: "#b6b6b6" ,
-                                    title_color: "#ffffff" ,
-                                    value: "12554" ,
-                                    value_backgroundColor: "#e7e7e7" ,
-                                    value_color: "#343434" ,
-                                }
-                            ]
+                            prop_icon: "&#10126;"
+                        }
+                    } ,
+
+
+
+
+
+/*
+
+
+                    {
+                        component: 'ComponentDate',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-date-0" ,
+
+                            prop_type: 0
+                        }
+                    } ,
+
+
+
+
+                    {
+                        component: 'ComponentInfo',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "info1" ,
+
+                            prop_icon: "&#10127;" ,
+                            prop_title: "<b>213123</b>"
                         }
                     } ,
 
 
                     {
-                        component: 'ComponentInput',
+                        component: 'ComponentInfo',
                         props: {
-                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
-                            id: "input-text" ,
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "info2" ,
 
-                            prop_title: "test text" ,
-                            prop_icon: "&#10124;" ,
+                            prop_icon: "&#10127;" ,
+                            prop_title: "<b>213123</b>"
                         }
                     } ,
+
+
+
+                    {
+                        component: 'ComponentPositionElement',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 position-relative"  ,
+                            id: "element-position" ,
+
+                            prop_content: "asd"
+                        }
+                    } ,
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -523,28 +623,7 @@
                     } ,
 
 
-                    {
-                        component: 'ComponentTabs',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "tabs" ,
 
-                            prop_tabSelected: 1 ,
-                            prop_tabs: [
-                                {
-                                    id:1 ,
-                                    title: "tab 1",
-                                } ,
-                                {
-                                    id:2 ,
-                                    title: "tab 2",
-                                }
-                            ] ,
-                            fn_callback: (tabIndex) =>{
-                                alert(tabIndex)
-                            }
-                        }
-                    } ,
 
 
                     {
@@ -566,16 +645,6 @@
 
 
 
-
-                    {
-                        component: 'ComponentDate',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "input-date-0" ,
-
-                            prop_type: 0
-                        }
-                    } ,
 
                     {
                         component: 'ComponentDate',
@@ -643,61 +712,6 @@
 
 
 
-
-                    {
-                        component: 'ComponentTable',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
-                            id: "table2" ,
-
-                            prop_valueType: 3 ,
-
-                            prop_tableClass : ["border-none"] ,
-                            prop_tableStyles : {
-                                "background" : "darkcyan" ,
-                            },
-                            prop_tableHeadClass : [ "border-bottom" , "border-white"] ,
-                            prop_tableItemHeadClass : [ "text-center" , "text-white"]  ,
-                            prop_tableItemHeadStyles : {
-                                "font-size" : "8pt" ,
-                                "line-height" : "25px" ,
-                                "border-left" : "white solid 1px" ,
-                                "border-bottom" : "white solid 1px" ,
-                                "width" : "14%" ,
-                            },
-                            prop_tableBodyClass : [ "bg-white"] ,
-                            prop_tableItemBodyClass : [ "text-center" , "rounded" , "d-block"] ,
-                            prop_tableItemBodyStyles: {
-                                "color" : "#525252" ,
-                            },
-                            prop_tableItemBodyHoverStyles : {
-                                "background-color" : "#e1e1e1!important" ,
-                                "cursor" : "pointer" ,
-                            },
-
-
-                            prop_order : ["day_0" , "day_1" , "day_2" , "day_3", "day_4" , "day_5", "day_6" ] ,
-                            prop_header : [
-                                {id:"day_0" , content: "ش"},
-                                {id:"day_1" , content: "ی"},
-                                {id:"day_2" , content: "د"},
-                                {id:"day_3" , content: "س"},
-                                {id:"day_4" , content: "چ"},
-                                {id:"day_5" , content: "پ"},
-                                {id:"day_6" , content: "ج"},
-                            ] ,
-                            prop_data : [
-                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
-                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
-                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
-                                {day_0:1 , day_1:2 , day_2:3 , day_3:4 , day_4:5 , day_5:6 , day_6:7} ,
-                            ] ,
-
-                            fn_callback: (val , key)=>{
-                                alert(val + " " + key)
-                            }
-                        }
-                    } ,
 
                     {
                         component: 'ComponentLabel',
