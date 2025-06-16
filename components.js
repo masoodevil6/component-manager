@@ -395,9 +395,15 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 
             const componentData = components[var_randomId];
 
+
+            const bgSuccsess = componentData.hasOwnProperty("prop_background_loading") ? componentData.prop_background_loading   : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("backgroundColor_success") ? tools_const.styles.message.backgroundColor_success : ""
+            const bgError = componentData.hasOwnProperty("prop_background_loading") ? componentData.prop_background_loading   : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("backgroundColor_error") ? tools_const.styles.message.backgroundColor_error : ""
+            const textSuccsess = componentData.hasOwnProperty("prop_background_loading") ? componentData.prop_background_loading   : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("color_success") ? tools_const.styles.message.color_success : ""
+            const textError = componentData.hasOwnProperty("prop_background_loading") ? componentData.prop_background_loading   : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("color_error") ? tools_const.styles.message.color_error : ""
+
             const prop_status =       componentData.hasOwnProperty("prop_status")             ?          componentData.prop_status        :  true;
-            const prop_background =   componentData.hasOwnProperty("prop_background")         ?          componentData.prop_background    :  (prop_status ? tools_const.styles.message.backgroundColor_success: tools_const.styles.message.backgroundColor_error);
-            const prop_color =        componentData.hasOwnProperty("prop_color")              ?          componentData.prop_color         :  (prop_status ?    tools_const.styles.message.color_success: tools_const.styles.message.color_error);
+            const prop_background =   componentData.hasOwnProperty("prop_background")         ?          componentData.prop_background    :  (prop_status ? bgSuccsess   : bgError  );
+            const prop_color =        componentData.hasOwnProperty("prop_color")              ?          componentData.prop_color         :  (prop_status ? textSuccsess : textError);
 
             if (data.hasOwnProperty("prop_messages")){
                 let html = ``;
@@ -506,8 +512,8 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
 
             const componentData = components[var_randomId];
 
-            const prop_background_loading = componentData.hasOwnProperty("prop_background_loading") ? componentData.prop_background_loading : tools_const.styles.loading.backgroundColor_shadow;
-            const prop_background_shadow  = componentData.hasOwnProperty("prop_background_shadow")   ? componentData.prop_background_shadow   : tools_const.styles.loading.backgroundColor_loading;
+            const prop_background_loading = componentData.hasOwnProperty("prop_background_loading") ? componentData.prop_background_loading   : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_shadow") ? tools_const.styles.loading.backgroundColor_shadow : "";
+            const prop_background_shadow  = componentData.hasOwnProperty("prop_background_shadow")   ? componentData.prop_background_shadow   : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_loading") ? tools_const.styles.loading.backgroundColor_loading : "";
 
 
             return  `
@@ -645,7 +651,7 @@ window.Component404 = class Component404 extends ComponentBase{
     top: 0;
     left: 0;
     position: absolute;
-    background-color: ${tools_const.styles.state404.backgroundColor_shadow};
+    background-color: ${tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("state404") &&  tools_const.styles.state404.hasOwnProperty("backgroundColor_shadow") ? tools_const.styles.state404.backgroundColor_shadow : ""};
 }
 
 
@@ -831,7 +837,7 @@ window.Component404 = class Component404 extends ComponentBase{
 
  #${el.id} .section-404-space-bot{
     min-height: 200px;
-    background-color: ${tools_const.styles.backShadow.backgroundColor};
+    background-color: ${tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("state404") &&  tools_const.styles.state404.hasOwnProperty("backgroundColor_shadow") ? tools_const.styles.state404.backgroundColor_shadow : ""};
     top: 0;
     left: 0;
 }
@@ -1297,7 +1303,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
     }
      
      #${el.id} .body-collapse-${  var_randomId}{
-        background-color: ${tools_const.styles.collapse.backgroundColor};
+        background-color: ${tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("collapse") &&  tools_const.styles.collapse.hasOwnProperty("backgroundColor") ? tools_const.styles.collapse.backgroundColor : ""};
     }
 </style>
 <div class="component-element-structure mx-2 mb-3">
@@ -1457,9 +1463,9 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
             let   prop_valueCol                   =   componentData.hasOwnProperty("prop_valueCol")                   ?  componentData.prop_valueCol                    :  null;
 
             const prop_valueType                  =   componentData.hasOwnProperty("prop_valueType")                  ?  componentData.prop_valueType                   : this.TYPE_SELECTED_NONE;
-            const prop_valueRow_backgroundColor   =   componentData.hasOwnProperty("prop_valueRow_backgroundColor")   ?  componentData.prop_valueRow_backgroundColor    : tools_const.styles.table.backgroundColor_rowSelected;
-            const prop_valueCol_backgroundColor   =   componentData.hasOwnProperty("prop_valueCol_backgroundColor")   ?  componentData.prop_valueCol_backgroundColor    : tools_const.styles.table.backgroundColor_columnSelected;
-            const prop_valueCol_textColor         =   componentData.hasOwnProperty("prop_valueCol_textColor")         ?  componentData.prop_valueCol_textColor          : tools_const.styles.table.backgroundColor_textSelected;
+            const prop_valueRow_backgroundColor   =   componentData.hasOwnProperty("prop_valueRow_backgroundColor")   ?  componentData.prop_valueRow_backgroundColor    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("table") &&  tools_const.styles.table.hasOwnProperty("backgroundColor_rowSelected") ? tools_const.styles.table.backgroundColor_rowSelected : "" ;
+            const prop_valueCol_backgroundColor   =   componentData.hasOwnProperty("prop_valueCol_backgroundColor")   ?  componentData.prop_valueCol_backgroundColor    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("table") &&  tools_const.styles.table.hasOwnProperty("backgroundColor_columnSelected") ? tools_const.styles.table.backgroundColor_columnSelected : "" ;
+            const prop_valueCol_textColor         =   componentData.hasOwnProperty("prop_valueCol_textColor")         ?  componentData.prop_valueCol_textColor          : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("table") &&  tools_const.styles.table.hasOwnProperty("backgroundColor_textSelected")   ? tools_const.styles.table.backgroundColor_textSelected : ""  ;
 
             const prop_order                      =   componentData.hasOwnProperty("prop_order")                      ?  componentData.prop_order                       : [];
             const prop_data                       =   componentData.hasOwnProperty("prop_data")                       ?  componentData.prop_data                        : [];
@@ -1753,14 +1759,14 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 
             switch (prop_type){
                 case "error" :
-                    btnBackgroundColor       = tools_const.styles.button.error.backgroundColor;
-                    btnBackgroundColor_hover = tools_const.styles.button.error.backgroundColorHover;
-                    btnColor                 = tools_const.styles.button.error.color;
+                    btnBackgroundColor       = data.hasOwnProperty("prop_btnBackgroundColor")         ?  data.prop_btnBackgroundColor          : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.error.backgroundColor : "" ;
+                    btnBackgroundColor_hover = data.hasOwnProperty("prop_btnBackgroundColor_hover")   ?  data.prop_btnBackgroundColor_hover    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.error.backgroundColorHover : "" ;
+                    btnColor                 = data.hasOwnProperty("prop_btnColor")                   ?  data.prop_btnColor                    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("color")                  ? tools_const.styles.button.error.color : ""  ;
                     break;
                 default:
-                    btnBackgroundColor       = data.hasOwnProperty("prop_btnBackgroundColor")         ?  data.prop_btnBackgroundColor          : tools_const.styles.button.default.backgroundColor;
-                    btnBackgroundColor_hover = data.hasOwnProperty("prop_btnBackgroundColor_hover")   ?  data.prop_btnBackgroundColor_hover    : tools_const.styles.button.default.backgroundColorHover;
-                    btnColor                 = data.hasOwnProperty("prop_btnColor")                   ?  data.prop_btnColor                    : tools_const.styles.button.default.color;
+                    btnBackgroundColor       = data.hasOwnProperty("prop_btnBackgroundColor")         ?  data.prop_btnBackgroundColor          : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.default.backgroundColor : "" ;
+                    btnBackgroundColor_hover = data.hasOwnProperty("prop_btnBackgroundColor_hover")   ?  data.prop_btnBackgroundColor_hover    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.default.backgroundColorHover : "" ;
+                    btnColor                 = data.hasOwnProperty("prop_btnColor")                   ?  data.prop_btnColor                    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("color")                  ? tools_const.styles.button.default.color : ""  ;
                     break;
             }
 
@@ -1835,10 +1841,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @fn_callback
 @fn_clickBtnTools
 -------------------------------------*/
-window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
-
-
-{
+window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase {
 
     constructor(elId , config) {
 
@@ -2081,10 +2084,10 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             const prop_titleClass           =  componentData.hasOwnProperty("prop_titleClass")               ?  componentData.prop_titleClass             :  "text-dark  border shadow-sm";
             const prop_titleStyles          =  componentData.hasOwnProperty("prop_titleStyles")              ?  componentData.prop_titleStyles            :  {};
             const prop_optionHeight         =  componentData.hasOwnProperty("prop_optionHeight")             ?  componentData.prop_optionHeight           :  130;
-            const prop_optionItemBackground =  componentData.hasOwnProperty("prop_optionItemBackground")     ?  componentData.prop_optionItemBackground   :  tools_const.styles.selectOption.backgroundColor_itemSelected;
+            const prop_optionItemBackground =  componentData.hasOwnProperty("prop_optionItemBackground")     ?  componentData.prop_optionItemBackground   :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemSelected")  ? tools_const.styles.selectOption.backgroundColor_itemSelected : ""
 
             const prop_optionIcon           =  componentData.hasOwnProperty("prop_optionIcon")               ?  componentData.prop_optionIcon             :  "&#129171";
-            const prop_optionIconColor      =  componentData.hasOwnProperty("prop_optionIconColor")          ?  componentData.prop_optionIconColor        :  tools_const.styles.selectOption.color_icon;
+            const prop_optionIconColor      =  componentData.hasOwnProperty("prop_optionIconColor")          ?  componentData.prop_optionIconColor        :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("color_icon")  ? tools_const.styles.selectOption.color_icon : ""
 
             const prop_itemSelected         =  componentData.hasOwnProperty("prop_itemSelected")             ?  componentData.prop_itemSelected           :  null;
 
@@ -2623,90 +2626,110 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
         methods["retry404"] = {
             name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
-                const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
 
-                const onFetchWidget = super.getMethod(config , "onFetchWidget" , null);
-                window[onFetchWidget]();
+                const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
 
-                tools_component.control(
-                    "Component404" ,
-                    {
-                        elId : "widget-component-404-"+var_randomId
-                    },
-                    false
-                )
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    const onFetchWidget = super.getMethod(componentData , "onFetchWidget" , null);
+                    window[onFetchWidget]();
+
+                    tools_component.control(
+                        "Component404" ,
+                        {
+                            elId : "widget-component-404-"+var_randomId
+                        },
+                        false
+                    )
+                }
+
 
             }
         };
         methods["readyResponse"] = {
             name: `readyResponse_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: (response) => {
-                const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
+                const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
 
-                const el = document.getElementById(elId);
-                const responseEl = el.getElementsByClassName("response-widget-component-"+var_randomId);
-                responseEl[0].innerHTML = response
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    const el = document.getElementById(elId);
+                    const responseEl = el.getElementsByClassName("response-widget-component-"+var_randomId);
+                    responseEl[0].innerHTML = response
+
+                }
             }
         };''
         methods["onFetchWidget"] = {
             name: `onFetchWidget_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
             fn: () => {
-                const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
-                const prop_minHeight = config.hasOwnProperty("prop_minHeight") ? Math.max(config.prop_minHeight , 120) : 120;
-                const prop_error404  = config.hasOwnProperty("prop_error404") ? config.prop_error404 : {};
 
-                const retry404 = super.getMethod(config , "retry404" , null);
+                const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
 
-                const prop_fetch = config.hasOwnProperty("prop_fetch") ? config.prop_fetch : {};
-                if (prop_fetch != null && prop_fetch.hasOwnProperty("url")){
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
 
-                    tools_submit.fetcth(
-                        prop_fetch != null && prop_fetch.hasOwnProperty("url") ? prop_fetch.url : "" ,
-                        {
-                            data:prop_fetch != null && prop_fetch.hasOwnProperty("data") ? prop_fetch.data : {} ,
-                            callback: window[methods.readyResponse.name] ,
-                            componentLoadingData: {
-                                elId : "widget-component-loading-"+var_randomId
-                            },
-                            component404Data: {
-                                elId : "widget-component-404-"+var_randomId ,
-                                prop_type : prop_error404 != null && prop_error404.hasOwnProperty("type") ? prop_error404.type : 0 ,
-                                prop_width : prop_error404 != null && prop_error404.hasOwnProperty("width") ? prop_error404.width : prop_minHeight*1.3 ,
-                                prop_height : prop_error404 != null && prop_error404.hasOwnProperty("height") ? prop_error404.height :  prop_minHeight*0.62 ,
-                                fn_callback: window[retry404]
-                            },
-                        }
-                    )
-                }
-                else {
-                    const readyResponse = super.getMethod(config , "readyResponse" , null);
-                    window[readyResponse]("<!--empty-component-->")
+                    const prop_minHeight = componentData.hasOwnProperty("prop_minHeight")   ? Math.max(componentData.prop_minHeight , 120)   : 120;
+                    const prop_error404  = componentData.hasOwnProperty("prop_error404")    ? componentData.prop_error404                    : {};
+                    const prop_fetch     = componentData.hasOwnProperty("prop_fetch")           ? componentData.prop_fetch                   : {};
+
+                    const retry404 = super.getMethod(componentData , "retry404" , null);
+
+                    if (prop_fetch != null && prop_fetch.hasOwnProperty("url")){
+
+                        tools_submit.fetcth(
+                            prop_fetch != null && prop_fetch.hasOwnProperty("url") ? prop_fetch.url : "" ,
+                            {
+                                data:prop_fetch != null && prop_fetch.hasOwnProperty("data") ? prop_fetch.data : {} ,
+                                callback: window[methods.readyResponse.name] ,
+                                componentLoadingData: {
+                                    elId : "widget-component-loading-"+var_randomId
+                                },
+                                component404Data: {
+                                    elId : "widget-component-404-"+var_randomId ,
+                                    prop_type : prop_error404 != null && prop_error404.hasOwnProperty("type") ? prop_error404.type : 0 ,
+                                    prop_width : prop_error404 != null && prop_error404.hasOwnProperty("width") ? prop_error404.width : prop_minHeight*1.3 ,
+                                    prop_height : prop_error404 != null && prop_error404.hasOwnProperty("height") ? prop_error404.height :  prop_minHeight*0.62 ,
+                                    fn_callback: window[retry404]
+                                },
+                            }
+                        )
+                    }
+                    else {
+                        const readyResponse = super.getMethod(componentData , "readyResponse" , null);
+                        window[readyResponse]("<!--empty-component-->")
+                    }
                 }
 
             }
         };
 
-        super(elId , config , listComponent[ComponentWidget.name] , methods);
+        super(elId , config , listComponent[ComponentWidget.name] , methods , config["var_randomId"]);
 
         this.render()
     }
 
     templateFn(data , componentSlots , el){
 
-        const var_randomId    = data.hasOwnProperty("var_randomId")   ? data.var_randomId                    : 0;
-        //---------------
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
 
-        const prop_classList  = data.hasOwnProperty("prop_classList") ? data.prop_classList                  : "shadow-sm rounded border";
-        const prop_minHeight  = data.hasOwnProperty("prop_minHeight") ? Math.max(data.prop_minHeight , 120)  : 120;
-        //---------------
+        if ( components.hasOwnProperty(var_randomId)) {
 
-        return `
+            const componentData = components[var_randomId];
+
+            const prop_widgetClass  = componentData.hasOwnProperty("prop_widgetClass")   ? componentData.prop_widgetClass                : [ "shadow-sm" , "rounded" , "border"];
+            const prop_widgetStyles = componentData.hasOwnProperty("prop_widgetStyles")  ? componentData.prop_widgetStyles               : {"height" : "120px"};
+            //---------------
+
+            return `
 <style>
- #${el.id} .widget-component{
-    min-height: ${prop_minHeight}px;
+ #${el.id} .widget-component-${var_randomId}{
+    ${super.renderListStyle(prop_widgetStyles)}
 }
 </style>
-<section class="component-element-structure mb-2 widget-component position-relative ${ prop_classList }" >
+<section class="component-element-structure mb-2 widget-component-${var_randomId} position-relative ${super.renderListClass(prop_widgetClass)}" >
 
     <section class="response-widget-component-${var_randomId}"></section>
     
@@ -2715,6 +2738,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
     <component-loading id="widget-component-loading-${var_randomId}"></component-loading>
 </section>
 `;
+        }
     }
 
     onCreate(data , el){
@@ -2723,14 +2747,22 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
     onRender(data , componentSlots , el){
 
-        if (componentSlots.hasOwnProperty("body")){
-            const readyResponse = super.getMethod(data , "readyResponse" , null);
-            window[readyResponse](componentSlots.body)
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            if (componentSlots.hasOwnProperty("body")){
+                const readyResponse = super.getMethod(componentData , "readyResponse" , null);
+                window[readyResponse](componentSlots.body)
+            }
+            else{
+                const onFetchWidget = super.getMethod(componentData , "onFetchWidget" , null);
+                window[onFetchWidget]()
+            }
         }
-        else{
-            const onFetchWidget = super.getMethod(data , "onFetchWidget" , null);
-            window[onFetchWidget]()
-        }
+
     }
 
 }
@@ -3669,7 +3701,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         let html = `
 <style>
 .title-otp{
-   background-color: ${tools_const.styles.title.backgroundColor};
+   background-color: ${ tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("title") && tools_const.styles.title.hasOwnProperty("backgroundColor")  ? tools_const.styles.title.backgroundColor : ""};
 }
 .form-otp{
    direction: ltr !important;

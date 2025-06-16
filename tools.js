@@ -4,41 +4,56 @@ Developer: Mehdi Maarefian
 Version: 0.1
 */
 
- component_props = {
-    directionRtl: false,
 
 
-    // -----------------------
-    primaryColor1: "#f47920",
-    primaryColor2: "#faa46c",
+if (typeof component_props === 'undefined') {
+    component_props = {
+        directionRtl: false,
 
-    secondaryColor1: "#38e1c3",
-    secondaryColor2: "#78f1db",
 
-    errorColor1: "#dc3545",
-    errorColor2: "#e8616f",
+        // -----------------------
+        primaryColor1: "#f47920",
+        primaryColor2: "#faa46c",
 
-    warningColor1: "#f47920",
-    warningColor2: "#fd9248",
+        secondaryColor1: "#38e1c3",
+        secondaryColor2: "#78f1db",
 
-    successColor1: "#9eeaf9",
-    successColor2: "#c7f4ff",
+        errorColor1: "#dc3545",
+        errorColor2: "#e8616f",
 
-    shadowColor1: "rgba(98,98,98,0.2)",
-    shadowColor2: "rgba(98,98,98,0.07)",
+        warningColor1: "#f47920",
+        warningColor2: "#fd9248",
 
-    darkColor1: "rgb(0,0,0)",
-    darkColor2: "rgb(42,42,42)",
+        successColor1: "#9eeaf9",
+        successColor2: "#c7f4ff",
 
-    shanColor1: "#ffffff",
-    shanColor2: "rgba(255,255,255,0.74)",
-    // -----------------------
+        shadowColor1: "rgba(98,98,98,0.2)",
+        shadowColor2: "rgba(98,98,98,0.07)",
 
+        darkColor1: "rgb(0,0,0)",
+        darkColor2: "rgb(42,42,42)",
+
+        shanColor1: "#ffffff",
+        shanColor2: "rgba(255,255,255,0.74)",
+        // -----------------------
+
+    }
+}
+
+if (typeof tools_const === 'undefined') {
+    tools_const = {
+        botResPath: "bot/run/435/res_v2" ,
+
+        contentTypes : {
+            html: "text/html" , json: "application/json" ,
+        },
+    };
 }
 
 
 
- tools_const = {};
+
+
  tools_init = {
     renderComponentProps : function(config){
 
@@ -56,79 +71,71 @@ Version: 0.1
     } ,
 
     renderToolsConst : function(){
-        tools_const = {
-            botResPath: "bot/run/435/res_v2" ,
-
-            styles: {
-
-                message: {
-                    backgroundColor_success: component_props.successColor1 ,
-                    color_success:           component_props.darkColor1 ,
-                    backgroundColor_error:   component_props.errorColor1 ,
-                    color_error:             component_props.shanColor1 ,
-                },
-
-                loading: {
-                    backgroundColor_loading:  component_props.primaryColor1 ,
-                    backgroundColor_shadow:   component_props.shadowColor1
-                },
-
-                state404: {
-                    backgroundColor_shadow:  component_props.shadowColor1 ,
-                },
-
-                title: {
-                    backgroundColor: component_props.shanColor1
-                },
-
-                collapse: {
-                    backgroundColor: component_props.shanColor1
-                },
-
-                button: {
-                    default:{
-                        backgroundColor:       component_props.primaryColor1,
-                        backgroundColorHover:  component_props.primaryColor2,
-                        color:                 component_props.shanColor1,
-                    } ,
-                    error:{
-                        backgroundColor:       component_props.errorColor1,
-                        backgroundColorHover:  component_props.errorColor2,
-                        color:                 component_props.shanColor1,
-                    }
-                },
-
-                table: {
-                    backgroundColor: component_props.shanColor1 ,
-                    backgroundColor_rowSelected: component_props.primaryColor1 ,
-                    backgroundColor_columnSelected: component_props.secondaryColor1 ,
-                    backgroundColor_textSelected: component_props.shanColor1 ,
-                },
-
-                selectOption: {
-                    backgroundColor_itemSelected: component_props.primaryColor1 ,
-                    color_icon: component_props.darkColor1
-                },
 
 
-
-                backShadow: {
-                    backgroundColor: component_props.shadowColor1
-                },
-                buttonError: {
-                    backgroundColor: component_props.errorColor1 ,
-                    color: component_props.shanColor1,
-                },
-            } ,
-
-
-            contentTypes : {
-                html: "text/html" , json: "application/json" ,
+        tools_const.styles =  {
+            message: {
+                backgroundColor_success: component_props.successColor1 ,
+                color_success:           component_props.darkColor1 ,
+                backgroundColor_error:   component_props.errorColor1 ,
+                color_error:             component_props.shanColor1 ,
             },
+
+            loading: {
+                backgroundColor_loading:  component_props.primaryColor1 ,
+                backgroundColor_shadow:   component_props.shadowColor1
+            },
+
+            state404: {
+                backgroundColor_shadow:  component_props.shadowColor1 ,
+            },
+
+            title: {
+                backgroundColor: component_props.shanColor1
+            },
+
+            collapse: {
+                backgroundColor: component_props.shanColor1
+            },
+
+            button: {
+                default:{
+                    backgroundColor:       component_props.primaryColor1,
+                    backgroundColorHover:  component_props.primaryColor2,
+                    color:                 component_props.shanColor1,
+                } ,
+                error:{
+                    backgroundColor:       component_props.errorColor1,
+                    backgroundColorHover:  component_props.errorColor2,
+                    color:                 component_props.shanColor1,
+                }
+            },
+
+            table: {
+                backgroundColor: component_props.shanColor1 ,
+                backgroundColor_rowSelected: component_props.primaryColor1 ,
+                backgroundColor_columnSelected: component_props.secondaryColor1 ,
+                backgroundColor_textSelected: component_props.shanColor1 ,
+            },
+
+            selectOption: {
+                backgroundColor_itemSelected: component_props.primaryColor1 ,
+                color_icon: component_props.darkColor1
+            },
+
+
+
+            backShadow: {
+                backgroundColor: component_props.shadowColor1
+            },
+            buttonError: {
+                backgroundColor: component_props.errorColor1 ,
+                color: component_props.shanColor1,
+            } ,
         };
     }
 }
-tools_init.renderToolsConst();
+
 
 
 
@@ -264,7 +271,11 @@ tools_init.renderToolsConst();
             }
         }
 
-        tools_component.control("ComponentLoading" , componentLoadingData , true);
+
+        if (componentLoadingData != null) {
+            tools_component.control("ComponentLoading" , componentLoadingData , true);
+        }
+
 
         return await fetch(
             url ,
@@ -279,8 +290,13 @@ tools_init.renderToolsConst();
                 response => {
                     switch (response.status){
                         case 404:
-                            tools_component.control("Component404" , component404Data);
-                            tools_component.control("ComponentLoading" , componentLoadingData , false);
+
+                            if (componentLoadingData != null) {
+                                tools_component.control("Component404" , component404Data);
+                            }
+                            if (componentLoadingData != null) {
+                                tools_component.control("ComponentLoading" , componentLoadingData , false);
+                            }
 
                             break;
                         case 200:
@@ -306,12 +322,16 @@ tools_init.renderToolsConst();
                 response => {
 
                     /// hide loading
-                    tools_component.control("ComponentLoading" , componentLoadingData , false);
+                    if (componentLoadingData != null) {
+                        tools_component.control("ComponentLoading" , componentLoadingData , false);
+                    }
 
                     /// set messages
-                    componentMessagesData.prop_messages = response.hasOwnProperty("messages") ? response.messages : [];
-                    componentMessagesData.prop_status = response.hasOwnProperty("status") ? response.status : true;
-                    tools_component.control("ComponentMessages" , componentMessagesData);
+                    if (componentMessagesData != null) {
+                        componentMessagesData.prop_messages = response.hasOwnProperty("messages") ? response.messages : [];
+                        componentMessagesData.prop_status = response.hasOwnProperty("status") ? response.status : true;
+                        tools_component.control("ComponentMessages" , componentMessagesData);
+                    }
 
                     /// result callback
                     const resultExp = response.hasOwnProperty("resultExp") ? response.resultExp : response;
@@ -324,9 +344,12 @@ tools_init.renderToolsConst();
                 }
             ).catch(
                 e=>{
-
-                    tools_component.control("Component404" , component404Data);
-                    tools_component.control("ComponentLoading" , componentLoadingData , false);
+                    if (componentLoadingData != null) {
+                        tools_component.control("Component404" , component404Data);
+                    }
+                    if (componentLoadingData != null) {
+                        tools_component.control("ComponentLoading" , componentLoadingData , false);
+                    }
 
                     /// log error
                     console.error("[FETCH]" , url , data , e);

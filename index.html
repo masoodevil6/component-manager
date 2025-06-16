@@ -64,7 +64,7 @@
 
 <script>
 
-
+    tools_init.renderToolsConst()
 
     tools_component.setup(
         document.getElementById('template-main') ,
@@ -537,6 +537,43 @@
 
 
 
+                    {
+                        component: 'ComponentWidget',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "w2" ,
+
+                            prop_minHeight: 120 ,
+                            prop_fetch : {
+                                url: "https://google1.com"
+                            }
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentWidget',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "w1" ,
+
+                            prop_minHeight: 150 ,
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    } ,
 
 
 /*
@@ -626,18 +663,6 @@
 
 
 
-                    {
-                        component: 'ComponentWidget',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "w2" ,
-
-                            prop_minHeight: 120 ,
-                            prop_fetch : {
-                                url: "https://google1.com"
-                            }
-                        }
-                    } ,
 
 
 
@@ -685,28 +710,7 @@
 
 
 
-                    {
-                        component: 'ComponentWidget',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "w1" ,
 
-                            prop_minHeight: 150 ,
-                        },
-                        children:[
-                            {
-                                component: 'body',
-                                children: [
-                                    {
-                                        component: 'h1',
-                                        props: {
-                                            text: "hello world"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    } ,
 
 
 
