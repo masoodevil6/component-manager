@@ -141,8 +141,6 @@
 
 
 
-
-
                     {
                         component: 'ComponentForm',
                         props: {
@@ -166,7 +164,6 @@
 
 
 
-
                     {
                         component: 'ComponentIsEmpty',
                         props: {
@@ -184,6 +181,7 @@
                     } ,
 
 
+
                     {
                         component: 'ComponentIsEmpty',
                         props: {
@@ -193,8 +191,6 @@
                             prop_title: "it is a test" ,
                         }
                     } ,
-
-
 
 
 
@@ -222,8 +218,6 @@
                             prop_bodyShow: false ,
                         }
                     } ,
-
-
 
 
 
@@ -356,6 +350,7 @@
                     } ,
 
 
+
                     {
                         component: 'ComponentSelectOption',
                         props: {
@@ -385,6 +380,7 @@
                             }
                         }
                     } ,
+
 
 
                     {
@@ -445,7 +441,6 @@
 
 
 
-
                     {
                         component: 'ComponentTabs',
                         props: {
@@ -468,11 +463,6 @@
                             }
                         }
                     } ,
-
-
-
-
-
 
 
 
@@ -522,6 +512,7 @@
                     } ,
 
 
+
                     {
                         component: 'ComponentInputPrice',
                         props: {
@@ -559,6 +550,33 @@
                             id: "w1" ,
 
                             prop_minHeight: 150 ,
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentBorder',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "b1" ,
+
+                            prop_borderStyles: {
+                                "height" : "150px"
+                            } ,
                         },
                         children:[
                             {

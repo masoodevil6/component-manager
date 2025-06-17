@@ -25,6 +25,7 @@ if (typeof listComponent === 'undefined') {
         ComponentIcon:                       "component-icon" ,                           //18
         ComponentPositionElement:            "component-position-element" ,               //19
         ComponentInfo:                       "component-info" ,                           //20
+        ComponentBorder:                     "component-border" ,                         //21
     }
 }
 ```
@@ -509,9 +510,11 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
+
+
+
 **20) Component Info:**
 ```
-
 /*-------------------------------------
  Component Info
 -------------------------------------
@@ -521,6 +524,26 @@ if (typeof listComponent === 'undefined') {
 @prop_iconStyles
 -------------------------------------*/
     new window.ComponentInfo(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+**21) Component Border:**
+```
+/*-------------------------------------
+ Component border
+-------------------------------------
+@prop_borderClass
+@prop_borderStyles
+@prop_content
+-------------------------------------*/
+    new window.ComponentBorder(
         "element_id" ,
         {
             

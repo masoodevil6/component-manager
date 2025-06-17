@@ -27,6 +27,7 @@ if (typeof listComponent === 'undefined') {
         ComponentIcon:                       "component-icon" ,                           //18
         ComponentPositionElement:            "component-position-element" ,               //19
         ComponentInfo:                       "component-info" ,                           //20
+        ComponentBorder:                     "component-border" ,                         //21
     }
 }
 if (typeof components === 'undefined') {
@@ -485,7 +486,6 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 
 
 
-
 /*-------------------------------------
  Component Loading
 -------------------------------------
@@ -583,7 +583,6 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
     }
 
 }
-
 
 
 
@@ -891,7 +890,6 @@ window.Component404 = class Component404 extends ComponentBase{
 
     }
 }
-
 
 
 
@@ -1388,9 +1386,6 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
 
 
 
-
-
-
 /*-------------------------------------
  Component Table
 -------------------------------------
@@ -1696,8 +1691,6 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 
 
 
-
-
 /*-------------------------------------
  Component Button
 -------------------------------------
@@ -1795,15 +1788,9 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 
         }
 
-
     }
 
 }
-
-
-
-
-
 
 
 
@@ -2600,8 +2587,26 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
         `
         }
 
-
     }
+
+
+    onRender = (data , componentSlots , el) =>{
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        this.callbackTabSelected(var_randomId);
+    }
+
+    callbackTabSelected = (var_randomId) =>{
+        if ( components.hasOwnProperty(var_randomId)) {
+            const componentData = components[var_randomId];
+            const prop_tabSelected   =   componentData.hasOwnProperty("prop_tabSelected")  ?  componentData.prop_tabSelected   :  null;
+            if (prop_tabSelected != null){
+                const onSelectTab = super.getMethod(componentData , "onSelectTab"    , null);
+                window[onSelectTab](prop_tabSelected)
+            }
+        }
+    }
+
 }
 
 
@@ -2644,7 +2649,6 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                     )
                 }
 
-
             }
         };
         methods["readyResponse"] = {
@@ -2655,9 +2659,41 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                 if ( components.hasOwnProperty(var_randomId)) {
                     const componentData = components[var_randomId];
 
-                    const el = document.getElementById(elId);
-                    const responseEl = el.getElementsByClassName("response-widget-component-"+var_randomId);
-                    responseEl[0].innerHTML = response
+                    const el = document.getElementById("response-widget-component-"+var_randomId);
+
+                    if (response != null){
+                        if (response.hasOwnProperty("html")){
+                            el.innerHTML = response.html;
+
+                            const scripts = el.querySelectorAll('script');
+                            scripts.forEach(oldScript => {
+                                const newScript = document.createElement('script');
+                                if (oldScript.src) {
+                                    newScript.src = oldScript.src;
+                                } else {
+                                    newScript.textContent = oldScript.textContent;
+                                }
+                                document.body.appendChild(newScript);
+                            });
+                        }
+                        if (response.hasOwnProperty("script_src")){
+                            const script = document.createElement('script');
+                            script.src = response.script_src;
+                            script.defer = true; // یا async
+                            document.body.appendChild(script);
+                        }
+                        if (response.hasOwnProperty("script")){
+                            response.script.forEach(oldScript => {
+                                const newScript = document.createElement('script');
+                                if (oldScript.src) {
+                                    newScript.src = oldScript.src;
+                                } else {
+                                    newScript.textContent = oldScript.textContent;
+                                }
+                                document.body.appendChild(newScript);
+                            });
+                        }
+                    }
 
                 }
             }
@@ -2682,7 +2718,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                         tools_submit.fetcth(
                             prop_fetch != null && prop_fetch.hasOwnProperty("url") ? prop_fetch.url : "" ,
                             {
-                                data:prop_fetch != null && prop_fetch.hasOwnProperty("data") ? prop_fetch.data : {} ,
+                                data: prop_fetch != null && prop_fetch.hasOwnProperty("data") ? prop_fetch.data : [] ,
                                 callback: window[methods.readyResponse.name] ,
                                 componentLoadingData: {
                                     elId : "widget-component-loading-"+var_randomId
@@ -2719,35 +2755,34 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
             const componentData = components[var_randomId];
 
-            const prop_widgetClass  = componentData.hasOwnProperty("prop_widgetClass")   ? componentData.prop_widgetClass                : [ "shadow-sm" , "rounded" , "border"];
-            const prop_widgetStyles = componentData.hasOwnProperty("prop_widgetStyles")  ? componentData.prop_widgetStyles               : {"height" : "120px"};
-            //---------------
 
             return `
 <style>
- #${el.id} .widget-component-${var_randomId}{
-    ${super.renderListStyle(prop_widgetStyles)}
-}
 </style>
-<section class="component-element-structure mb-2 widget-component-${var_randomId} position-relative ${super.renderListClass(prop_widgetClass)}" >
+<section class="component-element-structure mb-2 widget-component-${var_randomId} position-relative " >
 
-    <section class="response-widget-component-${var_randomId}"></section>
+   <component-border id="border-widget-component-${var_randomId}">
+       <component-body>
+             <section id="response-widget-component-${var_randomId}"></section>
     
-    <component-404 id="widget-component-404-${var_randomId}"></component-404>
+             <component-404 id="widget-component-404-${var_randomId}"></component-404>
 
-    <component-loading id="widget-component-loading-${var_randomId}"></component-loading>
+             <component-loading id="widget-component-loading-${var_randomId}"></component-loading>
+       </component-body>
+   </component-border>
+
 </section>
 `;
         }
     }
 
-    onCreate(data , el){
 
-    }
-
-    onRender(data , componentSlots , el){
+    onRender = (data , componentSlots , el) => {
 
         const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        this.readyBorderComponent(var_randomId);
+
 
         if ( components.hasOwnProperty(var_randomId)) {
 
@@ -2759,12 +2794,34 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
             }
             else{
                 const onFetchWidget = super.getMethod(componentData , "onFetchWidget" , null);
-                window[onFetchWidget]()
+                if (typeof onFetchWidget == "string" && window.hasOwnProperty(onFetchWidget) ){
+                    window[onFetchWidget]()
+                }
             }
+
+        }
+    }
+
+
+    readyBorderComponent  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+            const prop_widgetClass  = componentData.hasOwnProperty("prop_widgetClass")   ? componentData.prop_widgetClass                : [];
+            const prop_widgetStyles = componentData.hasOwnProperty("prop_widgetStyles")  ? componentData.prop_widgetStyles               : {"min-height" : "120px"};
+            //---------------
+
+            new window.ComponentBorder(
+                "border-widget-component-"+var_randomId ,
+                {
+                    prop_borderClass: prop_widgetClass ,
+                    prop_borderStyles: prop_widgetStyles ,
+                }
+            )
         }
 
     }
-
 }
 
 
@@ -5749,4 +5806,56 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
         }
 
     }
+}
+
+
+
+
+
+
+/*-------------------------------------
+ Component border
+-------------------------------------
+@prop_borderClass
+@prop_borderStyles
+@prop_content
+-------------------------------------*/
+window.ComponentBorder = class ComponentBorder extends ComponentBase{
+
+    props = {};
+
+    constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+        super(elId , config , listComponent[ComponentBorder.name] , methods , config["var_randomId"]);
+
+        this.render()
+    }
+
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+            const prop_content          =  componentData.hasOwnProperty("prop_content")             ?  componentData.prop_content          : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_borderClass      =  componentData.hasOwnProperty("prop_borderClass")         ?  componentData.prop_borderClass      :  ["border" , "shadow-sn" , "rounded" , "p-1"];
+            const prop_borderStyles     =  componentData.hasOwnProperty("prop_borderStyles")        ?  componentData.prop_borderStyles     :  {};
+
+            return `
+<style>
+ #${el.id} .border-component-${var_randomId}{
+    ${super.renderListStyle(prop_borderStyles)}
+}
+</style>
+<section class="component-element-structure mb-2 border-component-${var_randomId} ${super.renderListClass(prop_borderClass)}" >
+${prop_content}
+</section>
+`;
+        }
+
+    }
+
+
 }
