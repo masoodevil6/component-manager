@@ -34,7 +34,7 @@ if (typeof component_props === 'undefined') {
         darkColor2: "rgb(42,42,42)",
 
         shanColor1: "#ffffff",
-        shanColor2: "rgba(255,255,255,0.74)",
+        shanColor2: "#ececec",
         // -----------------------
 
     }
@@ -122,6 +122,15 @@ if (typeof tools_const === 'undefined') {
                 backgroundColor_itemSelected: component_props.primaryColor1 ,
                 color_icon: component_props.darkColor1
             },
+
+            elementLink: {
+                normal:{
+                    backgroundColor: component_props.shanColor1 ,
+                },
+                hover:{
+                    backgroundColor: component_props.shanColor2 ,
+                }
+            } ,
 
 
 

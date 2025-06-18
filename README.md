@@ -26,6 +26,8 @@ if (typeof listComponent === 'undefined') {
         ComponentPositionElement:            "component-position-element" ,               //19
         ComponentInfo:                       "component-info" ,                           //20
         ComponentBorder:                     "component-border" ,                         //21
+        ComponentImage:                      "component-image" ,                          //22
+        ComponentLink:                       "component-link" ,                           //23
     }
 }
 ```
@@ -154,6 +156,7 @@ if (typeof listComponent === 'undefined') {
 -------------------------------------
 @prop_size
 @prop_title
+@prop_icon
 @prop_classList
 -------------------------------------*/
     new window.ComponentHeader(
@@ -252,6 +255,7 @@ if (typeof listComponent === 'undefined') {
 -------------------------------------
 @prop_tabs           {id   icon}
 @prop_tabSelected
+@prop_type
 
 @fn_callback
 -------------------------------------*/
@@ -542,8 +546,57 @@ if (typeof listComponent === 'undefined') {
 @prop_borderClass
 @prop_borderStyles
 @prop_content
+
+@fn_elementClick
 -------------------------------------*/
     new window.ComponentBorder(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+
+**22) Component Image:**
+```
+/*-------------------------------------
+ Component image
+-------------------------------------
+@prop_imageSource
+@prop_imageTitle
+@prop_imageClass
+@prop_imageStyles
+
+@fn_elementClick
+-------------------------------------*/
+    new window.ComponentImage(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+**23) Component Link:**
+```
+/*-------------------------------------
+ Component link
+-------------------------------------
+@prop_image source , title , class , styles
+@prop_icon  source , title , class , styles
+@prop_title content , style , class
+@prop_linkClass
+@prop_linkStyles
+@prop_linkHref
+-------------------------------------*/
+    new window.ComponentLink(
         "element_id" ,
         {
             

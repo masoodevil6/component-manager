@@ -28,6 +28,9 @@ if (typeof listComponent === 'undefined') {
         ComponentPositionElement:            "component-position-element" ,               //19
         ComponentInfo:                       "component-info" ,                           //20
         ComponentBorder:                     "component-border" ,                         //21
+        ComponentImage:                      "component-image" ,                          //22
+        ComponentLink:                       "component-link" ,                           //23
+        ComponentDescription:                "component-description" ,                    //24
     }
 }
 if (typeof components === 'undefined') {
@@ -1203,6 +1206,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 -------------------------------------
 @prop_size
 @prop_title
+@prop_icon
 @prop_classList
 -------------------------------------*/
 window.ComponentHeader = class ComponentHeader extends ComponentBase{
@@ -1223,11 +1227,51 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
 
             const componentData = components[var_randomId];
 
-            const prop_size =      componentData.hasOwnProperty("prop_size")        ?  componentData.prop_size  : 5;
-            const prop_title =     componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title  : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-            const prop_classList = componentData.hasOwnProperty("prop_classList")   ?  componentData.prop_classList  : "pb-0 px-2 mb-1 border-bottom";
+            const prop_size =      componentData.hasOwnProperty("prop_size")        ?  componentData.prop_size       : 5;
+            const prop_title =     componentData.hasOwnProperty("prop_title")       ?  componentData.prop_title      : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_classList = componentData.hasOwnProperty("prop_classList")   ?  componentData.prop_classList  : ["pb-0","px-2","mb-1","border-bottom"];
 
-            return `<h${prop_size} class="component-element-structure mb-2 ${prop_classList ?? ''} ">${prop_title ?? ''}</h${prop_size}>`;
+            return `
+<section class="component-element-structure mb-2 ${super.renderListClass(prop_classList)}">
+       <component-icon id="component-header-icon-${var_randomId}"></component-icon>
+       <h${prop_size} id="component-header-text-${var_randomId}">${prop_title ?? ''}</h${prop_size}>
+</section>
+            `;
+        }
+    }
+
+    onRender = (data , componentSlots , el) => {
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        this.readyLinkIcon(var_randomId);
+    }
+
+    readyLinkIcon  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_icon      =  componentData.hasOwnProperty("prop_icon")         ?  componentData.prop_icon      : null;
+
+            if (prop_icon != null) {
+                new window.ComponentIcon(
+                    `component-header-icon-${var_randomId}` ,
+                    {
+                        classList:[ "float-start"  ] ,
+
+                        prop_icon        :  prop_icon != null ? prop_icon    : "" ,
+                        prop_iconClass   :  ["me-2" , "d-inline-block"] ,
+                        prop_iconStyles  :  {"line-height" : "25px" , "font-size" : "18pt"} ,
+                    }
+                )
+            }
+            else{
+                const el = document.getElementById(`component-header-icon-${var_randomId}`);
+                if (el != null){
+                    el.remove();
+                }
+            }
         }
 
     }
@@ -2469,6 +2513,7 @@ ${btnAddItem}
 -------------------------------------
 @prop_tabs           {id   icon}
 @prop_tabSelected
+@prop_type
 
 @fn_callback
 -------------------------------------*/
@@ -2512,37 +2557,44 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 
             const componentData = components[var_randomId];
 
+            const prop_type          =   componentData.hasOwnProperty("prop_type")         ?  componentData.prop_type          :  0;
+
             const prop_tabs          =   componentData.hasOwnProperty("prop_tabs")         ?  componentData.prop_tabs          :  [];
             const prop_tabSelected   =   componentData.hasOwnProperty("prop_tabSelected")  ?  componentData.prop_tabSelected   :  null;
 
             const onSelectTab = super.getMethod(componentData , "onSelectTab"    , null);
 
+
             let tabHtml = "";
-            if (prop_tabs != null){
-                let tabClassCol = "";
-                switch (prop_tabs.length){
-                    case 4:
-                        tabClassCol = "col-md-3";
-                        break;
-                    case 3:
-                        tabClassCol = "col-md-4";
-                        break;
-                    case 2:
-                        tabClassCol ="col-md-6";
-                        break;
-                    case 1:
-                        tabClassCol = "col-md-12";
-                        break;
-                }
+            let tabClass = "";
+            let tabStyle = "";
+            if (prop_type == 0){
+                tabClass = "row m-0 mb-2";
+                if (prop_tabs != null){
+                    let tabClassCol = "";
+                    switch (prop_tabs.length){
+                        case 4:
+                            tabClassCol = "col-md-3";
+                            break;
+                        case 3:
+                            tabClassCol = "col-md-4";
+                            break;
+                        case 2:
+                            tabClassCol ="col-md-6";
+                            break;
+                        case 1:
+                            tabClassCol = "col-md-12";
+                            break;
+                    }
 
-                for (let i = 0; i < prop_tabs.length; i++) {
-                    const itemTab = prop_tabs[i];
-                    if (itemTab.hasOwnProperty("title")){
-                        let icon = itemTab.hasOwnProperty("icon") ? `<img src="${itemTab.icon}" alt=" ">` : ``;
-                        const tabId =  itemTab.hasOwnProperty("id")  ?  itemTab.id  :  i;
-                        let classActive = prop_tabSelected != null && prop_tabSelected == tabId ? 'btn-tab-types-active' : '';
+                    for (let i = 0; i < prop_tabs.length; i++) {
+                        const itemTab = prop_tabs[i];
+                        if (itemTab.hasOwnProperty("title")){
+                            let icon = itemTab.hasOwnProperty("icon") ? `<img src="${itemTab.icon}" alt=" ">` : ``;
+                            const tabId =  itemTab.hasOwnProperty("id")  ?  itemTab.id  :  i;
+                            let classActive = prop_tabSelected != null && prop_tabSelected == tabId ? 'btn-tab-types-active' : '';
 
-                        tabHtml += `
+                            tabHtml += `
                       <div class="${tabClassCol} px-1 col-12 position-relative">
                           <button type="button"
                                 onclick="${onSelectTab}(${tabId})"
@@ -2552,11 +2604,44 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
                          </button>
                      </div>
                 `;
+                        }
+
                     }
 
                 }
 
             }
+            else if (prop_type == 1){
+                tabClass = "border rounded p-1";
+                tabStyle = "display: flow-root; maargin-bottom: 3px;";
+                if (prop_tabs != null){
+                    let tabClassCol = "float-start";
+
+                    for (let i = 0; i < prop_tabs.length; i++) {
+                        const itemTab = prop_tabs[i];
+                        if (itemTab.hasOwnProperty("title")){
+                            let icon = itemTab.hasOwnProperty("icon") ? `<img src="${itemTab.icon}" alt=" ">` : ``;
+                            const tabId =  itemTab.hasOwnProperty("id")  ?  itemTab.id  :  i;
+                            let classActive = prop_tabSelected != null && prop_tabSelected == tabId ? 'btn-tab-types-active' : '';
+
+                            tabHtml += `
+                      <div class="${tabClassCol} px-1  position-relative">
+                          <button type="button"
+                                onclick="${onSelectTab}(${tabId})"
+                                class="${classActive} btn-tab-types btn btn-light w-100 border shadow-sm line-height-30px" 
+                                title="${itemTab.title}">
+                            ${icon}
+                         </button>
+                     </div>
+                `;
+                        }
+
+                    }
+
+                }
+
+            }
+
 
             return `
 <style>
@@ -2581,7 +2666,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
     color :#ffffff !important;
 }
 </style>
-           <section class="component-element-structure row m-0 mb-2">
+           <section class="component-element-structure ${tabClass}" style="${tabStyle}">
                ${tabHtml}
            </section>
         `
@@ -5726,6 +5811,8 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 -------------------------------------
 @prop_icon
 @prop_title
+@prop_infoClass
+@prop_infoStyles
 @prop_iconClass
 @prop_iconStyles
 -------------------------------------*/
@@ -5749,24 +5836,24 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
 
             const componentData = components[var_randomId];
             const prop_title          =  componentData.hasOwnProperty("prop_title")             ?  componentData.prop_title          : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-            const prop_iconClass      =  componentData.hasOwnProperty("prop_iconClass")         ?  componentData.prop_iconClass      :  [];
-            const prop_iconStyles     =  componentData.hasOwnProperty("prop_iconStyles")        ?  componentData.prop_iconStyles     :  {};
+            const prop_infoClass      =  componentData.hasOwnProperty("prop_infoClass")         ?  componentData.prop_infoClass      :  [];
+            const prop_infoStyles     =  componentData.hasOwnProperty("prop_infoStyles")        ?  componentData.prop_infoStyles     :  {};
             const prop_icon           =  componentData.hasOwnProperty("prop_icon")              ?  componentData.prop_icon           :  "";
 
             return `
 <style>
  #${el.id} .component-info-text-${ var_randomId }{
-       ${super.renderListStyle(prop_iconStyles)}
+       ${super.renderListStyle(prop_infoStyles)}
  }
 </style>
 <section class="component-element-structure mb-2">
-   <p class="component-info-${   var_randomId }">
-   
-<component-icon id="component-info-icon-${   var_randomId }"></component-icon>
-      <section class="component-info-text-${   var_randomId } ${super.renderListClass(prop_iconClass)} ">
+   <section class="component-info-${   var_randomId } mx-0 p-0">
+      <component-icon id="component-info-icon-${   var_randomId }"></component-icon>
+      
+      <div class="component-info-text-${   var_randomId } ${super.renderListClass(prop_infoClass)} ">
          ${prop_title }
-      </section>
-   </p>
+      </div>
+   </section>
 </section>
         `;
         }
@@ -5784,25 +5871,34 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
         if ( components.hasOwnProperty(var_randomId)) {
 
             const componentData = components[var_randomId];
-            const prop_icon           =  componentData.hasOwnProperty("prop_icon")              ?  componentData.prop_icon           :  "";
+            const prop_icon           =  componentData.hasOwnProperty("prop_icon")              ?  componentData.prop_icon           :  null;
 
-            new window.ComponentIcon(
-                "component-info-icon-"+  var_randomId  ,
-                {
-                    prop_icon:     prop_icon  ,
+            if (prop_icon != null && prop_icon.length > 0){
+                new window.ComponentIcon(
+                    "component-info-icon-"+  var_randomId  ,
+                    {
+                        prop_icon:     prop_icon  ,
 
-                    prop_iconClass : ["font-12pt" , "mx-2" , "float-end"] ,
-                    prop_iconStyles : {
-                        "margin" : "0",
-                        "width" : "25px",
-                        "line-height" :   "25px",
-                        "right" :   "0",
-                        "font-size" : "20pt;",
-                        "top" : "0" ,
-                    } ,
+                        prop_iconClass : ["font-12pt" , "mx-2" , "float-end"] ,
+                        prop_iconStyles : {
+                            "margin" : "0",
+                            "width" : "25px",
+                            "line-height" :   "25px",
+                            "right" :   "0",
+                            "font-size" : "20pt;",
+                            "top" : "0" ,
+                        } ,
 
+                    }
+                )
+            }
+            else {
+                const el = document.getElementById(`component-info-icon-${var_randomId}`);
+                if (el != null){
+                    el.remove();
                 }
-            )
+            }
+
         }
 
     }
@@ -5818,7 +5914,10 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
 -------------------------------------
 @prop_borderClass
 @prop_borderStyles
+@prop_borderStylesHover
 @prop_content
+
+@fn_elementClick
 -------------------------------------*/
 window.ComponentBorder = class ComponentBorder extends ComponentBase{
 
@@ -5828,6 +5927,20 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
         config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         let methods = {};
+        methods["onClickToIconElement"] = {
+            name: `onClickToIconElement${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+
+                const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    if (componentData.hasOwnProperty("fn_elementClick") && typeof componentData.fn_elementClick != null){
+                        componentData.fn_elementClick(event);
+                    }
+                }
+            }
+        };
         super(elId , config , listComponent[ComponentBorder.name] , methods , config["var_randomId"]);
 
         this.render()
@@ -5839,17 +5952,23 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
         if ( components.hasOwnProperty(var_randomId)) {
 
             const componentData = components[var_randomId];
-            const prop_content          =  componentData.hasOwnProperty("prop_content")             ?  componentData.prop_content          : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-            const prop_borderClass      =  componentData.hasOwnProperty("prop_borderClass")         ?  componentData.prop_borderClass      :  ["border" , "shadow-sn" , "rounded" , "p-1"];
-            const prop_borderStyles     =  componentData.hasOwnProperty("prop_borderStyles")        ?  componentData.prop_borderStyles     :  {};
+            const prop_content               =  componentData.hasOwnProperty("prop_content")             ?  componentData.prop_content               : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_borderClass           =  componentData.hasOwnProperty("prop_borderClass")         ?  componentData.prop_borderClass           :  ["border" , "shadow-sm" , "rounded" , "p-1"];
+            const prop_borderStyles          =  componentData.hasOwnProperty("prop_borderStyles")        ?  componentData.prop_borderStyles          :  {};
+            const prop_borderStylesHover     =  componentData.hasOwnProperty("prop_borderStylesHover")   ?  componentData.prop_borderStylesHover     :  {};
+
+            const onClickToIconElement       =  super.getMethod(componentData , "onClickToIconElement"   , "(event)" );
 
             return `
 <style>
  #${el.id} .border-component-${var_randomId}{
     ${super.renderListStyle(prop_borderStyles)}
 }
+ #${el.id} .border-component-${var_randomId}:hover{
+    ${super.renderListStyle(prop_borderStylesHover)}
+}
 </style>
-<section class="component-element-structure mb-2 border-component-${var_randomId} ${super.renderListClass(prop_borderClass)}" >
+<section class="component-element-structure  border-component-${var_randomId} ${super.renderListClass(prop_borderClass)}" onclick="${onClickToIconElement}" >
 ${prop_content}
 </section>
 `;
@@ -5857,5 +5976,408 @@ ${prop_content}
 
     }
 
+
+}
+
+
+
+
+
+/*-------------------------------------
+ Component image
+-------------------------------------
+@prop_imageSource
+@prop_imageTitle
+@prop_imageClass
+@prop_imageStyles
+
+@fn_elementClick
+-------------------------------------*/
+window.ComponentImage = class ComponentImage extends ComponentBase{
+
+    props = {};
+
+    constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+        methods["onClickToIconElement"] = {
+            name: `onClickToIconElement${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+
+                const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    if (componentData.hasOwnProperty("fn_elementClick") && typeof componentData.fn_elementClick != null){
+                        componentData.fn_elementClick(event);
+                    }
+                }
+            }
+        };
+        super(elId , config , listComponent[ComponentImage.name] , methods , config["var_randomId"]);
+
+        this.render()
+    }
+
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+            const prop_imageSource     =  componentData.hasOwnProperty("prop_imageSource")         ?  componentData.prop_imageSource      : "";
+            const prop_imageTitle      =  componentData.hasOwnProperty("prop_imageTitle")          ?  componentData.prop_imageTitle       : "";
+            const prop_imageClass      =  componentData.hasOwnProperty("prop_imageClass")         ?  componentData.prop_imageClass      : [];
+            const prop_imageStyles     =  componentData.hasOwnProperty("prop_imageStyles")        ?  componentData.prop_imageStyles     : {};
+
+            const onClickToIconElement =   super.getMethod(componentData , "onClickToIconElement"   , "(event)" );
+
+            return `
+<style>
+ #${el.id} .image-component-${var_randomId}{
+    ${super.renderListStyle(prop_imageStyles)}
+}
+</style>
+<section class="component-element-structure mb-2 image-component-${var_randomId} ${super.renderListClass(prop_imageClass)}" onclick="${onClickToIconElement}" >
+    <img src="${prop_imageSource}" title="${prop_imageTitle}"/>
+</section>
+`;
+        }
+
+    }
+
+
+}
+
+
+
+
+
+
+/*-------------------------------------
+ Component link
+-------------------------------------
+@prop_image source , title , class , styles
+@prop_icon  source , title , class , styles
+@prop_title content , style , class
+@prop_linkClass
+@prop_linkStyles
+@prop_linkHref
+-------------------------------------*/
+window.ComponentLink = class ComponentLink extends ComponentBase{
+
+    props = {};
+
+    constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+        methods["onClickToIconElement"] = {
+            name: `onClickToIconElement${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event) => {
+
+                const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    if (componentData.hasOwnProperty("fn_elementClick") && typeof componentData.fn_elementClick != null){
+                        componentData.fn_elementClick(event);
+                    }
+                }
+            }
+        };
+        super(elId , config , listComponent[ComponentLink.name] , methods , config["var_randomId"]);
+
+        this.render()
+    }
+
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_type          =  componentData.hasOwnProperty("prop_type")          ?  componentData.prop_type       : 0;
+            const prop_linkClass     =  componentData.hasOwnProperty("prop_linkClass")     ?  componentData.prop_linkClass  : [];
+            const prop_linkStyles    =  componentData.hasOwnProperty("prop_linkStyles")    ?  componentData.prop_linkStyles : {};
+
+            const onClickToIconElement =   super.getMethod(componentData , "onClickToIconElement"   , "(event)" );
+
+            if (prop_type == 0){
+                return `
+<style>
+ #${el.id} .link-component-${var_randomId}{
+    ${super.renderListStyle(prop_linkStyles)}
+}
+</style>
+<section class="component-element-structure link-component-${var_randomId} ${super.renderListClass(prop_linkClass)}">
+   <component-border id="component-link-border-${var_randomId}" class="row px-2 py-1 m-0">
+       <component-body>
+          <component-icon id="component-link-icon-${var_randomId}"></component-icon>
+          <component-image id="component-link-image-${var_randomId}"></component-image>
+          <component-info id="component-link-title-${var_randomId}"></component-info>
+       </component-body>
+   </component-border>
+</section>
+`;
+            }
+
+
+        }
+
+    }
+
+    onRender = (data , componentSlots , el) => {
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        this.readyLinkBorder(var_randomId);
+        this.readyLinkIcon(var_randomId);
+        this.readyLinkImage(var_randomId);
+        this.readyLinkTitle(var_randomId);
+    }
+
+    readyLinkBorder  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_linkHref  =  componentData.hasOwnProperty("prop_linkHref")         ?  componentData.prop_linkHref      : null;
+
+            new window.ComponentBorder(
+                `component-link-border-${var_randomId}` ,
+                {
+                    prop_borderClass:[ "row"  , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded" ] ,
+                    prop_borderStyles: {
+                        "cursor" : "pointer" ,
+                        "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("normal") && tools_const.styles.elementLink.normal.hasOwnProperty("backgroundColor")  ? tools_const.styles.elementLink.normal.backgroundColor : ""
+                    } ,
+                    prop_borderStylesHover: {
+                        "transition" : "background-color ease 300ms" ,
+                        "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("hover") && tools_const.styles.elementLink.hover.hasOwnProperty("backgroundColor") ? tools_const.styles.elementLink.hover.backgroundColor : ""
+                    } ,
+                    fn_elementClick  :  () => {
+                        window.open(prop_linkHref, '_blank');
+                    } ,
+                }
+            )
+        }
+
+    }
+
+    readyLinkImage  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_image      =  componentData.hasOwnProperty("prop_image")         ?  componentData.prop_image      : null;
+
+            if (prop_image != null) {
+                new window.ComponentImage(
+                    `component-link-image-${var_randomId}` ,
+                    {
+                        classList:[ "col-4" ] ,
+
+                        prop_imageSource  :  prop_image != null && prop_image.hasOwnProperty("source") ? prop_image.source  : "" ,
+                        prop_imageClass   :  prop_image != null && prop_image.hasOwnProperty("class")  ? prop_image.class   : [] ,
+                        prop_imageStyles  :  prop_image != null && prop_image.hasOwnProperty("styles") ? prop_image.styles  : {"height" : "50px"} ,
+                    }
+                )
+            }
+            else{
+                const el = document.getElementById(`component-link-image-${var_randomId}`);
+                if (el != null){
+                    el.remove();
+                }
+            }
+        }
+
+    }
+
+    readyLinkIcon  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_icon      =  componentData.hasOwnProperty("prop_icon")         ?  componentData.prop_icon      : null;
+
+            if (prop_icon != null) {
+                new window.ComponentIcon(
+                    `component-link-icon-${var_randomId}` ,
+                    {
+                        classList:[ "col-4" ] ,
+
+                        prop_icon        :  prop_icon != null && prop_icon.hasOwnProperty("icon")   ? prop_icon.icon    : "" ,
+                        prop_iconClass   :  prop_icon != null && prop_icon.hasOwnProperty("class")  ? prop_icon.class   : [] ,
+                        prop_iconStyles  :  prop_icon != null && prop_icon.hasOwnProperty("styles") ? prop_icon.styles  : {"height" : "50px"} ,
+                    }
+                )
+            }
+            else{
+                const el = document.getElementById(`component-link-icon-${var_randomId}`);
+                if (el != null){
+                    el.remove();
+                }
+            }
+        }
+
+    }
+
+    readyLinkTitle  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_title      =  componentData.hasOwnProperty("prop_title")         ?  componentData.prop_title      : {};
+
+            new window.ComponentInfo(
+                `component-link-title-${var_randomId}` ,
+                {
+                    classList:[ "col-8" ] ,
+
+                    prop_title       : `<b class="d-block text-center mb-1" style="font-size: 12pt"> ${prop_title != null && prop_title.hasOwnProperty("title") ? prop_title.title  : ""} </b> ` ,
+                    prop_infoClass   :  prop_title != null && prop_title.hasOwnProperty("class") ? prop_title.class  : [] ,
+                    prop_infoStyles  :  prop_title != null && prop_title.hasOwnProperty("styles") ? prop_title.styles : {} ,
+                }
+            )
+        }
+
+    }
+
+
+}
+
+
+
+
+
+
+/*-------------------------------------
+ Component link
+-------------------------------------
+@prop_icon
+@prop_title
+@prop_description
+-------------------------------------*/
+window.ComponentDescription = class ComponentDescription extends ComponentBase{
+
+    props = {};
+
+    constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+
+        super(elId , config , listComponent[ComponentDescription.name] , methods , config["var_randomId"]);
+
+        this.render()
+    }
+
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_descriptionClass     =  componentData.hasOwnProperty("prop_descriptionClass")     ?  componentData.prop_descriptionClass  : [];
+            const prop_descriptionStyles    =  componentData.hasOwnProperty("prop_descriptionStyles")    ?  componentData.prop_descriptionStyles : {};
+
+            return `
+<style>
+ #${el.id} .description-component-${var_randomId}{
+    ${super.renderListStyle(prop_descriptionStyles)}
+}
+</style>
+<section class="component-element-structure description-component-${var_randomId} ${super.renderListClass(prop_descriptionClass)}">
+   <component-border id="component-description-border-${var_randomId}" class="row px-2 py-1 m-0">
+       <component-body>
+            <component-header id="component-description-header-${var_randomId}"></component-header>
+            <component-info id="component-description-info-${var_randomId}"></component-info>
+       </component-body>
+   </component-border>
+</section>
+`;
+        }
+
+    }
+
+    onRender = (data , componentSlots , el) => {
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        this.readyDescriptionBorder(var_randomId);
+        this.readyDescriptionHeader(var_randomId);
+        this.readyDescriptionInfo(var_randomId);
+    }
+
+
+    readyDescriptionBorder  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            new window.ComponentBorder(
+                `component-description-border-${var_randomId}` ,
+                {
+                    prop_borderClass:[ "row" , "bg-white" , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded" ] ,
+                }
+            )
+        }
+    }
+
+    readyDescriptionHeader  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+            const prop_title     =   componentData.hasOwnProperty("prop_title")      ?  componentData.prop_title      :  "";
+            const prop_icon      =   componentData.hasOwnProperty("prop_icon")       ?  componentData.prop_icon       :  "";
+
+            if (prop_title != null && prop_title.length > 0){
+                new window.ComponentHeader(
+                    `component-description-header-${var_randomId}` ,
+                    {
+                        classList:[ "m-0" , "p-0" ] ,
+
+                        prop_size: 5 ,
+                        prop_title : prop_title ,
+                        prop_icon : prop_icon
+                    }
+                )
+            }
+
+        }
+
+    }
+
+    readyDescriptionInfo  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+            const prop_description     =   componentData.hasOwnProperty("prop_description")      ?  componentData.prop_description      :  "";
+
+            console.info(prop_description)
+
+            new window.ComponentInfo(
+                `component-description-info-${var_randomId}` ,
+                {
+                    classList:[ "mx-2" , "p-0"  ] ,
+
+                    prop_title : prop_description ,
+                    prop_infoClass : [ "p-0" , "m-0"] ,
+                    prop_infoStyles : {} ,
+                }
+            )
+
+        }
+
+    }
 
 }
