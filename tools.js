@@ -34,7 +34,7 @@ if (typeof component_props === 'undefined') {
         darkColor2: "rgb(42,42,42)",
 
         shanColor1: "#ffffff",
-        shanColor2: "#ececec",
+        shanColor2: "#f3f3f3",
         // -----------------------
 
     }

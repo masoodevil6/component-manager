@@ -6258,11 +6258,13 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
 
 
 /*-------------------------------------
- Component link
+ Component Description
 -------------------------------------
 @prop_icon
 @prop_title
 @prop_description
+@prop_height
+@prop_button   title_more|title_less|prop_show
 -------------------------------------*/
 window.ComponentDescription = class ComponentDescription extends ComponentBase{
 
@@ -6273,6 +6275,19 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
 
         let methods = {};
 
+        methods["onClickToBtnMore"] = {
+            name: `onClickToBtnMore${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            fn: (event , setLineShow) => {
+
+                const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
+                if ( components.hasOwnProperty(var_randomId)) {
+                    const componentData = components[var_randomId];
+
+                    this.readyDescriptionInfo(var_randomId , !setLineShow)
+                    this.readyDescriptionButton(var_randomId , !setLineShow)
+                }
+            }
+        };
         super(elId , config , listComponent[ComponentDescription.name] , methods , config["var_randomId"]);
 
         this.render()
@@ -6294,11 +6309,16 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
     ${super.renderListStyle(prop_descriptionStyles)}
 }
 </style>
-<section class="component-element-structure description-component-${var_randomId} ${super.renderListClass(prop_descriptionClass)}">
-   <component-border id="component-description-border-${var_randomId}" class="row px-2 py-1 m-0">
+<section id="description-component-${var_randomId}" class="component-element-structure  ${super.renderListClass(prop_descriptionClass)}">
+   <component-border id="component-description-border-${var_randomId}" class="row py-1 my-0 mx-2 position-relative">
        <component-body>
             <component-header id="component-description-header-${var_randomId}"></component-header>
             <component-info id="component-description-info-${var_randomId}"></component-info>
+            
+            <div id="component-description-form-button-${var_randomId}" class=" pt-2 px-2 pb-1" style="background-color: #c5c5c552; ">
+                <component-button id="component-description-button-${var_randomId}"></component-button>
+            </div>
+           
        </component-body>
    </component-border>
 </section>
@@ -6313,6 +6333,7 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
         this.readyDescriptionBorder(var_randomId);
         this.readyDescriptionHeader(var_randomId);
         this.readyDescriptionInfo(var_randomId);
+        this.readyDescriptionButton(var_randomId);
     }
 
 
@@ -6325,7 +6346,7 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
             new window.ComponentBorder(
                 `component-description-border-${var_randomId}` ,
                 {
-                    prop_borderClass:[ "row" , "bg-white" , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded" ] ,
+                    prop_borderClass:[ "d-block" , "bg-white" , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded" ] ,
                 }
             )
         }
@@ -6356,14 +6377,27 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
 
     }
 
-    readyDescriptionInfo  = (var_randomId) => {
+    readyDescriptionInfo  = (var_randomId , setLineShow=true) => {
 
         if ( components.hasOwnProperty(var_randomId)) {
 
             const componentData = components[var_randomId];
-            const prop_description     =   componentData.hasOwnProperty("prop_description")      ?  componentData.prop_description      :  "";
+            const prop_description     =   componentData.hasOwnProperty("prop_description")  ?  componentData.prop_description  :  "";
+            const prop_button          =   componentData.hasOwnProperty("prop_button")       ?  componentData.prop_button       : {
+                prop_show: true
+            };
+            const prop_height          =   componentData.hasOwnProperty("prop_height")       ?  componentData.prop_height       :  100;
 
-            console.info(prop_description)
+
+            let styles = {
+                "text-align": "justify",
+                "display": "-webkit-box",
+                "-webkit-box-orient": "vertical",
+            }
+            if (setLineShow && (prop_button != null && prop_button.hasOwnProperty("prop_show") && prop_button.prop_show)){
+                styles["overflow"]= "hidden";
+                styles["max-height"]= prop_height + "px";
+            }
 
             new window.ComponentInfo(
                 `component-description-info-${var_randomId}` ,
@@ -6371,13 +6405,56 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
                     classList:[ "mx-2" , "p-0"  ] ,
 
                     prop_title : prop_description ,
-                    prop_infoClass : [ "p-0" , "m-0"] ,
-                    prop_infoStyles : {} ,
+                    prop_infoClass : [ "p-0" , "mx-2"] ,
+                    prop_infoStyles : styles ,
                 }
             )
 
         }
 
+    }
+
+    readyDescriptionButton = (var_randomId , setLineShow=true) => {
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+            const prop_button     =   componentData.hasOwnProperty("prop_button")      ?  componentData.prop_button      : {
+                title_more: "more ...",
+                title_less: "less ..." ,
+                prop_show: true
+            };
+            const prop_height          =   componentData.hasOwnProperty("prop_height")       ?  componentData.prop_height       :  100;
+            const onClickToBtnMore =   super.getMethod(componentData , "onClickToBtnMore"  , null );
+
+
+            const border = document.getElementById(`component-description-border-${var_randomId}`);
+            const description = document.getElementById(`component-description-info-${var_randomId}`);
+            let moreHight = 0;
+            if (description != null){
+                moreHight = prop_height - description.getBoundingClientRect().height
+            }
+
+            console.log(prop_height , description.getBoundingClientRect().height  , moreHight)
+
+            if (moreHight > 0) {
+                prop_button.prop_show= false;
+                document.getElementById("component-description-form-button-"+var_randomId).remove();
+
+                border.style.height = prop_height + 120 + "px"
+            }
+
+            new window.ComponentButton(
+                `component-description-button-${var_randomId}` ,
+                {
+                    prop_show: prop_button != null && prop_button.hasOwnProperty("prop_show") ? prop_button.prop_show : true ,
+                    prop_title: `<b>${setLineShow ? (prop_button != null && prop_button.hasOwnProperty("title_more") ? prop_button.title_more : "more ...") :  (prop_button != null && prop_button.hasOwnProperty("title_less") ? prop_button.title_less : "less ...")}</b>` ,
+                    fn_callback: (event) => {
+                        window[onClickToBtnMore](event , setLineShow)
+                    }
+                }
+            )
+
+        }
     }
 
 }
