@@ -257,6 +257,8 @@ if (typeof listComponent === 'undefined') {
 @prop_tabSelected
 @prop_type
 
+@prop_firstCallBack
+
 @fn_callback
 -------------------------------------*/
     new window.ComponentTab(

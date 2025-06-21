@@ -31,6 +31,7 @@ if (typeof listComponent === 'undefined') {
         ComponentImage:                      "component-image" ,                          //22
         ComponentLink:                       "component-link" ,                           //23
         ComponentDescription:                "component-description" ,                    //24
+        ComponentChart:                      "component-chrt" ,                           //25
     }
 }
 if (typeof components === 'undefined') {
@@ -2515,6 +2516,8 @@ ${btnAddItem}
 @prop_tabSelected
 @prop_type
 
+@prop_firstCallBack
+
 @fn_callback
 -------------------------------------*/
 window.ComponentTabs = class ComponentTabs extends ComponentBase{
@@ -2570,6 +2573,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
             let tabStyle = "";
             if (prop_type == 0){
                 tabClass = "row m-0 mb-2";
+                tabStyle = "height: 60px;"
                 if (prop_tabs != null){
                     let tabClassCol = "";
                     switch (prop_tabs.length){
@@ -2631,6 +2635,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
                                 class="${classActive} btn-tab-types btn btn-light w-100 border shadow-sm line-height-30px" 
                                 title="${itemTab.title}">
                             ${icon}
+                            ${itemTab.title}
                          </button>
                      </div>
                 `;
@@ -2647,7 +2652,6 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 <style>
 .btn-tab-types{
     background-color: #c7c7c7;
-    height: 60px;
 }
 .btn-tab-types:before{
     content: "";
@@ -2685,7 +2689,8 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
         if ( components.hasOwnProperty(var_randomId)) {
             const componentData = components[var_randomId];
             const prop_tabSelected   =   componentData.hasOwnProperty("prop_tabSelected")  ?  componentData.prop_tabSelected   :  null;
-            if (prop_tabSelected != null){
+            const prop_firstCallBack =  componentData.hasOwnProperty("prop_firstCallBack") ?  componentData.prop_firstCallBack :  true;
+            if (prop_tabSelected != null && prop_firstCallBack){
                 const onSelectTab = super.getMethod(componentData , "onSelectTab"    , null);
                 window[onSelectTab](prop_tabSelected)
             }
@@ -6453,6 +6458,157 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
                     }
                 }
             )
+
+        }
+    }
+
+}
+
+
+
+
+
+
+
+/*-------------------------------------
+ Component Chart
+-------------------------------------
+@prop_type
+
+@prop_title_text
+@prop_title_align
+
+@prop_description_text
+@prop_description_align
+
+@prop_y_title_text
+@prop_y_title_align
+
+@prop_x_title_text
+@prop_x_title_align
+
+-------------------------------------*/
+window.ComponentChart = class ComponentChart extends ComponentBase{
+
+    props = {};
+
+    constructor(elId , config) {
+        config["var_randomId"]= Math.floor(Math.random() * 10000);
+
+        let methods = {};
+
+        super(elId , config , listComponent[ComponentChart.name] , methods , config["var_randomId"]);
+
+        this.render()
+    }
+
+    templateFn = (data , componentSlots , el) => {
+        const var_randomId          =  data.hasOwnProperty("var_randomId")     ?  data.var_randomId        :  0;
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_chartClass     =  componentData.hasOwnProperty("prop_chartClass")     ?  componentData.prop_chartClass  : [];
+            const prop_chartStyles    =  componentData.hasOwnProperty("prop_chartStyles")    ?  componentData.prop_chartStyles : {};
+
+            return `
+<style>
+ #${el.id} .chart-component-${var_randomId}{
+    ${super.renderListStyle(prop_chartStyles)}
+}
+</style>
+<section id="chart-component-${var_randomId}" class="component-element-structure  ${super.renderListClass(prop_chartClass)}">
+   <div id="chart-component-element-${var_randomId}"></div>
+</section>
+`;
+        }
+
+    }
+
+    onRender = (data , componentSlots , el) => {
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        this.renderChart(var_randomId);
+    }
+
+    renderChart  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_type            =  componentData.hasOwnProperty("prop_type")            ?  componentData.prop_type           : 0;
+            let tyleStr = "";
+            switch (prop_type){
+                case 0:
+                    tyleStr = "logarithmic";
+                    break;
+                case 1:
+                    break;
+            }
+
+
+            const prop_TypeDirection   =  componentData.hasOwnProperty("prop_type")            ?  componentData.prop_type           : 0;
+
+            const prop_title_text      =  componentData.hasOwnProperty("prop_title_text")      ?  componentData.prop_title_text     : null;
+            const prop_title_align     =  componentData.hasOwnProperty("prop_title_align")     ?  componentData.prop_title_align    : "left";
+
+            const prop_x_title_text    =  componentData.hasOwnProperty("prop_x_title_text")    ?  componentData.prop_x_title_text   : null;
+            const prop_x_title_align   =  componentData.hasOwnProperty("prop_x_title_align")   ?  componentData.prop_x_title_align  : "left";
+
+            const prop_y_title_text    =  componentData.hasOwnProperty("prop_y_title_text")    ?  componentData.prop_y_title_text   : null;
+            const prop_y_title_align   =  componentData.hasOwnProperty("prop_y_title_align")   ?  componentData.prop_y_title_align  : "left";
+
+            const prop_categories      =  componentData.hasOwnProperty("prop_categories")      ?  componentData.prop_categories     : [];
+            const prop_series          =  componentData.hasOwnProperty("prop_series")          ?  componentData.prop_series         : [];
+
+
+
+
+            Highcharts.chart(
+                `chart-component-element-${var_randomId}`,
+                {
+                    title: {
+                        text: prop_title_text ,
+                        align: prop_title_align ,
+                    },
+
+                    xAxis: {
+                        title: {
+                            text: prop_x_title_text ,
+                            align: prop_x_title_align ,
+                        },
+                        type:       prop_TypeDirection != null && prop_TypeDirection == 1 ? tyleStr         : null ,
+                        categories: prop_TypeDirection != null && prop_TypeDirection == 0 ? prop_categories : null
+                    },
+
+                    yAxis: {
+                        title: {
+                            text: prop_y_title_text ,
+                            align: prop_y_title_align ,
+                        } ,
+                        type:       prop_TypeDirection != null && prop_TypeDirection == 0 ? tyleStr         : null ,
+                        categories: prop_TypeDirection != null && prop_TypeDirection == 1 ? prop_categories : null
+                    },
+
+                    series: prop_series ,
+
+
+                accessibility: {
+                    point: {
+                        valueDescriptionFormat:
+                            '{xDescription}{separator}{value} million(s)'
+                    }
+                },
+
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br />',
+                    pointFormat: '{point.y} million(s)'
+                },
+
+
+            });
 
         }
     }

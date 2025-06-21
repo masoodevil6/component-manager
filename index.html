@@ -58,6 +58,7 @@
 
 
 <script src="./jalali.js"></script>
+<script src="./highcharts.js"></script>
 <script src=".\components.js"></script>
 <script src=".\tools.js"></script>
 
@@ -79,6 +80,46 @@
                 children: [
 
                     {
+                        component: 'ComponentChart',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "chart" ,
+
+
+                            prop_title_text: "title_test" ,
+                            prop_categories: [1995, 2000, 2005, 2010, 2015, 2020, 2023] ,
+                            prop_series: [{
+                                name: 'Internet Users',
+                                keys: ['y', 'color'],
+                                data: [
+                                    [16, '#0000ff'],
+                                    [361, '#8d0073'],
+                                    [1018, '#ba0046'],
+                                    [2025, '#d60028'],
+                                    [3192, '#eb0014'],
+                                    [4673, '#fb0004'],
+                                    [5200, '#ff0000']
+                                ],
+                                color: {
+                                    linearGradient: {
+                                        x1: 0,
+                                        x2: 0,
+                                        y1: 1,
+                                        y2: 0
+                                    },
+                                    stops: [
+                                        [0, '#0000ff'],
+                                        [1, '#ff0000']
+                                    ]
+                                }
+                            }]
+
+                        }
+                    }
+
+
+
+                    /* {
                         component: 'ComponentDescription',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
@@ -88,9 +129,9 @@
                             prop_description: "it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header" ,
                             prop_icon: "&#10127;" ,
                         }
-                    } ,
+                    } ,*/
 
-                    {
+                    /*{
                         component: 'ComponentDescription',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
@@ -100,12 +141,12 @@
                             prop_description: "it is a test header it is a" ,
                             prop_icon: "&#10127;" ,
                         }
-                    } ,
+                    } ,*/
 
-                   /* {
+                    /* {
                         component: 'ComponentHeader',
                         props: {
-                            classList: "col-md-4 col-12 mt-2"  ,
+                            classList: "col-md-3 col-12 mt-2"  ,
                             id: "header" ,
 
                             prop_size: 5,
@@ -113,6 +154,58 @@
                             prop_icon: "&#10127;" ,
                         }
                     } ,*/
+
+                    /* {
+                       component: 'ComponentTabs',
+                       props: {
+                           classList: "col-md-3 col-12 mt-2"  ,
+                           id: "tabs1" ,
+
+                           prop_type: 1 ,
+                           prop_tabSelected: 1 ,
+                           prop_tabs: [
+                               {
+                                   id:1 ,
+                                   title: "tab 1",
+                                   icon: "/asd",
+                               } ,
+                               {
+                                   id:2 ,
+                                   title: "tab 2",
+                                   icon: "/asd",
+                               }
+                           ] ,
+                           fn_callback: (tabIndex) =>{
+                               //alert(tabIndex)
+                           }
+                       }
+                   } ,*/
+
+                    /*{
+                       component: 'ComponentTabs',
+                       props: {
+                           classList: "col-md-3 col-12 mt-2"  ,
+                           id: "tabs1" ,
+
+                           prop_type: 1 ,
+                           prop_tabSelected: 1 ,
+                           prop_tabs: [
+                               {
+                                   id:1 ,
+                                   title: "tab 1",
+                                   icon: "tab 1",
+                               } ,
+                               {
+                                   id:2 ,
+                                   title: "tab 2",
+                                   icon: "tab 2",
+                               }
+                           ] ,
+                           fn_callback: (tabIndex) =>{
+                               //alert(tabIndex)
+                           }
+                       }
+                   } ,*/
 
                     /*{
                         component: 'ComponentLabel',
@@ -140,31 +233,7 @@
                     } ,*/
 
 
-                    /*{
-                        component: 'ComponentTabs',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "tabs" ,
 
-                            prop_type: 1 ,
-                            prop_tabSelected: 1 ,
-                            prop_tabs: [
-                                {
-                                    id:1 ,
-                                    title: "tab 1",
-                                    icon: "/asd",
-                                } ,
-                                {
-                                    id:2 ,
-                                    title: "tab 2",
-                                    icon: "/asd",
-                                }
-                            ] ,
-                            fn_callback: (tabIndex) =>{
-                                //alert(tabIndex)
-                            }
-                        }
-                    } ,*/
 
 
 
