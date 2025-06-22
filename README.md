@@ -547,7 +547,12 @@ if (typeof listComponent === 'undefined') {
 -------------------------------------
 @prop_borderClass
 @prop_borderStyles
+@prop_borderStylesHover
 @prop_content
+
+@prop_btnMore_icon
+@prop_btnMore_show
+@prop_btnMore_link
 
 @fn_elementClick
 -------------------------------------*/
@@ -599,6 +604,65 @@ if (typeof listComponent === 'undefined') {
 @prop_linkHref
 -------------------------------------*/
     new window.ComponentLink(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+**24) Component Description:**
+```
+/*-------------------------------------
+ Component Description
+-------------------------------------
+@prop_icon
+@prop_title
+@prop_description
+@prop_height
+@prop_button   title_more|title_less|prop_show
+-------------------------------------*/
+    new window.ComponentDescription(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+**25) Component Chart:**
+```
+/*-------------------------------------
+ Component Chart
+-------------------------------------
+@prop_type
+@prop_TypeDirection
+
+@prop_title_text
+@prop_title_align
+
+@prop_description_text
+@prop_description_align
+
+@prop_y_title_text
+@prop_y_title_align
+
+@prop_x_title_text
+@prop_x_title_align
+
+@prop_categories
+@prop_series
+
+@prop_tooltip_header
+@prop_tooltip_format
+-------------------------------------*/
+    new window.ComponentChart(
         "element_id" ,
         {
             

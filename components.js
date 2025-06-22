@@ -31,7 +31,7 @@ if (typeof listComponent === 'undefined') {
         ComponentImage:                      "component-image" ,                          //22
         ComponentLink:                       "component-link" ,                           //23
         ComponentDescription:                "component-description" ,                    //24
-        ComponentChart:                      "component-chrt" ,                           //25
+        ComponentChart:                      "component-chart" ,                          //25
     }
 }
 if (typeof components === 'undefined') {
@@ -372,7 +372,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 
 
         methods["closeMessage"] = {
-            name: `closeMessage_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `closeMessage_${config["var_randomId"]}` ,
             fn: (index) => {
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
 
@@ -609,7 +609,7 @@ window.Component404 = class Component404 extends ComponentBase{
 
         let methods = {};
         methods["button404Retry"] = {
-            name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `retry404_${config["var_randomId"]}` ,
             fn: () => {
 
                 const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -912,7 +912,7 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
 
         let methods = {};
         methods["button404Retry"] = {
-            name: `button404Retry${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `button404Retry${config["var_randomId"]}`,
             fn: () => {
                 const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
 
@@ -931,7 +931,7 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
             }
         };
         methods["buttonSubmitForm"] = {
-            name: `buttonSubmitForm${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `buttonSubmitForm${config["var_randomId"]}`,
             fn: () => {
 
                 const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
@@ -1072,7 +1072,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 
         let methods = {};
         methods["callback"] = {
-            name: `callback${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `callback${config["var_randomId"]}`,
             fn: (event) => {
 
                 const var_randomId = config.hasOwnProperty("var_randomId") ? config.var_randomId : 0;
@@ -1298,7 +1298,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
 
         let methods = {};
         methods["showOrHideCollapse"] = {
-            name: `showOrHideCollapse_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `showOrHideCollapse_${config["var_randomId"]}` ,
             fn: () => {
                 const var_randomId    =        config.hasOwnProperty("var_randomId")        ?  config.var_randomId            :  0;
 
@@ -1455,7 +1455,7 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 
         let methods = {};
         methods["onSelectCol"] = {
-            name: `onSelectCol${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onSelectCol${config["var_randomId"]}`,
             fn: (event , key  , colIndex, rowIndex) => {
                 const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
 
@@ -1756,7 +1756,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 
         let methods = {};
         methods["buttonClick"] = {
-            name: `buttonClick_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `buttonClick_${config["var_randomId"]}`,
             fn: (event) => {
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
 
@@ -1881,7 +1881,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
         let methods = {};
         methods["clickBtnTools"] = {
-            name: `clickBtnTools${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `clickBtnTools${config["var_randomId"]}`,
             fn: (event) => {
                 event.stopPropagation();
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
@@ -1895,7 +1895,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         };
 
         methods["showListOptions"] = {
-            name: `showListOptions${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `showListOptions${config["var_randomId"]}`,
             fn: (status=null) => {
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
                 if ( components.hasOwnProperty(var_randomId)) {
@@ -1906,7 +1906,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             }
         };
         methods["selectItemOption"] = {
-            name: `selectItemOption${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `selectItemOption${config["var_randomId"]}`,
             fn: (id , event) => {
 
                 if (event != null){
@@ -1944,7 +1944,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             }
         };
         methods["setTitleItemSelected"] = {
-            name: `selectItemOption${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `setTitleItemSelected${config["var_randomId"]}`,
             fn: (id = null , data=null) => {
 
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
@@ -1981,7 +1981,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         };
 
         methods["changeItemSelected"] = {
-            name: `changeItemSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `changeItemSelected${config["var_randomId"]}`,
             fn: (id=null , event=null) => {
 
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
@@ -2042,7 +2042,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         };
 
         methods["searchListOptions"] = {
-            name: `searchListOptions${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `searchListOptions${config["var_randomId"]}`,
             fn: (value) => {
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
                 if ( components.hasOwnProperty(var_randomId)) {
@@ -2055,7 +2055,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         };
 
         methods["searchFocus"] = {
-            name: `searchFocus${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `searchFocus${config["var_randomId"]}`,
             fn: (value) => {
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
                 if ( components.hasOwnProperty(var_randomId)) {
@@ -2069,7 +2069,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         };
 
         methods["searchBlur"] = {
-            name: `searchBlur${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `searchBlur${config["var_randomId"]}`,
             fn: (value) => {
                 const var_randomId          =  config.hasOwnProperty("var_randomId")     ?  config.var_randomId        :  0;
                 if ( components.hasOwnProperty(var_randomId)) {
@@ -2526,7 +2526,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 
         let methods = {};
         methods["onSelectTab"] = {
-            name: `onSelectTab${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onSelectTab${config["var_randomId"]}`,
             fn: (tabIndex) => {
 
                 const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -2711,6 +2711,10 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 @prop_minHeight
 @prop_error404   type   width   height
 @prop_fetch      url    data
+
+@prop_btnMore_icon
+@prop_btnMore_show
+@prop_btnMore_link
 -------------------------------------*/
 window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
@@ -2719,7 +2723,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
         let methods = {};
         methods["retry404"] = {
-            name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `retry404_${config["var_randomId"]}`,
             fn: () => {
 
                 const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -2742,7 +2746,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
             }
         };
         methods["readyResponse"] = {
-            name: `readyResponse_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `readyResponse_${config["var_randomId"]}`,
             fn: (response) => {
                 const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
 
@@ -2789,7 +2793,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
             }
         };''
         methods["onFetchWidget"] = {
-            name: `onFetchWidget_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onFetchWidget_${config["var_randomId"]}`,
             fn: () => {
 
                 const var_randomId     =   config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -2900,6 +2904,10 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
             const componentData = components[var_randomId];
             const prop_widgetClass  = componentData.hasOwnProperty("prop_widgetClass")   ? componentData.prop_widgetClass                : [];
             const prop_widgetStyles = componentData.hasOwnProperty("prop_widgetStyles")  ? componentData.prop_widgetStyles               : {"min-height" : "120px"};
+
+            const prop_btnMore_icon = componentData.hasOwnProperty("prop_btnMore_icon")  ? componentData.prop_btnMore_icon               : "";
+            const prop_btnMore_show = componentData.hasOwnProperty("prop_btnMore_show")  ? componentData.prop_btnMore_show               : false;
+            const prop_btnMore_link = componentData.hasOwnProperty("prop_btnMore_link")  ? componentData.prop_btnMore_link               : null;
             //---------------
 
             new window.ComponentBorder(
@@ -2907,6 +2915,10 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                 {
                     prop_borderClass: prop_widgetClass ,
                     prop_borderStyles: prop_widgetStyles ,
+
+                    prop_btnMore_icon: prop_btnMore_icon ,
+                    prop_btnMore_show: prop_btnMore_show ,
+                    prop_btnMore_link: prop_btnMore_link ,
                 }
             )
         }
@@ -2944,7 +2956,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 
         let methods = {};
         methods["focusToInput"] = {
-            name: `focusToInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `focusToInput${config["var_randomId"]}`,
             fn: (event) => {
                 const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
 
@@ -2962,7 +2974,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             }
         };
         methods["clearInput"] = {
-            name: `clearInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `clearInput${config["var_randomId"]}`,
             fn: (event) => {
                 const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
 
@@ -2982,7 +2994,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             }
         };
         methods["oninput"] = {
-            name: `oninput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `oninput${config["var_randomId"]}`,
             fn: (event) => {
 
                 const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
@@ -3000,7 +3012,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             }
         };
         methods["onfocus"] = {
-            name: `onfocus${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onfocus${config["var_randomId"]}`,
             fn: (event) => {
                 const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
 
@@ -3017,7 +3029,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             }
         };
         methods["onblur"] = {
-            name: `onblur${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onblur${config["var_randomId"]}`,
             fn: (event) => {
                 const var_randomId  =        config.hasOwnProperty("var_randomId")               ?  config.var_randomId                    :  0;
 
@@ -3291,7 +3303,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 
         let methods = {};
         methods["setValue"] = {
-            name: `setValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `setValue${config["var_randomId"]}`,
             fn: (value) => {
                 const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
 
@@ -3312,14 +3324,14 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 
 
         methods["handleInput"] = {
-            name: `handleInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `handleInput${config["var_randomId"]}`,
             fn: (event) => {
                 this.value = event.target.value;
                 event.target.value =  tools_converter.convertPriceToString(this.value);
             }
         };
         methods["formattedValue"] = {
-            name: `formattedValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `formattedValue${config["var_randomId"]}`,
             fn: (event) => {
                 if (this.IS_FOCUS) return this.value;
 
@@ -3334,7 +3346,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             }
         };
         methods["formatValue"] = {
-            name: `formatValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `formatValue${config["var_randomId"]}`,
             fn: () => {
                 this.IS_FOCUS = false;
                 const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
@@ -3342,7 +3354,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             }
         };
         methods["unformatValue"] = {
-            name: `unformatValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `unformatValue${config["var_randomId"]}`,
             fn: () => {
                 this.IS_FOCUS = true;
                 const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
@@ -3351,7 +3363,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         };
 
         methods["clearInput"] = {
-            name: `clearInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `clearInput${config["var_randomId"]}`,
             fn: (event) => {
 
                 const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
@@ -3367,7 +3379,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         };
 
         methods["focustoInput"] = {
-            name: `focustoInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `focustoInput${config["var_randomId"]}`,
             fn: (event) => {
                 const element = event.target;
                 const parent = element.parentElement;
@@ -3379,7 +3391,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         };
 
         methods["clickBtnTools"] = {
-            name: `clickBtnTools${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `clickBtnTools${config["var_randomId"]}`,
             fn: (event) => {
                 const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
                 if ( components.hasOwnProperty(var_randomId)) {
@@ -3392,7 +3404,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         };
 
         methods["changeValue"] = {
-            name: `changeValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `changeValue${config["var_randomId"]}`,
             fn: (event) => {
                 this.value = event.target.value;
 
@@ -3407,7 +3419,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         };
 
         methods["changeValue_commit"] = {
-            name: `changeValue_commit${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `changeValue_commit${config["var_randomId"]}`,
             fn: () => {
 
                 const var_randomId    =    config.hasOwnProperty("var_randomId")     ?  config.var_randomId  :  0;
@@ -3700,7 +3712,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         let methods = {};
 
         methods["getValue"] = {
-            name: `getValue${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `getValue${config["var_randomId"]}`,
             fn: () => {
 
                 const prop_length  =   config.hasOwnProperty("prop_length")   ?  config.prop_length   :  6;
@@ -3718,7 +3730,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         };
 
         methods["getNewToken"] = {
-            name: `getNewToken${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `getNewToken${config["var_randomId"]}`,
             fn: () => {
                 if (config.hasOwnProperty("prop_getNewToken") && typeof config.prop_getNewToken != null){
                     config.prop_getNewToken();
@@ -3727,7 +3739,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         };
 
         methods["moveToNext"] = {
-            name: `moveToNext${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `moveToNext${config["var_randomId"]}` ,
             fn: (event , nextFieldID) => {
 
                 if (event.key !== 'Backspace' && event.target.value !== '') {
@@ -3742,7 +3754,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
             }
         };
         methods["moveToPrev"] = {
-            name: `moveToPrev${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `moveToPrev${config["var_randomId"]}` ,
             fn: (event , prevFieldID) => {
                 if (event.key === 'Backspace' && event.target.value === '') {
                     if (prevFieldID !== '') {
@@ -3755,7 +3767,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
             }
         };
         methods["onFocus"] = {
-            name: `onFocus${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `onFocus${config["var_randomId"]}` ,
             fn: (event , myElId) => {
                 const el = document.getElementById(myElId);
                 if (el != null){
@@ -3765,7 +3777,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         };
 
         methods["setTimeCurrent"] = {
-            name: `setTimeCurrent${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `setTimeCurrent${config["var_randomId"]}` ,
             fn: (timeCurent , durationForEnd) => {
                 config.timeCurrent = new Date().getTime() ;
                 const newData = JSON.stringify(config);
@@ -3775,7 +3787,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         };
 
         methods["calculateTimer"] = {
-            name: `calculateTimer${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `calculateTimer${config["var_randomId"]}` ,
             fn: (durationForEnd) => {
                 const timeCurrent =    config.hasOwnProperty("timeCurrent")   ?  config.timeCurrent :  0;
 
@@ -3784,7 +3796,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
             }
         };
         methods["startCountdown"] = {
-            name: `startCountdown${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `startCountdown${config["var_randomId"]}` ,
             fn: (durationForEnd) => {
                 const setTimeCurrent = super.getMethod(this.config , "setTimeCurrent" , null);
                 window[setTimeCurrent]();
@@ -3980,14 +3992,14 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         config["var_randomId"]= Math.floor(Math.random() * 10000);
 
         methods["getDaysInJalaliMonth"] = {
-            name: `getDaysInJalaliMonth${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `getDaysInJalaliMonth${config["var_randomId"]}`,
             fn: (year, month) => {
                 return jalaali.jalaaliMonthLength(year, month);
             }
         };
 
         methods["jalaliToTimeUnix"] = {
-            name: `jalaliToTimeUnix${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `jalaliToTimeUnix${config["var_randomId"]}`,
             fn: (jy, jm, jd) => {
                 const gDate = jalaali.toGregorian(jy, jm, jd);
                 const date = new Date(gDate.gy, gDate.gm - 1, gDate.gd);
@@ -4001,7 +4013,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["getJalaliMonthGrid"] = {
-            name: `getJalaliMonthGrid${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `getJalaliMonthGrid${config["var_randomId"]}`,
             fn: (year, month) => {
                 const getDaysInJalaliMonth  = super.getMethod(config , "getDaysInJalaliMonth"    , null );
                 const daysInMonth = window[getDaysInJalaliMonth](year+1, month+1);
@@ -4034,7 +4046,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["getPartDate"] = {
-            name: `getPartDate${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `getPartDate${config["var_randomId"]}`,
             fn: (date = null) => {
 
 
@@ -4118,7 +4130,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         };
         methods["readyDatePicker"] = {
-            name: `readyDatePicker${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `readyDatePicker${config["var_randomId"]}`,
             fn: () => {
                 const var_date  =   config.hasOwnProperty("var_date")     ?  config.var_date    :  null;
                 const getPartDate  = super.getMethod(config , "getPartDate"    , null );
@@ -4131,7 +4143,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
         methods["selectDate"] = {
-            name: `selectDate${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `selectDate${config["var_randomId"]}`,
             fn: (status = null) => {
                 config.var_showFormSelector = status != null ? status : !config.var_showFormSelector;
                 this.changeProperty(config);
@@ -4139,7 +4151,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["clearInput"] = {
-            name: `clearInput${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `clearInput${config["var_randomId"]}`,
             fn: (event) => {
                 const today = new Date();
                 const jToday = jalaali.toJalaali(today);
@@ -4161,7 +4173,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["acceptBtnSelected"] = {
-            name: `acceptBtnSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `acceptBtnSelected${config["var_randomId"]}`,
             fn: (event) => {
                 const selectDate  = super.getMethod(config , "selectDate"    , null );
                 window[selectDate](false);
@@ -4169,7 +4181,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["nowBtnSelected"] = {
-            name: `nowBtnSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `nowBtnSelected${config["var_randomId"]}`,
             fn: (yearNum) => {
                 const clearInput  = super.getMethod(config , "clearInput"    , null );
                 window[clearInput]();
@@ -4178,7 +4190,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
         methods["goToYearSelected"] = {
-            name: `goToYearSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `goToYearSelected${config["var_randomId"]}`,
             fn: (yearNum) => {
 
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
@@ -4193,7 +4205,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         };
         methods["goToYear"] = {
-            name: `goToYear${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `goToYear${config["var_randomId"]}`,
             fn: (isNext = false) => {
 
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
@@ -4227,7 +4239,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
         methods["goToMonthSelected"] = {
-            name: `goToMounthSelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `goToMounthSelected${config["var_randomId"]}`,
             fn: (monthNum = null) => {
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
                 let   year      =   var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("year") ?   parseInt(var_selected_date.total.year) : -1 ;
@@ -4241,7 +4253,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             }
         };
         methods["goToMonth"] = {
-            name: `goToMonth${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `goToMonth${config["var_randomId"]}`,
             fn: (isNext = false) => {
 
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
@@ -4285,7 +4297,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
         methods["goToDaySelected"] = {
-            name: `goToDaySelected${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `goToDaySelected${config["var_randomId"]}`,
             fn: (dayNum , dayName , dayIndex , weekIndex) => {
 
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
@@ -4304,7 +4316,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
         methods["getDigitDatePart"] = {
-            name: `getDigitDatePart${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `getDigitDatePart${config["var_randomId"]}`,
             fn: (type=null , digit=null) => {
 
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date     :  null;
@@ -4366,7 +4378,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["onChangeDateDigit"] = {
-            name: `onChangeDateDigit${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `onChangeDateDigit${config["var_randomId"]}` ,
             fn: (event , type=null , index=null) => {
 
                 const var_selected_date  =   config.hasOwnProperty("var_selected_date")   ?  config.var_selected_date  :  null;
@@ -4469,7 +4481,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["commitNewTime"] = {
-            name: `commitNewTime${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `commitNewTime${config["var_randomId"]}` ,
             fn: (year , month , day , index) => {
 
                 /// year
@@ -4516,7 +4528,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["moveToNext"] = {
-            name: `moveToNext${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `moveToNext${config["var_randomId"]}` ,
             fn: (event , nextFieldID , type=null) => {
                 const prop_type          =   config.hasOwnProperty("prop_type")           ?  config.prop_type             :  this.TYPE_INPUT_ONE_DIGIT;
 
@@ -4564,7 +4576,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["moveToPrev"] = {
-            name: `moveToPrev${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `moveToPrev${config["var_randomId"]}` ,
             fn: (event , prevFieldID , type=null , digit=null) => {
 
                 const prop_type  =   config.hasOwnProperty("prop_type")    ?  config.prop_type   :  this.TYPE_INPUT_ONE_DIGIT;
@@ -4597,7 +4609,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["commitNewDate"] = {
-            name: `commitNewDate${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `commitNewDate${config["var_randomId"]}` ,
             fn: (event) => {
                 const commitNewTime  = super.getMethod(config , "commitNewTime"    , null );
 
@@ -4619,7 +4631,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
         };
 
         methods["onFocus"] = {
-            name: `onFocus${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `onFocus${config["var_randomId"]}` ,
             fn: (event , myElId) => {
 
                 const prop_type  =   config.hasOwnProperty("prop_type")    ?  config.prop_type   :  this.TYPE_INPUT_ONE_DIGIT;
@@ -5609,7 +5621,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
 
         let methods = {};
         methods["onClickLabel"] = {
-            name: `retry404_${Date.now()}_${Math.floor(Math.random() * 10000)}` ,
+            name: `retry404_${config["var_randomId"]}` ,
             fn: (event) => {
                 const prop_for    =   config.hasOwnProperty("prop_for")        ?  config.prop_for    :  "";
                 if (config.hasOwnProperty("fn_callback") && typeof config.fn_callback != null){
@@ -5676,7 +5688,7 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
 
         let methods = {};
         methods["onClickToIcon"] = {
-            name: `onClickToIcon${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onClickToIcon${config["var_randomId"]}`,
             fn: (event) => {
 
                 const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -5922,6 +5934,10 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
 @prop_borderStylesHover
 @prop_content
 
+@prop_btnMore_icon
+@prop_btnMore_show
+@prop_btnMore_link
+
 @fn_elementClick
 -------------------------------------*/
 window.ComponentBorder = class ComponentBorder extends ComponentBase{
@@ -5933,7 +5949,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
 
         let methods = {};
         methods["onClickToIconElement"] = {
-            name: `onClickToIconElement${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onClickToIconElement${config["var_randomId"]}`,
             fn: (event) => {
 
                 const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -5966,21 +5982,71 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
 
             return `
 <style>
- #${el.id} .border-component-${var_randomId}{
+ #${el.id} #border-component-${var_randomId}{
     ${super.renderListStyle(prop_borderStyles)}
 }
- #${el.id} .border-component-${var_randomId}:hover{
+ #${el.id} #border-component-${var_randomId}:hover{
     ${super.renderListStyle(prop_borderStylesHover)}
 }
+ #${el.id} #border-icon-more-component-${var_randomId}{
+    opacity: 0;
+}
+ #${el.id} #border-component-${var_randomId}:hover #border-icon-more-component-${var_randomId}{
+    transition: opacity 200ms ease;
+    opacity: 1;
+}
 </style>
-<section class="component-element-structure  border-component-${var_randomId} ${super.renderListClass(prop_borderClass)}" onclick="${onClickToIconElement}" >
-${prop_content}
+<section id="border-component-${var_randomId}" class="component-element-structure  position-relative ${super.renderListClass(prop_borderClass)}" onclick="${onClickToIconElement}" >
+   ${prop_content}
+   <component-icon id="border-icon-more-component-${var_randomId}"></component-icon>
 </section>
 `;
         }
 
     }
 
+    onRender = (data , componentSlots , el) => {
+        const var_randomId     =   data.hasOwnProperty("var_randomId")      ?  data.var_randomId      :  0;
+
+        this.readyIconMore(var_randomId);
+    }
+
+    readyIconMore  = (var_randomId) => {
+
+        if ( components.hasOwnProperty(var_randomId)) {
+
+            const componentData = components[var_randomId];
+
+            const prop_btnMore_icon  =  componentData.hasOwnProperty("prop_btnMore_icon")         ?  componentData.prop_btnMore_icon      : "";
+            const prop_btnMore_show  =  componentData.hasOwnProperty("prop_btnMore_show")         ?  componentData.prop_btnMore_show      : false;
+            const prop_btnMore_link  =  componentData.hasOwnProperty("prop_btnMore_link")         ?  componentData.prop_btnMore_link      : null;
+
+            new window.ComponentIcon(
+                `border-icon-more-component-${var_randomId}` ,
+                {
+                    prop_icon: prop_btnMore_icon ,
+                    prop_show: prop_btnMore_show ,
+
+                    prop_iconClass: ["position-absolute" , "border-dark" , "rounded"  , "shadow-sm" , "p-1"] ,
+                    prop_iconStyles: {
+                        "top" : "10px" ,
+                        "left" : "10px" ,
+                        "background-color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_backgroundColor")  ? tools_const.styles.elementBorder.btnMore_backgroundColor : "" ,
+                        "color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_color")  ? tools_const.styles.elementBorder.btnMore_color : "" ,
+                        "cursor" : "pointer" ,
+                        "z-index" : "9" ,
+                    } ,
+
+                    fn_callback: ()=>{
+                        if (prop_btnMore_link != null){
+                            window.open(prop_btnMore_link,'_blank');
+                        }
+                    }
+                }
+            )
+        }
+
+    }
 
 }
 
@@ -6007,7 +6073,7 @@ window.ComponentImage = class ComponentImage extends ComponentBase{
 
         let methods = {};
         methods["onClickToIconElement"] = {
-            name: `onClickToIconElement${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onClickToIconElement${config["var_randomId"]}`,
             fn: (event) => {
 
                 const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -6079,7 +6145,7 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
 
         let methods = {};
         methods["onClickToIconElement"] = {
-            name: `onClickToIconElement${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onClickToIconElement${config["var_randomId"]}`,
             fn: (event) => {
 
                 const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -6281,7 +6347,7 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
         let methods = {};
 
         methods["onClickToBtnMore"] = {
-            name: `onClickToBtnMore${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+            name: `onClickToBtnMore${config["var_randomId"]}`,
             fn: (event , setLineShow) => {
 
                 const var_randomId    =  config.hasOwnProperty("var_randomId")      ?  config.var_randomId      :  0;
@@ -6474,6 +6540,7 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
  Component Chart
 -------------------------------------
 @prop_type
+@prop_TypeDirection
 
 @prop_title_text
 @prop_title_align
@@ -6487,6 +6554,11 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
 @prop_x_title_text
 @prop_x_title_align
 
+@prop_categories
+@prop_series
+
+@prop_tooltip_header
+@prop_tooltip_format
 -------------------------------------*/
 window.ComponentChart = class ComponentChart extends ComponentBase{
 
@@ -6539,17 +6611,23 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
             const componentData = components[var_randomId];
 
             const prop_type            =  componentData.hasOwnProperty("prop_type")            ?  componentData.prop_type           : 0;
-            let tyleStr = "";
+            let typeStr = "";
             switch (prop_type){
-                case 0:
-                    tyleStr = "logarithmic";
-                    break;
-                case 1:
-                    break;
+                case 0: typeStr = "line";       break;
+                case 1: typeStr = "column";     break;
+                case 2: typeStr = "bar";        break;
+                case 3: typeStr = "pie";        break;
+                case 4: typeStr = "area";       break;
+                case 5: typeStr = "spline";     break;
+                case 6: typeStr = "scatter";    break;
+                case 7: typeStr = "areaspline"; break;
+                case 8: typeStr = "heatmap";    break;
             }
 
+            console.log(typeStr)
 
             const prop_TypeDirection   =  componentData.hasOwnProperty("prop_type")            ?  componentData.prop_type           : 0;
+            const prop_height          =  componentData.hasOwnProperty("prop_height")          ?  componentData.prop_height         : null;
 
             const prop_title_text      =  componentData.hasOwnProperty("prop_title_text")      ?  componentData.prop_title_text     : null;
             const prop_title_align     =  componentData.hasOwnProperty("prop_title_align")     ?  componentData.prop_title_align    : "left";
@@ -6563,12 +6641,17 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
             const prop_categories      =  componentData.hasOwnProperty("prop_categories")      ?  componentData.prop_categories     : [];
             const prop_series          =  componentData.hasOwnProperty("prop_series")          ?  componentData.prop_series         : [];
 
-
-
+            const prop_tooltip_header  =  componentData.hasOwnProperty("prop_tooltip_header")  ?  componentData.prop_tooltip_header : '<b>{series.name}</b><br />';
+            const prop_tooltip_format  =  componentData.hasOwnProperty("prop_tooltip_format")  ?  componentData.prop_tooltip_format : '{point.y}';
 
             Highcharts.chart(
                 `chart-component-element-${var_randomId}`,
                 {
+                    chart: {
+                        type: typeStr,
+                        height: prop_height,
+                    },
+
                     title: {
                         text: prop_title_text ,
                         align: prop_title_align ,
@@ -6579,7 +6662,6 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
                             text: prop_x_title_text ,
                             align: prop_x_title_align ,
                         },
-                        type:       prop_TypeDirection != null && prop_TypeDirection == 1 ? tyleStr         : null ,
                         categories: prop_TypeDirection != null && prop_TypeDirection == 0 ? prop_categories : null
                     },
 
@@ -6588,24 +6670,15 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
                             text: prop_y_title_text ,
                             align: prop_y_title_align ,
                         } ,
-                        type:       prop_TypeDirection != null && prop_TypeDirection == 0 ? tyleStr         : null ,
                         categories: prop_TypeDirection != null && prop_TypeDirection == 1 ? prop_categories : null
                     },
 
                     series: prop_series ,
 
-
-                accessibility: {
-                    point: {
-                        valueDescriptionFormat:
-                            '{xDescription}{separator}{value} million(s)'
-                    }
-                },
-
-                tooltip: {
-                    headerFormat: '<b>{series.name}</b><br />',
-                    pointFormat: '{point.y} million(s)'
-                },
+                    tooltip: {
+                        headerFormat: prop_tooltip_header,
+                        pointFormat: prop_tooltip_format
+                    },
 
 
             });

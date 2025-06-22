@@ -54,7 +54,7 @@ if (typeof tools_const === 'undefined') {
 
 
 
- tools_init = {
+tools_init = {
     renderComponentProps : function(config){
 
         if (config != null && typeof config == "object"){
@@ -132,6 +132,11 @@ if (typeof tools_const === 'undefined') {
                 }
             } ,
 
+            elementBorder: {
+                btnMore_backgroundColor : component_props.primaryColor1 ,
+                btnMore_color : component_props.shanColor1 ,
+            } ,
+
 
 
             backShadow: {
@@ -148,7 +153,7 @@ if (typeof tools_const === 'undefined') {
 
 
 
- tools_component = {
+tools_component = {
 
     setup: function (container , tree , withPrefix=null){
 
@@ -219,6 +224,74 @@ if (typeof tools_const === 'undefined') {
     } ,
 
 
+    widgetRender: function(element , dataForApi=[] , insert=true){
+        const closestComponent = element.closest("component-widget");
+        if (closestComponent != null){
+            const data = closestComponent.getAttribute("data");
+            if (data != null){
+                try {
+                    let dataJson = JSON.parse(data);
+                    let var_randomId = dataJson.hasOwnProperty("var_randomId") ? dataJson.var_randomId : null;
+
+                    if (var_randomId != null){
+                        const prop_fetch = dataJson.hasOwnProperty("prop_fetch") ? dataJson.prop_fetch : {};
+                        let fetchData = dataForApi;
+                        if (insert){
+
+                            if (prop_fetch.hasOwnProperty("data") && !Array.isArray(prop_fetch.data)){
+                                fetchData = prop_fetch.data.hasOwnProperty("data") ? prop_fetch.data.data : [];
+
+                                for (let x = 0; x < dataForApi.length ; x++) {
+                                    const itemApi = dataForApi[x];
+
+                                    let exist = false;
+                                    if (itemApi.hasOwnProperty("name") && itemApi.hasOwnProperty("value") ){
+                                        for (let i = 0; i < fetchData.length ; i++) {
+                                            const item = fetchData[i];
+                                            if (item.hasOwnProperty("name") && item.name == itemApi.name){
+                                                fetchData[i] = itemApi;
+                                                exist = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (!exist){
+                                        fetchData.push(itemApi);
+                                    }
+                                }
+
+
+                            }
+                        }
+
+
+                        if (!prop_fetch.hasOwnProperty("data") || Array.isArray(prop_fetch.data)){
+                            prop_fetch.data = {};
+                        }
+                        if (!prop_fetch.data.hasOwnProperty("data")){
+                            prop_fetch.data.data = {};
+                        }
+                        prop_fetch.data.data = fetchData;
+                        dataJson["prop_fetch"] = prop_fetch;
+
+                        if (typeof components != "undefined"){
+                            components[var_randomId] = dataJson;
+                        }
+
+                        closestComponent.setAttribute("data" , JSON.stringify(dataJson))
+                    }
+
+
+                }
+                catch (e){
+                    console.error(e)
+                }
+            }
+        }
+    } ,
+
+
     getComponentHtml: function (containerId , ComponentName , ComponentId , ComponentProps){
         const container = document.getElementById(containerId);
         const elForm = document.createElement(tools_converter.toKebabCase(ComponentName));
@@ -237,7 +310,7 @@ if (typeof tools_const === 'undefined') {
 
 
 
- tools_submit = {
+tools_submit = {
 
     fetcth: async function(url='' , args={}){
         let data                  = args.hasOwnProperty("data") ? args.data: {} ;
@@ -310,6 +383,7 @@ if (typeof tools_const === 'undefined') {
                             break;
                         case 200:
 
+                            console.log(response)
                             const contentType = data.hasOwnProperty("contentType") ? data.contentType : tools_const.contentTypes.json
                             switch (contentType){
                                 case tools_const.contentTypes.json:
@@ -370,7 +444,7 @@ if (typeof tools_const === 'undefined') {
 
 
 
- tools_vue = {
+tools_vue = {
 
     renderDynamicComponent: function(view, createViewComponent = true) {
         let {template, script} = this.extractComponentParts(view);
@@ -441,7 +515,7 @@ if (typeof tools_const === 'undefined') {
 
 
 
- tools_converter = {
+tools_converter = {
 
     serializeArray: function (formElement){
         const result = [];
@@ -562,7 +636,7 @@ if (typeof tools_const === 'undefined') {
 
 
 
- tools_validate = {
+tools_validate = {
 
     isEmpty: function (value){
         return (
