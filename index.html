@@ -3,69 +3,15 @@
 <section id="template-main"></section>
 
 
-<!--<table class="form-choose-date-middle-table border-none">
-    <thead class="form-choose-date-middle-table-header boreder-bottom border-white">
-    <tr>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_1") ? prop_langs._day_1 : "شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_2") ? prop_langs._day_2 : "یک شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_3") ? prop_langs._day_3 : "دو شنب"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_4") ? prop_langs._day_4 : "سه شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_5") ? prop_langs._day_5 : "چهار شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_6") ? prop_langs._day_6 : "پنج شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_7") ? prop_langs._day_7 : "جمعه"} </th>
-    </tr>
-    </thead>
+<script src="./jalali.js"></script>
+<script src="./highcharts.js"></script>
+<script src=".\components.js"></script>
+<script src=".\tools.js"></script>
 
-    <tbody class="form-choose-date-middle-table-body bg-white">
-    <tr>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
-    </tr>
-    <tr>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
-    </tr>
-    <tr>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
-    </tr>
-    <tr>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
-    </tr>
-    </tbody>
-</table>-->
-
-
-<script src="W:\teamyarProjects\marefiyan\Modules\0- Base\res_v2\attachments\components.js"></script>
-<script src="W:\teamyarProjects\marefiyan\Modules\0- Base\res_v2\attachments\tools.js"></script>
-
-<script src="./persian-date.js"></script>
 
 <script>
 
-    const date = new persianDate();
-    console.log(date.format('YYYY/MM/DD')); // مثلاً: ۱۴۰۴/۰۳/۰۶
+    tools_init.renderToolsConst()
 
     tools_component.setup(
         document.getElementById('template-main') ,
@@ -79,19 +25,363 @@
                 },
                 children: [
 
-
                     {
-                        component: 'ComponentButton',
+                        component: 'ComponentTest',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
-                            id: "btn" ,
+                            id: "b1" ,
 
-                            prop_text: "asd" ,
-                            fn_callback: ()=>{
-                                alert("asd");
-                            }
+                            prop_title: "asd",
+                            prop_btnMore_show: true,
+                            prop_btnMore_icon: "&#10127;" ,
+                            prop_btnMore_link: "/asd" ,
+                            prop_borderStyles: {
+                                "height" : "150px"
+                            } ,
                         }
                     } ,
+
+
+                    /*
+
+                    {
+                        component: 'ComponentBorder',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "b1" ,
+
+                            prop_btnMore_show: true,
+                            prop_btnMore_icon: "&#10127;" ,
+                            prop_btnMore_link: "/asd" ,
+                            prop_borderStyles: {
+                                "height" : "150px"
+                            } ,
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    } ,*/
+
+
+
+                    /*{
+                        component: 'ComponentSelectOption',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "selectOption2" ,
+
+                            prop_type:1 ,
+                            prop_name:"asd" ,
+                            prop_title:"asd" ,
+                            //prop_itemSelected:1 ,
+                            prop_options: [
+                                {
+                                    id:1 ,
+                                    name: "ssss"
+                                } ,
+                                {
+                                    id:2 ,
+                                    name: "aaaa"
+                                },
+                                {
+                                    id:3 ,
+                                    name: "1111"
+                                }
+                            ] ,
+                            fn_callback: (index)=>{
+                                //alert(index)
+                            }
+                        }
+                    } ,*/
+
+
+                    /*{
+                        component: 'ComponentSelectOption',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "selectOption" ,
+
+                            prop_name:"asd" ,
+                            prop_title:"asd" ,
+                            //prop_itemSelected: 1 ,
+                            prop_options: [
+                                {
+                                    id:1 ,
+                                    name: "sasd"
+                                } ,
+                                {
+                                    id:2 ,
+                                    name: "213245"
+                                }
+                            ] ,
+                            fn_callback: (index)=>{
+                                alert(index)
+                            }
+                        }
+                    } ,*/
+
+
+                    /*{
+                        component: 'ComponentChart',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "chart" ,
+
+
+                            prop_title_text: "title_test" ,
+                            prop_height: 400 ,
+                            prop_type: 2 ,
+                            prop_categories: [1995, 2000, 2005, 2010, 2015, 2020, 2023] ,
+                            prop_series: [{
+                                name: 'Internet Users',
+                                keys: ['y', 'color'],
+                                data: [
+                                    [16, '#0000ff'],
+                                    [361, '#8d0073'],
+                                    [1018, '#ba0046'],
+                                    [2025, '#d60028'],
+                                    [3192, '#eb0014'],
+                                    [4673, '#fb0004'],
+                                    [5200, '#ff0000']
+                                ],
+                                color: {
+                                    linearGradient: {
+                                        x1: 0,
+                                        x2: 0,
+                                        y1: 1,
+                                        y2: 0
+                                    },
+                                    stops: [
+                                        [0, '#0000ff'],
+                                        [1, '#ff0000']
+                                    ]
+                                }
+                            }]
+
+                        }
+                    },*/
+
+
+                    /*{
+                        component: 'ComponentWidget',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "w2" ,
+
+                            prop_minHeight: 120 ,
+                            prop_fetch : {
+                                url: "https://google1.com"
+                            }
+                        }
+                    } ,*/
+
+
+                    /*{
+                        component: 'ComponentWidget',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "w1" ,
+
+                            prop_minHeight: 120 ,
+                            prop_fetch : {
+                                url: "http://127.0.0.1:8081/mt5/test.json" ,
+                                data: [
+
+                                ]
+                            }
+                        }
+                    } ,*/
+
+
+
+                    /*{
+                        component: 'ComponentWidget',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "w1" ,
+
+                            prop_minHeight: 150 ,
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    } ,*/
+
+                    /* {
+                        component: 'ComponentDescription',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "description" ,
+
+                            prop_title: "it is a test header" ,
+                            prop_description: "it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header it is a test header" ,
+                            prop_icon: "&#10127;" ,
+                        }
+                    } ,*/
+
+                    /*{
+                        component: 'ComponentDescription',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "description2" ,
+
+                            prop_title: "it is a test header" ,
+                            prop_description: "it is a test header it is a" ,
+                            prop_icon: "&#10127;" ,
+                        }
+                    } ,*/
+
+                    /* {
+                        component: 'ComponentHeader',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "header" ,
+
+                            prop_size: 5,
+                            prop_title: "it is a test header" ,
+                            prop_icon: "&#10127;" ,
+                        }
+                    } ,*/
+
+                    /* {
+                       component: 'ComponentTabs',
+                       props: {
+                           classList: "col-md-3 col-12 mt-2"  ,
+                           id: "tabs1" ,
+
+                           prop_type: 1 ,
+                           prop_tabSelected: 1 ,
+                           prop_tabs: [
+                               {
+                                   id:1 ,
+                                   title: "tab 1",
+                                   icon: "/asd",
+                               } ,
+                               {
+                                   id:2 ,
+                                   title: "tab 2",
+                                   icon: "/asd",
+                               }
+                           ] ,
+                           fn_callback: (tabIndex) =>{
+                               //alert(tabIndex)
+                           }
+                       }
+                   } ,*/
+
+                    /*{
+                       component: 'ComponentTabs',
+                       props: {
+                           classList: "col-md-3 col-12 mt-2"  ,
+                           id: "tabs1" ,
+
+                           prop_type: 1 ,
+                           prop_tabSelected: 1 ,
+                           prop_tabs: [
+                               {
+                                   id:1 ,
+                                   title: "tab 1",
+                                   icon: "tab 1",
+                               } ,
+                               {
+                                   id:2 ,
+                                   title: "tab 2",
+                                   icon: "tab 2",
+                               }
+                           ] ,
+                           fn_callback: (tabIndex) =>{
+                               //alert(tabIndex)
+                           }
+                       }
+                   } ,*/
+
+                    /*{
+                        component: 'ComponentLabel',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "label1" ,
+
+                            prop_title: "test text" ,
+                            prop_for: "test" ,
+                        }
+                    } ,*/
+
+                    /*{
+                        component: 'ComponentLink',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "link" ,
+
+                            prop_title: {
+                                title: "asd" ,
+                                class: ["text-info"]
+                            } ,
+                            prop_linkHref: "asd"
+                        }
+                    } ,*/
+
+
+
+
+
+
+
+
+                   /* {
+                        component: 'ComponentMessages',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "messages" ,
+
+                            prop_status: true ,
+                            prop_messages: [
+                                "a" , "b" , "c"
+                            ]
+                        }
+                    } ,
+
+
+                    {
+
+                        component: 'div',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 position-relative",
+                        },
+                        children: [
+                            {
+                                component: 'ComponentLoading',
+                                props: {
+                                    classList: "col-md-3 col-12 d-block mt-2"  ,
+                                    styles: {
+                                        "height" : "200px"
+                                    },
+                                    id: "loading"
+                                }
+                            }
+                        ]
+
+                    } ,
+
 
 
                     {
@@ -118,18 +408,46 @@
                     } ,
 
 
+
                     {
-                        component: 'ComponentMessages',
+                        component: 'ComponentForm',
+                        props: {
+                            classList: "col-md-3 col-12  mt-2"  ,
+                            id: "form"
+                        },
+                        children:[
+                            {
+                                component: 'body',
+                                children: [
+                                    {
+                                        component: 'h1',
+                                        props: {
+                                            text: "hello world"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentIsEmpty',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
-                            id: "messages" ,
+                            id: "isEmpty2" ,
 
-                            prop_status: true ,
-                            prop_messages: [
-                                "a" , "b" , "c"
-                            ]
+                            prop_title: "it is a test" ,
+                            prop_btnAddStatus: true ,
+                            prop_btnAddTitle : "asd",
+
+                            fn_callback: ()=>{
+                                alert("aaa")
+                            }
                         }
                     } ,
+
 
 
                     {
@@ -138,33 +456,28 @@
                             classList: "col-md-3 col-12 mt-2"  ,
                             id: "isEmpty" ,
 
-                            prop_text: "it is a test" ,
+                            prop_title: "it is a test" ,
                         }
                     } ,
 
 
-                    {
-                        component: 'ComponentHeader',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "header" ,
 
-                            prop_size: 4,
-                            prop_text: "it is a test header" ,
-                        }
-                    } ,
+
+
 
 
                     {
                         component: 'ComponentCollapse',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
-                            id: "collapse" ,
+                            id: "collapse2" ,
 
-                            prop_text: "asd" ,
-                            prop_body: "<h1>hello world</h1>" ,
+                            prop_title: "asd" ,
+                            prop_body: "<h1>hello 123123</h1>" ,
+                            prop_bodyShow: false ,
                         }
                     } ,
+
 
 
                     {
@@ -197,220 +510,14 @@
                     } ,
 
 
-                    {
-                        component: 'ComponentSelectOption',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "selectOption" ,
-
-                            prop_name:"asd" ,
-                            prop_title:"asd" ,
-                            prop_itemSelected: 1 ,
-                            prop_options: [
-                                {
-                                    id:1 ,
-                                    name: "sasd"
-                                } ,
-                                {
-                                    id:2 ,
-                                    name: "213245"
-                                }
-                            ] ,
-                            fn_callback: (index)=>{
-                                alert(index)
-                            }
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentOtp',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "otp" ,
-
-                            prop_name: "otp_phone" ,
-                            prop_input: "09302171809" ,
-                            prop_length: 4 ,
-                            prop_langs: {
-                                _title_otp_description : "کد برای شماره/ایمیل زیر ارسال شد" ,
-                                _text_timer_after_active_otp : "تا ارسال مجدد کد" ,
-                                _text_timer_after_di_active_otp : "کد منقضی شده است" ,
-                                _text_get_new_otp : "کد جدید" ,
-                            } ,
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentTabs',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "tabs" ,
-
-                            prop_tabSelected: 1 ,
-                            prop_tabs: [
-                                {
-                                    id:1 ,
-                                    title: "tab 1",
-                                } ,
-                                {
-                                    id:2 ,
-                                    title: "tab 2",
-                                }
-                            ] ,
-                            fn_callback: (tabIndex) =>{
-                                alert(tabIndex)
-                            }
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentWidget',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "w2" ,
-
-                            prop_minHeight: 120 ,
-                            prop_fetch : {
-                                url: "https://google1.com"
-                            }
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentWidget',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "w1" ,
-
-                            prop_minHeight: 150 ,
-                        },
-                        children:[
-                            {
-                                component: 'body',
-                                children: [
-                                    {
-                                        component: 'h1',
-                                        props: {
-                                            text: "hello world"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    } ,
-
-
-                    {
-                        component: 'ComponentForm',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "form" ,
-
-
-
-                        },
-                        children:[
-                            {
-                                component: 'body',
-                                children: [
-                                    {
-                                        component: 'h1',
-                                        props: {
-                                            text: "hello world"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    } ,
-
-
-                    {
-                        component: 'ComponentInput',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "input_price" ,
-
-                            prop_name: "input_price" ,
-                            prop_default: "123456789" ,
-                            prop_icon: "&#10127;" ,
-                            prop_btnAddStatus: true ,
-                            fn_addNewItem: () =>{
-                                alert("asd")
-                            } ,
-
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentInput',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "input-text" ,
-
-                            prop_name: "input" ,
-                            prop_default: "123456789" ,
-                            prop_icon: "&#10126;" ,
-
-                        }
-                    } ,
-
-
-                    {
-                        component: 'ComponentDate',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "input-date" ,
-
-
-                        }
-                    } ,
-
-
-
-
-                    {
-                        component: 'ComponentSelectOption',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2"  ,
-                            id: "selectOption2" ,
-
-                            prop_type:1 ,
-                            prop_name:"asd" ,
-                            prop_title:"asd" ,
-                            prop_itemSelected:1 ,
-                            prop_options: [
-                                {
-                                    id:1 ,
-                                    name: "ssss"
-                                } ,
-                                {
-                                    id:2 ,
-                                    name: "aaaa"
-                                },
-                                {
-                                    id:3 ,
-                                    name: "1111"
-                                }
-                            ] ,
-                            fn_callback: (index)=>{
-                                //alert(index)
-                            }
-                        }
-                    } ,
-
-
 
                     {
                         component: 'ComponentTable',
                         props: {
                             classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
                             id: "table2" ,
+
+                            prop_valueType: 3 ,
 
                             prop_tableClass : ["border-none"] ,
                             prop_tableStyles : {
@@ -426,7 +533,10 @@
                                 "width" : "14%" ,
                             },
                             prop_tableBodyClass : [ "bg-white"] ,
-                            prop_tableItemBodyClass : [ "text-center" , "text-dark" , "bg-white", "rounded" , "d-block"] ,
+                            prop_tableItemBodyClass : [ "text-center" , "rounded" , "d-block"] ,
+                            prop_tableItemBodyStyles: {
+                                "color" : "#525252" ,
+                            },
                             prop_tableItemBodyHoverStyles : {
                                 "background-color" : "#e1e1e1!important" ,
                                 "cursor" : "pointer" ,
@@ -455,6 +565,315 @@
                             }
                         }
                     } ,
+
+
+
+                    {
+                        component: 'ComponentButton',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "btn" ,
+
+                            prop_title: "asd" ,
+                            fn_callback: ()=>{
+                                alert("asd");
+                            }
+                        }
+                    } ,
+
+
+
+
+
+
+
+                    {
+                        component: 'ComponentSelectOption',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "selectOption3" ,
+
+                            prop_type:1 ,
+                            prop_name:"asd" ,
+                            prop_title:"asd" ,
+
+                            prop_icon: "&#10127;" ,
+                            prop_itemSelected:1 ,
+                            prop_options: [
+                                {
+                                    id:1 ,
+                                    name: "ssss" ,
+                                    data: {
+                                        id:1 ,
+                                        name: "massod" ,
+                                        family: "maref" ,
+                                        age: 30 ,
+                                    }
+                                } ,
+                                {
+                                    id:2 ,
+                                    name: "aaaa",
+                                    data: {
+                                        id:1 ,
+                                        name: "massod" ,
+                                        family: "maref" ,
+                                        age: 31 ,
+                                    }
+                                },
+                                {
+                                    id:3 ,
+                                    name: "1111",
+                                    data: {
+                                        id:1 ,
+                                        name: "massod" ,
+                                        family: "maref" ,
+                                        age: 32 ,
+                                    }
+                                }
+                            ] ,
+                            fn_callback: (index , data)=>{
+                                console.log(index , data)
+                            },
+
+                            prop_btnAddStatus: true ,
+                            prop_btnAddTitle: "asd" ,
+                            fn_clickBtnTools: () =>{
+                                alert("asd")
+                            } ,
+                        }
+                    } ,
+
+
+
+
+
+
+
+                    {
+                        component: 'ComponentInput',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "input-text" ,
+
+                            prop_title: "test text" ,
+                            prop_icon: "&#10124;" ,
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentInputPrice',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-text-price-22222222222" ,
+
+                            prop_name: "input_price" ,
+                            prop_default: "123456789" ,
+                            prop_icon: "&#10127;" ,
+                            prop_title: "asd" ,
+                            prop_btnAddStatus: true ,
+                            prop_information : [
+                                {
+                                    title: "test 1" ,
+                                    title_backgroundColor: "#b6b6b6" ,
+                                    title_color: "#ffffff" ,
+                                    value: "12554" ,
+                                    value_backgroundColor: "#e7e7e7" ,
+                                    value_color: "#343434" ,
+                                }
+                            ] ,
+                            fn_clickBtnTools: () =>{
+                                alert("asd")
+                            } ,
+
+                            fn_changeValue: (val) =>{
+                                console.log(val)
+                            } ,
+
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentInputPrice',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-text-price-1" ,
+
+                            prop_name: "input" ,
+                            prop_title: "asd" ,
+                            prop_default: "123456789" ,
+                            prop_icon: "&#10126;"
+                        }
+                    } ,
+
+
+
+
+
+
+                   */
+
+
+/*
+
+
+                    {
+                        component: 'ComponentDate',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-date-0" ,
+
+                            prop_type: 0
+                        }
+                    } ,
+
+
+
+
+                    {
+                        component: 'ComponentInfo',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "info1" ,
+
+                            prop_icon: "&#10127;" ,
+                            prop_title: "<b>213123</b>"
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentInfo',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "info2" ,
+
+                            prop_icon: "&#10127;" ,
+                            prop_title: "<b>213123</b>"
+                        }
+                    } ,
+
+
+
+                    {
+                        component: 'ComponentPositionElement',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 position-relative"  ,
+                            id: "element-position" ,
+
+                            prop_content: "asd"
+                        }
+                    } ,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    {
+                        component: 'ComponentOtp',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "otp" ,
+
+                            prop_name: "otp_phone" ,
+                            prop_input: "09302171809" ,
+                            prop_length: 4 ,
+                            prop_langs: {
+                                _title_otp_description : "کد برای شماره/ایمیل زیر ارسال شد" ,
+                                _text_timer_after_active_otp : "تا ارسال مجدد کد" ,
+                                _text_timer_after_di_active_otp : "کد منقضی شده است" ,
+                                _text_get_new_otp : "کد جدید" ,
+                            } ,
+                        }
+                    } ,
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    {
+                        component: 'ComponentDate',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-date-1" ,
+
+                            prop_type: 1
+                        }
+                    } ,
+
+
+                    {
+                        component: 'ComponentDate',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-date-2" ,
+
+                            prop_type: 2
+                        }
+                    } ,
+
+                    {
+                        component: 'ComponentDate',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "input-date-3" ,
+
+                            prop_type: 3
+                        }
+                    } ,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    {
+                        component: 'ComponentIcon',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "input-icon" ,
+
+                            prop_icon: " &#x2315; " ,
+                        }
+                    } ,
+*/
+
+
+
 
                 ]
             }
