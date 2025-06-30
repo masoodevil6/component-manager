@@ -3,60 +3,6 @@
 <section id="template-main"></section>
 
 
-<!--<table class="form-choose-date-middle-table border-none">
-    <thead class="form-choose-date-middle-table-header boreder-bottom border-white">
-    <tr>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_1") ? prop_langs._day_1 : "شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_2") ? prop_langs._day_2 : "یک شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_3") ? prop_langs._day_3 : "دو شنب"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_4") ? prop_langs._day_4 : "سه شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_5") ? prop_langs._day_5 : "چهار شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_6") ? prop_langs._day_6 : "پنج شنبه"} </th>
-        <th scope="col" class="form-choose-date-middle-days-title text-center text-white" >  ${prop_langs != null && prop_langs.hasOwnProperty("_day_7") ? prop_langs._day_7 : "جمعه"} </th>
-    </tr>
-    </thead>
-
-    <tbody class="form-choose-date-middle-table-body bg-white">
-    <tr>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
-    </tr>
-    <tr>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
-    </tr>
-    <tr>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
-    </tr>
-    <tr>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 1)"}">1</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 2)"}">2</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 3)"}">3</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 4)"}">4</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 5)"}">5</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 6)"}">6</span> </td>
-        <td class="form-choose-date-middle-days-num text-center text-dark "> <span class="rounded d-block" onclick="${goToDaySelected + "(event , 7)"}">7</span> </td>
-    </tr>
-    </tbody>
-</table>-->
-
-
 <script src="./jalali.js"></script>
 <script src="./highcharts.js"></script>
 <script src=".\components.js"></script>
@@ -78,6 +24,48 @@
                     classList: "row mx-0 ",
                 },
                 children: [
+
+
+                    {
+                        component: 'ComponentHeader',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "header" ,
+
+                            prop_size: 5,
+                            prop_title: "it is a test header" ,
+                            prop_icon: "&#10127;" ,
+                        }
+                    } ,
+
+                    {
+                        component: 'ComponentIcon',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+                            id: "input-icon" ,
+
+                            prop_icon: " &#x2315; " ,
+                        }
+                    } ,
+
+                    /*{
+                        component: 'ComponentTest',
+                        props: {
+                            classList: "col-md-3 col-12 mt-2"  ,
+                            id: "b1" ,
+
+                            prop_title: "asd",
+                            prop_btnMore_show: true,
+                            prop_btnMore_icon: "&#10127;" ,
+                            prop_btnMore_link: "/asd" ,
+                            prop_borderStyles: {
+                                "height" : "150px"
+                            } ,
+                        }
+                    } ,*/
+
+
+                    /*
 
                     {
                         component: 'ComponentBorder',
@@ -105,7 +93,7 @@
                                 ]
                             }
                         ]
-                    } ,
+                    } ,*/
 
 
 
@@ -166,7 +154,7 @@
                     } ,*/
 
 
-                    {
+                    /*{
                         component: 'ComponentChart',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
@@ -204,12 +192,10 @@
                             }]
 
                         }
-                    },
+                    },*/
 
 
-
-
-                    {
+                    /*{
                         component: 'ComponentWidget',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
@@ -220,9 +206,10 @@
                                 url: "https://google1.com"
                             }
                         }
-                    } ,
+                    } ,*/
 
-                    {
+
+                    /*{
                         component: 'ComponentWidget',
                         props: {
                             classList: "col-md-3 col-12 mt-2"  ,
@@ -236,7 +223,7 @@
                                 ]
                             }
                         }
-                    } ,
+                    } ,*/
 
 
 
@@ -897,15 +884,7 @@
 
 
 
-                    {
-                        component: 'ComponentIcon',
-                        props: {
-                            classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
-                            id: "input-icon" ,
 
-                            prop_icon: " &#x2315; " ,
-                        }
-                    } ,
 */
 
 
