@@ -647,3 +647,38 @@ tools_validate = {
     }
 
 }
+
+
+
+tools_public = {
+
+    renderListClass: function (data){
+        let classes = "";
+        if (data != null){
+            if (Array.isArray(data)){
+                classes = data.join(" ");
+            }
+            if (typeof data == "string"){
+                classes = data;
+            }
+        }
+        return classes;
+    } ,
+
+    renderListStyle: function (data){
+        let styles = "";
+        if (data != null){
+            if (typeof data == "object"){
+                Object.keys(data).forEach((key)=> {
+                    styles += key + ":" + data[key] + ";";
+                })
+            }
+            if (typeof data == "string"){
+                styles = data;
+            }
+        }
+
+        return styles;
+    }
+
+}

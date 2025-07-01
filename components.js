@@ -49,7 +49,7 @@ if (typeof components === 'undefined') {
 class ComponentMaker {
     define(elId , props , componentName, templateFn , onCreate , onRender , parts , schema) {
 
-
+       // console.log(document.getElementById(elId))
 
         if (!customElements.get(componentName)) {
 
@@ -74,14 +74,18 @@ class ComponentMaker {
 
 
                     connectedCallback() {
+                        const idSelected = this.getAttribute("id");
+                        if (elId == idSelected){
 
-
-                        this.setAttribute("data_random_id" , this._randomId)
-                        if (typeof onCreate === 'function') {
-                            onCreate(this._data, this);
+                            this.setAttribute("data_random_id" , this._randomId)
+                            if (typeof onCreate === 'function') {
+                                onCreate(this._data, this);
+                            }
+                            this._renderMain();
+                            this._initScriptData();
                         }
-                        this._renderMain();
-                        this._initScriptData();
+
+                        console.log(elId , idSelected)
                     }
 
 
@@ -223,6 +227,17 @@ class ComponentMaker {
                         }
 
 
+                        if (componentProps.hasOwnProperty("classList")){
+                            this.classList = tools_public.renderListClass(componentProps.classList);
+                        }
+                        if (componentProps.hasOwnProperty("styles")){
+                            Object.entries(componentProps.styles).forEach(([key, value]) => {
+                                this.style[key] = value;
+                            });
+                        }
+
+
+
                         let elContent = this.getElementsByTagName('content');
                         if (elContent.length == 0) {
                             this.innerHTML = `<content></content>` + this._script;
@@ -275,9 +290,11 @@ class ComponentMaker {
                         const componentProps =  data != null && data.hasOwnProperty("component") ? data.component : null;
                         const directionRtl = componentProps != null && componentProps.hasOwnProperty("directionRtl") ? componentProps.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
                         const prop_show    = componentProps != null && componentProps.hasOwnProperty("prop_show")    ? componentProps.prop_show    : true
+                        const classList    = componentProps != null && componentProps.hasOwnProperty("classList")    ? componentProps.classList    : (props.hasOwnProperty("classList") ? props.classList : [])
+                        const styles       = componentProps != null && componentProps.hasOwnProperty("styles")       ? componentProps.styles       : (props.hasOwnProperty("styles") ? props.styles : {})
 
                         return {
-                            directionRtl , prop_show
+                            directionRtl , prop_show , classList , styles
                         }
                     }
 
@@ -399,51 +416,8 @@ class ComponentBase{
     }
 
 
-    readyAttrs(){
-
-        const els = document.querySelectorAll(`#${this.elId}`);
-        console.log(els)
-
-        els.forEach(el => {
-
-
-
-            if (!el) {
-                console.warn(`Element with id '${this.elId}' not found`);
-                return;
-            }
-
-
-            /*this.config.methods = this.methods;
-            const newData = JSON.stringify(this.config);
-            const currentData = el.getAttribute("data");
-
-            if (currentData === newData) {
-                return;
-            }
-
-            el.setAttribute("data", newData);*/
-
-
-            if (this.config != null){
-                /*const firstChild = el.querySelector('component-element-structure');
-                console.log(el , firstChild)*/
-
-                if (this.config.classList){
-                    el.classList = this.renderListClass(this.config.classList);
-                }
-
-                if (this.config.styles) {
-                    Object.entries(this.config.styles).forEach(([key, value]) => {
-                        el.style[key] = value;
-                    });
-                }
-            }
-        });
-    }
-
     render(props){
-        this.readyAttrs();
+
 
         const maker = new ComponentMaker()
         /*setTimeout(()=>{
@@ -649,10 +623,10 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
         if (data != null){
             const prop_icon =      data.hasOwnProperty("prop_icon")        ?  data.prop_icon       : null;
 
-            if (prop_icon){
-                return `
-<component-icon id="component-header-icon-${var_randomId}"></component-icon>
-            `;
+            if (prop_icon != null){
+
+
+                console.log(prop_icon)
 
                 new window.ComponentIcon(
                     `component-header-icon-${var_randomId}` ,
@@ -664,6 +638,11 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
                         prop_iconStyles  :  {"line-height" : "25px" , "font-size" : "18pt"} ,
                     }
                 )
+
+                return `
+<component-icon id="component-header-icon-${var_randomId}"></component-icon>
+ `;
+
             }
 
         }
