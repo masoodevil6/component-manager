@@ -1,0 +1,32 @@
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+<component-test id="ctest1"></component-test>
+<component-test id="ctest2"></component-test>
+
+
+<script src="./jalali.js"></script>
+<script src="./highcharts.js"></script>
+<script src=".\components.js"></script>
+<script src=".\tools.js"></script>
+
+
+<script>
+
+    const componentTest1 = new window.ComponentTest(
+        "ctest1" , {
+            prop_numA: 100 ,
+            prop_numB: 200 ,
+            prop_numC: 300
+        }
+    );
+
+   /* const componentTest2 = new window.ComponentTest(
+        "ctest2" , {
+            prop_numA: 800 ,
+            prop_numB: 900 ,
+            prop_numC: 1000
+        }
+    );
+*/
+
+</script>
