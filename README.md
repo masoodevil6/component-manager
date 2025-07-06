@@ -38,9 +38,9 @@ if (typeof listComponent === 'undefined') {
 **1) Component Message:**
 ```
 /*-------------------------------------
- Component Messages
+ 1) Component Messages
 -------------------------------------
-@prop_status
+@prop_type                            // success[default] | error | warning | null
 @prop_background
 @prop_color
 @prop_messages
@@ -60,8 +60,9 @@ if (typeof listComponent === 'undefined') {
 **2) Component Loading:**
 ```
 /*-------------------------------------
- Component Loading
+ 2) Component Loading
 -------------------------------------
+@prop_type                       // circle[default] | null
 @prop_background_loading
 @prop_background_shadow
 -------------------------------------*/
@@ -79,12 +80,13 @@ if (typeof listComponent === 'undefined') {
 **3) Component 404:**
 ```
 /*-------------------------------------
- Component 404
+ 3) Component 404
 -------------------------------------
-@prop_type
-@prop_btnRetry    prop_type  prop_title  prop_btnClass
+@prop_type            'simple_animation'
 @prop_width
 @prop_height
+
+@prop_btnRetry        {prop_type: "submit"  , prop_title: "Retry" , prop_btnClass: ["w-100"]}
 
 @fn_callback
 -------------------------------------*/
@@ -101,11 +103,16 @@ if (typeof listComponent === 'undefined') {
 **4) Component Form:**
 ```
 /*-------------------------------------
- Component Form
+ 4) Component Form
 -------------------------------------
-@prop_btnSubmit   prop_type  prop_title  prop_btnClass
 @prop_formClass
+@prop_formStyles
+
+@prop_btnSubmit    {prop_type , prop_title , prop_btnClass}
+
 @prop_forms
+@prop_url
+@prop_data
 -------------------------------------*/
     new window.ComponentForm(
         "element_id" ,
@@ -123,20 +130,22 @@ if (typeof listComponent === 'undefined') {
 
 **5) Component Is Empty:**
 ```
-   /*-------------------------------------
-    Component Collapse
-    -------------------------------------
-    @prop_title
-    @prop_icon
-    @prop_iconClass
+/*-------------------------------------
+ 5) Component Is Empty
+-------------------------------------
+@prop_icon
+@prop_iconClass
+@prop_iconStyles
 
-    @prop_btnAddStatus
-    @prop_btnAddIcon
-    @prop_btnAddTitle
-    @prop_btnAddClass
+@prop_title
 
-    @fn_callback
-    -------------------------------------*/
+@prop_btnAddStatus
+@prop_btnAddIcon
+@prop_btnAddTitle
+@prop_btnAddClass
+
+@fn_callback
+-------------------------------------*/
     new window.ComponentIsEmpty(
         "element_id" ,
         {
@@ -172,13 +181,18 @@ if (typeof listComponent === 'undefined') {
 
 **7) Component Collapse:**
 ```
-   /*-------------------------------------
-    Component Collapse
-    -------------------------------------
-    @prop_title
-    @prop_body
-    @prop_bodyShow
-    -------------------------------------*/
+/*-------------------------------------
+ 7) Component Collapse
+-------------------------------------
+@prop_collapseClass
+@prop_collapseStyles
+
+@prop_title
+
+@prop_bodyBackgroundColor
+@prop_body
+@prop_bodyShow
+-------------------------------------*/
     new window.ComponentCollapse(
         "element_id" ,
         {
@@ -445,18 +459,20 @@ if (typeof listComponent === 'undefined') {
 
 **17) Component Label:**
 ```
-    /*-------------------------------------
-    Component label
-    -------------------------------------
-    @prop_title
-    @prop_for
-    
-    @prop_labelClass
-    @prop_labelStyles
-    @prop_labelHoverStyles
+/*-------------------------------------
+ 17) Component label
+-------------------------------------
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_labelBackgroundColor
 
-    @fn_callback
-    -------------------------------------*/
+@prop_title
+@prop_for
+@prop_labelColor
+
+@fn_callback
+-------------------------------------*/
     new window.ComponentLabel(
         "element_id" ,
         {

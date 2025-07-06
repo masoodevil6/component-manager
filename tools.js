@@ -75,10 +75,18 @@ tools_init = {
 
         tools_const.styles =  {
             message: {
-                backgroundColor_success: component_props.successColor1 ,
-                color_success:           component_props.darkColor1 ,
-                backgroundColor_error:   component_props.errorColor1 ,
-                color_error:             component_props.shanColor1 ,
+                success: {
+                    backgroundColor: component_props.successColor1 ,
+                    color:           component_props.darkColor1 ,
+                } ,
+                error: {
+                    backgroundColor: component_props.errorColor1 ,
+                    color:           component_props.shanColor1 ,
+                } ,
+                warning: {
+                    backgroundColor: component_props.warningColor1 ,
+                    color:           component_props.darkColor1 ,
+                }
             },
 
             loading: {
@@ -138,6 +146,12 @@ tools_init = {
             } ,
 
 
+            label: {
+                backgroundColor : component_props.shadowColor2 ,
+                color : component_props.darkColor1 ,
+            } ,
+
+
 
             backShadow: {
                 backgroundColor: component_props.shadowColor1
@@ -154,6 +168,7 @@ tools_init = {
 
 
 tools_component = {
+
 
     setup: function (container , tree , withPrefix=null){
 
@@ -318,6 +333,17 @@ tools_submit = {
         let componentMessagesData = args.hasOwnProperty("componentMessagesData") ? args.componentMessagesData: null ;
         let componentLoadingData  = args.hasOwnProperty("componentLoadingData") ? args.componentLoadingData: null ;
         let component404Data      = args.hasOwnProperty("component404Data") ? args.component404Data: null ;
+        if (component404Data != null){
+            component404Data["prop_404class"] = ["position-absolute"];
+            component404Data["prop_404styles"] = {
+                "width" : "100%" ,
+                "height" : "100%" ,
+                "left" : "0" ,
+                "top" : "0" ,
+            };
+        }
+
+
 
         const formData = new FormData();
 
@@ -383,7 +409,6 @@ tools_submit = {
                             break;
                         case 200:
 
-                            console.log(response)
                             const contentType = data.hasOwnProperty("contentType") ? data.contentType : tools_const.contentTypes.json
                             switch (contentType){
                                 case tools_const.contentTypes.json:

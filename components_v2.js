@@ -7,7 +7,7 @@ Version: 0.1
 
 if (typeof listComponent === 'undefined') {
     var listComponent = {
-        ComponentTest:                       "component-test" ,                           //0
+
 
         ComponentMessages:                   "component-messages" ,                       //1
         ComponentLoading:                    "component-loading" ,                        //2
@@ -42,342 +42,140 @@ if (typeof components === 'undefined') {
 
 
 
-
-
-/* -------------------------------------
- Component Make:
-------------------------------------- */
-class ComponentMaker {
-    define(elId , props , componentName, templateFn , onCreate , onRender , parts , schema) {
-
-        console.log(document.getElementById(props))
-
-        if (!customElements.get(componentName)) {
-
-            customElements.define(
-                componentName,
-                class extends HTMLElement {
-                    constructor() {
-                        super();
-
-                        this._observer = null;
-                        this._randomId = Math.floor(Math.random() * 10000);
-
-                        /*if (parts == null){
-                            parts = {};
-                        }*/
-
-                        /*parts.component = this._getComponentProps()
-                        this._data = parts;*/
-                        const localProps = typeof props === "function" ? props() : {};
-                        const localParts = typeof parts === "function" ? parts() : {};
-
-                        this._data = {
-                            ...localParts,
-                            component: this._getComponentProps(localProps)
-                        };
-                        this._script = `<script type='application/json'>${JSON.stringify(this._data)}</script>`;
-
-                       /* if (parts == null) {
-                            parts = {};
-                        }
-
-                        const clonedParts = JSON.parse(JSON.stringify(parts));
-                        clonedParts.component = this._getComponentProps();
-
-                        this._data = clonedParts;
-                        this._script = `<script type='application/json'>${JSON.stringify(this._data)}</script>`;*/
-                    }
-
-
-
-                    connectedCallback() {
-                        this.setAttribute("data_random_id" , this._randomId)
-                        if (typeof onCreate === 'function') {
-                            onCreate(this._data, this);
-                        }
-                        this._renderMain();
-                        this._initScriptData();
-                    }
-
-
-
-                    _getCompoents(){
-                        let componentSlots = {};
-                        const componentSlotNames = [...this.children].filter(
-                            el => el.tagName.toLowerCase().startsWith('component-')
-                        );
-
-                        if (componentSlotNames != null && Array.isArray(componentSlotNames)){
-                            for (const componentTag of componentSlotNames) {
-                                componentSlots[componentTag.tagName.toLowerCase().replace(/^component-/, '')] = componentTag.innerHTML;
-                            }
-                        }
-                        return componentSlots;
-                    }
-
-
-
-                    _findPart(obj , partName) {
-                        for (const key in obj) {
-                            if (key === partName) {
-                                return obj[key]; // پیدا کردیم
-                            }
-                            if (typeof obj[key] === "object" && obj[key] !== null) {
-                                const result = this._findPart(obj[key] , partName);
-                                if (result !== undefined) return result;
-                            }
-                        }
-
-                        return undefined;
-                    }
-
-
-
-                    _mergePartsFromSchema(schemaNode, parts) {
-                        const result = {};
-
-                        if (parts.hasOwnProperty(schemaNode.key)) {
-                            Object.assign(result, parts[schemaNode.key]);
-                        }
-
-                        const children = schemaNode.value;
-                        for (const key in children) {
-                            result[key] = this._mergePartsFromSchema({ key: key, value: children[key] }, parts);
-                        }
-
-                        return result;
-                    }
-
-
-
-                    _findDifferences(oldData, newData) {
-                        const changedKeys = [];
-
-                        for (const key in newData) {
-                            if (!oldData.hasOwnProperty(key)) {
-                                changedKeys.push(key); // کلید جدید
-                            } else {
-                                const oldVal = JSON.stringify(oldData[key]);
-                                const newVal = JSON.stringify(newData[key]);
-                                if (oldVal !== newVal) {
-                                    changedKeys.push(key); // مقدار تغییر کرده
-                                }
-                            }
-                        }
-
-                        for (const key in oldData) {
-                            if (!newData.hasOwnProperty(key)) {
-                                changedKeys.push(key); // کلید حذف‌شده
-                            }
-                        }
-
-                        return changedKeys;
-                    }
-
-
-                    _initScriptData() {
-                        const script = this.querySelector('script[type="application/json"]');
-
-
-
-                        if (script) {
-
-                            if (this._observer) {
-                                this._observer.disconnect();
-                                this._observer = null;
-                            }
-
-                            try {
-                                this._data = JSON.parse(script.textContent || '{}');
-                            } catch (e) {
-                                console.warn('Invalid JSON in script', e);
-                                this._data = {};
-                            }
-
-
-                            this._observer = new MutationObserver(() => {
-
-                                let newData;
-                                try {
-                                    newData = JSON.parse(script.textContent || '{}');
-                                } catch (e) {
-                                    console.warn('Invalid JSON on mutation', e);
-                                    return;
-                                }
-
-                                const changes = this._findDifferences(this._data, newData);
-
-
-
-                                this._data = newData;
-
-                                if (changes.length > 0) {
-                                    for (let i = 0; i < changes.length; i++) {
-                                        const itemPart = changes[i];
-
-                                        this._renderMain(itemPart);
-                                    }
-                                }
-
-                                this._initScriptData();
-                            });
-
-                            this._observer.observe(script, {
-                                childList: true,
-                                characterData: true,
-                                subtree: true
-                            });
-
-                        }
-                    }
-
-
-
-                    _renderMain(partName=null){
-                        const data = this._data || {};
-                        const componentProps = this._getComponentProps();
-
-                        if (partName == "component"){
-                            partName = null;
-                        }
-
-
-                        if (componentProps.hasOwnProperty("classList")){
-                            this.classList = tools_public.renderListClass(componentProps.classList);
-                        }
-                        if (componentProps.hasOwnProperty("styles")){
-                            Object.entries(componentProps.styles).forEach(([key, value]) => {
-                                this.style[key] = value;
-                            });
-                        }
-
-
-
-                        let elContent = this.getElementsByTagName('content');
-                        if (elContent.length == 0) {
-                            this.innerHTML = `<content></content>` + this._script;
-                        }
-                        elContent = this.getElementsByTagName('content')[0];
-
-
-                        if (componentProps.prop_show){
-
-                            let partMap = schema;
-                            if (partName != null){
-                                partMap = this._findPart(schema , partName);
-                            }
-
-                            let dataSelected = this._mergePartsFromSchema({ key: partName, value: partMap } , data);
-
-                            const html = templateFn(partName , dataSelected, this._getCompoents() , this , this.getAttribute("data_random_id") );
-
-                            if (partName != null){
-                                let elementSelected = elContent.querySelector(`[data-part-name="${partName}"]`);
-
-                                const template = document.createElement('template');
-                                template.innerHTML = html;
-                                const newEl = template.content.firstElementChild;
-
-                                if (elementSelected && newEl) {
-                                    elementSelected.replaceWith(newEl);
-                                }
-                            }
-                            else {
-                                elContent.innerHTML = html;
-                                if (typeof elContent.style != "undefined"){
-                                    const directionRtl = componentProps.directionRtl;
-                                    elContent.style.setProperty('direction', directionRtl ? 'rtl' : 'ltr' , 'important');
-                                    elContent.style.setProperty('text-align', directionRtl ? 'right' : 'left' , 'important');
-                                }
-                            }
-
-                        }
-                        else {
-                            elContent.innerHTML = "<!--hidden-component-->"
-                        }
-                    }
-
-
-
-                    _getComponentProps() {
-                        const data = this._data || {};
-
-                        const componentProps =  data != null && data.hasOwnProperty("component") ? data.component : null;
-                        const directionRtl = componentProps != null && componentProps.hasOwnProperty("directionRtl") ? componentProps.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
-                        const prop_show    = componentProps != null && componentProps.hasOwnProperty("prop_show")    ? componentProps.prop_show    : true
-                        const classList    = componentProps != null && componentProps.hasOwnProperty("classList")    ? componentProps.classList    : (props.hasOwnProperty("classList") ? props.classList : [])
-                        const styles       = componentProps != null && componentProps.hasOwnProperty("styles")       ? componentProps.styles       : (props.hasOwnProperty("styles") ? props.styles : {})
-
-                        return {
-                            directionRtl , prop_show , classList , styles
-                        }
-                    }
-
-
-
-                    disconnectedCallback() {
-                        if (this._observer) {
-                            this._observer.disconnect();
-                        }
-                    }
-                }
-            );
-        }
-    }
-}
-
-
-
-
-
 /* -------------------------------------
  Component Base:
 ------------------------------------- */
 class ComponentBase{
 
+    _COMPONENT_RANDOM_ID = 0;
+    _COMPONENT_ID = null;
+    _COMPONENT_NAME = null;
+    _COMPONENT_SELECTOR = null;
     _COMPONENT_ELEMENT = null;
+    _COMPONENT_CONTENT = "";
+    _COMPONENT_SLOTS = [];
+
     _COMPONENT_PROPS = null;
     _COMPONENT_PROPS_LAST = null;
     _COMPONENT_CONFIG = null;
     _COMPONENT_SCHEMA = null;
 
-    _COMPONENT_OBSERVER = null;
+    constructor(componentName , elId) {
+        this._COMPONENT_RANDOM_ID = Math.floor(Math.random() * 10000);
+        this._COMPONENT_NAME = componentName;
+        this._COMPONENT_ID = elId;
+        this._COMPONENT_SELECTOR = this._COMPONENT_NAME+"#"+this._COMPONENT_ID;
+    }
 
-    constructor(elId , config , props , schema) {
 
-        this._COMPONENT_ELEMENT = document.querySelector(listComponent[ComponentTest.name]+"#"+elId);
+    onCreate( config , props, schema){
+        this.readyConfigBasic(config , props);
+
+        this.readyPropAndSchemaBasic(props , schema);
+
+        this.getAllComponentSluts();
+
+        this._COMPONENT_ELEMENT = document.createElement("template");
+        this._COMPONENT_CONTENT = this.setContent();
+    }
+
+
+    onTemplateComplete(){
+        this._COMPONENT_ELEMENT = document.querySelector(this._COMPONENT_SELECTOR);
+
         if (this._COMPONENT_ELEMENT != null){
-            components.set(this._COMPONENT_ELEMENT , this);
-
-            this._COMPONENT_PROPS = props;
-            this._COMPONENT_CONFIG = config;
-            this._COMPONENT_SCHEMA = schema;
-
-            this._COMPONENT_PROPS_LAST = this.setConfigToPart(this._COMPONENT_CONFIG);
-            console.log(this._COMPONENT_PROPS_LAST)
-
-
-            this.setContent();
-
-
-          //  this._COMPONENT_OBSERVER = this._observe(this._COMPONENT_PROPS);
+            this._COMPONENT_ELEMENT.innerHTML  =  this._COMPONENT_CONTENT;
+            this.setComponentData();
         }
     }
 
-    // _observe(obj) {
-    //     return new Proxy(obj, {
-    //         set: (target, prop, value) => {
-    //             console.log(`Property '${prop}' changed from ${target[prop]} to ${value}`);
-    //             target[prop] = value;
-    //
-    //             console.log(`Reacting to ${prop} change`);
-    //
-    //             return true;
-    //         }
-    //     });
-    // }
 
+    onRegister(){
+        components.set(this._COMPONENT_ELEMENT , this);
+
+        this.setComponents();
+    }
+
+
+
+
+
+    //--------------------------------------------------
+    // ready properties
+    //--------------------------------------------------
+    readyConfigBasic(config , props){
+        /// config default
+        this._COMPONENT_CONFIG = config;
+
+        /// config public component
+        const mainProps = this.getComponentProps();
+        Object.keys(mainProps).forEach(key => {
+            this._COMPONENT_CONFIG[key] = mainProps[key];
+        })
+
+        /// config other exist
+        if (props != null){
+            Object.keys(props).forEach(keyPart => {
+                const itemPart = props[keyPart];
+
+                if (itemPart != null && Array.isArray(itemPart)){
+                    for (const indexProp in itemPart) {
+                        const itemProp = itemPart[indexProp];
+
+                        if (itemProp.hasOwnProperty("prop")){
+                            const propKey = itemProp.prop;
+                            const propValue = itemProp.hasOwnProperty("default") ? itemProp.default : null;
+                            let propExist = false;
+
+                            Object.keys(this._COMPONENT_CONFIG).forEach(configKey => {
+                                if (propKey == configKey){
+                                    propExist = true;
+                                }
+                            });
+
+                            if (!propExist){
+                                this._COMPONENT_CONFIG[propKey] = propValue
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+
+    readyPropAndSchemaBasic(props , schema){
+        this._COMPONENT_PROPS = props;
+        this._COMPONENT_SCHEMA = schema;
+        this._COMPONENT_PROPS_LAST = this.setConfigToPart(this._COMPONENT_CONFIG);
+
+    }
+
+
+
+    getAllComponentSluts(){
+        const component = document.querySelector(this._COMPONENT_SELECTOR);
+
+        if (component != null){
+            /*for (const itemChild of component.children) {
+                const slotName = itemChild.getAttribute("name");
+                const slotContent = itemChild.innerHTML;
+
+                this._COMPONENT_SLOTS[slotName ?? "body"] = slotContent;
+            }*/
+
+            const componentSlotNames = [...component.children].filter(
+                el => el.tagName.toLowerCase().startsWith('component-')
+            );
+
+            if (componentSlotNames != null && Array.isArray(componentSlotNames)){
+                for (const componentTag of componentSlotNames) {
+                    this._COMPONENT_SLOTS[componentTag.tagName.toLowerCase().replace(/^component-/, '')] = componentTag.innerHTML;
+                }
+            }
+        }
+    }
 
 
 
@@ -447,102 +245,135 @@ class ComponentBase{
 
 
 
+
     //--------------------------------------------------
-    // find and merage componentData
+    // content for templates
     //--------------------------------------------------
-    findPartAndMerge(partName = null){
-        let partMap = this._COMPONENT_SCHEMA;
+    setContent(partName = null){
+        let html;
+
+        let el = this._COMPONENT_ELEMENT;
+        let isMain = true;
         if (partName != null){
-            partMap = this.findPart(this._COMPONENT_SCHEMA , partName);
+            el = this._COMPONENT_ELEMENT.querySelector(`[data-part-name="${partName}"]`);
+            isMain = false;
         }
-        return this.mergePartsFromSchema({ key: partName, value: partMap } ,  this._COMPONENT_PROPS_LAST );
-    }
 
-    findPart(obj , partName) {
-        for (const key in obj) {
-            if (key === partName) {
-                return obj[key];
+        if (el != null){
+            //let dataSelected = this.findPartAndMerge(partName);
+            if (typeof this.templateFn !== "undefined"){
+                html = this.templateFn(partName  , this._COMPONENT_SLOTS  , this._COMPONENT_RANDOM_ID);
+                if (html != null){
+                    if (isMain){
+                        el.innerHTML = html;
+                    }
+                    else{
+                        el.outerHTML = html;
+                    }
+                }
             }
-            if (typeof obj[key] === "object" && obj[key] !== null) {
-                const result = this.findPart(obj[key] , partName);
-                if (result !== undefined) return result;
-            }
         }
 
-        return undefined;
+        return html;
     }
 
-    mergePartsFromSchema(schemaNode, parts) {
-        const result = {};
+    setComponentData(){
+        const mainProps = this.getComponentProps();
+        if (mainProps.prop_show){
+            this._COMPONENT_ELEMENT.style.display = ""
 
-        if (parts.hasOwnProperty(schemaNode.key)) {
-            Object.assign(result, parts[schemaNode.key]);
+            const directionRtl = mainProps.directionRtl;
+            this._COMPONENT_ELEMENT.style.setProperty('direction', directionRtl ? 'rtl' : 'ltr' , 'important');
+            this._COMPONENT_ELEMENT.style.setProperty('text-align', directionRtl ? 'right' : 'left' , 'important');
+
+            this._COMPONENT_ELEMENT.classList = tools_public.renderListClass(mainProps.classList);
+
+            Object.entries(mainProps.styles).forEach(([key, value]) => {
+                this._COMPONENT_ELEMENT.style[key] = value;
+            });
         }
-
-        const children = schemaNode.value;
-        for (const key in children) {
-            result[key] = this.mergePartsFromSchema({ key: key, value: children[key] }, parts);
+        else{
+            this._COMPONENT_ELEMENT.style.display = "none"
         }
-
-        return result;
     }
 
-
-
-
-
-    //--------------------------------------------------
-    // find and merage componentData
-    //--------------------------------------------------
-
-
+    setComponents(){
+        if (typeof this.componentFn !== "undefined"){
+            this.componentFn(this._COMPONENT_SLOTS , this._COMPONENT_RANDOM_ID);
+        }
+    }
 
 
 
     //--------------------------------------------------
     // content for templates
     //--------------------------------------------------
-    setContent(partName = null){
+    getComponentProps() {
+        const data = this._COMPONENT_CONFIG || {};
 
-        let el = this._COMPONENT_ELEMENT;
-        if (partName != null){
-            el = this._COMPONENT_ELEMENT.querySelector(`[data-part-name="${partName}"]`);
+        const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+        const prop_show    = data.hasOwnProperty("prop_show")    ? data.prop_show    : true
+        const classList    = data.hasOwnProperty("classList")    ? data.classList    : []
+        const styles       = data.hasOwnProperty("styles")       ? data.styles       : {}
+
+        return {
+            directionRtl , prop_show , classList , styles
         }
-
-        console.log(el)
-
-        if (el != null){
-            if (typeof this.templateFn !== "undefined"){
-
-                let dataSelected = this.findPartAndMerge(partName);
-                console.log(dataSelected)
-
-                el.innerHTML =  this.templateFn(partName , dataSelected , null , el);
-            }
-        }
-
     }
 
 
 
+    //--------------------------------------------------
+    // SETTER AND GETTER
+    //--------------------------------------------------
+    getPartProps(partName){
+        let resultExp = null
+        if (this._COMPONENT_PROPS_LAST != null){
+            Object.keys(this._COMPONENT_PROPS_LAST).forEach(key => {
+                console.log()
+                if (key == partName){
+                    resultExp = this._COMPONENT_PROPS_LAST[key];
+                }
+            })
+        }
+        return resultExp;
+    }
+
+    get(key ){
+        let lastConfig =  this._COMPONENT_CONFIG;
+        if (lastConfig != null && lastConfig.hasOwnProperty(key)){
+            return lastConfig[key];
+        }
+        return null;
+    }
 
     set(key , value){
         let lastConfig =  this._COMPONENT_CONFIG;
         if (lastConfig != null && lastConfig.hasOwnProperty(key)){
             lastConfig[key] = value;
-            //console.log(lastConfig)
 
             const props = this.setConfigToPart(lastConfig);
             const changes = this.findDifferences(this._COMPONENT_PROPS_LAST, props);
             this._COMPONENT_PROPS_LAST = props;
 
-
-
             for (const partIndex in changes) {
                 this.setContent(changes[partIndex])
             }
-            //this._COMPONENT_PROPS[key] = value;
+
+            this.setComponentData();
         }
+    }
+
+    getFn(methodName , ...methodArgs ){
+        return `components.get(document.querySelector('${this._COMPONENT_SELECTOR}')).${methodName}(${methodArgs})`;
+    }
+
+    runFn(methodName , ...methodArgs ){
+        const fn = this.getFn(methodName , ... methodArgs);
+        if (typeof fn != "undefined"){
+            return eval(fn)
+        }
+        return null;
     }
 
 
@@ -554,101 +385,352 @@ class ComponentBase{
 
 
 /*-------------------------------------
- Component Header
+ 1) Component Messages
 -------------------------------------
-@prop_size
-@prop_title
-@prop_icon
-@prop_classList
+@prop_type                            // success[default] | error | warning | null
+@prop_background
+@prop_color
+@prop_messages
 -------------------------------------*/
-window.ComponentTest = class ComponentTest extends ComponentBase{
+window.ComponentMessages = class ComponentMessages extends ComponentBase{
 
-    constructor(elId , config) {
-        super(
-            elId ,
-            config ,
-            {
-                part_a: [
-                    {prop : "prop_numA"  , default: 1}
-                ] ,
-                part_b: [
-                    {prop : "prop_numB" , default: 2}
-                ] ,
-                part_c: [
-                    {prop : "prop_numC" , default: 3}
-                ]
-            },
-            {
-                part_a: {} ,
-                part_b: {
-                    part_c: {}
-                } ,
-            }
-        );
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_message: [
+            {prop : "prop_type"                 , default: "success"} ,  // success  //error //warning //null
+            {prop : "prop_msgBackgroundColor"   , default: null} ,
+            {prop : "prop_msgColor"             , default: null} ,
+            {prop : "prop_messages"             , default: null} ,
+        ] ,
+        part_icon: [
+            {prop : "prop_messages"             , default: null} ,
+        ]
+    }
 
+    _COMPONENT_SCHEMA = {
+        part_message: {} ,
+        part_icon: {}
     }
 
 
 
-    templateFn(partName = null , data , componentSlots , el){
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentMessages.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn( componentSlots , var_randomId){
+        this.componentFn_render_icon(  "part_icon" , componentSlots  , var_randomId);
+    }
+
+    templateFn(partName = null  , componentSlots  , var_randomId){
         switch (partName){
-            case "part_a":
-                return this.templateFn_render_numA(data , componentSlots , el);
-                break;
-            case "part_b":
-                return this.templateFn_render_numB(data  , componentSlots , el);
-                break;
-            case "part_c":
-                return this.templateFn_render_numC(data  , componentSlots , el);
-                break;
+            case "part_message":
+                return this.template_render_message(  "part_message"  , componentSlots  , var_randomId);
             default:
-                return this.templateFn_render(data , componentSlots , el);
+                return this.template_render( componentSlots  , var_randomId);
         }
     }
 
-
-
-    templateFn_render(data , componentSlots , el) {
+    template_render( componentSlots , var_randomId) {
 
         return `
-        ${this.templateFn_render_numA(data.part_a , componentSlots , el)} 
-        ${this.templateFn_render_numB(data.part_b , componentSlots , el)} 
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_message", componentSlots , var_randomId) ?? ""}
+</section>
         `;
 
     }
 
+    template_render_message(partName , componentSlots , var_randomId) {
+         const data = this.getPartProps(partName)
 
-    templateFn_render_numA(data , componentSlots , el) {
+         if (data != null){
 
-        const prop_numA = data != null &&   data.hasOwnProperty("prop_numA")        ?  data.prop_numA       : 1;
-        return `
-<section data-part-name="part_a">
-${prop_numA}
+             let html = "";
+             if (data.hasOwnProperty("prop_messages")  ){
+                 const prop_messages  =   data.prop_messages;
+
+                 const prop_type                =   data.hasOwnProperty("prop_type")                 ?  data.prop_type               :  null;
+                 let msgBackgroundColor =  null;
+                 let msgColor =            null;
+
+                 switch (prop_type){
+                     case "success" :
+                         msgBackgroundColor       =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("success") &&  tools_const.styles.message.success.hasOwnProperty("backgroundColor") ? tools_const.styles.message.success.backgroundColor : "" ;
+                         msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("success") &&  tools_const.styles.message.success.hasOwnProperty("color")           ? tools_const.styles.message.success.color : "" ;
+                         break;
+                     case "error" :
+                         msgBackgroundColor       =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("error") &&  tools_const.styles.message.error.hasOwnProperty("backgroundColor")     ? tools_const.styles.message.error.backgroundColor : "" ;
+                         msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("error") &&  tools_const.styles.message.error.hasOwnProperty("color")               ? tools_const.styles.message.error.color : "" ;
+                         break;
+                     case "warning" :
+                         msgBackgroundColor       =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("warning") &&  tools_const.styles.message.warning.hasOwnProperty("backgroundColor") ? tools_const.styles.message.warning.backgroundColor : "" ;
+                         msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("warning") &&  tools_const.styles.message.warning.hasOwnProperty("color")           ? tools_const.styles.message.warning.color : "" ;
+                         break;
+                     default:
+                         msgBackgroundColor       =  data.hasOwnProperty("prop_msgBackgroundColor") ?  data.prop_msgBackgroundColor  : "";
+                         msgColor                 =  data.hasOwnProperty("prop_msgColor")           ?  data.prop_msgColor            : "" ;
+                         break;
+                 }
+
+                 for (const indexMessage in prop_messages) {
+                     const itemMessage = prop_messages[indexMessage];
+
+                     html += `
+<section id="component-messages-item-${var_randomId}-${indexMessage}">
+    <style>
+         #${this._COMPONENT_ID} #text-message-${var_randomId}{
+             background-color: ${msgBackgroundColor};
+             color: ${msgColor};
+         }
+    </style>
+    
+    <div  class="component-element-structure mb-2  mt-2 rounded shadow-sm" role="alert">
+         <p id="text-message-${var_randomId}" class=" alert shadow-sm">
+              ${itemMessage}
+              <component-icon id="component-messages-icon-close-${var_randomId}-${indexMessage}"></component-icon>
+         </p>
+    </div>
 </section>
-            `;
+                     `;
+
+                 }
+
+                 return html;
+             }
+         }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_icon (partName , componentSlots  , var_randomId) {
+        const data = this.getPartProps(partName)
+        if (data != null){
+            const directionRtl =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl : false
+
+            if (data.hasOwnProperty("prop_messages")  ) {
+
+                for (const indexMessage in data.prop_messages) {
+                    new window.ComponentIcon(
+                        `component-messages-icon-close-${var_randomId}-${indexMessage}`  ,
+                        {
+                            classList:     [ directionRtl ? "float-start" :  "float-end" ] ,
+                            prop_icon:     "&#10005"  ,
+
+                            prop_iconClass : ["mx-2" ] ,
+                            prop_iconStyles : {
+                                "cursor" : "pointer"
+                            } ,
+
+                            fn_callback: () =>{
+                                this.runFn('fn_onCLickIconClose' , "event" , var_randomId , indexMessage);
+                            }
+                        }
+                    )
+                }
+
+
+            }
+
+        }
     }
 
 
-    templateFn_render_numB (data , componentSlots , el) {
-        console.log(data)
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickIconClose(event , var_randomId , indexMessage){
+        this._COMPONENT_ELEMENT.querySelector(`#component-messages-item-${var_randomId}-${indexMessage}`).remove()
+    }
+}
 
-        return `
-<section data-part-name="part_b">
-${this.templateFn_render_numC(data.part_c , componentSlots , el)}
-</section>
-            `;
+
+
+
+
+
+
+/*-------------------------------------
+ 2) Component Loading
+-------------------------------------
+@prop_type                       // circle[default] | null
+@prop_background_loading
+@prop_background_shadow
+-------------------------------------*/
+window.ComponentLoading = class ComponentLoading extends ComponentBase{
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_loading: [
+            {prop : "prop_type"                            , default: "circle"  } ,  // circle  //null
+            {prop : "prop_background_loading"              , default: null} ,
+            {prop : "prop_background_shadow"               , default: true} ,
+        ]
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_loading: {} ,
     }
 
 
-    templateFn_render_numC(data , componentSlots , el) {
 
-        const prop_numC =    data != null &&    data.hasOwnProperty("prop_numC")        ?  data.prop_numC       : 3;
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentLoading.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_loading":
+                return this.template_render_loading(  "part_loading"  , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+    template_render( componentSlots , var_randomId) {
 
         return `
-<section data-part-name="part_c">
-${prop_numC}
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_loading", componentSlots , var_randomId) ?? ""}
 </section>
-            `;
+        `;
+
+    }
+
+    template_render_loading(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+
+        if (data != null){
+
+            const prop_type    =   data.hasOwnProperty("prop_type")      ?  data.prop_type      :  null;
+            const prop_background_loading =   data.hasOwnProperty("prop_background_loading")   && data.prop_background_loading != null   ? data.prop_background_loading    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_shadow") ? tools_const.styles.loading.backgroundColor_shadow : "";
+            const prop_background_shadow =    data.hasOwnProperty("prop_background_shadow")    && data.prop_background_shadow != null    ? data.prop_background_shadow     : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_loading") ? tools_const.styles.loading.backgroundColor_loading : "";
+
+            if (prop_type == "circle"){
+                return `
+<section data-part-name="${partName}">
+
+   <style>
+      #${this._COMPONENT_ID} .form-loading-${var_randomId}{
+           left: 0;
+           top: 0;
+           z-index: 5000;
+           background-color: ${prop_background_loading};
+      }
+
+      #${this._COMPONENT_ID} .lds-ring-${var_randomId} {
+          z-index: 12;
+          color: ${prop_background_shadow};
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%)
+      }
+      
+      #${this._COMPONENT_ID} .lds-ring-${var_randomId},
+      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div {
+          box-sizing: border-box;
+      }
+      
+      #${this._COMPONENT_ID} .lds-ring-${var_randomId} {
+          display: inline-block;
+          position: relative;
+          width: 80px;
+          height: 80px;
+      }
+
+      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div {
+          box-sizing: border-box;
+          display: block;
+          position: absolute;
+          width: 64px;
+          height: 64px;
+          margin: 8px;
+          border: 8px solid currentColor;
+          border-radius: 50%;
+          animation: lds-ring-${var_randomId} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+          border-color: currentColor transparent transparent transparent;
+      }
+      
+      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div:nth-child(1) {
+          animation-delay: -0.45s;
+      }
+      
+      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div:nth-child(2) {
+         animation-delay: -0.3s;
+      }
+      
+      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div:nth-child(3) {
+         animation-delay: -0.15s;
+      }
+      
+      @keyframes lds-ring-${var_randomId} {
+         0% {
+            transform: rotate(0deg);
+         }
+         100% {
+            transform: rotate(360deg);
+         }
+      }
+   </style>
+
+   <section class="fcomponent-element-structure form-loading-${var_randomId} position-absolute  w-100 h-100" >
+       <div class="lds-ring-${var_randomId} position-absolute"><div></div><div></div><div></div><div></div></div>
+   </section>
+
+</section>
+            `
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
     }
 
 }
@@ -656,5 +738,2104 @@ ${prop_numC}
 
 
 
+
+
+/*-------------------------------------
+ 3) Component 404
+-------------------------------------
+@prop_type            'simple_animation'
+@prop_width
+@prop_height
+
+@prop_btnRetry        {prop_type: "submit"  , prop_title: "Retry" , prop_btnClass: ["w-100"]}
+
+@fn_callback
+-------------------------------------*/
+window.Component404 = class Component404 extends ComponentBase{
+
+    /* ---------------------------------------------
+  PROPERTYs
+  --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            {prop : "prop_404class"                        , default: []  } ,
+            {prop : "prop_404styles"                       , default: {}  } ,
+        ] ,
+        part_404: [
+            {prop : "prop_type"                            , default: "simple_animation"  } ,     // simple_animation  //null
+            {prop : "prop_width"                           , default: 250                 } ,
+            {prop : "prop_height"                          , default: 100                 } ,
+        ] ,
+        part_button_retry: [
+            {prop : "prop_btnRetry"                        , default: {prop_type: "submit"  , prop_title: "Retry" , prop_btnClass: ["w-100"]}      } ,
+        ]
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_404: {} ,
+            part_button_retry: {} ,
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[Component404.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn( componentSlots , var_randomId){
+        this.componentFn_render_btnRetry(  "part_button_retry" , componentSlots  , var_randomId);
+    }
+
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(  "part_structure"  , componentSlots  , var_randomId);
+            case "part_404":
+                return this.template_render_404(        "part_404"        , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+    template_render( componentSlots , var_randomId) {
+        return `
+<section class="component-element-structure mb-2 ">
+   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
+</section>
+        `;
+    }
+
+    template_render_structure(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+        if (data != null){
+
+            const prop_404class   =   data.hasOwnProperty("prop_404class")      ?  data.prop_404class     : [];
+            const prop_404styles  =   data.hasOwnProperty("prop_404styles")     ? data.prop_404styles     : {};
+
+            return `
+<section  data-part-name="${partName}">
+
+    <style>
+        #${this._COMPONENT_ID} #component-404-structure-${var_randomId}{
+           ${tools_public.renderListStyle(prop_404styles)}
+        }
+    </style>
+    
+    <section id="component-404-structure-${var_randomId}"  class=" ${tools_public.renderListClass(prop_404class)}">
+        ${this.templateFn("part_404", componentSlots , var_randomId) ?? ""}
+   
+        <section class="d-block mx-5 h-100 position-relative">
+            <component-button id="component-btn-retry-in-component-404-${var_randomId}" ></component-button>
+        </section>
+    </section>
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_404(partName , componentSlots  , var_randomId) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_type   =   data.hasOwnProperty("prop_type")      ?  data.prop_type     : "simple_animation";
+            const prop_width  =   data.hasOwnProperty("prop_width")     ? data.prop_width     : 250;
+            const prop_height =   data.hasOwnProperty("prop_height")    ? data.prop_height    : 100;
+
+            if (prop_type == "simple_animation"){
+
+                return `
+<section data-part-name="${partName}">
+
+   <style>
+        #${this._COMPONENT_ID} #component-form-404-${var_randomId}{
+           top: 0;
+           left: 0;
+           position: absolute;
+           background-color: ${tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("state404") &&  tools_const.styles.state404.hasOwnProperty("backgroundColor_shadow") ? tools_const.styles.state404.backgroundColor_shadow : ""};
+       }
+
+       #${this._COMPONENT_ID} #svgWrap_1,
+       #${this._COMPONENT_ID} #svgWrap_2{
+          position: absolute;
+          height: auto;
+          width: ${prop_width}px;
+          max-width: 100%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -75%);
+       }
+
+       #${this._COMPONENT_ID} #svgWrap_0{
+          height: ${prop_height}px
+       }
+
+       #${this._COMPONENT_ID} #svgWrap_1,
+       #${this._COMPONENT_ID} #svgWrap_2,
+       #${this._COMPONENT_ID} #id1_1,
+       #${this._COMPONENT_ID} #id2_1,
+       #${this._COMPONENT_ID} #id3_1{
+          stroke: #11539c;
+          stroke-width: 3px;
+          fill: transparent;
+          filter: url(#glow);
+       }
+
+       #${this._COMPONENT_ID} #id1_2,
+       #${this._COMPONENT_ID} #id2_2,
+       #${this._COMPONENT_ID} #id3_2{
+           stroke-width: 3px;
+           fill: transparent;
+           filter: url(#glow);
+       }
+
+       #${this._COMPONENT_ID} #id3_1{
+           stroke-dasharray: 940px;
+           stroke-dashoffset: -940px;
+           animation: drawLine3 2.5s ease-in-out 0s forwards, flicker3 4s linear 4s infinite;
+       }
+
+       #${this._COMPONENT_ID} #id2_1{
+           stroke-dasharray: 735px;
+           stroke-dashoffset: -735px;
+           animation: drawLine2 2.5s ease-in-out 0.5s forwards, flicker2 4s linear 4.5s infinite;
+       }
+
+       #${this._COMPONENT_ID} #id1_1{
+           stroke-dasharray: 940px;
+           stroke-dashoffset: -940px;
+           animation: drawLine1 2.5s ease-in-out 1s forwards, flicker1 4s linear 5s infinite;
+       }
+
+       @keyframes drawLine1 {
+           0%  {stroke-dashoffset: -940px;}
+          100%{stroke-dashoffset: 0px;}
+       }
+
+       @keyframes drawLine2 {
+           0%  {stroke-dashoffset: -735px;}
+          100%{stroke-dashoffset: 0px;}
+       }
+
+       @keyframes drawLine3 {
+           0%  {stroke-dashoffset: -940px;}
+           100%{stroke-dashoffset: 0px;}
+       }
+
+       @keyframes flicker1{
+           0%  {stroke: #0c407a;}
+           1%  {stroke: transparent;}
+           3%  {stroke: transparent;}
+           4%  {stroke: #0c407a;}
+           6%  {stroke: #0c407a;}
+           7%  {stroke: transparent;}
+           13% {stroke: transparent;}
+           14% {stroke: #0c407a;}
+           100%{stroke: #0c407a;}
+}
+
+       @keyframes flicker2{
+           0%  {stroke: #0c407a;}
+           50% {stroke: #0c407a;}
+           51% {stroke: transparent;}
+           61% {stroke: transparent;}
+           62% {stroke: #0c407a;}
+           100%{stroke: #0c407a;}
+       }
+
+       @keyframes flicker3{
+           0%  {stroke: #0c407a;}
+           1%  {stroke: transparent;}
+           10% {stroke: transparent;}
+           11% {stroke: #0c407a;}
+           40% {stroke: #0c407a;}
+           41% {stroke: transparent;}
+           45% {stroke: transparent;}
+           46% {stroke: #0c407a;}
+           100%{stroke: #0c407a;}
+       }
+
+       @keyframes flicker4{
+           0%  {color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+           30% {color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+           31% {color: #12000a;text-shadow:0px 0px 4px #12000a;}
+           32% {color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+           36% {color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+           37% {color: #12000a;text-shadow:0px 0px 4px #12000a;}
+           41% {color: #12000a;text-shadow:0px 0px 4px #12000a;}
+           42% {color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+           85% {color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+           86% {color: #12000a;text-shadow:0px 0px 4px #12000a;}
+           95% {color: #12000a;text-shadow:0px 0px 4px #12000a;}
+           96% {color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+           100%{color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+       }
+
+       @keyframes fadeInText{
+           1%  {color: #12000a;text-shadow:0px 0px 4px #12000a;}
+           70% {color: #0c407a;text-shadow:0px 0px 14px #0c407a;}
+           100%{color: #0c407a;text-shadow:0px 0px 4px #0c407a;}
+       }
+
+       @keyframes hueRotate{
+           0%  {
+               filter: hue-rotate(0deg);
+           }
+           50%  {
+               filter: hue-rotate(-120deg);
+           }
+           100%  {
+               filter: hue-rotate(0deg);
+           }
+       }
+   </style>
+
+   <section id="component-form-404-${var_randomId}" class="mb-2 w-100 h-100  ">
+
+        <svg id="svgWrap_2" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 700 250">
+            <g>
+                <path id="id3_2" d="M195.7 232.67h-37.1V149.7H27.76c-2.64 0-5.1-.5-7.36-1.49-2.27-.99-4.23-2.31-5.88-3.96-1.65-1.65-2.95-3.61-3.89-5.88s-1.42-4.67-1.42-7.22V29.62h36.82v82.98H158.6V29.62h37.1v203.05z"/>
+                <path id="id2_2" d="M470.69 147.71c0 8.31-1.06 16.17-3.19 23.58-2.12 7.41-5.12 14.28-8.99 20.6-3.87 6.33-8.45 11.99-13.74 16.99-5.29 5-11.07 9.28-17.35 12.81a85.146 85.146 0 0 1-20.04 8.14 83.637 83.637 0 0 1-21.67 2.83H319.3c-7.46 0-14.73-.94-21.81-2.83-7.08-1.89-13.76-4.6-20.04-8.14a88.292 88.292 0 0 1-17.35-12.81c-5.29-5-9.84-10.67-13.66-16.99-3.82-6.32-6.8-13.19-8.92-20.6-2.12-7.41-3.19-15.27-3.19-23.58v-33.13c0-12.46 2.34-23.88 7.01-34.27 4.67-10.38 10.92-19.33 18.76-26.83 7.83-7.5 16.87-13.36 27.12-17.56 10.24-4.2 20.93-6.3 32.07-6.3h66.41c7.36 0 14.58.94 21.67 2.83 7.08 1.89 13.76 4.6 20.04 8.14a88.292 88.292 0 0 1 17.35 12.81c5.29 5 9.86 10.67 13.74 16.99 3.87 6.33 6.87 13.19 8.99 20.6 2.13 7.41 3.19 15.27 3.19 23.58v33.14zm-37.1-33.13c0-7.27-1.32-13.88-3.96-19.82-2.64-5.95-6.16-11.04-10.55-15.29-4.39-4.25-9.46-7.5-15.22-9.77-5.76-2.27-11.8-3.35-18.13-3.26h-66.41c-6.14-.09-12.11.97-17.91 3.19-5.81 2.22-10.95 5.43-15.44 9.63-4.48 4.2-8.07 9.3-10.76 15.29-2.69 6-4.04 12.67-4.04 20.04v33.13c0 7.36 1.32 14.02 3.96 19.97 2.64 5.95 6.18 11.02 10.62 15.22 4.44 4.2 9.56 7.43 15.36 9.7 5.8 2.27 11.87 3.35 18.2 3.26h66.41c7.27 0 13.85-1.2 19.75-3.61s10.93-5.73 15.08-9.98 7.36-9.32 9.63-15.22c2.27-5.9 3.4-12.34 3.4-19.33v-33.15zm-16-26.91a17.89 17.89 0 0 1 2.83 6.73c.47 2.41.47 4.77 0 7.08-.47 2.31-1.39 4.48-2.76 6.51-1.37 2.03-3.14 3.75-5.31 5.17l-99.4 66.41c-1.61 1.23-3.26 2.08-4.96 2.55-1.7.47-3.45.71-5.24.71-3.02 0-5.9-.71-8.64-2.12-2.74-1.42-4.96-3.44-6.66-6.09a17.89 17.89 0 0 1-2.83-6.73c-.47-2.41-.5-4.77-.07-7.08.43-2.31 1.3-4.48 2.62-6.51 1.32-2.03 3.07-3.75 5.24-5.17l99.69-66.41a17.89 17.89 0 0 1 6.73-2.83c2.41-.47 4.77-.47 7.08 0 2.31.47 4.48 1.37 6.51 2.69 2.03 1.32 3.75 3.02 5.17 5.09z"/>
+                <path id="id1_2" d="M688.33 232.67h-37.1V149.7H520.39c-2.64 0-5.1-.5-7.36-1.49-2.27-.99-4.23-2.31-5.88-3.96-1.65-1.65-2.95-3.61-3.89-5.88s-1.42-4.67-1.42-7.22V29.62h36.82v82.98h112.57V29.62h37.1v203.05z"/>
+            </g>
+        </svg>
+        <svg id="svgWrap_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 700 250">
+            <g>
+                <path id="id3_1" d="M195.7 232.67h-37.1V149.7H27.76c-2.64 0-5.1-.5-7.36-1.49-2.27-.99-4.23-2.31-5.88-3.96-1.65-1.65-2.95-3.61-3.89-5.88s-1.42-4.67-1.42-7.22V29.62h36.82v82.98H158.6V29.62h37.1v203.05z"/>
+                <path id="id2_1" d="M470.69 147.71c0 8.31-1.06 16.17-3.19 23.58-2.12 7.41-5.12 14.28-8.99 20.6-3.87 6.33-8.45 11.99-13.74 16.99-5.29 5-11.07 9.28-17.35 12.81a85.146 85.146 0 0 1-20.04 8.14 83.637 83.637 0 0 1-21.67 2.83H319.3c-7.46 0-14.73-.94-21.81-2.83-7.08-1.89-13.76-4.6-20.04-8.14a88.292 88.292 0 0 1-17.35-12.81c-5.29-5-9.84-10.67-13.66-16.99-3.82-6.32-6.8-13.19-8.92-20.6-2.12-7.41-3.19-15.27-3.19-23.58v-33.13c0-12.46 2.34-23.88 7.01-34.27 4.67-10.38 10.92-19.33 18.76-26.83 7.83-7.5 16.87-13.36 27.12-17.56 10.24-4.2 20.93-6.3 32.07-6.3h66.41c7.36 0 14.58.94 21.67 2.83 7.08 1.89 13.76 4.6 20.04 8.14a88.292 88.292 0 0 1 17.35 12.81c5.29 5 9.86 10.67 13.74 16.99 3.87 6.33 6.87 13.19 8.99 20.6 2.13 7.41 3.19 15.27 3.19 23.58v33.14zm-37.1-33.13c0-7.27-1.32-13.88-3.96-19.82-2.64-5.95-6.16-11.04-10.55-15.29-4.39-4.25-9.46-7.5-15.22-9.77-5.76-2.27-11.8-3.35-18.13-3.26h-66.41c-6.14-.09-12.11.97-17.91 3.19-5.81 2.22-10.95 5.43-15.44 9.63-4.48 4.2-8.07 9.3-10.76 15.29-2.69 6-4.04 12.67-4.04 20.04v33.13c0 7.36 1.32 14.02 3.96 19.97 2.64 5.95 6.18 11.02 10.62 15.22 4.44 4.2 9.56 7.43 15.36 9.7 5.8 2.27 11.87 3.35 18.2 3.26h66.41c7.27 0 13.85-1.2 19.75-3.61s10.93-5.73 15.08-9.98 7.36-9.32 9.63-15.22c2.27-5.9 3.4-12.34 3.4-19.33v-33.15zm-16-26.91a17.89 17.89 0 0 1 2.83 6.73c.47 2.41.47 4.77 0 7.08-.47 2.31-1.39 4.48-2.76 6.51-1.37 2.03-3.14 3.75-5.31 5.17l-99.4 66.41c-1.61 1.23-3.26 2.08-4.96 2.55-1.7.47-3.45.71-5.24.71-3.02 0-5.9-.71-8.64-2.12-2.74-1.42-4.96-3.44-6.66-6.09a17.89 17.89 0 0 1-2.83-6.73c-.47-2.41-.5-4.77-.07-7.08.43-2.31 1.3-4.48 2.62-6.51 1.32-2.03 3.07-3.75 5.24-5.17l99.69-66.41a17.89 17.89 0 0 1 6.73-2.83c2.41-.47 4.77-.47 7.08 0 2.31.47 4.48 1.37 6.51 2.69 2.03 1.32 3.75 3.02 5.17 5.09z"/>
+                <path id="id1_1" d="M688.33 232.67h-37.1V149.7H520.39c-2.64 0-5.1-.5-7.36-1.49-2.27-.99-4.23-2.31-5.88-3.96-1.65-1.65-2.95-3.61-3.89-5.88s-1.42-4.67-1.42-7.22V29.62h36.82v82.98h112.57V29.62h37.1v203.05z"/>
+            </g>
+        </svg>
+        <svg id="svgWrap_0">
+            <defs>
+                <filter id="glow">
+                    <fegaussianblur class="blur" result="coloredBlur" stddeviation="4"></fegaussianblur>
+                    <femerge>
+                        <femergenode in="coloredBlur"></femergenode>
+                        <femergenode in="SourceGraphic"></femergenode>
+                    </femerge>
+                </filter>
+            </defs>
+        </svg>
+        
+   </section>
+
+
+</section>
+                `
+            }
+
+        }
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    componentFn_render_btnRetry (partName , componentSlots  , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_btnRetry   =  data.hasOwnProperty("prop_btnRetry")       ?  data.prop_btnRetry      : {};
+
+            const prop_type       =  prop_btnRetry.hasOwnProperty("prop_type")          ?  prop_btnRetry.prop_type         : "submit";
+            const prop_title      =  prop_btnRetry.hasOwnProperty("prop_title")         ?  prop_btnRetry.prop_title        : "Retry";
+            const prop_btnClass   =  prop_btnRetry.hasOwnProperty("prop_btnClass")      ?  prop_btnRetry.prop_btnClass     : [];
+
+            new window.ComponentButton(
+                `component-btn-retry-in-component-404-${var_randomId}` ,
+                {
+                    classList: ["position-absolute" , "w-100"] ,
+                    styles:{
+                        "bottom" : "10%"
+                    },
+
+                    prop_type ,
+                    prop_title ,
+                    prop_btnClass ,
+
+
+                    fn_callback: () => {
+                        this.runFn('fn_onCLickBtnRetry' , "event")
+                    }
+                }
+
+            )
+        }
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickBtnRetry(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+}
+
+
+
+
+
+
+/*-------------------------------------
+ 4) Component Form
+-------------------------------------
+@prop_formClass
+@prop_formStyles
+
+@prop_btnSubmit    {prop_type , prop_title , prop_btnClass}
+
+@prop_forms
+@prop_url
+@prop_data
+-------------------------------------*/
+window.ComponentForm = class ComponentForm extends ComponentBase{
+
+    /* ---------------------------------------------
+      PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            {prop : "prop_formClass"      , default: ["border" , "shadow-sm" ]} ,
+            {prop : "prop_formStyles"     , default: {}} ,
+        ] ,
+        part_loading: [
+
+        ] ,
+        part_form: [
+            {prop : "prop_forms"          , default: null } ,
+            {prop : "prop_url"            , default: "" } ,
+            {prop : "prop_data"           , default: [] } ,
+        ] ,
+        part_404: [
+
+        ] ,
+        part_button_submit: [
+            {prop : "prop_btnSubmit"      , default: {prop_type: "submit"  , prop_title: "Submit" , prop_btnClass: ["w-100"]}      } ,
+        ]
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_loading: {} ,
+            part_form: {} ,
+            part_404: {} ,
+            part_button_submit: {} ,
+        }
+    }
+
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentForm.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn( componentSlots , var_randomId){
+        this.componentFn_render_buttonSubmit(  "part_button_submit" , componentSlots  , var_randomId);
+    }
+
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(     "part_structure"     , componentSlots  , var_randomId);
+            case "part_form":
+                return this.template_render_form(          "part_form"  , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+    template_render( componentSlots , var_randomId) {
+
+        return `
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
+</section>
+        `;
+
+    }
+
+    template_render_structure(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_formClass  = data.hasOwnProperty("prop_formClass")    ?  data.prop_formClass  : [];
+            const prop_formStyles = data.hasOwnProperty("prop_formStyles")   ?  data.prop_formStyles  : {};
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-form-structure-${var_randomId}{
+            ${tools_public.renderListStyle(prop_formStyles)}
+       }
+    </style>
+    <section id="component-form-structure-${var_randomId}" class="${tools_public.renderListClass(prop_formClass)} position-relative" >
+         
+         <section id="component-form-messages-${var_randomId}"></section>
+         
+         ${this.templateFn("part_form", componentSlots , var_randomId) ?? ""}
+         
+         <section class="row">
+             <component-button id="component-form-button-submit-${var_randomId}"></component-button>
+         </section>
+         
+         <component-404 id="component-form-404-${var_randomId}"></component-404>
+         
+         <component-loading id="component-form-loading-${var_randomId}"></component-loading>
+         
+    </section>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_forms =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-form-forms-${var_randomId}{
+   
+       }
+    </style>
+    <form id="component-form-forms-${var_randomId}" class="m-2" >
+         
+         ${prop_forms}
+
+    </form>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_buttonSubmit(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_btnSubmit   =  data.hasOwnProperty("prop_btnSubmit")             ?  data.prop_btnSubmit      : {};
+
+            const prop_type       =  prop_btnSubmit.hasOwnProperty("prop_type")         ?  prop_btnSubmit.prop_type         : "submit";
+            const prop_title      =  prop_btnSubmit.hasOwnProperty("prop_title")        ?  prop_btnSubmit.prop_title        : "submit";
+            const prop_btnClass   =  prop_btnSubmit.hasOwnProperty("prop_btnClass")     ?  prop_btnSubmit.prop_btnClass     : [  "float-start"  ];
+            const prop_btnStyles  =  prop_btnSubmit.hasOwnProperty("prop_btnStyles")    ?  prop_btnSubmit.prop_btnStyles    : {
+                "width" : "200px!important"
+            } ;
+
+            new window.ComponentButton(
+                `component-form-button-submit-${var_randomId}` ,
+                {
+                    classList: [ "d-block" , "mx-2" ] ,
+                    styles:{
+
+                    },
+
+                    prop_type ,
+                    prop_title ,
+                    prop_btnClass ,
+                    prop_btnStyles ,
+
+                    fn_callback: () => {
+                        this.runFn('fn_onCLickBtnSubmit' , "event")
+                    }
+                }
+
+            )
+        }
+    }
+
+
+    /* ---------------------------------------------
+           FUNCTIONs
+        --------------------------------------------- */
+    fn_onCLickBtnSubmit(event){
+        const data = this._COMPONENT_CONFIG;
+
+        if (data.hasOwnProperty("prop_url")){
+
+            const formData =  this._COMPONENT_ELEMENT.querySelector("#component-form-forms-" + this._COMPONENT_RANDOM_ID);
+
+            tools_submit.fetcth(
+                data.prop_url,
+                {
+                    data: {
+                        formData: formData,
+                        data: data.hasOwnProperty("prop_data") ? data.prop_data : []
+                    },
+                    componentMessagesData: {elId: `component-form-messages-${this._COMPONENT_RANDOM_ID}`},
+                    componentLoadingData:  {elId: `component-form-loading-${this._COMPONENT_RANDOM_ID}`},
+                    component404Data: {
+                        elId: `component-form-404-${this._COMPONENT_RANDOM_ID}`,
+                        fn_callback: () => {
+                            this.runFn('fn_onCLickBtnSubmit' , "event")
+                        }
+                    },
+                });
+
+        }
+
+        console.log(data)
+
+        /*const componentData = components[var_randomId];
+
+
+
+
+        */
+
+
+        /*
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }*/
+    }
+}
+
+
+
+
+
+
+/*-------------------------------------
+ 5) Component Is Empty
+-------------------------------------
+@prop_icon
+@prop_iconClass
+@prop_iconStyles
+
+@prop_title
+
+@prop_btnAddStatus
+@prop_btnAddIcon
+@prop_btnAddTitle
+@prop_btnAddClass
+
+@fn_callback
+-------------------------------------*/
+window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
+
+    /* ---------------------------------------------
+    PROPERTYs
+  --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_icon: [
+            {prop : "prop_icon"           , default: "&#9888;"} ,
+            {prop : "prop_iconClass"      , default: ["font-30pt" , "text-danger"]} ,
+            {prop : "prop_iconStyles"     , default: { "font-size" : "30px" , "display" : "block" ,  "text-align" : "center" , }} ,
+        ] ,
+        part_title: [
+            {prop : "prop_title"          , default: null} ,
+
+        ] ,
+        part_btn_retry: [
+            {prop : "prop_btnAddStatus"   , default: false} ,
+            {prop : "prop_btnAddClass"    , default: [ "mx-auto"]} ,
+            {prop : "prop_btnAddStyles"   , default:  {"cursor" : "pointer" , "width" : "100%" , "height" : "32px" , "text-align" : "center!important" ,}} ,
+            {prop : "prop_btnAddIcon"     , default: "&#10082;"} ,
+            {prop : "prop_btnAddTitle"    , default: "add item"} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_icon: {} ,
+            part_title: {} ,
+            part_btn_retry: {} ,
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentIsEmpty.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+     --------------------------------------------- */
+    componentFn( componentSlots , var_randomId){
+        this.componentFn_render_icon(  "part_icon" , componentSlots  , var_randomId);
+        this.componentFn_render_button(  "part_btn_retry" , componentSlots  , var_randomId);
+    }
+
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(     "part_structure"     , componentSlots  , var_randomId);
+            case "part_title":
+                return this.template_render_title(          "part_title"  , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+    template_render( componentSlots , var_randomId) {
+
+        return `
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
+</section>
+        `;
+
+    }
+
+    template_render_structure(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-form-structure-${var_randomId}{
+           
+       }
+    </style>
+    <section id="component-is-empty-structure-${var_randomId}" class="border border-danger text-danger  shadow-sm" >
+         
+         <component-icon id="component-is-empty-icon-${var_randomId}"></component-icon>
+         
+         ${this.templateFn("part_title", componentSlots , var_randomId) ?? ""}
+         
+         <div class="d-block mx-auto">
+             <component-button id="component-is-empty-button-${var_randomId}"></component-button>
+         </div>
+         
+    </section>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_title(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title =     data.hasOwnProperty("prop_title")    ?  data.prop_title     : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-is-empty-title-${var_randomId}{
+             text-align: center!important;
+       }
+    </style>
+    <p id="component-is-empty-title-${var_randomId}" class="" >
+         <b>
+            ${prop_title} 
+         </b>
+    </p>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_icon(partName , componentSlots  , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_icon        =  data.hasOwnProperty("prop_icon")       ?  data.prop_icon         : "&#9888;";
+            const prop_iconClass   =  data.hasOwnProperty("prop_iconClass")  ?  data.prop_iconClass    : [  "mx-3"];
+            const prop_iconStyles  =  data.hasOwnProperty("prop_iconStyles")  ?  data.prop_iconStyles  : {
+                "font-size" : "30px" ,
+                "width" : "100%" ,
+                "display" : "block" ,
+                "text-align" : "center" ,
+            };
+
+            new window.ComponentIcon(
+                `component-is-empty-icon-${var_randomId}` ,
+                {
+                    prop_iconClass: prop_iconClass ,
+                    prop_iconStyles: prop_iconStyles ,
+                    prop_icon: prop_icon ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_button(partName , componentSlots  , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null && data.hasOwnProperty("prop_btnAddStatus") && data.prop_btnAddStatus){
+
+            const prop_btnAddClass   =      data.hasOwnProperty("prop_btnAddClass")             ?  data.prop_btnAddClass            :  [];
+            const prop_btnAddStyles  =      data.hasOwnProperty("prop_btnAddStyles")            ?  data.prop_btnAddStyles           :  {
+                "cursor" : "pointer" ,
+                "height" : "32px" ,
+                "text-align" : "center!important" ,
+            };
+            const prop_btnAddIcon    =      data.hasOwnProperty("prop_btnAddIcon")              ?  data.prop_btnAddIcon             :  "&#10082;";
+            const prop_btnAddTitle   =      data.hasOwnProperty("prop_btnAddTitle")             ?  data.prop_btnAddTitle            :  "add item";
+
+            new window.ComponentButton(
+                `component-is-empty-button-${var_randomId}` ,
+                {
+                    classList: ["d-block" , "m-auto"] ,
+                    styles: {
+                        "width" : "200px"
+                    },
+
+
+                    prop_btnClass: prop_btnAddClass ,
+                    prop_btnStyles: prop_btnAddStyles ,
+                    prop_title: `
+<span class="mx-1">
+      ${prop_btnAddIcon}
+</span>
+<span class="d-none d-md-inline">
+      ${prop_btnAddTitle}
+</span>
+                    ` ,
+
+                    fn_callback: ()=>{
+                       this.runFn("fn_onCLickRetry" , "event")
+                    }
+
+                }
+            )
+        }
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickRetry(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+
+}
+
+
+
+
+
+
+
+/*-------------------------------------
+ 6) Component Header
+-------------------------------------
+@prop_classList
+
+@prop_icon
+
+@prop_size
+@prop_title
+
+-------------------------------------*/
+window.ComponentHeader = class ComponentHeader extends ComponentBase{
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            {prop : "prop_classList"  , default: ["pb-0","px-2","mb-1","border-bottom"]} ,
+        ] ,
+        part_header: [
+            {prop : "prop_size"       , default: 5} ,
+            {prop : "prop_title"      , default: ""} ,
+        ] ,
+        part_icon: [
+            {prop : "prop_icon" , default: null}
+        ]
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_header: {} ,
+            part_icon: {} ,
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentHeader.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+
+    }
+
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn( componentSlots , var_randomId){
+        this.componentFn_render_icon(  "part_icon" , componentSlots  , var_randomId);
+    }
+
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(  "part_structure"  , componentSlots  , var_randomId);
+            case "part_header":
+                return this.template_render_header(     "part_header"     , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+    template_render( componentSlots , var_randomId) {
+
+        return `
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
+</section>
+        `;
+
+    }
+
+    template_render_structure(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_classList = data.hasOwnProperty("prop_classList")   ?  data.prop_classList  : ["pb-0","px-2","mb-1","border-bottom"];
+
+            return `
+<section class="${tools_public.renderListClass(prop_classList)}" data-part-name="${partName}">
+        <component-icon id="component-header-icon-${var_randomId}"></component-icon>
+        ${this.templateFn("part_header" , componentSlots  , var_randomId) ?? ""}
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_header(partName , componentSlots  , var_randomId) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size =      data.hasOwnProperty("prop_size")        ?  data.prop_size       : 5;
+            const prop_title =     data.hasOwnProperty("prop_title")       ?  data.prop_title      : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+
+            return `
+<section data-part-name="${partName}">
+   <h${prop_size} id="component-header-text-${var_randomId}">${prop_title ?? ''}</h${prop_size}>
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_icon (partName , componentSlots  , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_icon   =  data.hasOwnProperty("prop_icon")       ?  data.prop_icon      : null;
+
+            new window.ComponentIcon(
+                `component-header-icon-${var_randomId}` ,
+                {
+                    classList:[
+                        (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl) ? "float-end" : "float-start" ,
+                        (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl) ? "ps-2" : "pe-2" ,
+                    ] ,
+
+                    prop_icon: prop_icon ,
+                }
+            )
+        }
+    }
+
+}
+
+
+
+
+
+/*-------------------------------------
+ 7) Component Collapse
+-------------------------------------
+@prop_collapseClass
+@prop_collapseStyles
+
+@prop_title
+
+@prop_bodyBackgroundColor
+@prop_body
+@prop_bodyShow
+-------------------------------------*/
+window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
+
+    /* ---------------------------------------------
+      PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            {prop : "prop_collapseClass"                  , default: []} ,
+            {prop : "prop_collapseStyles"                 , default: {}} ,
+        ] ,
+        part_collapse_header: [
+            {prop : "prop_title"                          , default: "---"} ,
+        ] ,
+        part_collapse_header_title: [
+
+        ] ,
+        part_collapse_header_icon: [
+            {prop : "prop_bodyShow"                       , default: false} ,
+        ] ,
+        part_collapse_body: [
+            {prop : "prop_bodyBackgroundColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("collapse") && tools_const.styles.collapse.hasOwnProperty("backgroundColor")   ? tools_const.styles.collapse.backgroundColor : ""} ,
+            {prop : "prop_body"                           , default: null} ,
+            {prop : "prop_bodyShow"                       , default: false} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_collapse_header: {
+                part_collapse_header_title: {},
+                part_collapse_header_icon: {},
+            } ,
+            part_collapse_body: {} ,
+        }
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentCollapse.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn( componentSlots , var_randomId){
+        this.componentFn_render_label("part_collapse_header_title" , componentSlots  , var_randomId)
+        this.componentFn_render_icon("part_collapse_header_icon" , componentSlots  , var_randomId)
+    }
+
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(     "part_structure"        , componentSlots  , var_randomId);
+            case "part_collapse_header":
+                return this.template_render_collapseHeader(          "part_collapse_header"  , componentSlots  , var_randomId);
+            case "part_collapse_body":
+                return this.template_render_collapseBody(          "part_collapse_body"  , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+    template_render( componentSlots , var_randomId) {
+        return `
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
+</section>
+        `;
+    }
+
+    template_render_structure(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_collapseClass  = data.hasOwnProperty("prop_collapseClass")    ?  data.prop_collapseClass  : [];
+            const prop_collapseStyles = data.hasOwnProperty("prop_collapseStyles")   ?  data.prop_collapseStyles  : {};
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-collapse-structure-${var_randomId}{
+            ${tools_public.renderListStyle(prop_collapseStyles)}
+       }
+    </style>
+    <section id="component-collapse-structure-${var_randomId}" class="${tools_public.renderListClass(prop_collapseClass)}" >
+         
+         ${this.templateFn("part_collapse_header", componentSlots , var_randomId) ?? ""}
+         
+         ${this.templateFn("part_collapse_body", componentSlots , var_randomId) ?? ""}
+         
+    </section>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_collapseHeader(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_title  = data.hasOwnProperty("prop_title")     ?  data.prop_title     :  "---";
+            /*<component-icon id="component-collapse-header-label-icon-${  var_randomId}"></component-icon>*/
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-collapse-header-${var_randomId}{
+            
+       }
+    </style>
+    <section id="component-collapse-header-${var_randomId}" class="" >
+         <component-label id="component-collapse-header-label-${var_randomId}">
+             <component-body>
+                 <section>
+                     ${prop_title}
+                     <component-icon id="component-collapse-header-label-icon-${  var_randomId}"></component-icon>
+                 </section>
+             </component-body>
+         </component-label>
+    </section>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_collapseBody(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_bodyBackgroundColor  = data.hasOwnProperty("prop_bodyBackgroundColor")                     ?  data.prop_bodyBackgroundColor  : "";
+            const prop_bodyShow             = data.hasOwnProperty("prop_bodyShow")                                ?  data.prop_bodyShow             : false;
+            const prop_body                 = data.hasOwnProperty("prop_body") && data.prop_body != null          ?  data.prop_body                 :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-collapse-body-${var_randomId}{
+            background-color: ${prop_bodyBackgroundColor};
+            display: ${prop_bodyShow ? '' : 'none'};
+       }
+    </style>
+    <section id="component-collapse-body-${var_randomId}" class="shadow-sm p-2 border" >
+         ${prop_body}
+    </section>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label (partName , componentSlots  , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            new window.ComponentLabel(
+                "component-collapse-header-label-"+  var_randomId ,
+                {
+                    fn_callback: ()=>{
+                        this.runFn("fn_onCLickHeaderCollapse" , "event" , var_randomId)
+                    }
+                }
+            )
+        }
+    }
+
+    componentFn_render_icon (partName , componentSlots  , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_bodyShow             = data.hasOwnProperty("prop_bodyShow")                                ?  data.prop_bodyShow             : false;
+            console.log(prop_bodyShow)
+
+            new window.ComponentIcon(
+                `component-collapse-header-label-icon-${var_randomId}` ,
+                {
+                    classList: [ (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl) ? "float-start" : "float-end"] ,
+
+                    prop_icon : prop_bodyShow  ? "&#129171;" : "&#129169" ,
+                    prop_iconClass : [] ,
+                    prop_iconStyles : {
+                        "font-size" : "20pt",
+                        "margin" : "0 10px",
+                        "color" : "#000000",
+                        "line-height" :prop_bodyShow  ? "" : "0",
+                        "padding-top" :prop_bodyShow  ? "15px" : "0px"
+                    } ,
+                }
+            )
+        }
+    }
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickHeaderCollapse(event , var_randomId){
+        let prop_bodyShow = this.get("prop_bodyShow");
+        if (prop_bodyShow == null){
+            prop_bodyShow = false;
+        }
+        this.set("prop_bodyShow" , !prop_bodyShow);
+        this.componentFn_render_icon("part_collapse_header_icon" , null  , var_randomId)
+    }
+
+}
+
+
+
+
+
+
+
+
+/*-------------------------------------
+ 8) Component Table
+-------------------------------------
+@prop_tableClass
+@prop_tableStyles
+@prop_tableType                      // 1) table-dark  |  2) table-primary  | 3) table-secondary  | 4) table-success  | 5) table-danger  | 6) table-warning  | 7) table-info  | 8) table-light  | 0(default)
+@prop_tableBordered                  // 1) border-dark |  2) border-primary | 3) border-secondary | 4) border-success | 5) border-danger | 6) border-warning | 7) border-info | 8) border-light | 0(default)
+
+
+@prop_tableStriped
+@prop_tableHover
+@prop_tableBorderless
+@prop_order
+@prop_data
+@prop_header
+-------------------------------------*/
+window.ComponentTable = class ComponentTable extends ComponentBase{
+
+
+    /* ---------------------------------------------
+     PROPERTYs
+    --------------------------------------------- */
+
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_table: [
+            {prop : "prop_tableClass"                  , default: [ "table" ]} ,
+            {prop : "prop_tableStyles"                 , default: {}} ,
+            {prop : "prop_tableType"                   , default: 0} ,
+            {prop : "prop_tableBordered"               , default: 0} ,
+        ] ,
+        part_table_header: [
+            {prop : "prop_tableHeadClass"              , default: []} ,
+            {prop : "prop_tableHeadStyles"             , default: {} } ,
+            {prop : "prop_tableItemHeadClass"          , default: []} ,
+            {prop : "prop_tableItemHeadStyles"         , default: {} } ,
+            {prop : "prop_order"                       , default: {} } ,
+            {prop : "prop_header"                      , default: {} } ,
+        ] ,
+        part_table_body: [
+            {prop : "prop_tableBodyClass"              , default: []} ,
+            {prop : "prop_tableBodyStyles"             , default: {}} ,
+            {prop : "prop_tableItemBodyClass"          , default: []} ,
+            {prop : "prop_tableItemBodyStyles"         , default: {} } ,
+            {prop : "prop_tableItemBodyHoverStyles"    , default: {} } ,
+            {prop : "prop_order"                       , default: {} } ,
+            {prop : "prop_header"                      , default: {} } ,
+            {prop : "prop_data"                        , default: {} } ,
+        ] ,
+        part_table_footer: [
+
+        ]
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_table : {
+                part_table_header: {},
+                part_table_columns: {},
+            }
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentTable.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn( componentSlots , var_randomId){
+
+    }
+
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(      "part_structure"        , componentSlots  , var_randomId);
+            case "part_table":
+                return this.template_render_table( "part_table"  , componentSlots  , var_randomId);
+            case "part_table_header":
+                return this.template_render_tableHeader( "part_table_header"  , componentSlots  , var_randomId);
+            case "part_table_body":
+                return this.template_render_tableBody(   "part_table_body"  , componentSlots  , var_randomId);
+            case "part_table_footer":
+                return this.template_render_tableFooter(   "part_table_footer"  , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+    template_render( componentSlots , var_randomId) {
+        return `
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
+</section>
+        `;
+    }
+
+    template_render_structure(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-table-structure-${var_randomId}{
+            
+       }
+    </style>
+    <section id="component-table-structure-${var_randomId}" class="" >
+         
+         ${this.templateFn("part_table", componentSlots , var_randomId) ?? ""}
+         
+    </section>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    template_render_table(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+            const prop_tableClass    = data.hasOwnProperty("prop_tableClass")    ?  data.prop_tableClass   : [ "table" ];
+            const prop_tableStyles   = data.hasOwnProperty("prop_tableStyles")   ?  data.prop_tableStyles  : {};
+
+            const prop_tableType     = data.hasOwnProperty("prop_tableType")     ? data.prop_tableType     : 0;
+            const prop_tableBordered = data.hasOwnProperty("prop_tableBordered") ? data.prop_tableBordered : 0;
+
+            /*
+
+            const prop_tableBodyClass             =   data.hasOwnProperty("prop_tableBodyClass")             ?  data.prop_tableBodyClass              : [];
+            const prop_tableBodyStyles            =   data.hasOwnProperty("prop_tableBodyStyles")            ?  data.prop_tableBodyStyles             : null;
+
+            const prop_tableItemBodyClass         =   data.hasOwnProperty("prop_tableItemBodyClass")         ?  data.prop_tableItemBodyClass           : [];
+            const prop_tableItemBodyStyles        =   data.hasOwnProperty("prop_tableItemBodyStyles")        ?  data.prop_tableItemBodyStyles          : null;
+            const prop_tableItemBodyHoverStyles   =   data.hasOwnProperty("prop_tableItemBodyHoverStyles")   ?  data.prop_tableItemBodyHoverStyles     : null;
+*/
+
+            let tableType = "";
+            switch (prop_tableType){
+                case 1: tableType = "table-dark"; break;
+                case 2: tableType = "table-primary"; break;
+                case 3: tableType = "table-secondary"; break;
+                case 4: tableType = "table-success"; break;
+                case 5: tableType = "table-danger"; break;
+                case 6: tableType = "table-warning"; break;
+                case 7: tableType = "table-info"; break;
+                case 8: tableType = "table-light"; break;
+            }
+
+            let tableBordered = "";
+            switch (prop_tableBordered){
+                case 1: tableBordered += "table-bordered  border-dark"; break;
+                case 2: tableBordered += "table-bordered  border-primary"; break;
+                case 3: tableBordered += "table-bordered  border-secondary"; break;
+                case 4: tableBordered += "table-bordered  border-success"; break;
+                case 5: tableBordered += "table-bordered  border-danger"; break;
+                case 6: tableBordered += "table-bordered  border-warning"; break;
+                case 7: tableBordered += "table-bordered  border-info"; break;
+                case 8: tableBordered += "table-bordered  border-light"; break;
+            }
+
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} #component-table-table-${var_randomId}{
+            ${tools_public.renderListStyle(prop_tableStyles)}
+       }
+    </style>
+    <table id="component-table-table-${var_randomId}" class=" ${tableType}  ${tableBordered} ${tools_public.renderListClass(prop_tableClass)}">
+        ${this.templateFn("part_table_header", componentSlots , var_randomId) ?? ""}
+         
+         ${this.templateFn("part_table_body", componentSlots , var_randomId) ?? ""}
+         
+         ${this.templateFn("part_table_footer", componentSlots , var_randomId) ?? ""}
+    </table>
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_tableHeader(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_tableBodyClass             =   data.hasOwnProperty("prop_tableBodyClass")             ?  data.prop_tableBodyClass              : [];
+            const prop_tableBodyStyles            =   data.hasOwnProperty("prop_tableBodyStyles")            ?  data.prop_tableBodyStyles             : null;
+
+            const prop_tableItemBodyClass         =   data.hasOwnProperty("prop_tableItemBodyClass")         ?  data.prop_tableItemBodyClass           : [];
+            const prop_tableItemBodyStyles        =   data.hasOwnProperty("prop_tableItemBodyStyles")        ?  data.prop_tableItemBodyStyles          : null;
+            const prop_tableItemBodyHoverStyles   =   data.hasOwnProperty("prop_tableItemBodyHoverStyles")   ?  data.prop_tableItemBodyHoverStyles     : null;
+
+            const prop_order                      =   data.hasOwnProperty("prop_order")                      ?  data.prop_order                       : [];
+            const prop_header                     =   data.hasOwnProperty("prop_header")                     ?  data.prop_header                      : [];
+
+            const htmlHeader = this.fn_onGetHtmlHeader(prop_order , prop_header , prop_tableItemHeadClass)
+
+            return `
+
+<thead id="component-table-header-${var_randomId}" data-part-name="${partName}" class=" ${tools_public.renderListClass(prop_tableHeadClass)}">
+     <style>
+         #${this._COMPONENT_ID} #component-table-header-${var_randomId}{
+             ${tools_public.renderListStyle(prop_tableHeadStyles)}
+         }
+         #${this._COMPONENT_ID}.component-table-header-item-${var_randomId}{
+             ${tools_public.renderListStyle(prop_tableItemHeadStyles)}
+         }
+     </style>
+    <tr>
+        ${htmlHeader}
+    </tr>
+</thead>
+            `;
+        }
+
+        return `
+<thead data-part-name="${partName}"></thead>
+        `;
+    }
+
+    template_render_tableBody(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_tableItemBodyClass         =   data.hasOwnProperty("prop_tableItemBodyClass")         ?  data.prop_tableItemBodyClass           : [];
+            const prop_tableItemBodyStyles        =   data.hasOwnProperty("prop_tableItemBodyStyles")        ?  data.prop_tableItemBodyStyles          : null;
+            const prop_tableItemBodyHoverStyles   =   data.hasOwnProperty("prop_tableItemBodyHoverStyles")   ?  data.prop_tableItemBodyHoverStyles     : null;
+
+            return `
+<tbody id="component-table-body-${var_randomId}" data-part-name="${partName}" class=" ${tools_public.renderListClass(prop_tableItemBodyClass)}">
+     <style>
+         #${this._COMPONENT_ID} #component-table-body-${var_randomId} span{
+             ${tools_public.renderListStyle(prop_tableHeadStyles)}
+         }
+         #${this._COMPONENT_ID}.component-table-header-item-${var_randomId}{
+             ${tools_public.renderListStyle(prop_tableItemHeadStyles)}
+         }
+     </style>
+    <tr>
+        ${htmlHeader}
+    </tr>
+</tbody>
+
+            `;
+        }
+
+        return `
+<thead data-part-name="${partName}"></thead>
+        `;
+    }
+
+    template_render_tableFooter(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            return `
+              
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+
+
+    fn_onGetHtmlHeader(prop_order , prop_header , prop_tableItemHeadClass){
+        let htmlHeader = "";
+        if (prop_header != null && Array.isArray(prop_header)){
+            let orderHedar = [];
+            for (const orderIndex in prop_order) {
+                const orderKey = prop_order[orderIndex]
+                for (const headerIndex in prop_header) {
+                    const itemHeader = prop_header[headerIndex];
+                    if (itemHeader != null && itemHeader.hasOwnProperty("id") && orderKey == itemHeader.id ){
+                        orderHedar.push(itemHeader)
+                    }
+                }
+            }
+            for (const headerIndex in orderHedar) {
+                const itemHeader = orderHedar[headerIndex];
+                htmlHeader += `
+<th class="element-item-header-table ${tools_public.renderListClass(prop_tableItemHeadClass)}" 
+   scope="col">
+     ${itemHeader.hasOwnProperty("content") ? itemHeader.content : '#'}
+</th>`
+            }
+        }
+
+        return htmlHeader;
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
+/*-------------------------------------
+ 9) Component Button
+-------------------------------------
+@prop_type
+@prop_title
+
+@prop_btnClass
+@prop_btnStyles
+@prop_btnHoverStyles
+
+@prop_btnBackgroundColor
+@prop_btnBackgroundColor_hover
+@prop_btnColor
+
+@fn_callback
+-------------------------------------*/
+window.ComponentButton = class ComponentButton extends ComponentBase{
+
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_button: [
+            {prop : "prop_type"                         , default: "submit"  } ,  // error  //submit //null
+            {prop : "prop_title"                        , default: "BTN"     } ,
+            {prop : "prop_btnClass"                     , default: ["w-100"] } ,
+            {prop : "prop_btnStyles"                    , default: {}        } ,
+            {prop : "prop_btnHoverStyles"               , default: {}        } ,
+            {prop : "prop_btnBackgroundColor"           , default: null      } ,
+            {prop : "prop_btnBackgroundColor_hover"     , default: null      } ,
+            {prop : "prop_btnColor"                     , default: null      } ,
+            {prop : "fn_callback"                       , default: null      } ,
+        ]
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_button: {} ,
+    }
+
+
+
+
+    /* ---------------------------------------------
+        SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentButton.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_button":
+                return this.template_render_button(  "part_button"  , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+
+    template_render( componentSlots , var_randomId) {
+        return `
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_button", componentSlots , var_randomId) ?? ""}
+</section>
+        `;
+    }
+
+
+    template_render_button(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_type             =   data.hasOwnProperty("prop_type")                 ?  data.prop_type               :  null;
+            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+
+            const prop_btnClass         =   data.hasOwnProperty("prop_btnClass")             ?  data.prop_btnClass           : "w-100"
+            const prop_btnStyles        =   data.hasOwnProperty("prop_btnStyles")            ?  data.prop_btnStyles          : null;
+            const prop_btnHoverStyles   =   data.hasOwnProperty("prop_btnHoverStyles")       ?  data.prop_btnHoverStyles     : null;
+
+            let btnBackgroundColor =  null;
+            let btnBackgroundColor_hover =  null;
+            let btnColor =            null;
+
+            switch (prop_type){
+                case "cancel" :
+                    btnBackgroundColor       = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.error.backgroundColor : "" ;
+                    btnBackgroundColor_hover = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.error.backgroundColorHover : "" ;
+                    btnColor                 = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("color")                  ? tools_const.styles.button.error.color : ""  ;
+                    break;
+                case "submit" :
+                    btnBackgroundColor       = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.default.backgroundColor : "" ;
+                    btnBackgroundColor_hover = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.default.backgroundColorHover : "" ;
+                    btnColor                 = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("color")                  ? tools_const.styles.button.default.color : ""  ;
+                    break;
+                default:
+                    btnBackgroundColor       = data.hasOwnProperty("prop_btnBackgroundColor")         ?  data.prop_btnBackgroundColor          : "";
+                    btnBackgroundColor_hover = data.hasOwnProperty("prop_btnBackgroundColor_hover")   ?  data.prop_btnBackgroundColor_hover    : "" ;
+                    btnColor                 = data.hasOwnProperty("prop_btnColor")                   ?  data.prop_btnColor                    : "" ;
+                    break;
+            }
+
+
+            return `
+<section data-part-name="${partName}">
+
+   <style>
+      #${this._COMPONENT_ID} #component-button-${var_randomId}{
+          background-color: ${btnBackgroundColor};
+          color:            ${btnColor};
+          ${tools_public.renderListStyle(prop_btnStyles)}
+     }
+      #${this._COMPONENT_ID} #component-button-${var_randomId}:hover{
+          transition: background-color 200ms ease;
+          background-color: ${btnBackgroundColor_hover};
+          ${tools_public.renderListStyle(prop_btnHoverStyles)}
+     }
+   </style>
+
+   <button id="component-button-${var_randomId}" class=" ${tools_public.renderListClass(prop_btnClass)}  shadow-sm border-0 px-2 py-1 rounded "
+            onclick="${this.getFn('fn_onCLickBtn' , "event")}">
+      ${prop_title}
+   </button>
+
+</section>
+            `
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickBtn(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*-------------------------------------
+ 17) Component label
+-------------------------------------
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_labelBackgroundColor
+
+@prop_title
+@prop_for
+@prop_labelColor
+
+@fn_callback
+-------------------------------------*/
+window.ComponentLabel  = class ComponentLabel extends ComponentBase{
+
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            {prop : "prop_labelClass"            , default:  ["shadow-sm" , "px-2" , "py-1"]} ,
+            {prop : "prop_labelStyles"           , default: {}} ,
+            {prop : "prop_labelHoverStyles"      , default: {}} ,
+            {prop : "prop_labelBackgroundColor"  , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("backgroundColor")   ? tools_const.styles.label.backgroundColor : ""} ,
+        ] ,
+        part_label: [
+            {prop : "prop_title"                 , default: null} ,
+            {prop : "prop_for"                   , default: false} ,
+            {prop : "prop_labelColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")             ? tools_const.styles.label.color           : ""} ,
+        ]
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label: {} ,
+        } ,
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentLabel.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+
+    }
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(  "part_structure"  , componentSlots  , var_randomId);
+            case "part_label":
+                return this.template_render_label(      "part_label"      , componentSlots  , var_randomId);
+            default:
+                return this.template_render( componentSlots  , var_randomId);
+        }
+    }
+
+    template_render( componentSlots , var_randomId) {
+
+        return `
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
+</section>
+        `;
+
+    }
+
+    template_render_structure(partName , componentSlots , var_randomId) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_labelClass             =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass             :  ["shadow-sm" , "px-2" , "py-1"];
+            const prop_labelStyles            =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles            :  null;
+            const prop_labelHoverStyles       =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_labelHoverStyles       :  null;
+            const prop_labelBackgroundColor   =   data.hasOwnProperty("prop_labelBackgroundColor")   ?  data.prop_labelBackgroundColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("backgroundColor")   ? tools_const.styles.label.backgroundColor : "";
+
+            return `
+<section data-part-name="${partName}">
+     <style>
+         #${this._COMPONENT_ID} #component-label-structure-${var_randomId}{
+             background-color: ${prop_labelBackgroundColor};
+             ${tools_public.renderListStyle(prop_labelStyles)}
+         }
+         #${this._COMPONENT_ID} #component-label-structure-${var_randomId}:hover{
+             ${tools_public.renderListStyle(prop_labelHoverStyles)}
+         }
+     </style>
+     <section id="component-label-structure-${var_randomId}" 
+              class="${tools_public.renderListClass(prop_labelClass)}" >
+         ${this.templateFn("part_label", componentSlots , var_randomId) ?? ""}
+    </section>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_label(partName , componentSlots  , var_randomId) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_for          =   data.hasOwnProperty("prop_for")                                   ?  data.prop_for          : "";
+            const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_labelColor   =   data.hasOwnProperty("prop_labelColor")                            ?  data.prop_labelColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")   ? tools_const.styles.label.color : "";
+
+            return `
+<section data-part-name="${partName}">
+     <style>
+         #${this._COMPONENT_ID} #component-label-label-${var_randomId}{
+              cursor: pointer;
+              color: ${prop_labelColor};
+         }
+     </style>
+       
+     <label for="${prop_for}" 
+           id="component-label-label-${var_randomId}" 
+           class=" d-block" 
+           onclick="${this.getFn('fn_onCLickLabel' , 'event' , `'${prop_for}'`)}">
+         ${prop_title}
+     </label>
+       
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickLabel(event , prop_for){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , prop_for);
+        }
+    }
+
+}
+
+
+
+
+
+
+
+/*-------------------------------------
+ 18) Component Icon
+-------------------------------------
+@prop_icon
+@prop_isItalik
+
+@prop_iconClass
+@prop_iconStyles
+
+@fn_callback
+-------------------------------------*/
+window.ComponentIcon  = class ComponentIcon extends ComponentBase{
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_icon: [
+            {prop : "prop_icon"        , default: ""} ,
+            {prop : "prop_isItalik"    , default: false} ,
+            {prop : "prop_iconClass"   , default: []} ,
+            {prop : "prop_iconStyles"  , default: {}} ,
+            {prop : "fn_callback"      , default: null} ,
+        ]
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_icon: {} ,
+    }
+
+
+
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentIcon.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+
+    }
+
+
+
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    templateFn(partName = null  , componentSlots  , var_randomId){
+        return `
+        ${this.templateFn_render_icon("part_icon" , componentSlots  , var_randomId)} 
+        `;
+    }
+
+    templateFn_render_icon= (partName  , componentSlots  , var_randomId) =>{
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_icon                =  data.hasOwnProperty("prop_icon")                       ?  data.prop_icon                                            :  "";
+            const prop_isItalik            =  data.hasOwnProperty("prop_isItalik")                   ?  data.prop_isItalik                                        :  false;
+
+            const prop_iconClass           =   data.hasOwnProperty("prop_iconClass")                 ?  data.prop_iconClass                                       :  [];
+            const prop_iconStyles          =   data.hasOwnProperty("prop_iconStyles")                ?  data.prop_iconStyles                                      :  {};
+
+            return `
+<section data-part-name="${partName}">
+    <style>
+        #${this._COMPONENT_ID} .component-icon-${var_randomId}{
+            ${tools_public.renderListStyle(prop_iconStyles)}
+        }
+    </style>
+    <div class="component-element-structure">
+         <${prop_isItalik ? "i" : "span"} class="component-icon-${var_randomId} ${tools_public.renderListClass(prop_iconClass)}" 
+           onclick="${this.getFn('fn_onCLickIcon' , "event")}">
+             ${prop_icon}
+         </${prop_isItalik ? "i" : "span"}>
+    </div>
+</section>
+`;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickIcon(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+}
 
 

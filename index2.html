@@ -1,0 +1,302 @@
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+<section id="template-main" class="row mx-0">
+
+
+    <component-messages   id="message"></component-messages>
+
+    <component-loading    id="loading"></component-loading>
+
+    <component-404        id="c404"></component-404>
+
+    <component-form       id="form">
+        <component-body>
+            form data
+        </component-body>
+    </component-form>
+
+    <component-is-empty  id="is_empty"></component-is-empty>
+
+    <component-header    id="header"></component-header>
+
+    <component-collapse  id="collapse">
+        <component-body>
+            Collapse Body
+        </component-body>
+    </component-collapse>
+
+    <component-table  id="table"></component-table>
+
+
+
+    <component-button  id="button"></component-button>
+
+
+
+    <component-label   id="label"></component-label>
+
+    <component-icon    id="icon"></component-icon>
+
+
+</section>
+
+
+<script src="./jalali.js"></script>
+<script src="./highcharts.js"></script>
+<script src=".\components_v2.js"></script>
+<script src=".\tools.js"></script>
+
+
+<script>
+
+    tools_init.renderToolsConst()
+
+
+
+    /*-------------------------------------
+     1) Component Messages
+    -------------------------------------*/
+    new window.ComponentMessages(
+        "message" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_status: false ,
+            prop_messages: ["asd" , "asd2" , "asd3"]
+        }
+    )
+
+
+    /*-------------------------------------
+     2) Component Loading
+    -------------------------------------*/
+    new window.ComponentLoading(
+        "loading" ,
+        {
+            classList: "col-md-3 col-12 d-block mt-2 position-relative"  ,
+            styles: {
+                "height" : "200px"
+            },
+        }
+    )
+
+
+    /*-------------------------------------
+     3) Component 404
+    -------------------------------------*/
+    new window.Component404(
+        "c404" ,
+        {
+            classList: "col-md-3 col-12 mt-2 position-relative"  ,
+            styles: {
+                "height" : "200px"
+            },
+
+            fn_callback: ()=>{
+                alert("asd");
+            },
+            prop_width: 200 ,
+            prop_height: 150
+        }
+    )
+
+
+    /*-------------------------------------
+     4) Component Form
+    -------------------------------------*/
+    new window.ComponentForm(
+        "form" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_formStyles: {
+                "min-height" : "200px"
+            },
+        }
+    )
+
+
+
+    /*-------------------------------------
+     5) Component Is Empty
+    -------------------------------------*/
+    new window.ComponentIsEmpty(
+        "is_empty" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "it is a test" ,
+
+            prop_btnAddStatus: true ,
+            prop_btnAddTitle : "asd",
+            fn_callback: ()=>{
+                alert("aaa")
+            }
+        }
+    )
+
+
+
+    /*-------------------------------------
+      6) Component Header
+    -------------------------------------*/
+    new window.ComponentHeader(
+        "header" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_size: 5,
+            prop_title: "it is a test header" ,
+            prop_icon: " &#x2315;" ,
+        }
+    )
+
+
+
+    /*-------------------------------------
+      7) Component Collapse
+    -------------------------------------*/
+    new window.ComponentCollapse(
+        "collapse" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "collapse title" ,
+        }
+    )
+
+
+
+    /*-------------------------------------
+      8) Component Table
+    -------------------------------------*/
+    new window.ComponentTable(
+        "table" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_tableType: 0 ,
+            prop_tableBordered: 1 ,
+
+            //prop_tableStriped: true ,
+            //prop_tableHover: true ,
+            //prop_tableBorderless: true ,
+
+            prop_order : ["id" , "name" , "family" , "has"] ,
+            prop_header : [
+                {id:"id" , content: "id"},
+
+                {id:"has" , content: "has"},
+                {id:"name" , content: "name"},
+                {id:"family" , content: "family"},
+            ] ,
+            prop_data : [
+                {id:1 , name:"mehdi" , family:"marefiyan" , has:false} ,
+                {id:2 , name:"ali"   , family:"sadegi"    , has:true} ,
+            ] ,
+        }
+    )
+
+
+
+
+    /*-------------------------------------
+      9) Component Button
+    -------------------------------------*/
+    new window.ComponentButton(
+        "button" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "asd" ,
+            fn_callback: ()=>{
+                alert("asd");
+            }
+        }
+    )
+
+
+
+
+    /*-------------------------------------
+      17) Component label
+    -------------------------------------*/
+    new window.ComponentLabel(
+        "label" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "test text" ,
+            prop_for: "test" ,
+
+            fn_callback: (event , prop_for) => {
+                console.log(event , prop_for)
+            } ,
+        }
+    )
+
+
+
+    /*-------------------------------------
+       18) Component Icon
+    -------------------------------------*/
+    new window.ComponentIcon(
+        "icon" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_icon: " &#x2315; " ,
+
+            fn_callback: (event) => {
+                console.log(event)
+            } ,
+        }
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+
+    new window.ComponentTest(
+            "c1"
+            ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_numA: 100,
+                prop_numB: 200 ,
+                prop_numC: 300 ,
+            }
+        )
+
+        new window.ComponentTest(
+            "c2" ,
+            {
+                classList: "col-md-3 col-12 mt-2 row p-0 m-0"  ,
+
+                prop_numA: 500,
+                prop_numB: 600 ,
+                prop_numC: 700 ,
+            }
+        )
+        */
+
+
+
+</script>
