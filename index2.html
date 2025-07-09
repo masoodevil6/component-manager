@@ -82,6 +82,9 @@
                 <component-select-option  id="select-option-1"></component-select-option>
 
 
+                <component-input  id="input"></component-input>
+
+
             </section>
 
         </component-body>
@@ -119,7 +122,11 @@
                 <component-icon    id="icon"></component-icon>
 
                 <div class="col-md-3 col-12 mt-2 position-relative">
-                    <component-position-element   id="position-element"></component-position-element>
+                    <component-position-element   id="position-element">
+                        <component-body>
+                            position element Body
+                        </component-body>
+                    </component-position-element>
                 </div>
 
             </section>
@@ -412,6 +419,30 @@
 
 
 
+    /*-------------------------------------
+      14)  Component Input
+    -------------------------------------*/
+    new window.ComponentInput(
+        "input" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_labelShow: true ,
+            prop_title: "input test" ,
+            prop_icon: "&#10124;" ,
+
+            fn_oninput: (event , value) => {
+                console.log("fn_oninput"  , event , value)
+            } ,
+            fn_onfocus: (event , value) => {
+                console.log("fn_onfocus"  , event , value)
+            } ,
+            fn_onblur: (event , value) => {
+                console.log("fn_onblur"  , event , value)
+            } ,
+        }
+    )
+
 
 
     /*-------------------------------------
@@ -458,7 +489,7 @@
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_content: "asd"
+            //prop_content: "asd"
         }
     )
 

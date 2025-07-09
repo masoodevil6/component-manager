@@ -363,17 +363,27 @@ if (typeof listComponent === 'undefined') {
 
 **14) Component Input:**
 ```
+
 /*-------------------------------------
- Component Input
+ 14) Component Input
 -------------------------------------
-@prop_type
-@prop_name
+@prop_inputClass
+@prop_inputStyles
+
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
 @prop_title
-@prop_icon
-@prop_value
 
 @prop_inputClass
 @prop_inputStyles
+@prop_type
+@prop_name
+@prop_value
+@prop_placeholder
+
+@prop_icon
 
 @fn_oninput
 @fn_onfocus
