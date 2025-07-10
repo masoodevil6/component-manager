@@ -127,6 +127,8 @@ tools_init = {
             },
 
             selectOption: {
+                backgroundColor_itemNotSelected: component_props.shanColor2 ,
+                backgroundColor_itemHover: component_props.primaryColor2 ,
                 backgroundColor_itemSelected: component_props.primaryColor1 ,
                 color_icon: component_props.darkColor1
             },

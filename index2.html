@@ -84,6 +84,8 @@
 
                 <component-input  id="input"></component-input>
 
+                <component-input-price  id="input_price"></component-input-price>
+
 
             </section>
 
@@ -397,20 +399,25 @@
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_name:"asd" ,
-            prop_title:"asd" ,
-            //prop_itemSelected: 1 ,
+            prop_name:"select_option" ,
+            prop_title:"select options" ,
+            prop_itemSelected: 1 ,
+            prop_icon: "&#10124;" ,
             prop_options: [
-                {
-                    id:1 ,
-                    name: "sasd"
-                } ,
-                {
-                    id:2 ,
-                    name: "213245"
-                }
+                {id:1 , name: "test 1"} ,
+                {id:2 , name: "test 2"} ,
+                {id:3 , name: "test 3"} ,
+                {id:4 , name: "test 4"} ,
+                {id:5 , name: "test 5"} ,
+                {id:6 , name: "test 6"} ,
             ] ,
-            fn_callback: (index)=>{
+
+            prop_btnAddStatus: true ,
+
+            fn_callback:  (event , index)=>{
+                alert(index)
+            } ,
+            fn_clickBtnTools: (event , index)=>{
                 alert(index)
             }
         }
@@ -430,6 +437,9 @@
             prop_labelShow: true ,
             prop_title: "input test" ,
             prop_icon: "&#10124;" ,
+            prop_placeholder: "string format" ,
+
+            prop_btnAddStatus: true ,
 
             fn_oninput: (event , value) => {
                 console.log("fn_oninput"  , event , value)
@@ -440,6 +450,60 @@
             fn_onblur: (event , value) => {
                 console.log("fn_onblur"  , event , value)
             } ,
+
+
+            fn_clickBtnTools: (event , index)=>{
+                alert(index)
+            }
+
+
+        }
+    )
+
+
+    /*-------------------------------------
+       15) Component Input Price
+    -------------------------------------*/
+    new window.ComponentInputPrice(
+        "input_price" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_labelShow: true ,
+            prop_title: "input price test" ,
+            prop_icon: "&#10124;" ,
+            prop_placeholder: "number format" ,
+
+            prop_btnAddStatus: true ,
+
+            fn_oninput: (event , value) => {
+                console.log("fn_oninput"  , event , value)
+            } ,
+            fn_onfocus: (event , value) => {
+                console.log("fn_onfocus"  , event , value)
+            } ,
+            fn_onblur: (event , value) => {
+                console.log("fn_onblur"  , event , value)
+            } ,
+
+
+            fn_clickBtnTools: (event , index)=>{
+                alert(index)
+            },
+
+
+            prop_information : [
+                {
+                    title: "test 1" ,
+                    title_backgroundColor: "#b6b6b6" ,
+                    title_color: "#ffffff" ,
+                    value: "12554" ,
+                    value_backgroundColor: "#e7e7e7" ,
+                    value_color: "#343434" ,
+                }
+            ] ,
+
+
         }
     )
 
