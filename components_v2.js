@@ -71,6 +71,12 @@ class ComponentBase{
 
 
     onCreate( config , props, schema){
+        if (props != null && props.hasOwnProperty("part_structure")){
+            props["part_structure"].push( {prop: "prop_show"           , default: true});
+            props["part_structure"].push( {prop: "prop_structureClass" , default: []});
+            props["part_structure"].push( {prop: "prop_structureStyles", default: {}});
+        }
+
         this.readyConfigBasic(config , props);
 
         this.readyPropAndSchemaBasic(props , schema);
@@ -98,7 +104,6 @@ class ComponentBase{
 
         this.setComponents();
     }
-
 
 
 
@@ -265,6 +270,7 @@ class ComponentBase{
 
         if (typeof this.templateFn !== "undefined"){
             html = this.templateFn(partName  , this._COMPONENT_SLOTS  , this._COMPONENT_RANDOM_ID);
+
             if (el != null && html != null){
                 if (isMain){
                     el.innerHTML = html;
@@ -282,22 +288,34 @@ class ComponentBase{
         this._COMPONENT_ELEMENT = this.getComponentElement();
 
         const mainProps = this.getComponentProps();
-        if (mainProps.prop_show){
-            this._COMPONENT_ELEMENT.style.display = ""
 
-            const directionRtl = mainProps.directionRtl;
-            this._COMPONENT_ELEMENT.style.setProperty('direction', directionRtl ? 'rtl' : 'ltr' , 'important');
-            this._COMPONENT_ELEMENT.style.setProperty('text-align', directionRtl ? 'right' : 'left' , 'important');
+        this._COMPONENT_ELEMENT.style.display = ""
 
-            this._COMPONENT_ELEMENT.classList = tools_public.renderListClass(mainProps.classList);
+        const directionRtl = mainProps.directionRtl;
+        this._COMPONENT_ELEMENT.style.setProperty('direction', directionRtl ? 'rtl' : 'ltr' , 'important');
+        this._COMPONENT_ELEMENT.style.setProperty('text-align', directionRtl ? 'right' : 'left' , 'important');
 
-            Object.entries(mainProps.styles).forEach(([key, value]) => {
-                this._COMPONENT_ELEMENT.style[key] = value;
-            });
+        this._COMPONENT_ELEMENT.classList = tools_public.renderListClass(mainProps.classList);
+
+        Object.entries(mainProps.styles).forEach(([key, value]) => {
+            this._COMPONENT_ELEMENT.style[key] = value;
+        });
+
+
+        this._COMPONENT_ELEMENT.setAttribute("data-component-id" , this._COMPONENT_RANDOM_ID);
+
+        /*if (mainProps.prop_show){
+
         }
         else{
             this._COMPONENT_ELEMENT.style.display = "none"
-        }
+        }*/
+
+
+
+
+
+
     }
 
     setComponents(){
@@ -315,14 +333,16 @@ class ComponentBase{
         const data = this._COMPONENT_CONFIG || {};
 
         const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
-        const prop_show    = data.hasOwnProperty("prop_show")    ? data.prop_show    : true
+        //const prop_show    = data.hasOwnProperty("prop_show")    ? data.prop_show    : true
         const classList    = data.hasOwnProperty("classList")    ? data.classList    : []
         const styles       = data.hasOwnProperty("styles")       ? data.styles       : {}
 
         return {
-            directionRtl , prop_show , classList , styles
+            directionRtl , classList , styles,
+            //prop_show
         }
     }
+
 
 
 
@@ -384,6 +404,42 @@ class ComponentBase{
         return null;
     }
 
+
+
+
+
+    templateBasic_render_structure(content) {
+        const partName = "part_structure";
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_show             =   data.hasOwnProperty("prop_show")                ?  data.prop_show               : true;
+            const prop_structureClass   =   data.hasOwnProperty("prop_structureClass")      ?  data.prop_structureClass     : [];
+            const prop_structureStyles  =   data.hasOwnProperty("prop_structureStyles")     ? data.prop_structureStyles     : {};
+
+            if (prop_show){
+                return `
+<section  data-part-name="${partName}" 
+          id="component-loading-structure-${this._COMPONENT_RANDOM_ID}"
+          class=" ${tools_public.renderListClass(prop_structureClass)}">
+
+    <style>
+        #${this._COMPONENT_ID} #component-loading-structure-${this._COMPONENT_RANDOM_ID}{
+           ${tools_public.renderListStyle(prop_structureStyles)}
+        }
+    </style>
+    
+    ${content}
+   
+</section>
+        `;
+            }
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
 
 }
 
@@ -579,11 +635,13 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 
 
 
-
-
 /*-------------------------------------
  2) Component Loading
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type                       // circle[default] | null
 @prop_background_loading
 @prop_background_shadow
@@ -594,6 +652,9 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
     PROPERTYs
     --------------------------------------------- */
     _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
         part_loading: [
             {prop : "prop_type"                            , default: "circle"  } ,  // circle  //null
             {prop : "prop_background_loading"              , default: null} ,
@@ -602,7 +663,9 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
     }
 
     _COMPONENT_SCHEMA = {
-        part_loading: {} ,
+        part_structure: {
+            part_loading: {} ,
+        },
     }
 
 
@@ -630,48 +693,56 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName)
             case "part_loading":
-                return this.template_render_loading(  "part_loading"  , componentSlots  , var_randomId);
+                return this.template_render_loading(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.template_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
+    template_render() {
 
         return `
 <section class="component-element-structure mb-2">
-   ${this.templateFn("part_loading", componentSlots , var_randomId) ?? ""}
+   ${this.templateFn("part_structure") ?? ""}
 </section>
         `;
 
     }
 
-    template_render_loading(partName , componentSlots , var_randomId) {
-        const data = this.getPartProps(partName)
+    template_render_structure(partName) {
+        const content = `
+                    ${this.templateFn("part_loading") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
+    }
 
+    template_render_loading(partName) {
+        const data = this.getPartProps(partName);
 
         if (data != null){
 
-            const prop_type    =   data.hasOwnProperty("prop_type")      ?  data.prop_type      :  null;
+            const prop_type               =   data.hasOwnProperty("prop_type")                                                           ?  data.prop_type                 : "circle";
             const prop_background_loading =   data.hasOwnProperty("prop_background_loading")   && data.prop_background_loading != null   ? data.prop_background_loading    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_shadow") ? tools_const.styles.loading.backgroundColor_shadow : "";
-            const prop_background_shadow =    data.hasOwnProperty("prop_background_shadow")    && data.prop_background_shadow != null    ? data.prop_background_shadow     : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_loading") ? tools_const.styles.loading.backgroundColor_loading : "";
+            const prop_background_shadow  =   data.hasOwnProperty("prop_background_shadow")    && data.prop_background_shadow != null    ? data.prop_background_shadow     : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_loading") ? tools_const.styles.loading.backgroundColor_loading : "";
 
             if (prop_type == "circle"){
                 return `
 <section data-part-name="${partName}">
 
    <style>
-      #${this._COMPONENT_ID} .form-loading-${var_randomId}{
+      #${this._COMPONENT_ID} .form-loading-${this._COMPONENT_RANDOM_ID}{
            left: 0;
            top: 0;
            z-index: 5000;
            background-color: ${prop_background_loading};
       }
 
-      #${this._COMPONENT_ID} .lds-ring-${var_randomId} {
+      #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} {
           z-index: 12;
           color: ${prop_background_shadow};
           left: 50%;
@@ -679,19 +750,19 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
           transform: translate(-50%, -50%)
       }
       
-      #${this._COMPONENT_ID} .lds-ring-${var_randomId},
-      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div {
+      #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID},
+      #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div {
           box-sizing: border-box;
       }
       
-      #${this._COMPONENT_ID} .lds-ring-${var_randomId} {
+      #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} {
           display: inline-block;
           position: relative;
           width: 80px;
           height: 80px;
       }
 
-      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div {
+      #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div {
           box-sizing: border-box;
           display: block;
           position: absolute;
@@ -700,23 +771,23 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
           margin: 8px;
           border: 8px solid currentColor;
           border-radius: 50%;
-          animation: lds-ring-${var_randomId} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+          animation: lds-ring-${this._COMPONENT_RANDOM_ID} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
           border-color: currentColor transparent transparent transparent;
       }
       
-      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div:nth-child(1) {
+      #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div:nth-child(1) {
           animation-delay: -0.45s;
       }
       
-      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div:nth-child(2) {
+      #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div:nth-child(2) {
          animation-delay: -0.3s;
       }
       
-      #${this._COMPONENT_ID} .lds-ring-${var_randomId} div:nth-child(3) {
+      #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div:nth-child(3) {
          animation-delay: -0.15s;
       }
       
-      @keyframes lds-ring-${var_randomId} {
+      @keyframes lds-ring-${this._COMPONENT_RANDOM_ID} {
          0% {
             transform: rotate(0deg);
          }
@@ -726,8 +797,8 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
       }
    </style>
 
-   <section class="fcomponent-element-structure form-loading-${var_randomId} position-absolute  w-100 h-100" >
-       <div class="lds-ring-${var_randomId} position-absolute"><div></div><div></div><div></div><div></div></div>
+   <section class="fcomponent-element-structure form-loading-${this._COMPONENT_RANDOM_ID} position-absolute  w-100 h-100" >
+       <div class="lds-ring-${this._COMPONENT_RANDOM_ID} position-absolute"><div></div><div></div><div></div><div></div></div>
    </section>
 
 </section>
@@ -751,6 +822,10 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
 /*-------------------------------------
  3) Component 404
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type            'simple_animation'
 @prop_width
 @prop_height
@@ -766,8 +841,7 @@ window.Component404 = class Component404 extends ComponentBase{
   --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_404class"                        , default: []  } ,
-            {prop : "prop_404styles"                       , default: {}  } ,
+
         ] ,
         part_404: [
             {prop : "prop_type"                            , default: "simple_animation"  } ,     // simple_animation  //null
@@ -817,6 +891,8 @@ window.Component404 = class Component404 extends ComponentBase{
     templateFn(partName = null  , componentSlots  , var_randomId){
         switch (partName){
             case "part_structure":
+
+
                 return this.template_render_structure(  "part_structure"  , componentSlots  , var_randomId);
             case "part_404":
                 return this.template_render_404(        "part_404"        , componentSlots  , var_randomId);
@@ -834,36 +910,14 @@ window.Component404 = class Component404 extends ComponentBase{
     }
 
     template_render_structure(partName , componentSlots , var_randomId) {
-        const data = this.getPartProps(partName)
-        if (data != null){
-
-            const prop_404class   =   data.hasOwnProperty("prop_404class")      ?  data.prop_404class     : [];
-            const prop_404styles  =   data.hasOwnProperty("prop_404styles")     ? data.prop_404styles     : {};
-
-            return `
-<section  data-part-name="${partName}">
-
-    <style>
-        #${this._COMPONENT_ID} #component-404-structure-${var_randomId}{
-           ${tools_public.renderListStyle(prop_404styles)}
-        }
-    </style>
-    
-    <section id="component-404-structure-${var_randomId}"  class=" ${tools_public.renderListClass(prop_404class)}">
+        const content = `
         ${this.templateFn("part_404", componentSlots , var_randomId) ?? ""}
    
         <section class="d-block mx-5 h-100 position-relative">
-            <component-button id="component-btn-retry-in-component-404-${var_randomId}" ></component-button>
+            <component-button id="component-btn-retry-in-component-404-${this._COMPONENT_RANDOM_ID}" ></component-button>
         </section>
-    </section>
-    
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
     template_render_404(partName , componentSlots  , var_randomId) {
@@ -900,7 +954,7 @@ window.Component404 = class Component404 extends ComponentBase{
        }
 
        #${this._COMPONENT_ID} #svgWrap_0{
-          height: ${prop_height}px
+          height: ${prop_height}px;
        }
 
        #${this._COMPONENT_ID} #svgWrap_1,
@@ -4193,7 +4247,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"                 , default:  []} ,
+            {prop : "prop_structureClass"                 , default:  ["border" , "shadow-sm" , "rounded" , "p-1"]} ,
             {prop : "prop_structureStyles"                , default:  {}} ,
             {prop : "prop_minHeight"                      , default:  120} ,
         ] ,
@@ -4237,11 +4291,14 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
     TEMPLATEs
    --------------------------------------------- */
     componentFn(){
-        this.templateFn("part_label");
+        this.fn_onFetchWidget()
+
+        console.log("asd")
     }
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
+                console.log("asaaaaaaa")
                 return this.template_render_structure(partName);
             case "part_border":
                 return this.componentFn_render_border(partName);
@@ -4272,7 +4329,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
             return `
 <section data-part-name="${partName}" 
          id="component-widget-structure-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_structureClass)}" >
+         class="${tools_public.renderListClass(prop_structureClass)} position-relative" >
          
      <style>
          #${this._COMPONENT_ID} #component-widget-structure-${ this._COMPONENT_RANDOM_ID}{
@@ -4300,13 +4357,12 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
         `;
     }
 
-
     componentFn_render_border(partName) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_widgetClass  = data.hasOwnProperty("prop_widgetClass")   ? data.prop_widgetClass                : [];
+            const prop_widgetClass  = data.hasOwnProperty("prop_widgetClass")   ? data.prop_widgetClass                : ["border" , "shadow-sm" , "rounded" , "p-1"];
             const prop_widgetStyles = data.hasOwnProperty("prop_widgetStyles")  ? data.prop_widgetStyles               : {"min-height" : "120px"};
 
             const prop_btnMore_icon = data.hasOwnProperty("prop_btnMore_icon")  ? data.prop_btnMore_icon               : "";
@@ -4331,11 +4387,11 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
 
 
-
-
-
+    /* ---------------------------------------------
+      FUNCTIONs
+     --------------------------------------------- */
     fn_retry404(){
-        this.onFetchWidget();
+        this.fn_onFetchWidget();
 
         tools_component.control(
             "Component404" ,
@@ -4346,9 +4402,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
         )
     }
     fn_readyResponse(response){
-
         const el = document.getElementById(`section#widget-component-404-${this._COMPONENT_RANDOM_ID}`);
-
         if (response != null){
             if (response.hasOwnProperty("html")){
                 el.innerHTML = response.html;
@@ -4382,15 +4436,16 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                 });
             }
         }
-
     }
     fn_onFetchWidget(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onGetNewToken") && typeof data.fn_onGetNewToken != null){
+            data.fn_onGetNewToken();
+        }
 
-        const prop_minHeight = componentData.hasOwnProperty("prop_minHeight")   ? Math.max(componentData.prop_minHeight , 120)   : 120;
-        const prop_error404  = componentData.hasOwnProperty("prop_error404")    ? componentData.prop_error404                    : {};
-        const prop_fetch     = componentData.hasOwnProperty("prop_fetch")           ? componentData.prop_fetch                   : {};
-
-        const retry404 = super.getMethod(componentData , "retry404" , null);
+        const prop_minHeight = data.hasOwnProperty("prop_minHeight")   ? Math.max(data.prop_minHeight , 120)   : 120;
+        const prop_error404  = data.hasOwnProperty("prop_error404")    ? data.prop_error404                    : {};
+        const prop_fetch     = data.hasOwnProperty("prop_fetch")       ? data.prop_fetch                       : {};
 
         if (prop_fetch != null && prop_fetch.hasOwnProperty("url")){
 
@@ -4398,13 +4453,13 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                 prop_fetch != null && prop_fetch.hasOwnProperty("url") ? prop_fetch.url : "" ,
                 {
                     data: prop_fetch != null && prop_fetch.hasOwnProperty("data") ? prop_fetch.data : [] ,
-                    callback: window[methods.readyResponse.name] ,
+                    callback: this.fn_readyResponse ,
                     componentLoadingData: {
-                        elId : "widget-component-loading-"+var_randomId
+                        elId : `widget-component-loading-${this._COMPONENT_RANDOM_ID}`
                     },
                     component404Data: {
-                        elId : "widget-component-404-"+var_randomId ,
-                        prop_type : prop_error404 != null && prop_error404.hasOwnProperty("type") ? prop_error404.type : 0 ,
+                        elId : `widget-component-404-${this._COMPONENT_RANDOM_ID}` ,
+                        prop_type : prop_error404 != null && prop_error404.hasOwnProperty("type") ? prop_error404.type : "simple_animation" ,
                         prop_width : prop_error404 != null && prop_error404.hasOwnProperty("width") ? prop_error404.width : prop_minHeight*1.3 ,
                         prop_height : prop_error404 != null && prop_error404.hasOwnProperty("height") ? prop_error404.height :  prop_minHeight*0.62 ,
                         fn_callback: () =>{
@@ -4415,15 +4470,12 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
             )
         }
         else {
-            const readyResponse = super.getMethod(componentData , "readyResponse" , null);
-            window[readyResponse]("<!--empty-component-->")
+            this.fn_readyResponse("<!--empty-component-->")
         }
 
     }
 
-
 }
-
 
 
 
