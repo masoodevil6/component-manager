@@ -344,21 +344,58 @@ if (typeof listComponent === 'undefined') {
 
 **11) Component Tabs:**
 ```
-   /*-------------------------------------
-     Component Tabs
-   -------------------------------------
-   @prop_tabs           {id   icon}
-   @prop_tabSelected
+/*-------------------------------------
+ Component Tabs
+-------------------------------------
+@prop_structureClass
+@prop_structureStyles
 
-   @fn_callback
-   -------------------------------------*/
-    new window.ComponentTabsComponentTabs(
+@prop_type           0 | 1
+@prop_tabs           {id  name  icon}
+@prop_tabSelected
+
+@prop_firstCallBack
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentTabs(
         "element_id" ,
         {
             
         }
     )
 ```
+
+
+
+
+**12) Component OTP:**
+```
+/*-------------------------------------
+ 12) Component OTP
+-------------------------------------
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_length
+@prop_input
+@prop_langs
+
+@fn_onGetNewToken
+
+//call_startCountdown
+-------------------------------------*/
+    new window.ComponentOtp(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
 
 
 **14) Component Input:**

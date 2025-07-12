@@ -126,6 +126,10 @@ tools_init = {
                 backgroundColor_textSelected: component_props.shanColor1 ,
             },
 
+            otp: {
+
+            },
+
             selectOption: {
                 backgroundColor_itemNotSelected: component_props.shanColor2 ,
                 backgroundColor_itemHover: component_props.primaryColor2 ,
@@ -146,7 +150,6 @@ tools_init = {
                 btnMore_backgroundColor : component_props.primaryColor1 ,
                 btnMore_color : component_props.shanColor1 ,
             } ,
-
 
             label: {
                 backgroundColor : component_props.shadowColor2 ,

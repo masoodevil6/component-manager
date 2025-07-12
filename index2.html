@@ -36,6 +36,9 @@
                         form data
                     </component-body>
                 </component-form>
+
+                <component-widget     id="widget"></component-widget>
+
             </section>
 
         </component-body>
@@ -86,6 +89,7 @@
 
                 <component-input-price  id="input_price"></component-input-price>
 
+                <component-otp  id="otp"></component-otp>
 
             </section>
 
@@ -98,13 +102,15 @@
 
 
 
-    <component-collapse  id="tables">
+    <component-collapse  id="tables-and-tabs">
         <component-body>
 
             <section class="row p-0 m-0">
                 <component-table  id="table"></component-table>
-
                 <component-table  id="table2"></component-table>
+
+                <component-tabs  id="tab-1"></component-tabs>
+                <component-tabs  id="tab-2"></component-tabs>
 
             </section>
 
@@ -123,13 +129,20 @@
             <section class="row p-0 m-0">
                 <component-icon    id="icon"></component-icon>
 
-                <div class="col-md-3 col-12 mt-2 position-relative">
+                <div class="col-md-3 col-12 mt-2 position-relative" style="height: 200px">
                     <component-position-element   id="position-element">
                         <component-body>
                             position element Body
                         </component-body>
                     </component-position-element>
                 </div>
+
+
+                <component-border     id="border">
+                    <component-body>
+                        border Body
+                    </component-body>
+                </component-border>
 
             </section>
 
@@ -427,6 +440,112 @@
 
 
     /*-------------------------------------
+      11)  Component tabs
+    -------------------------------------*/
+    new window.ComponentTabs(
+        "tab-1" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_type: 0 ,
+            prop_tabSelected: 1 ,
+            prop_tabs: [
+                {
+                    id:1 ,
+                    title: "tab 1",
+                    icon: "/asd",
+                } ,
+                {
+                    id:2 ,
+                    title: "tab 2",
+                    icon: "/asd",
+                }
+            ] ,
+            fn_callback: (event , tabIndex) =>{
+                console.log(tabIndex)
+            }
+
+        }
+    )
+    new window.ComponentTabs(
+        "tab-2" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_type: 1 ,
+            prop_tabSelected: 1 ,
+            prop_tabs: [
+                {
+                    id:1 ,
+                    title: "tab 1",
+                } ,
+                {
+                    id:2 ,
+                    title: "tab 2",
+                },
+                {
+                    id:3 ,
+                    title: "tab 3",
+                }
+            ] ,
+            fn_callback: (event , tabIndex) =>{
+                console.log(tabIndex)
+            }
+
+        }
+    )
+
+
+
+    /*-------------------------------------
+     12)  Component otp
+    -------------------------------------*/
+    const otp = new window.ComponentOtp(
+        "otp" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name: "otp_phone" ,
+            prop_input: "09302171809" ,
+            prop_length: 4 ,
+            prop_langs: {
+                _title_otp_description : "کد برای شماره/ایمیل زیر ارسال شد" ,
+                _text_timer_after_active_otp : "تا ارسال مجدد کد" ,
+                _text_timer_after_di_active_otp : "کد منقضی شده است" ,
+                _text_get_new_otp : "کد جدید" ,
+            } ,
+
+            fn_onGetNewToken:() => {
+                alert("get new token");
+                otp.call_startCountdown(1);
+            }
+        }
+    );
+    otp.call_startCountdown(1);
+
+
+
+
+    /*-------------------------------------
+     12)  Component otp
+    -------------------------------------*/
+    new window.ComponentWidget(
+        "widget" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_minHeight: 120 ,
+            prop_fetch : {
+                url: "https://google1.com"
+            }
+        }
+    );
+
+
+
+
+
+    /*-------------------------------------
       14)  Component Input
     -------------------------------------*/
     new window.ComponentInput(
@@ -459,6 +578,8 @@
 
         }
     )
+
+
 
 
     /*-------------------------------------
@@ -553,7 +674,26 @@
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
+            prop_positionTop: "0"
             //prop_content: "asd"
+        }
+    )
+
+
+    /*-------------------------------------
+       21) Component border
+    -------------------------------------*/
+    new window.ComponentBorder(
+        "border" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_btnMore_show: true,
+            prop_btnMore_icon: "&#10127;" ,
+            prop_btnMore_link: "/asd" ,
+            prop_borderStyles: {
+                "height" : "150px"
+            } ,
         }
     )
 
@@ -581,7 +721,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: "fetch and loading" ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -599,15 +739,15 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: "btn and input" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(
-        "tables" ,
+        "tables-and-tabs" ,
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_title: "tables" ,
+            prop_title: "Tables and Tabs" ,
             prop_bodyShow: false
         }
     )
