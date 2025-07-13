@@ -339,8 +339,8 @@ tools_submit = {
         let componentLoadingData  = args.hasOwnProperty("componentLoadingData") ? args.componentLoadingData: null ;
         let component404Data      = args.hasOwnProperty("component404Data") ? args.component404Data: null ;
         if (component404Data != null){
-            component404Data["prop_404class"] = ["position-absolute"];
-            component404Data["prop_404styles"] = {
+            component404Data["prop_structureClass"] = ["position-absolute"];
+            component404Data["prop_structureStyles"] = {
                 "width" : "100%" ,
                 "height" : "100%" ,
                 "left" : "0" ,

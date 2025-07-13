@@ -40,6 +40,10 @@ if (typeof listComponent === 'undefined') {
 /*-------------------------------------
  1) Component Messages
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type                            // success[default] | error | warning | null
 @prop_background
 @prop_color
@@ -62,6 +66,10 @@ if (typeof listComponent === 'undefined') {
 /*-------------------------------------
  2) Component Loading
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type                       // circle[default] | null
 @prop_background_loading
 @prop_background_shadow
@@ -82,6 +90,10 @@ if (typeof listComponent === 'undefined') {
 /*-------------------------------------
  3) Component 404
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type            'simple_animation'
 @prop_width
 @prop_height
@@ -105,6 +117,10 @@ if (typeof listComponent === 'undefined') {
 /*-------------------------------------
  4) Component Form
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_formClass
 @prop_formStyles
 
@@ -133,6 +149,10 @@ if (typeof listComponent === 'undefined') {
 /*-------------------------------------
  5) Component Is Empty
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_icon
 @prop_iconClass
 @prop_iconStyles
@@ -161,12 +181,18 @@ if (typeof listComponent === 'undefined') {
 **6) Component Header:**
 ```
 /*-------------------------------------
- Component Header
+ 6) Component Header
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_classList
+
+@prop_icon
+
 @prop_size
 @prop_title
-@prop_icon
-@prop_classList
 -------------------------------------*/
     new window.ComponentHeader(
         "element_id" ,
@@ -184,8 +210,9 @@ if (typeof listComponent === 'undefined') {
 /*-------------------------------------
  7) Component Collapse
 -------------------------------------
-@prop_collapseClass
-@prop_collapseStyles
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
 @prop_title
 
@@ -210,10 +237,17 @@ if (typeof listComponent === 'undefined') {
 **8) Component Table:**
 ```
 /*-------------------------------------
- Component Table
+ 8) Component Table
 -------------------------------------
-@prop_tableType
-@prop_tableBordered
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_tableClass
+@prop_tableStyles
+@prop_tableType                      // 1) table-dark  |  2) table-primary  | 3) table-secondary  | 4) table-success  | 5) table-danger  | 6) table-warning  | 7) table-info  | 8) table-light  | 0(default)
+@prop_tableBordered                  // 1) border-dark |  2) border-primary | 3) border-secondary | 4) border-success | 5) border-danger | 6) border-warning | 7) border-info | 8) border-light | 0(default)
+
 @prop_tableStriped
 @prop_tableHover
 @prop_tableBorderless
@@ -237,11 +271,18 @@ if (typeof listComponent === 'undefined') {
 **9) Component Button:**
 ```
 /*-------------------------------------
- Component Button
+ 9) Component Button
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type
 @prop_title
+
 @prop_btnClass
+@prop_btnStyles
+@prop_btnHoverStyles
 
 @prop_btnBackgroundColor
 @prop_btnBackgroundColor_hover
@@ -262,14 +303,78 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**10) Component Tab:**
+
+
+
+
+**10) Component Select Option:**
 ```
 /*-------------------------------------
- Component Tabs
+ 10) Component Select Option
 -------------------------------------
-@prop_tabs           {id   icon}
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_itemSelected
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_titleClass
+@prop_titleStyles
+
+@prop_icon
+
+@prop_options
+@prop_placeholder
+
+@prop_btnAddStatus
+@prop_btnAddIcon
+@prop_btnAddClass
+@prop_btnAddTitle
+
+@prop_optionHeight
+@prop_optionWidth
+@prop_optionStyles
+
+@prop_options
+@prop_optionStyles
+@prop_optionWidth
+@prop_optionItemNotSelectedBackground
+@prop_optionItemHoverBackground
+@prop_optionItemSelectedBackground
+
+@fn_callback
+@fn_clickBtnTools
+-------------------------------------*/
+    new window.ComponentSelectOption(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+
+**11) Component Tab:**
+```
+/*-------------------------------------
+ 11) Component Tabs
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_type           0 | 1
+@prop_tabs           {id  name  icon}
 @prop_tabSelected
-@prop_type
 
 @prop_firstCallBack
 
@@ -290,90 +395,12 @@ if (typeof listComponent === 'undefined') {
 
 
 
-
-
-
-
-
-
-**10) Component Select Option:**
-```
-/*-------------------------------------
- Component Select Option
--------------------------------------
-@prop_type
-@prop_name
-@prop_title
-@prop_placeholder
-
-@prop_options
-@prop_optionStyles
-@prop_optionWidth
-@prop_optionHeight
-@prop_optionIcon
-@prop_optionIconColor
-@prop_optionItemBackground
-
-@prop_itemSelected
-@prop_selectOptionClass
-@prop_titleClass
-@prop_titleStyles
-
-@prop_btnAddStatus
-@prop_btnAddIcon
-@prop_btnAddClass
-@prop_btnAddTitle
-
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_firstCallBack
-
-@fn_callback
-@fn_clickBtnTools
--------------------------------------*/
-    new window.ComponentSelectOption(
-        "element_id" ,
-        {
-            
-        }
-    )
-```
-
-
-**11) Component Tabs:**
-```
-/*-------------------------------------
- Component Tabs
--------------------------------------
-@prop_structureClass
-@prop_structureStyles
-
-@prop_type           0 | 1
-@prop_tabs           {id  name  icon}
-@prop_tabSelected
-
-@prop_firstCallBack
-
-@fn_callback
--------------------------------------*/
-    new window.ComponentTabs(
-        "element_id" ,
-        {
-            
-        }
-    )
-```
-
-
-
-
 **12) Component OTP:**
 ```
 /*-------------------------------------
  12) Component OTP
 -------------------------------------
+@prop_show
 @prop_structureClass
 @prop_structureStyles
 
@@ -398,14 +425,48 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**14) Component Input:**
+**13) Component Widget:**
+```
+/*-------------------------------------
+ 13) Component Widget
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_widgetClass
+@prop_widgetStyles
+@prop_widgetMinHeight
+
+@prop_btnMore_icon
+@prop_btnMore_show
+@prop_btnMore_link
+
+@prop_error404   type   width   height
+@prop_fetch      url    data
+-------------------------------------*/
+    new window.ComponentWidget(
+        "element_id" ,
+        {
+            
+        }
+    )
 ```
 
+
+
+
+
+
+
+**14) Component Input:**
+```
 /*-------------------------------------
  14) Component Input
 -------------------------------------
-@prop_inputClass
-@prop_inputStyles
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
 @prop_show_label
 @prop_labelClass
@@ -425,6 +486,8 @@ if (typeof listComponent === 'undefined') {
 @fn_oninput
 @fn_onfocus
 @fn_onblur
+
+@fn_clickBtnTools
 -------------------------------------*/
     new window.ComponentInput(
         "element_id" ,
@@ -436,22 +499,38 @@ if (typeof listComponent === 'undefined') {
 
 
 
+
+
 **15) Component Input Price:**
 ```
-   /*-------------------------------------
-    Component Input price
-    -------------------------------------
-    @prop_btnAddStatus
-    @prop_btnAddIcon
-    @prop_btnAddClass
-    @@prop_btnAddClass
-    @prop_icon
-    @prop_name
-    @prop_title
-    @prop_default
+/*-------------------------------------
+ 15) Component Input Price
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-    @fn_addNewItem
-    -------------------------------------*/
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_inputClass
+@prop_inputStyles
+@prop_type
+@prop_name
+@prop_value
+@prop_placeholder
+
+@prop_icon
+
+@fn_oninput
+@fn_onfocus
+@fn_onblur
+
+@fn_clickBtnTools
+-------------------------------------*/
     new window.ComponentInputPrice(
         "element_id" ,
         {
@@ -509,9 +588,12 @@ if (typeof listComponent === 'undefined') {
 /*-------------------------------------
  17) Component label
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_labelClass
 @prop_labelStyles
-@prop_labelHoverStyles
 @prop_labelBackgroundColor
 
 @prop_title
@@ -534,8 +616,12 @@ if (typeof listComponent === 'undefined') {
 **18) Component Icon:**
 ```
 /*-------------------------------------
- Component Icon
+ 18) Component Icon
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_icon
 @prop_isItalik
 

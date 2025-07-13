@@ -7,6 +7,21 @@ Version: 0.2
 
 if (typeof listComponent === 'undefined') {
     var listComponent = {
+
+        // [01] text
+
+
+        // [02] Fetch
+
+
+        // [03] Button and Inputs
+
+
+        // [04] Table and Tabs
+
+
+        // [99] Others
+
         ComponentMessages:                   "component-messages" ,                       //1
         ComponentLoading:                    "component-loading" ,                        //2
         Component404:                        "component-404" ,                            //3
@@ -63,7 +78,7 @@ class ComponentBase{
     _COMPONENT_SCHEMA = null;
 
     constructor(componentName , elId) {
-        this._COMPONENT_RANDOM_ID = Math.floor(Math.random() * 10000);
+        this._COMPONENT_RANDOM_ID = this.setComponentRandomId();
         this._COMPONENT_NAME = componentName;
         this._COMPONENT_ID = elId;
         this._COMPONENT_SELECTOR = this._COMPONENT_NAME+"#"+this._COMPONENT_ID;
@@ -72,9 +87,18 @@ class ComponentBase{
 
     onCreate( config , props, schema){
         if (props != null && props.hasOwnProperty("part_structure")){
-            props["part_structure"].push( {prop: "prop_show"           , default: true});
-            props["part_structure"].push( {prop: "prop_structureClass" , default: []});
-            props["part_structure"].push( {prop: "prop_structureStyles", default: {}});
+
+            if (props.hasOwnProperty("part_structure")){
+                if (!props.part_structure.hasOwnProperty("prop_show")){
+                    props["part_structure"].push( {prop: "prop_show"           , default: true});
+                }
+                if (!props.part_structure.hasOwnProperty("prop_structureClass")){
+                    props["part_structure"].push( {prop: "prop_structureClass" , default: []});
+                }
+                if (!props.part_structure.hasOwnProperty("prop_structureStyles")){
+                    props["part_structure"].push( {prop: "prop_structureStyles", default: {}});
+                }
+            }
         }
 
         this.readyConfigBasic(config , props);
@@ -111,6 +135,17 @@ class ComponentBase{
     //--------------------------------------------------
     // ready properties
     //--------------------------------------------------
+
+    setComponentRandomId(){
+        let randomSelected = Math.floor(Math.random() * 10000);
+        if (typeof components[randomSelected] != "undefined"){
+            randomSelected = this.setComponentRandomId()
+        }
+        return randomSelected;
+    }
+
+
+
     readyConfigBasic(config , props){
         /// config default
         this._COMPONENT_CONFIG = config;
@@ -408,7 +443,19 @@ class ComponentBase{
 
 
 
-    templateBasic_render_structure(content) {
+
+    //--------------------------------------------------
+    // Template Reader
+    //--------------------------------------------------
+    templateBasic_render() {
+        return `
+<section class="component-element-structure mb-2">
+   ${this.templateFn("part_structure") ?? ""}
+</section>
+        `;
+    }
+
+    templateBasic_render_structure(content , moreClass="") {
         const partName = "part_structure";
         const data = this.getPartProps(partName);
 
@@ -420,11 +467,11 @@ class ComponentBase{
             if (prop_show){
                 return `
 <section  data-part-name="${partName}" 
-          id="component-loading-structure-${this._COMPONENT_RANDOM_ID}"
-          class=" ${tools_public.renderListClass(prop_structureClass)}">
+          id="component-${this._COMPONENT_NAME}-structure-${this._COMPONENT_RANDOM_ID}"
+          class=" ${tools_public.renderListClass(prop_structureClass)} ${tools_public.renderListClass(moreClass)}">
 
     <style>
-        #${this._COMPONENT_ID} #component-loading-structure-${this._COMPONENT_RANDOM_ID}{
+        #${this._COMPONENT_ID} #component-${this._COMPONENT_NAME}-structure-${this._COMPONENT_RANDOM_ID}{
            ${tools_public.renderListStyle(prop_structureStyles)}
         }
     </style>
@@ -451,6 +498,10 @@ class ComponentBase{
 /*-------------------------------------
  1) Component Messages
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type                            // success[default] | error | warning | null
 @prop_background
 @prop_color
@@ -462,6 +513,9 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
     PROPERTYs
     --------------------------------------------- */
     _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
         part_message: [
             {prop : "prop_type"                 , default: "success"} ,  // success  //error //warning //null
             {prop : "prop_msgBackgroundColor"   , default: null} ,
@@ -474,8 +528,10 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
     }
 
     _COMPONENT_SCHEMA = {
-        part_message: {} ,
-        part_icon: {}
+        part_structure: {
+            part_message: {} ,
+            part_icon: {}
+        }
     }
 
 
@@ -503,30 +559,33 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn( componentSlots , var_randomId){
-        this.componentFn_render_icon(  "part_icon" , componentSlots  , var_randomId);
+    componentFn(){
+        this.templateFn(  "part_icon" );
     }
 
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
             case "part_message":
-                return this.template_render_message(  "part_message"  , componentSlots  , var_randomId);
+                return this.template_render_message(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
 
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_message", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
 
+    template_render_structure(partName) {
+        const content = `
+                    ${this.templateFn("part_message") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_message(partName , componentSlots , var_randomId) {
+    template_render_message(partName) {
          const data = this.getPartProps(partName)
 
          if (data != null){
@@ -562,19 +621,19 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
                      const itemMessage = prop_messages[indexMessage];
 
                      html += `
-<section id="component-messages-item-${var_randomId}-${indexMessage}">
+<section id="component-messages-item-${this._COMPONENT_RANDOM_ID}-${indexMessage}">
     <style>
-         #${this._COMPONENT_ID} #text-message-${var_randomId}{
+         #${this._COMPONENT_ID} #text-message-${this._COMPONENT_RANDOM_ID}{
              background-color: ${msgBackgroundColor};
              color: ${msgColor};
          }
     </style>
     
     <div  class="component-element-structure mb-2  mt-2 rounded shadow-sm" role="alert">
-         <p id="text-message-${var_randomId}" class=" alert shadow-sm">
+         <div id="text-message-${this._COMPONENT_RANDOM_ID}" class=" alert shadow-sm">
               ${itemMessage}
-              <component-icon id="component-messages-icon-close-${var_randomId}-${indexMessage}"></component-icon>
-         </p>
+              <component-icon id="component-messages-icon-close-${this._COMPONENT_RANDOM_ID}-${indexMessage}"></component-icon>
+         </div>
     </div>
 </section>
                      `;
@@ -590,7 +649,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
         `;
     }
 
-    componentFn_render_icon (partName , componentSlots  , var_randomId) {
+    componentFn_render_icon (partName) {
         const data = this.getPartProps(partName)
         if (data != null){
             const directionRtl =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl : false
@@ -599,7 +658,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 
                 for (const indexMessage in data.prop_messages) {
                     new window.ComponentIcon(
-                        `component-messages-icon-close-${var_randomId}-${indexMessage}`  ,
+                        `component-messages-icon-close-${this._COMPONENT_RANDOM_ID}-${indexMessage}`  ,
                         {
                             classList:     [ directionRtl ? "float-start" :  "float-end" ] ,
                             prop_icon:     "&#10005"  ,
@@ -610,7 +669,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
                             } ,
 
                             fn_callback: () =>{
-                                this.runFn('fn_onCLickIconClose' , "event" , var_randomId , indexMessage);
+                                this.runFn('fn_onCLickIconClose' , "event" , indexMessage);
                             }
                         }
                     )
@@ -626,8 +685,8 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
-    fn_onCLickIconClose(event , var_randomId , indexMessage){
-        this.getComponentElement().querySelector(`#component-messages-item-${var_randomId}-${indexMessage}`).remove()
+    fn_onCLickIconClose(event  , indexMessage){
+        this.getComponentElement().querySelector(`#component-messages-item-${this._COMPONENT_RANDOM_ID}-${indexMessage}`).remove()
     }
 }
 
@@ -693,6 +752,9 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
+    componentFn(){
+
+    }
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
@@ -700,18 +762,8 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
             case "part_loading":
                 return this.template_render_loading(partName);
             default:
-                return this.template_render();
+                return this.templateBasic_render();
         }
-    }
-
-    template_render() {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure") ?? ""}
-</section>
-        `;
-
     }
 
     template_render_structure(partName) {
@@ -797,7 +849,7 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
       }
    </style>
 
-   <section class="fcomponent-element-structure form-loading-${this._COMPONENT_RANDOM_ID} position-absolute  w-100 h-100" >
+   <section class="component-element-structure form-loading-${this._COMPONENT_RANDOM_ID} position-absolute  w-100 h-100" >
        <div class="lds-ring-${this._COMPONENT_RANDOM_ID} position-absolute"><div></div><div></div><div></div><div></div></div>
    </section>
 
@@ -884,34 +936,26 @@ window.Component404 = class Component404 extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn( componentSlots , var_randomId){
-        this.componentFn_render_btnRetry(  "part_button_retry" , componentSlots  , var_randomId);
+    componentFn(){
+        this.templateFn("part_button_retry");
     }
 
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
-
-
-                return this.template_render_structure(  "part_structure"  , componentSlots  , var_randomId);
+                return this.template_render_structure(partName);
             case "part_404":
-                return this.template_render_404(        "part_404"        , componentSlots  , var_randomId);
+                return this.template_render_404(partName);
+            case "part_button_retry":
+                return this.componentFn_render_btnRetry(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
-        return `
-<section class="component-element-structure mb-2 ">
-   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
-    }
-
-    template_render_structure(partName , componentSlots , var_randomId) {
+    template_render_structure(partName) {
         const content = `
-        ${this.templateFn("part_404", componentSlots , var_randomId) ?? ""}
+        ${this.templateFn("part_404") ?? ""}
    
         <section class="d-block mx-5 h-100 position-relative">
             <component-button id="component-btn-retry-in-component-404-${this._COMPONENT_RANDOM_ID}" ></component-button>
@@ -920,7 +964,7 @@ window.Component404 = class Component404 extends ComponentBase{
         return this.templateBasic_render_structure(content);
     }
 
-    template_render_404(partName , componentSlots  , var_randomId) {
+    template_render_404(partName) {
         const data = this.getPartProps(partName);
 
         if (data != null){
@@ -935,7 +979,7 @@ window.Component404 = class Component404 extends ComponentBase{
 <section data-part-name="${partName}">
 
    <style>
-        #${this._COMPONENT_ID} #component-form-404-${var_randomId}{
+        #${this._COMPONENT_ID} #component-form-404-${this._COMPONENT_RANDOM_ID}{
            top: 0;
            left: 0;
            position: absolute;
@@ -1077,7 +1121,7 @@ window.Component404 = class Component404 extends ComponentBase{
        }
    </style>
 
-   <section id="component-form-404-${var_randomId}" class="mb-2 w-100 h-100  ">
+   <section id="component-form-404-${this._COMPONENT_RANDOM_ID}" class="mb-2 w-100 h-100  ">
 
         <svg id="svgWrap_2" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 700 250">
             <g>
@@ -1119,7 +1163,7 @@ window.Component404 = class Component404 extends ComponentBase{
     }
 
 
-    componentFn_render_btnRetry (partName , componentSlots  , var_randomId) {
+    componentFn_render_btnRetry (partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -1130,7 +1174,7 @@ window.Component404 = class Component404 extends ComponentBase{
             const prop_btnClass   =  prop_btnRetry.hasOwnProperty("prop_btnClass")      ?  prop_btnRetry.prop_btnClass     : [];
 
             new window.ComponentButton(
-                `component-btn-retry-in-component-404-${var_randomId}` ,
+                `component-btn-retry-in-component-404-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList: ["position-absolute" , "w-100"] ,
                     styles:{
@@ -1142,8 +1186,8 @@ window.Component404 = class Component404 extends ComponentBase{
                     prop_btnClass ,
 
 
-                    fn_callback: () => {
-                        this.runFn('fn_onCLickBtnRetry' , "event")
+                    fn_callback: (event) => {
+                        this.fn_onCLickBtnRetry(event);
                     }
                 }
 
@@ -1175,6 +1219,10 @@ window.Component404 = class Component404 extends ComponentBase{
 /*-------------------------------------
  4) Component Form
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_formClass
 @prop_formStyles
 
@@ -1191,7 +1239,10 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_formClass"      , default: ["border" , "shadow-sm" ]} ,
+
+        ] ,
+        part_border: [
+            {prop : "prop_formClass"      , default: ["border" , "shadow-sm" , "p-2" ]} ,
             {prop : "prop_formStyles"     , default: {}} ,
         ] ,
         part_loading: [
@@ -1212,10 +1263,12 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-            part_loading: {} ,
-            part_form: {} ,
-            part_404: {} ,
-            part_button_submit: {} ,
+            part_border: {
+                part_loading: {} ,
+                part_form: {} ,
+                part_404: {} ,
+                part_button_submit: {} ,
+            }
         }
     }
 
@@ -1245,83 +1298,63 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
        TEMPLATEs
     --------------------------------------------- */
     componentFn( componentSlots , var_randomId){
-        this.componentFn_render_buttonSubmit(  "part_button_submit" , componentSlots  , var_randomId);
+        this.templateFn(  "part_border");
+        this.templateFn(  "part_button_submit");
     }
 
     templateFn(partName = null  , componentSlots  , var_randomId){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure(     "part_structure"     , componentSlots  , var_randomId);
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
             case "part_form":
-                return this.template_render_form(          "part_form"  , componentSlots  , var_randomId);
+                return this.template_render_form( partName);
+            case "part_button_submit":
+                return this.componentFn_render_buttonSubmit( partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
-
+    template_render_structure(partName) {
+        const content = `
+           <component-border id="component-form-border-${this._COMPONENT_RANDOM_ID}">
+               <component-body>
+               
+                    <section id="component-form-messages-${this._COMPONENT_RANDOM_ID}"></section>
+         
+                    ${this.templateFn("part_form") ?? ""}
+         
+                    <section class="d-block border-top pt-2 px-1">
+                        <component-button id="component-form-button-submit-${this._COMPONENT_RANDOM_ID}"></component-button>
+                    </section>
+         
+                    <component-404 id="component-form-404-${this._COMPONENT_RANDOM_ID}"></component-404>
+         
+                    <component-loading id="component-form-loading-${this._COMPONENT_RANDOM_ID}"></component-loading>
+                    
+               </component-body>
+          </component-border> 
+                `;
+        return this.templateBasic_render_structure(content , ["position-relative"]);
     }
 
-    template_render_structure(partName , componentSlots , var_randomId) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_formClass  = data.hasOwnProperty("prop_formClass")    ?  data.prop_formClass  : [];
-            const prop_formStyles = data.hasOwnProperty("prop_formStyles")   ?  data.prop_formStyles  : {};
-
-            return `
-<section data-part-name="${partName}">
-    <style>
-        #${this._COMPONENT_ID} #component-form-structure-${var_randomId}{
-            ${tools_public.renderListStyle(prop_formStyles)}
-       }
-    </style>
-    <section id="component-form-structure-${var_randomId}" class="${tools_public.renderListClass(prop_formClass)} position-relative" >
-         
-         <section id="component-form-messages-${var_randomId}"></section>
-         
-         ${this.templateFn("part_form", componentSlots , var_randomId) ?? ""}
-         
-         <section class="row">
-             <component-button id="component-form-button-submit-${var_randomId}"></component-button>
-         </section>
-         
-         <component-404 id="component-form-404-${var_randomId}"></component-404>
-         
-         <component-loading id="component-form-loading-${var_randomId}"></component-loading>
-         
-    </section>
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_form(partName , componentSlots , var_randomId) {
+    template_render_form(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
 
-            const prop_forms =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_forms =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
 
             return `
 <section data-part-name="${partName}">
     <style>
-        #${this._COMPONENT_ID} #component-form-forms-${var_randomId}{
-   
-       }
+        #${this._COMPONENT_ID} #component-form-forms-${this._COMPONENT_RANDOM_ID}{
+            min-height: 60%;
+        }
     </style>
-    <form id="component-form-forms-${var_randomId}" class="m-2" >
+    <form id="component-form-forms-${this._COMPONENT_RANDOM_ID}" class="m-2" >
          
          ${prop_forms}
 
@@ -1335,7 +1368,27 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
         `;
     }
 
-    componentFn_render_buttonSubmit(partName , componentSlots , var_randomId) {
+    componentFn_render_border(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_formClass =      data.hasOwnProperty("prop_formClass")     ? data.prop_formClass    : null;
+            const prop_formStyles =     data.hasOwnProperty("prop_formStyles")    ? data.prop_formStyles   : null;
+
+            new window.ComponentBorder(
+                `component-form-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_btnMore_show: false ,
+
+                    prop_structureClass: prop_formClass ,
+                    prop_structureStyles: prop_formStyles ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_buttonSubmit(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -1349,7 +1402,7 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
             } ;
 
             new window.ComponentButton(
-                `component-form-button-submit-${var_randomId}` ,
+                `component-form-button-submit-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList: [ "d-block" , "mx-2" ] ,
                     styles:{
@@ -1410,6 +1463,10 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
 /*-------------------------------------
  5) Component Is Empty
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_icon
 @prop_iconClass
 @prop_iconStyles
@@ -1432,6 +1489,10 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
         part_structure: [
 
         ] ,
+        part_border: [
+            {prop : "prop_borderClass"    , default: ["border" , "border-danger" , "rounded" , "shadow-sm"]} ,
+            {prop : "prop_borderStyles"   , default: {}} ,
+        ] ,
         part_icon: [
             {prop : "prop_icon"           , default: "&#9888;"} ,
             {prop : "prop_iconClass"      , default: ["font-30pt" , "text-danger"]} ,
@@ -1452,9 +1513,11 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-            part_icon: {} ,
-            part_title: {} ,
-            part_btn_retry: {} ,
+            part_border: {
+                part_icon: {} ,
+                part_title: {} ,
+                part_btn_retry: {} ,
+            }
         }
     }
 
@@ -1482,65 +1545,49 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
     /* ---------------------------------------------
       TEMPLATEs
      --------------------------------------------- */
-    componentFn( componentSlots , var_randomId){
-        this.componentFn_render_icon(  "part_icon" , componentSlots  , var_randomId);
-        this.componentFn_render_button(  "part_btn_retry" , componentSlots  , var_randomId);
+    componentFn(){
+        this.templateFn(  "part_border");
+        this.templateFn(  "part_icon");
+        this.templateFn(  "part_btn_retry");
     }
 
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure(     "part_structure"     , componentSlots  , var_randomId);
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
             case "part_title":
-                return this.template_render_title(          "part_title"  , componentSlots  , var_randomId);
+                return this.template_render_title(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
+            case "part_btn_retry":
+                return this.componentFn_render_button(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
-
+    template_render_structure(partName) {
+        const content = `
+           <component-border id="component-is-empty-border-${this._COMPONENT_RANDOM_ID}">
+               <component-body>
+               
+                    <component-icon id="component-is-empty-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+         
+                    ${this.templateFn("part_title") ?? ""}
+         
+                    <div class="d-block mx-auto">
+                        <component-button id="component-is-empty-button-${this._COMPONENT_RANDOM_ID}"></component-button>
+                    </div>
+                    
+               </component-body>
+          </component-border> 
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_structure(partName , componentSlots , var_randomId) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            return `
-<section data-part-name="${partName}">
-    <style>
-        #${this._COMPONENT_ID} #component-form-structure-${var_randomId}{
-           
-       }
-    </style>
-    <section id="component-is-empty-structure-${var_randomId}" class="border border-danger text-danger  shadow-sm" >
-         
-         <component-icon id="component-is-empty-icon-${var_randomId}"></component-icon>
-         
-         ${this.templateFn("part_title", componentSlots , var_randomId) ?? ""}
-         
-         <div class="d-block mx-auto">
-             <component-button id="component-is-empty-button-${var_randomId}"></component-button>
-         </div>
-         
-    </section>
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_title(partName , componentSlots , var_randomId) {
+    template_render_title(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -1548,13 +1595,15 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
             const prop_title =     data.hasOwnProperty("prop_title")    ?  data.prop_title     : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
 
             return `
-<section data-part-name="${partName}">
+<section data-part-name="${partName}" 
+         id="component-is-empty-title-${this._COMPONENT_RANDOM_ID}" 
+         class="">
     <style>
-        #${this._COMPONENT_ID} #component-is-empty-title-${var_randomId}{
+        #${this._COMPONENT_ID} #component-is-empty-title-${this._COMPONENT_RANDOM_ID}{
              text-align: center!important;
        }
     </style>
-    <p id="component-is-empty-title-${var_randomId}" class="" >
+    <p>
          <b>
             ${prop_title} 
          </b>
@@ -1568,7 +1617,27 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
         `;
     }
 
-    componentFn_render_icon(partName , componentSlots  , var_randomId) {
+    componentFn_render_border(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_borderClass =      data.hasOwnProperty("prop_borderClass")     ? data.prop_borderClass    : null;
+            const prop_borderStyles =     data.hasOwnProperty("prop_borderStyles")    ? data.prop_borderStyles   : null;
+
+            new window.ComponentBorder(
+                `component-is-empty-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_btnMore_show: false ,
+
+                    prop_structureClass: prop_borderClass ,
+                    prop_structureStyles: prop_borderStyles ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_icon(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -1582,7 +1651,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
             };
 
             new window.ComponentIcon(
-                `component-is-empty-icon-${var_randomId}` ,
+                `component-is-empty-icon-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_iconClass: prop_iconClass ,
                     prop_iconStyles: prop_iconStyles ,
@@ -1592,7 +1661,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
         }
     }
 
-    componentFn_render_button(partName , componentSlots  , var_randomId) {
+    componentFn_render_button(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null && data.hasOwnProperty("prop_btnAddStatus") && data.prop_btnAddStatus){
@@ -1607,7 +1676,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
             const prop_btnAddTitle   =      data.hasOwnProperty("prop_btnAddTitle")             ?  data.prop_btnAddTitle            :  "add item";
 
             new window.ComponentButton(
-                `component-is-empty-button-${var_randomId}` ,
+                `component-is-empty-button-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList: ["d-block" , "m-auto" , "mb-2"] ,
                     styles: {
@@ -1626,8 +1695,8 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 </span>
                     ` ,
 
-                    fn_callback: ()=>{
-                       this.runFn("fn_onCLickRetry" , "event")
+                    fn_callback: (event)=>{
+                        this.fn_onCLickRetry(event)
                     }
 
                 }
@@ -1661,13 +1730,16 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 /*-------------------------------------
  6) Component Header
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_classList
 
 @prop_icon
 
 @prop_size
 @prop_title
-
 -------------------------------------*/
 window.ComponentHeader = class ComponentHeader extends ComponentBase{
 
@@ -1676,11 +1748,15 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_classList"  , default: ["pb-0","px-2","mb-1","border-bottom"]} ,
+
+        ] ,
+        part_border: [
+            {prop : "prop_borderClass"   , default: ["pb-0","px-2","mb-1","border-bottom"]} ,
+            {prop : "prop_borderStyles"  , default: {}} ,
         ] ,
         part_header: [
-            {prop : "prop_size"       , default: 5} ,
-            {prop : "prop_title"      , default: ""} ,
+            {prop : "prop_size"          , default: 5} ,
+            {prop : "prop_title"         , default: ""} ,
         ] ,
         part_icon: [
             {prop : "prop_icon" , default: null}
@@ -1689,8 +1765,10 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-            part_header: {} ,
-            part_icon: {} ,
+            part_border: {
+                part_header: {} ,
+                part_icon: {} ,
+            }
         }
     }
 
@@ -1720,61 +1798,56 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn( componentSlots , var_randomId){
-        this.componentFn_render_icon(  "part_icon" , componentSlots  , var_randomId);
+    componentFn(){
+        this.templateFn(  "part_border");
+        this.templateFn(  "part_icon");
     }
 
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure(  "part_structure"  , componentSlots  , var_randomId);
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
             case "part_header":
-                return this.template_render_header(     "part_header"     , componentSlots  , var_randomId);
+                return this.template_render_header(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
 
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
+    template_render_structure(partName) {
+
+        const content = `
+           <component-border id="component-header-border-${this._COMPONENT_RANDOM_ID}">
+               <component-body>
+               
+                     <component-icon id="component-header-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+                     
+                     ${this.templateFn("part_header") ?? ""}
+                    
+               </component-body>
+          </component-border> 
+                `;
+        return this.templateBasic_render_structure(content);
 
     }
 
-    template_render_structure(partName , componentSlots , var_randomId) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_classList = data.hasOwnProperty("prop_classList")   ?  data.prop_classList  : ["pb-0","px-2","mb-1","border-bottom"];
-
-            return `
-<section class="${tools_public.renderListClass(prop_classList)}" data-part-name="${partName}">
-        <component-icon id="component-header-icon-${var_randomId}"></component-icon>
-        ${this.templateFn("part_header" , componentSlots  , var_randomId) ?? ""}
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_header(partName , componentSlots  , var_randomId) {
+    template_render_header(partName) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
             const prop_size =      data.hasOwnProperty("prop_size")        ?  data.prop_size       : 5;
-            const prop_title =     data.hasOwnProperty("prop_title")       ?  data.prop_title      : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_title =     data.hasOwnProperty("prop_title")       ?  data.prop_title      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
 
             return `
-<section data-part-name="${partName}">
-   <h${prop_size} id="component-header-text-${var_randomId}">${prop_title ?? ''}</h${prop_size}>
+<section data-part-name="${partName}" 
+         id="component-header-text-${this._COMPONENT_RANDOM_ID}">
+   <h${prop_size}>${prop_title ?? ''}</h${prop_size}>
 </section>
             `;
         }
@@ -1784,14 +1857,36 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
         `;
     }
 
-    componentFn_render_icon (partName , componentSlots  , var_randomId) {
+    componentFn_render_border(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_borderClass =      data.hasOwnProperty("prop_borderClass")     ? data.prop_borderClass    : null;
+            const prop_borderStyles =     data.hasOwnProperty("prop_borderStyles")    ? data.prop_borderStyles   : null;
+
+            console.log(data)
+
+            new window.ComponentBorder(
+                `component-header-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_btnMore_show: false ,
+
+                    prop_structureClass: prop_borderClass ,
+                    prop_structureStyles: prop_borderStyles ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_icon (partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
             const prop_icon   =  data.hasOwnProperty("prop_icon")       ?  data.prop_icon      : null;
 
             new window.ComponentIcon(
-                `component-header-icon-${var_randomId}` ,
+                `component-header-icon-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList:[
                         (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl) ? "float-end" : "float-start" ,
@@ -1813,8 +1908,9 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
 /*-------------------------------------
  7) Component Collapse
 -------------------------------------
-@prop_collapseClass
-@prop_collapseStyles
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
 @prop_title
 
@@ -1824,14 +1920,12 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
 -------------------------------------*/
 window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
 
-
     /* ---------------------------------------------
       PROPERTYs
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_collapseClass"                  , default: []} ,
-            {prop : "prop_collapseStyles"                 , default: {}} ,
+
         ] ,
         part_collapse_header: [
             {prop : "prop_title"                          , default: "---"} ,
@@ -1889,84 +1983,57 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
        TEMPLATEs
     --------------------------------------------- */
     componentFn( componentSlots , var_randomId){
-        this.componentFn_render_label("part_collapse_header_title" , componentSlots  , var_randomId)
-        this.componentFn_render_icon("part_collapse_header_icon" , componentSlots  , var_randomId)
+        this.templateFn("part_collapse_header_title")
+        this.templateFn("part_collapse_header_icon")
     }
 
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure(     "part_structure"        , componentSlots  , var_randomId);
+                return this.template_render_structure(partName);
             case "part_collapse_header":
-                return this.template_render_collapseHeader(          "part_collapse_header"  , componentSlots  , var_randomId);
+                return this.template_render_collapseHeader(partName);
+            case "part_collapse_header_title":
+                return this.componentFn_render_label(partName);
+            case "part_collapse_header_icon":
+                return this.componentFn_render_icon(partName);
             case "part_collapse_body":
-                return this.template_render_collapseBody(          "part_collapse_body"  , componentSlots  , var_randomId);
+                return this.template_render_collapseBody(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
+    template_render_structure(partName) {
+        const content = `
+         ${this.templateFn("part_collapse_header") ?? ""}
+         
+         ${this.templateFn("part_collapse_body") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_structure(partName , componentSlots , var_randomId) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_collapseClass  = data.hasOwnProperty("prop_collapseClass")    ?  data.prop_collapseClass  : [];
-            const prop_collapseStyles = data.hasOwnProperty("prop_collapseStyles")   ?  data.prop_collapseStyles  : {};
-
-            return `
-<section data-part-name="${partName}">
-    <style>
-        #${this._COMPONENT_ID} #component-collapse-structure-${var_randomId}{
-            ${tools_public.renderListStyle(prop_collapseStyles)}
-       }
-    </style>
-    <section id="component-collapse-structure-${var_randomId}" class="${tools_public.renderListClass(prop_collapseClass)}" >
-         
-         ${this.templateFn("part_collapse_header", componentSlots , var_randomId) ?? ""}
-         
-         ${this.templateFn("part_collapse_body", componentSlots , var_randomId) ?? ""}
-         
-    </section>
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_collapseHeader(partName , componentSlots , var_randomId) {
+    template_render_collapseHeader(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
             const prop_title  = data.hasOwnProperty("prop_title")     ?  data.prop_title     :  "---";
-            /*<component-icon id="component-collapse-header-label-icon-${  var_randomId}"></component-icon>*/
+
             return `
-<section data-part-name="${partName}">
+<section data-part-name="${partName}" id="component-collapse-header-${this._COMPONENT_RANDOM_ID}" class="" >
     <style>
-        #${this._COMPONENT_ID} #component-collapse-header-${var_randomId}{
+        #${this._COMPONENT_ID} #component-collapse-header-${this._COMPONENT_RANDOM_ID}{
             
        }
     </style>
-    <section id="component-collapse-header-${var_randomId}" class="" >
-         <component-label id="component-collapse-header-label-${var_randomId}">
+    <component-label id="component-collapse-header-label-${this._COMPONENT_RANDOM_ID}">
              <component-body>
-                 <section>
+                 <div>
                      ${prop_title}
-                     <component-icon id="component-collapse-header-label-icon-${  var_randomId}"></component-icon>
-                 </section>
+                     <component-icon id="component-collapse-header-label-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+                 </div>
              </component-body>
-         </component-label>
-    </section>
+    </component-label>
 </section>
         `;
         }
@@ -1976,27 +2043,29 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
         `;
     }
 
-    template_render_collapseBody(partName , componentSlots , var_randomId) {
+    template_render_collapseBody(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
 
             const prop_bodyBackgroundColor  = data.hasOwnProperty("prop_bodyBackgroundColor")                     ?  data.prop_bodyBackgroundColor  : "";
             const prop_bodyShow             = data.hasOwnProperty("prop_bodyShow")                                ?  data.prop_bodyShow             : false;
-            const prop_body                 = data.hasOwnProperty("prop_body") && data.prop_body != null          ?  data.prop_body                 :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_body                 = data.hasOwnProperty("prop_body") && data.prop_body != null          ?  data.prop_body                 :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
 
 
             return `
-<section data-part-name="${partName}">
+<section data-part-name="${partName}"  
+         id="component-collapse-body-${this._COMPONENT_RANDOM_ID}" 
+         class="shadow-sm p-2 border">
     <style>
-        #${this._COMPONENT_ID} #component-collapse-body-${var_randomId}{
+        #${this._COMPONENT_ID} #component-collapse-body-${this._COMPONENT_RANDOM_ID}{
             background-color: ${prop_bodyBackgroundColor};
             display: ${prop_bodyShow ? '' : 'none'};
        }
     </style>
-    <section id="component-collapse-body-${var_randomId}" class="shadow-sm p-2 border" >
-         ${prop_body}
-    </section>
+    
+    ${prop_body}
+    
 </section>
         `;
         }
@@ -2006,29 +2075,29 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
         `;
     }
 
-    componentFn_render_label (partName , componentSlots  , var_randomId) {
+    componentFn_render_label (partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
             new window.ComponentLabel(
-                "component-collapse-header-label-"+  var_randomId ,
+                "component-collapse-header-label-"+  this._COMPONENT_RANDOM_ID ,
                 {
-                    fn_callback: ()=>{
-                        this.runFn("fn_onCLickHeaderCollapse" , "event" , var_randomId)
+                    fn_callback: (event)=>{
+                        this.fn_onCLickHeaderCollapse(event)
                     }
                 }
             )
         }
     }
 
-    componentFn_render_icon (partName , componentSlots  , var_randomId) {
+    componentFn_render_icon (partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
             const prop_bodyShow             = data.hasOwnProperty("prop_bodyShow")                                ?  data.prop_bodyShow             : false;
 
             new window.ComponentIcon(
-                `component-collapse-header-label-icon-${var_randomId}` ,
+                `component-collapse-header-label-icon-${ this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList: [ (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl) ? "float-start" : "float-end"] ,
 
@@ -2052,13 +2121,12 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
-    fn_onCLickHeaderCollapse(event , var_randomId){
+    fn_onCLickHeaderCollapse(event){
         let prop_bodyShow = this.get("prop_bodyShow");
         if (prop_bodyShow == null){
             prop_bodyShow = false;
         }
         this.set("prop_bodyShow" , !prop_bodyShow);
-        this.componentFn_render_icon("part_collapse_header_icon" , null  , var_randomId)
     }
 
 }
@@ -2073,11 +2141,14 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
 /*-------------------------------------
  8) Component Table
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_tableClass
 @prop_tableStyles
 @prop_tableType                      // 1) table-dark  |  2) table-primary  | 3) table-secondary  | 4) table-success  | 5) table-danger  | 6) table-warning  | 7) table-info  | 8) table-light  | 0(default)
 @prop_tableBordered                  // 1) border-dark |  2) border-primary | 3) border-secondary | 4) border-success | 5) border-danger | 6) border-warning | 7) border-info | 8) border-light | 0(default)
-
 
 @prop_tableStriped
 @prop_tableHover
@@ -2181,64 +2252,38 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn( componentSlots , var_randomId){
+    componentFn(){
 
     }
 
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure(      "part_structure"        , componentSlots  , var_randomId);
+                return this.template_render_structure(partName);
             case "part_table":
-                return this.template_render_table( "part_table"  , componentSlots  , var_randomId);
+                return this.template_render_table(partName);
             case "part_table_header":
-                return this.template_render_tableHeader( "part_table_header"  , componentSlots  , var_randomId);
+                return this.template_render_tableHeader(partName);
             case "part_table_body":
-                return this.template_render_tableBody(   "part_table_body"  , componentSlots  , var_randomId);
+                return this.template_render_tableBody(partName);
             case "part_table_footer":
-                return this.template_render_tableFooter(   "part_table_footer"  , componentSlots  , var_randomId);
+                return this.template_render_tableFooter(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
-    }
+    template_render_structure(partName) {
 
-    template_render_structure(partName , componentSlots , var_randomId) {
-        const data = this.getPartProps(partName)
+        const content = `
+            ${this.templateFn("part_table") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
 
-        if (data != null){
-
-
-            return `
-<section data-part-name="${partName}">
-    <style>
-        #${this._COMPONENT_ID} #component-table-structure-${var_randomId}{
-            
-       }
-    </style>
-    <section id="component-table-structure-${var_randomId}" class="" >
-         
-         ${this.templateFn("part_table", componentSlots , var_randomId) ?? ""}
-         
-    </section>
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
     }
 
 
-    template_render_table(partName , componentSlots , var_randomId) {
+    template_render_table(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null) {
@@ -2287,21 +2332,21 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
            font-size: 10pt;
        }
     
-        #${this._COMPONENT_ID} #component-table-table-${var_randomId}{
+        #${this._COMPONENT_ID} #component-table-table-${this._COMPONENT_RANDOM_ID}{
             ${tools_public.renderListStyle(prop_tableStyles)}
        }
     </style>
-    <table id="component-table-table-${var_randomId}"
+    <table id="component-table-table-${this._COMPONENT_RANDOM_ID}"
            class=" ${tableType}  ${tableBordered} ${tools_public.renderListClass(prop_tableClass)}
                    ${ prop_tableStriped ?    'table-striped'    : ''}
                    ${ prop_tableHover ?      'table-hover'      : ''} 
                    ${ prop_tableBorderless ? 'table-borderless' : ''}
            ">
-        ${this.templateFn("part_table_header", componentSlots , var_randomId) ?? ""}
+        ${this.templateFn("part_table_header") ?? ""}
          
-         ${this.templateFn("part_table_body", componentSlots , var_randomId) ?? ""}
+         ${this.templateFn("part_table_body") ?? ""}
          
-         ${this.templateFn("part_table_footer", componentSlots , var_randomId) ?? ""}
+         ${this.templateFn("part_table_footer") ?? ""}
     </table>
 </section>
             `;
@@ -2312,7 +2357,7 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
         `;
     }
 
-    template_render_tableHeader(partName , componentSlots , var_randomId) {
+    template_render_tableHeader(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null) {
@@ -2330,12 +2375,14 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 
             return `
 
-<thead id="component-table-header-${var_randomId}" data-part-name="${partName}" class=" ${tools_public.renderListClass(prop_tableHeadClass)}">
+<thead data-part-name="${partName}"  
+       id="component-table-header-${this._COMPONENT_RANDOM_ID}" 
+       class=" ${tools_public.renderListClass(prop_tableHeadClass)}">
      <style>
-         #${this._COMPONENT_ID} #component-table-header-${var_randomId}{
+         #${this._COMPONENT_ID} #component-table-header-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_tableHeadStyles)}
          }
-         #${this._COMPONENT_ID}.component-table-header-item-${var_randomId}{
+         #${this._COMPONENT_ID}.component-table-header-item-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_tableItemHeadStyles)}
          }
      </style>
@@ -2351,7 +2398,7 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
         `;
     }
 
-    template_render_tableBody(partName , componentSlots , var_randomId) {
+    template_render_tableBody(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -2379,16 +2426,19 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
             const htmlBody = this.fn_onGetHtmlBody(prop_order , prop_header  , prop_data , prop_valueType  , prop_valueRow , prop_valueCol , prop_tableItemBodyClass );
 
             return `
-<tbody id="component-table-body-${var_randomId}" data-part-name="${partName}" class=" ${tools_public.renderListClass(prop_tableBodyClass)}">
+<tbody data-part-name="${partName}" 
+       id="component-table-body-${this._COMPONENT_RANDOM_ID}" 
+       class=" ${tools_public.renderListClass(prop_tableBodyClass)}">
+       
      <style>
-         #${this._COMPONENT_ID} #component-table-body-${var_randomId}{
+         #${this._COMPONENT_ID} #component-table-body-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_tableBodyStyles)}
          }
-         #${this._COMPONENT_ID} .component-table-body-item-${var_randomId} span{
+         #${this._COMPONENT_ID} .component-table-body-item-${this._COMPONENT_RANDOM_ID} span{
              cursor: pointer;
              ${tools_public.renderListStyle(prop_tableItemBodyStyles)}
          }
-         #${this._COMPONENT_ID} .component-table-body-item-${var_randomId}:hover span{
+         #${this._COMPONENT_ID} .component-table-body-item-${this._COMPONENT_RANDOM_ID}:hover span{
              ${tools_public.renderListStyle(prop_tableItemBodyHoverStyles)}
          }
          
@@ -2413,7 +2463,7 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
         `;
     }
 
-    template_render_tableFooter(partName , componentSlots , var_randomId) {
+    template_render_tableFooter(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null) {
@@ -2461,7 +2511,6 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
     }
 
     fn_onGetHtmlBody(prop_order , prop_header  , prop_data , prop_valueType , prop_valueRow , prop_valueCol  , prop_tableItemBodyClass){
-
 
         let htmlBody = "";
 
@@ -2589,6 +2638,10 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 /*-------------------------------------
  9) Component Button
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type
 @prop_title
 
@@ -2609,6 +2662,9 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
     PROPERTYs
     --------------------------------------------- */
     _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
         part_button: [
             {prop : "prop_type"                         , default: "submit"  } ,  // error  //submit //null
             {prop : "prop_title"                        , default: "BTN"     } ,
@@ -2623,7 +2679,9 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
     }
 
     _COMPONENT_SCHEMA = {
-        part_button: {} ,
+        part_structure: {
+            part_button: {} ,
+        }
     }
 
 
@@ -2655,30 +2713,29 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
     --------------------------------------------- */
     templateFn(partName = null  , componentSlots  , var_randomId){
         switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
             case "part_button":
-                return this.template_render_button(  "part_button"  , componentSlots  , var_randomId);
+                return this.template_render_button( partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-
-    template_render( componentSlots , var_randomId) {
-        return `
-<section class="component-element-structure">
-   ${this.templateFn("part_button", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
+    template_render_structure(partName) {
+        const content = `
+            ${this.templateFn("part_button") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-
-    template_render_button(partName , componentSlots , var_randomId) {
+    template_render_button(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
 
             const prop_type             =   data.hasOwnProperty("prop_type")                 ?  data.prop_type               :  null;
-            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
 
             const prop_btnClass         =   data.hasOwnProperty("prop_btnClass")             ?  data.prop_btnClass           : "w-100"
             const prop_btnStyles        =   data.hasOwnProperty("prop_btnStyles")            ?  data.prop_btnStyles          : null;
@@ -2711,19 +2768,19 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 <section data-part-name="${partName}">
 
    <style>
-      #${this._COMPONENT_ID} #component-button-${var_randomId}{
+      #${this._COMPONENT_ID} #component-button-${this._COMPONENT_RANDOM_ID}{
           background-color: ${btnBackgroundColor};
           color:            ${btnColor};
           ${tools_public.renderListStyle(prop_btnStyles)}
      }
-      #${this._COMPONENT_ID} #component-button-${var_randomId}:hover{
+      #${this._COMPONENT_ID} #component-button-${this._COMPONENT_RANDOM_ID}:hover{
           transition: background-color 200ms ease;
           background-color: ${btnBackgroundColor_hover};
           ${tools_public.renderListStyle(prop_btnHoverStyles)}
      }
    </style>
 
-   <button id="component-button-${var_randomId}" class=" ${tools_public.renderListClass(prop_btnClass)}  shadow-sm border-0 px-2 py-1 rounded "
+   <button id="component-button-${this._COMPONENT_RANDOM_ID}" class=" ${tools_public.renderListClass(prop_btnClass)}  shadow-sm border-0 px-2 py-1 rounded "
             onclick="${this.getFn('fn_onCLickBtn' , "event")}">
       ${prop_title}
    </button>
@@ -2736,7 +2793,6 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 <section data-part-name="${partName}"></section>
         `;
     }
-
 
 
 
@@ -2760,8 +2816,9 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 /*-------------------------------------
  10) Component Select Option
 -------------------------------------
-@prop_selectClass
-@prop_selectStyles
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
 @prop_name
 @prop_itemSelected
@@ -2807,8 +2864,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_selectClass"                       , default:  []} ,
-            {prop : "prop_selectStyles"                      , default:  {}} ,
+
         ] ,
         part_value: [
             {prop : "prop_name"                              , default:  ""} ,
@@ -2914,62 +2970,34 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure();
+                return this.template_render_structure(partName);
             case "part_value":
-                return this.template_render_value();
+                return this.template_render_value(partName);
             case "part_label":
-                return this.componentFn_render_label();
+                return this.componentFn_render_label(partName);
             case "part_header":
-                return this.template_render_header();
+                return this.template_render_header(partName);
             case "part_header_icon":
-                return this.componentFn_render_headerIcon();
+                return this.componentFn_render_headerIcon(partName);
             case "part_header_arrow_icon":
-                return this.componentFn_render_headerArrowIcon();
+                return this.componentFn_render_headerArrowIcon(partName);
             case "part_header_button":
-                return this.componentFn_render_headerButton();
+                return this.componentFn_render_headerButton(partName);
             case "part_header_title":
-                return this.template_render_headerTitle();
+                return this.template_render_headerTitle(partName);
             case "part_body":
-                return this.componentFn_render_body();
+                return this.componentFn_render_body(partName);
             case "part_body_searcher":
-                return this.componentFn_render_bodySearcher();
+                return this.componentFn_render_bodySearcher(partName);
             case "part_body_options":
-                return this.template_render_bodyOptions();
+                return this.template_render_bodyOptions(partName);
             default:
-                return this.template_render();
+                return this.templateBasic_render();
         }
     }
 
-    template_render() {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure") ?? ""}
-</section>
-        `;
-
-    }
-
-    template_render_structure() {
-        const partName = "part_structure";
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_selectClass             =   data.hasOwnProperty("prop_selectClass")             ?  data.prop_selectClass             :  [];
-            const prop_selectStyles            =   data.hasOwnProperty("prop_selectStyles")            ?  data.prop_selectStyles            : {};
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-select-option-structure-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_selectClass)}" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-select-option-structure-${ this._COMPONENT_RANDOM_ID}{
-             ${tools_public.renderListStyle(prop_selectStyles)}
-         }
-     </style>
-     
+    template_render_structure(partName) {
+        const content = `
       <component-label id="component-select-option-label-${ this._COMPONENT_RANDOM_ID}"></component-label>
      
       ${this.templateFn("part_value") ?? ""}
@@ -2987,19 +3015,12 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                  </component-body>
           </component-position-element>
       </div>
-
-
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_value() {
-        const partName = "part_value";
+
+    template_render_value(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3029,8 +3050,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         `;
     }
 
-    template_render_header() {
-        const partName = "part_header";
+    template_render_header(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3041,7 +3061,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             return `
 <section data-part-name="${partName}" 
          id="component-select-option-header-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_titleClass)} position-relative"  
+         class="${tools_public.renderListClass(prop_titleClass)} position-relative p-0"  
          onclick="${this.getFn('fn_showListOptions' , 'event')}">
      <style>
          #${this._COMPONENT_ID} #component-select-option-header-${ this._COMPONENT_RANDOM_ID}{
@@ -3067,8 +3087,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         `;
     }
 
-    template_render_headerTitle() {
-        const partName = "part_header_title";
+    template_render_headerTitle(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3093,6 +3112,8 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            height: 28px;
+            line-height: 35px;
          }
      </style>
 
@@ -3111,8 +3132,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         `;
     }
 
-    template_render_bodyOptions() {
-        const partName = "part_body_options";
+    template_render_bodyOptions(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3166,8 +3186,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         `;
     }
 
-    componentFn_render_label() {
-        const partName = "part_label";
+    componentFn_render_label(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3198,8 +3217,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_headerIcon() {
-        const partName = "part_header_icon";
+    componentFn_render_headerIcon(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3237,8 +3255,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_headerArrowIcon() {
-        const partName = "part_header_arrow_icon";
+    componentFn_render_headerArrowIcon(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3280,8 +3297,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_headerButton() {
-        const partName = "part_header_button";
+    componentFn_render_headerButton(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3333,8 +3349,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_body() {
-        const partName = "part_body";
+    componentFn_render_body(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3359,8 +3374,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_bodySearcher() {
-        const partName = "part_body_searcher";
+    componentFn_render_bodySearcher(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -3391,7 +3405,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         if (data.hasOwnProperty("fn_clickBtnTools") && typeof data.fn_clickBtnTools != null){
             data.fn_clickBtnTools(event , data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null);
         }
-        this.runFn("fn_showListOptions" , "event" , false)
+        this.fn_showListOptions(event , false);
     }
 
     fn_onSelectItemSelectOption(event , itemIdSelected){
@@ -3406,7 +3420,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                 }
             }
         }
-        this.runFn("fn_showListOptions" , "event" , false);
+        this.fn_showListOptions(event , false);
 
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
             data.fn_callback(event , data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null);
@@ -3477,6 +3491,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 /*-------------------------------------
  11) Component Tabs
 -------------------------------------
+@prop_show
 @prop_structureClass
 @prop_structureStyles
 
@@ -3496,8 +3511,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"                 , default:  []} ,
-            {prop : "prop_structureStyles"                , default:  {}} ,
+
         ] ,
         part_tabs: [
             {prop : "prop_type"                           , default:  0 } ,
@@ -3543,63 +3557,28 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
     componentFn(){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("prop_firstCallBack") && data.prop_firstCallBack){
-            this.runFn("fn_onSelectTab" , "event" , data.hasOwnProperty("prop_tabSelected") ? data.prop_tabSelected : null , false)
+            this.fn_onSelectTab(event , data.hasOwnProperty("prop_tabSelected") ? data.prop_tabSelected : null , false)
         }
     }
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure();
+                return this.template_render_structure(partName);
             case "part_tabs":
-                return this.template_render_tabs();
+                return this.template_render_tabs(partName);
             default:
-                return this.template_render();
+                return this.templateBasic_render();
         }
     }
 
-    template_render() {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure") ?? ""}
-</section>
-        `;
-
-    }
-
-    template_render_structure() {
-        const partName = "part_structure";
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_structureClass             =   data.hasOwnProperty("prop_structureClass")             ?  data.prop_structureClass             :  [];
-            const prop_structureStyles            =   data.hasOwnProperty("prop_structureStyles")            ?  data.prop_structureStyles            : {};
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-tabs-structure-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_structureClass)}" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-tabs-structure-${ this._COMPONENT_RANDOM_ID}{
-             ${tools_public.renderListStyle(prop_structureStyles)}
-         }
-     </style>
-     
+    template_render_structure(partName) {
+        const content = `
       ${this.templateFn("part_tabs") ?? ""}
-      
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_tabs(){
-        const partName = "part_tabs";
+    template_render_tabs(partName){
 
         const data = this.getPartProps(partName)
 
@@ -3697,15 +3676,15 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
          class="" >
          
      <style>
-         #${this._COMPONENT_ID} #component-tabs-structure-${ this._COMPONENT_RANDOM_ID}{
+         #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID}{
          
          }
          
          
-         #${this._COMPONENT_ID} #component-tabs-structure-${ this._COMPONENT_RANDOM_ID} .btn-tab-types{
+         #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types{
                background-color: #c7c7c7;
          }
-         #${this._COMPONENT_ID} #component-tabs-structure-${ this._COMPONENT_RANDOM_ID} .btn-tab-types:before{
+         #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types:before{
                content: "";
                width: 100%;
                height: 115%;
@@ -3716,7 +3695,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
                background-color: #ffffff29;
                clip-path: ellipse(100% 50% at 50% 0);
          }
-         #${this._COMPONENT_ID} #component-tabs-structure-${ this._COMPONENT_RANDOM_ID} .btn-tab-types-active{
+         #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types-active{
                background-color:#0A1225 !important;
                color :#ffffff !important;
          }
@@ -3760,6 +3739,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 /*-------------------------------------
  12) Component OTP
 -------------------------------------
+@prop_show
 @prop_structureClass
 @prop_structureStyles
 
@@ -3782,8 +3762,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"                 , default:  []} ,
-            {prop : "prop_structureStyles"                , default:  {}} ,
+
         ] ,
         part_value: [
             {prop : "var_value"                           , default:  null} ,
@@ -3858,67 +3837,33 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure();
+                return this.template_render_structure(partName);
             case "part_value":
-                return this.template_render_value();
+                return this.template_render_value(partName);
             case "part_elements":
-                return this.template_render_elements();
+                return this.template_render_elements(partName);
             case "part_inputs":
-                return this.template_render_inputs();
+                return this.template_render_inputs(partName);
             case "part_label":
-                return this.componentFn_render_label();
+                return this.componentFn_render_label(partName);
             case "part_description":
-                return this.template_render_description();
+                return this.template_render_description(partName);
             default:
-                return this.template_render();
+                return this.templateBasic_render();
         }
     }
 
-    template_render() {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure") ?? ""}
-</section>
-        `;
-
-    }
-
-    template_render_structure() {
-        const partName = "part_structure";
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_structureClass             =   data.hasOwnProperty("prop_structureClass")             ?  data.prop_structureClass             :  [];
-            const prop_structureStyles            =   data.hasOwnProperty("prop_structureStyles")            ?  data.prop_structureStyles            : {};
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-tabs-structure-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_structureClass)}" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-tabs-structure-${ this._COMPONENT_RANDOM_ID}{
-             ${tools_public.renderListStyle(prop_structureStyles)}
-         }
-     </style>
-     
+    template_render_structure(partName) {
+        const content = `
       ${this.templateFn("part_value") ?? ""}
       
       ${this.templateFn("part_elements") ?? ""}
-      
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_value() {
-        const partName = "part_value";
+
+    template_render_value(partName) {
 
         const data = this.getPartProps(partName)
         if (data != null){
@@ -3948,8 +3893,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 
     }
 
-    template_render_elements(){
-        const partName = "part_elements";
+    template_render_elements(partName){
 
         const data = this.getPartProps(partName)
 
@@ -3984,8 +3928,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         `;
     }
 
-    template_render_inputs(){
-        const partName = "part_inputs";
+    template_render_inputs(partName){
 
         const data = this.getPartProps(partName)
 
@@ -4032,8 +3975,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         `;
     }
 
-    template_render_description(){
-        const partName = "part_description";
+    template_render_description(partName){
 
         const data = this.getPartProps(partName)
         if (data != null){
@@ -4076,7 +4018,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
                      <span class="mx-1">
                          |
                      </span>
-                     <span class="btn-get-new-token mx-1 text-info cursor-pointer" onclick="this.getFn("fn_onGetNewToken")">
+                     <span class="btn-get-new-token mx-1 text-info cursor-pointer" onclick="${this.getFn("fn_onGetNewToken")}">
                          ${prop_langs.hasOwnProperty("_text_get_new_otp") ? prop_langs._text_get_new_otp : ""}
                      </span>
                  </div>
@@ -4093,8 +4035,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 
     }
 
-    componentFn_render_label(){
-        const partName = "part_label";
+    componentFn_render_label(partName){
 
         const data = this.getPartProps(partName)
         if (data != null){
@@ -4231,14 +4172,20 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 /*-------------------------------------
  13) Component Widget
 -------------------------------------
-@prop_classList
-@prop_minHeight
-@prop_error404   type   width   height
-@prop_fetch      url    data
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_widgetClass
+@prop_widgetStyles
+@prop_widgetMinHeight
 
 @prop_btnMore_icon
 @prop_btnMore_show
 @prop_btnMore_link
+
+@prop_error404   type   width   height
+@prop_fetch      url    data
 -------------------------------------*/
 window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
@@ -4247,13 +4194,12 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"                 , default:  ["border" , "shadow-sm" , "rounded" , "p-1"]} ,
-            {prop : "prop_structureStyles"                , default:  {}} ,
-            {prop : "prop_minHeight"                      , default:  120} ,
+
         ] ,
         part_border: [
-            {prop : "prop_widgetClass"                    , default:  []} ,
+            {prop : "prop_widgetClass"                    , default:  ["border" , "shadow-sm" , "rounded" , "p-1"]} ,
             {prop : "prop_widgetStyles"                   , default:  {"min-height" : "120px"}} ,
+            {prop : "prop_widgetMinHeight"                , default:  null} ,
             {prop : "prop_btnMore_icon"                   , default:  ""} ,
             {prop : "prop_btnMore_show"                   , default:  false} ,
             {prop : "prop_btnMore_link"                   , default:  null} ,
@@ -4262,7 +4208,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-
+            part_border:{}
         } ,
     }
 
@@ -4291,54 +4237,24 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
     TEMPLATEs
    --------------------------------------------- */
     componentFn(){
+        this.templateFn("part_border")
         this.fn_onFetchWidget()
-
-        console.log("asd")
     }
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                console.log("asaaaaaaa")
                 return this.template_render_structure(partName);
             case "part_border":
                 return this.componentFn_render_border(partName);
             default:
-                return this.template_render();
+                return this.templateBasic_render();
         }
     }
 
-    template_render() {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure") ?? ""}
-</section>
-        `;
-
-    }
 
     template_render_structure(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_structureClass             =   data.hasOwnProperty("prop_structureClass")             ?  data.prop_structureClass                      :  [];
-            const prop_structureStyles            =   data.hasOwnProperty("prop_structureStyles")            ?  data.prop_structureStyles                     : {};
-            const prop_minHeight                  =   data.hasOwnProperty("prop_minHeight")                  ? Math.max(data.prop_minHeight , 120)            : 120;
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-widget-structure-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_structureClass)} position-relative" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-widget-structure-${ this._COMPONENT_RANDOM_ID}{
-             min-height: ${prop_minHeight}px;
-             ${tools_public.renderListStyle(prop_structureStyles)}
-         }
-     </style>
-     
-      <component-border id="border-widget-component-${this._COMPONENT_RANDOM_ID}">
+        const content = `
+   <component-border id="border-widget-component-${this._COMPONENT_RANDOM_ID}">
        <component-body>
              <section id="response-widget-component-${this._COMPONENT_RANDOM_ID}"></section>
     
@@ -4347,34 +4263,34 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
              <component-loading id="widget-component-loading-${this._COMPONENT_RANDOM_ID}"></component-loading>
        </component-body>
    </component-border>
-     
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
+                `;
+        return this.templateBasic_render_structure(content , ["position-relative"]);
     }
+
 
     componentFn_render_border(partName) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_widgetClass  = data.hasOwnProperty("prop_widgetClass")   ? data.prop_widgetClass                : ["border" , "shadow-sm" , "rounded" , "p-1"];
-            const prop_widgetStyles = data.hasOwnProperty("prop_widgetStyles")  ? data.prop_widgetStyles               : {"min-height" : "120px"};
+            const prop_widgetClass     = data.hasOwnProperty("prop_widgetClass")      ? data.prop_widgetClass                   : ["border" , "shadow-sm" , "rounded" , "p-1"];
+            const prop_widgetStyles    = data.hasOwnProperty("prop_widgetStyles")     ? data.prop_widgetStyles                  : {"min-height" : "120px"};
+            const prop_widgetMinHeight = data.hasOwnProperty("prop_widgetMinHeight")  ? data.prop_widgetMinHeight               : null;
 
-            const prop_btnMore_icon = data.hasOwnProperty("prop_btnMore_icon")  ? data.prop_btnMore_icon               : "";
-            const prop_btnMore_show = data.hasOwnProperty("prop_btnMore_show")  ? data.prop_btnMore_show               : false;
-            const prop_btnMore_link = data.hasOwnProperty("prop_btnMore_link")  ? data.prop_btnMore_link               : null;
+            const prop_btnMore_icon    = data.hasOwnProperty("prop_btnMore_icon")     ? data.prop_btnMore_icon                  : "";
+            const prop_btnMore_show    = data.hasOwnProperty("prop_btnMore_show")     ? data.prop_btnMore_show                  : false;
+            const prop_btnMore_link    = data.hasOwnProperty("prop_btnMore_link")     ? data.prop_btnMore_link                  : null;
+
             //---------------
+            if (prop_widgetMinHeight != null){
+                prop_widgetStyles["min-height"] = prop_widgetMinHeight;
+            }
 
             new window.ComponentBorder(
                 `border-widget-component-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_borderClass: prop_widgetClass ,
-                    prop_borderStyles: prop_widgetStyles ,
+                    prop_structureClass: prop_widgetClass ,
+                    prop_structureStyles: prop_widgetStyles ,
 
                     prop_btnMore_icon: prop_btnMore_icon ,
                     prop_btnMore_show: prop_btnMore_show ,
@@ -4482,11 +4398,14 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
 
 
+
+
 /*-------------------------------------
  14) Component Input
 -------------------------------------
-@prop_inputClass
-@prop_inputStyles
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
 @prop_show_label
 @prop_labelClass
@@ -4516,8 +4435,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"        , default:  []} ,
-            {prop : "prop_structureStyles"      , default: {}} ,
+
         ] ,
         part_label: [
             {prop : "prop_labelShow"             , default: false} ,
@@ -4594,55 +4512,29 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure();
+                return this.template_render_structure(partName);
             case "part_label":
-                return this.componentFn_render_label()
+                return this.componentFn_render_label(partName)
             case "part_input":
-                return this.template_render_input();
+                return this.template_render_input(partName);
             case "part_icon_clear":
-                return this.componentFn_render_iconClear();
+                return this.componentFn_render_iconClear(partName);
             case "part_icon":
-                return this.componentFn_render_icon();
+                return this.componentFn_render_icon(partName);
             case "part_button":
-                return this.componentFn_render_button();
+                return this.componentFn_render_button(partName);
             default:
-                return this.template_render();
+                return this.templateBasic_render(partName);
         }
     }
 
-    template_render() {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure") ?? ""}
-</section>
-        `;
-
-    }
 
 
     template_render_structure() {
-        const partName = "part_structure";
-        const data = this.getPartProps(partName)
+        const content = `
+         <component-label id="component-input-label-${this._COMPONENT_RANDOM_ID}"></component-label>
 
-        if (data != null){
-            const prop_structureClass      =   data.hasOwnProperty("prop_structureClass")       ?  data.prop_structureClass        :  [];
-            const prop_structureStyles     =   data.hasOwnProperty("prop_structureStyles")      ?  data.prop_structureStyles       :  {};
-
-            return `
-<section  data-part-name="${partName}"
-          id="component-input-structure-${this._COMPONENT_RANDOM_ID}"  
-          class="${tools_public.renderListClass(prop_structureClass)} " >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-structure-${this._COMPONENT_RANDOM_ID}{
-             ${tools_public.renderListStyle(prop_structureStyles)}
-         }
-     </style>
-     
-     <component-label id="component-input-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
-     
-     <div class="position-relative">
+        <div class="position-relative">
            ${this.templateFn("part_input") ?? ""}
      
            <component-icon id="component-input-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
@@ -4650,19 +4542,12 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
            <component-icon id="component-input-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
            
            <component-button id="component-input-button-${this._COMPONENT_RANDOM_ID}" ></component-button>
-     </div>
-
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
+        </div>
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_input() {
-        const partName = "part_input";
+    template_render_input(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -4715,8 +4600,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         `;
     }
 
-    componentFn_render_label() {
-        const partName = "part_label";
+    componentFn_render_label(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -4745,8 +4629,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         }
     }
 
-    componentFn_render_iconClear() {
-        const partName = "part_icon_clear";
+    componentFn_render_iconClear(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -4793,8 +4676,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         }
     }
 
-    componentFn_render_icon() {
-        const partName = "part_icon";
+    componentFn_render_icon(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -4836,8 +4718,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         }
     }
 
-    componentFn_render_button() {
-        const partName = "part_button";
+    componentFn_render_button(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -4950,8 +4831,9 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 /*-------------------------------------
  15) Component Input Price
 -------------------------------------
-@prop_inputClass
-@prop_inputStyles
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
 @prop_show_label
 @prop_labelClass
@@ -4981,8 +4863,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"        , default:  []} ,
-            {prop : "prop_structureStyles"      , default: {}} ,
+
         ] ,
         part_label: [
             {prop : "prop_labelShow"             , default: false} ,
@@ -5064,54 +4945,27 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure();
+                return this.template_render_structure(partName);
             case "part_label":
-                return this.componentFn_render_label()
+                return this.componentFn_render_label(partName)
             case "part_input":
-                return this.template_render_input();
+                return this.template_render_input(partName);
             case "part_icon_clear":
-                return this.componentFn_render_iconClear();
+                return this.componentFn_render_iconClear(partName);
             case "part_icon":
-                return this.componentFn_render_icon();
+                return this.componentFn_render_icon(partName);
             case "part_button":
-                return this.componentFn_render_button();
+                return this.componentFn_render_button(partName);
             case "part_information":
-                return this.componentFn_render_partition();
+                return this.componentFn_render_partition(partName);
             default:
-                return this.template_render();
+                return this.templateBasic_render();
         }
     }
 
-    template_render() {
 
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure") ?? ""}
-</section>
-        `;
-
-    }
-
-
-    template_render_structure() {
-        const partName = "part_structure";
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_structureClass      =   data.hasOwnProperty("prop_structureClass")       ?  data.prop_structureClass        :  [];
-            const prop_structureStyles     =   data.hasOwnProperty("prop_structureStyles")      ?  data.prop_structureStyles       :  {};
-
-            return `
-<section  data-part-name="${partName}"
-          id="component-input-structure-${this._COMPONENT_RANDOM_ID}"  
-          class="${tools_public.renderListClass(prop_structureClass)} " >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-structure-${this._COMPONENT_RANDOM_ID}{
-             ${tools_public.renderListStyle(prop_structureStyles)}
-         }
-     </style>
-     
+    template_render_structure(partName) {
+        const content = `
      <component-label id="component-input-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
      
      <div class="position-relative">
@@ -5125,18 +4979,12 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
            
            <component-position-element id="component-input-position-element-${this._COMPONENT_RANDOM_ID}" ></component-position-element>
      </div>
-
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_input() {
-        const partName = "part_input";
+    template_render_input(partName) {
+
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -5190,8 +5038,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         `;
     }
 
-    componentFn_render_label() {
-        const partName = "part_label";
+    componentFn_render_label(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -5220,8 +5067,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         }
     }
 
-    componentFn_render_iconClear() {
-        const partName = "part_icon_clear";
+    componentFn_render_iconClear(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -5268,8 +5114,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         }
     }
 
-    componentFn_render_icon() {
-        const partName = "part_icon";
+    componentFn_render_icon(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -5311,8 +5156,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         }
     }
 
-    componentFn_render_button() {
-        const partName = "part_button";
+    componentFn_render_button(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -5364,8 +5208,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         }
     }
 
-    componentFn_render_partition() {
-        const partName = "part_information";
+    componentFn_render_partition(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -5415,7 +5258,6 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                 )
 
             }
-
         }
     }
 
@@ -5497,9 +5339,12 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 /*-------------------------------------
  17) Component label
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_labelClass
 @prop_labelStyles
-@prop_labelHoverStyles
 @prop_labelBackgroundColor
 
 @prop_title
@@ -5516,9 +5361,11 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
+
+        ] ,
+        part_border: [
             {prop : "prop_labelClass"            , default:  ["shadow-sm" , "px-2" , "py-1"]} ,
             {prop : "prop_labelStyles"           , default: {}} ,
-            {prop : "prop_labelHoverStyles"      , default: {}} ,
             {prop : "prop_labelBackgroundColor"  , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("backgroundColor")   ? tools_const.styles.label.backgroundColor : ""} ,
         ] ,
         part_label: [
@@ -5530,7 +5377,9 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-            part_label: {} ,
+            part_border: {
+                part_label: {} ,
+            } ,
         } ,
     }
 
@@ -5561,86 +5410,88 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
     /* ---------------------------------------------
       TEMPLATEs
     --------------------------------------------- */
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    componentFn(){
+        this.templateFn("part_border");
+    }
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure(  "part_structure"  , componentSlots  , var_randomId);
+                return this.template_render_structure( partName );
+            case "part_border":
+                return this.componentFn_render_border( partName );
             case "part_label":
-                return this.template_render_label(      "part_label"      , componentSlots  , var_randomId);
+                return this.template_render_label(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
-
+    template_render_structure(partName) {
+        const content = `
+        <component-border id="component-label-border-${this._COMPONENT_RANDOM_ID}">
+            <component-body>
+                ${this.templateFn("part_label") ?? ""}
+            </component-body>
+        </component-border>
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_structure(partName , componentSlots , var_randomId) {
-        const data = this.getPartProps(partName)
+
+    componentFn_render_border(partName) {
+
+        const data = this.getPartProps(partName);
 
         if (data != null){
-            const prop_labelClass             =   data.hasOwnProperty("prop_labelClass")             ?  data.prop_labelClass             :  ["shadow-sm" , "px-2" , "py-1"];
-            const prop_labelStyles            =   data.hasOwnProperty("prop_labelStyles")            ?  data.prop_labelStyles            :  null;
-            const prop_labelHoverStyles       =   data.hasOwnProperty("prop_labelHoverStyles")       ?  data.prop_labelHoverStyles       :  null;
-            const prop_labelBackgroundColor   =   data.hasOwnProperty("prop_labelBackgroundColor")   ?  data.prop_labelBackgroundColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("backgroundColor")   ? tools_const.styles.label.backgroundColor : "";
+            const prop_labelClass              =   data.hasOwnProperty("prop_labelClass")    && data.prop_labelClass != null    ?  data.prop_labelClass              : [];
+            const prop_labelStyles             =   data.hasOwnProperty("prop_labelStyles")   && data.prop_labelStyles != null   ?  data.prop_labelStyles             : {};
+            const prop_labelBackgroundColor    =   data.hasOwnProperty("prop_labelBackgroundColor")                             ?  data.prop_labelBackgroundColor    : null;
+            //---------------
+            if (prop_labelBackgroundColor != null){
+                prop_labelStyles["background-color"] = prop_labelBackgroundColor;
+            }
 
-            return `
-<section data-part-name="${partName}">
-     <style>
-         #${this._COMPONENT_ID} #component-label-structure-${var_randomId}{
-             background-color: ${prop_labelBackgroundColor};
-             ${tools_public.renderListStyle(prop_labelStyles)}
-         }
-         #${this._COMPONENT_ID} #component-label-structure-${var_randomId}:hover{
-             ${tools_public.renderListStyle(prop_labelHoverStyles)}
-         }
-     </style>
-     <section id="component-label-structure-${var_randomId}" 
-              class="${tools_public.renderListClass(prop_labelClass)}" >
-         ${this.templateFn("part_label", componentSlots , var_randomId) ?? ""}
-    </section>
-</section>
-        `;
+            console.log(prop_labelStyles);
+
+            new window.ComponentBorder(
+                `component-label-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass: prop_labelClass ,
+                    prop_structureStyles: prop_labelStyles ,
+                }
+            )
         }
 
-        return `
-<section data-part-name="${partName}"></section>
-        `;
     }
 
-    template_render_label(partName , componentSlots  , var_randomId) {
+
+    template_render_label(partName) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
+
             const prop_for          =   data.hasOwnProperty("prop_for")                                   ?  data.prop_for          : "";
-            const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
             const prop_labelColor   =   data.hasOwnProperty("prop_labelColor")                            ?  data.prop_labelColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")   ? tools_const.styles.label.color : "";
 
             return `
-<section data-part-name="${partName}">
+<label data-part-name="${partName}"   
+         id="component-label-label-${this._COMPONENT_RANDOM_ID}" 
+         class=" d-block" 
+          for="${prop_for}" 
+         onclick="${this.getFn('fn_onCLickLabel' , 'event' , `'${prop_for}'`)}">
+         
      <style>
-         #${this._COMPONENT_ID} #component-label-label-${var_randomId}{
+         #${this._COMPONENT_ID} #component-label-label-${this._COMPONENT_RANDOM_ID}{
               cursor: pointer;
               color: ${prop_labelColor};
          }
      </style>
        
-     <label for="${prop_for}" 
-           id="component-label-label-${var_randomId}" 
-           class=" d-block" 
-           onclick="${this.getFn('fn_onCLickLabel' , 'event' , `'${prop_for}'`)}">
-         ${prop_title}
-     </label>
+     ${prop_title}
        
-</section>
+</label>
             `;
         }
 
@@ -5672,6 +5523,10 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
 /*-------------------------------------
  18) Component Icon
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_icon
 @prop_isItalik
 
@@ -5686,6 +5541,9 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
     PROPERTYs
     --------------------------------------------- */
     _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
         part_icon: [
             {prop : "prop_icon"        , default: ""} ,
             {prop : "prop_isItalik"    , default: false} ,
@@ -5696,7 +5554,9 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
     }
 
     _COMPONENT_SCHEMA = {
-        part_icon: {} ,
+        part_structure: {
+            part_icon: {} ,
+        }
     }
 
 
@@ -5730,13 +5590,31 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    templateFn(partName = null  , componentSlots  , var_randomId){
-        return `
-        ${this.templateFn_render_icon("part_icon" , componentSlots  , var_randomId)} 
-        `;
+    componentFn(){
+
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure( partName );
+            case "part_icon":
+                return this.template_render_label(partName);
+            default:
+                return this.templateBasic_render();
+        }
     }
 
-    templateFn_render_icon= (partName  , componentSlots  , var_randomId) =>{
+
+    template_render_structure(partName) {
+        const content = `
+${this.templateFn_render_icon("part_icon")} 
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+
+    templateFn_render_icon(partName){
 
         const data = this.getPartProps(partName)
 
@@ -5748,19 +5626,20 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
             const prop_iconStyles          =   data.hasOwnProperty("prop_iconStyles")                ?  data.prop_iconStyles                                      :  {};
 
             return `
-<section data-part-name="${partName}">
-    <style>
-        #${this._COMPONENT_ID} .component-icon-${var_randomId}{
-            ${tools_public.renderListStyle(prop_iconStyles)}
-        }
-    </style>
-    <div class="component-element-structure">
-         <${prop_isItalik ? "i" : "span"} class="component-icon-${var_randomId} ${tools_public.renderListClass(prop_iconClass)}" 
-           onclick="${this.getFn('fn_onCLickIcon' , "event")}">
-             ${prop_icon}
-         </${prop_isItalik ? "i" : "span"}>
-    </div>
-</section>
+<${prop_isItalik ? "i" : "span"} 
+       id="component-icon-icon-${this._COMPONENT_RANDOM_ID}"
+       class="${tools_public.renderListClass(prop_iconClass)}" 
+       onclick="${this.getFn('fn_onCLickIcon' , "event")}">
+    
+      <style>
+         #${this._COMPONENT_ID} #component-icon-icon-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_iconStyles)}
+         }
+      </style>
+
+      ${prop_icon}
+       
+</${prop_isItalik ? "i" : "span"}>
 `;
         }
 
@@ -5793,9 +5672,14 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
 /*-------------------------------------
  19) Component Position Element
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_elementClass
 @prop_elementStyles
 
+@prop_positionType
 @prop_positionTop
 @prop_positionLeft
 @prop_positionBottom
@@ -5813,8 +5697,12 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
+
+        ] ,
+        part_border: [
             {prop : "prop_elementClass"            , default: ["border" , "shadow-sm" , "bg-white" ,"px-2" , "py-1" , "rounded"]} ,
             {prop : "prop_elementStyles"           , default: {}} ,
+            {prop : "prop_positionType"            , default: "absolute"} ,
             {prop : "prop_positionTop"             , default: ""} ,
             {prop : "prop_positionLeft"            , default: ""} ,
             {prop : "prop_positionBottom"          , default: ""} ,
@@ -5829,7 +5717,9 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-            part_content: {}
+            part_border: {
+                part_content: {}
+            }
         } ,
     }
 
@@ -5859,47 +5749,54 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
     /* ---------------------------------------------
       TEMPLATEs
     --------------------------------------------- */
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    componentFn(){
+        this.templateFn("part_border");
+    }
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
-                return this.template_render_structure(  "part_structure"  , componentSlots  , var_randomId);
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
             case "part_content":
-                return this.template_render_content(    "part_content"    , componentSlots  , var_randomId);
+                return this.template_render_content(partName);
             default:
-                return this.template_render( componentSlots  , var_randomId);
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure", componentSlots , var_randomId) ?? ""}
-</section>
-        `;
-
+    template_render_structure(partName) {
+        const content = `
+   <component-border id="component-position-element-border-${this._COMPONENT_RANDOM_ID}">
+      <component-body>
+         ${this.templateFn("part_content") ?? ""}
+      </component-body>
+   </component-border>
+                `;
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_structure(partName , componentSlots , var_randomId) {
+    /*template_render_structure(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
             const prop_elementClass       =  data.hasOwnProperty("prop_elementClass")               ?  data.prop_elementClass         :  ["border" , "shadow-sm" , "bg-white" ,"px-2" , "py-1" , "rounded"];
             const prop_elementStyles      =  data.hasOwnProperty("prop_elementStyles")              ?  data.prop_elementStyles        :  null;
+
             const prop_positionTop        =  data.hasOwnProperty("prop_positionTop")                ?  data.prop_positionTop          :  "";
             const prop_positionLeft       =  data.hasOwnProperty("prop_positionLeft")               ?  data.prop_positionLeft         :  "";
             const prop_positionBottom     =  data.hasOwnProperty("prop_positionBottom")             ?  data.prop_positionBottom       :  "";
             const prop_positionRight      =  data.hasOwnProperty("prop_positionRight")              ?  data.prop_positionRight        :  "";
             const prop_width              =  data.hasOwnProperty("prop_width")                      ?  data.prop_width                :  "100%";
-            const prop_height             =  data.hasOwnProperty("prop_height")                     ?  data.prop_height               :   "200px";
+            const prop_height             =  data.hasOwnProperty("prop_height")                     ?  data.prop_height               :  "200px";
 
             return `
 <section data-part-name="${partName}" 
-         id="component-position-element-structure-${var_randomId}"
+         id="component-position-element-structure-${this._COMPONENT_RANDOM_ID}"
          class=" position-absolute ${tools_public.renderListClass(prop_elementClass)}" >
          
      <style>
-         #${this._COMPONENT_ID} #component-position-element-structure-${var_randomId}{
+         #${this._COMPONENT_ID} #component-position-element-structure-${this._COMPONENT_RANDOM_ID}{
              z-index: 11;
              width:  ${prop_width};
              height: ${prop_height};
@@ -5911,7 +5808,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
          }
      </style>
      
-     ${this.templateFn("part_content", componentSlots , var_randomId) ?? ""}
+     ${this.templateFn("part_content") ?? ""}
      
 </section>
         `;
@@ -5920,21 +5817,73 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
         return `
 <section data-part-name="${partName}"></section>
         `;
+    }*/
+
+
+    componentFn_render_border(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_elementClass       =  data.hasOwnProperty("prop_elementClass")  && data.prop_elementClass != null               ?  data.prop_elementClass         :  [];
+            const prop_elementStyles      =  data.hasOwnProperty("prop_elementStyles") && data.prop_elementStyles != null              ?  data.prop_elementStyles        : {};
+            const prop_positionType       =  data.hasOwnProperty("prop_positionType")                                                  ?  data.prop_positionType         :  "absolute";
+            const prop_positionTop        =  data.hasOwnProperty("prop_positionTop")                                                   ?  data.prop_positionTop          :  "";
+            const prop_positionLeft       =  data.hasOwnProperty("prop_positionLeft")                                                  ?  data.prop_positionLeft         :  "";
+            const prop_positionBottom     =  data.hasOwnProperty("prop_positionBottom")                                                ?  data.prop_positionBottom       :  "";
+            const prop_positionRight      =  data.hasOwnProperty("prop_positionRight")                                                 ?  data.prop_positionRight        :  "";
+            const prop_width              =  data.hasOwnProperty("prop_width")                                                         ?  data.prop_width                :  "100%";
+            const prop_height             =  data.hasOwnProperty("prop_height")                                                        ?  data.prop_height               :   "200px";
+
+           //---------------
+            if (prop_positionType != null){
+                prop_elementStyles["position"] = prop_positionType;
+            }
+            if (prop_positionTop != null){
+                prop_elementStyles["top"] = prop_positionTop;
+            }
+            if (prop_positionLeft != null){
+                prop_elementStyles["left"] = prop_positionLeft;
+            }
+            if (prop_positionBottom != null){
+                prop_elementStyles["bottom"] = prop_positionBottom;
+            }
+            if (prop_positionRight != null){
+                prop_elementStyles["right"] = prop_positionRight;
+            }
+            if (prop_width != null){
+                prop_elementStyles["width"] = prop_width;
+            }
+            if (prop_height != null){
+                prop_elementStyles["height"] = prop_height;
+            }
+
+            new window.ComponentBorder(
+                `component-position-element-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  prop_elementClass ,
+                    prop_structureStyles: prop_elementStyles ,
+                }
+            )
+        }
+
     }
 
-    template_render_content(partName , componentSlots  , var_randomId) {
+
+
+    template_render_content(partName) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_content  =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content     :  (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_content  =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content     :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
 
             return `
 <section data-part-name="${partName}" 
-         id="component-position-element-content-${var_randomId}" 
+         id="component-position-element-content-${this._COMPONENT_RANDOM_ID}" 
          class=" ">
      <style>
-         #${this._COMPONENT_ID} #component-position-element-content-${var_randomId}{
+         #${this._COMPONENT_ID} #component-position-element-content-${this._COMPONENT_RANDOM_ID}{
 
          }
      </style>
@@ -5957,14 +5906,30 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 
 
 
+/*/!*-------------------------------------
+ 20) Component Info
+-------------------------------------
+@prop_icon
+@prop_title
+@prop_infoClass
+@prop_infoStyles
+@prop_iconClass
+@prop_iconStyles
+-------------------------------------*!/
+window.ComponentInfo = class ComponentInfo extends ComponentBase{
+
+}*/
+
+
+
 
 
 /*-------------------------------------
  21) Component border
 -------------------------------------
-@prop_borderClass
-@prop_borderStyles
-@prop_borderStylesHover
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
 @prop_content
 
@@ -5981,9 +5946,8 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_borderClass"            , default: ["border" , "shadow-sm" , "rounded" , "p-1"]} ,
-            {prop : "prop_borderStyles"           , default: {}} ,
-            {prop : "prop_borderStylesHover"      , default: {}} ,
+            {prop : "prop_structureClass"            , default: ["border" , "shadow-sm" , "rounded" , "px-1" , "px-2"]} ,
+            {prop : "prop_structureStyles"           , default: {}} ,
         ] ,
         part_border: [
             {prop : "prop_content"                , default: null} ,
@@ -6022,6 +5986,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
     }
 
 
+
     /* ---------------------------------------------
       TEMPLATEs
      --------------------------------------------- */
@@ -6037,42 +6002,13 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
             case "part_icon_more":
                 return this.componentFn_render_iconMore(partName);
             default:
-                return this.template_render();
+                return this.templateBasic_render();
         }
     }
 
-    template_render( componentSlots , var_randomId) {
-
-        return `
-<section class="component-element-structure mb-2">
-   ${this.templateFn("part_structure") ?? ""}
-</section>
-        `;
-
-    }
-
     template_render_structure(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_borderClass          =  data.hasOwnProperty("prop_borderClass")               ?  data.prop_borderClass         :  ["border" , "shadow-sm" , "rounded" , "p-1"];
-            const prop_borderStyles         =  data.hasOwnProperty("prop_borderStyles")              ?  data.prop_borderStyles        :  {};
-            const prop_borderStylesHover    =  data.hasOwnProperty("prop_borderStylesHover")         ?  data.prop_borderStylesHover   :  {};
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-border-structure-${this._COMPONENT_RANDOM_ID}"
-         class="${tools_public.renderListClass(prop_borderClass)} position-relative" >
-         
+        const content = `
      <style>
-         #${this._COMPONENT_ID} #component-border-structure-${this._COMPONENT_RANDOM_ID}{
-             ${tools_public.renderListStyle(prop_borderStyles)}
-         }
-         #${this._COMPONENT_ID} #component-border-structure-${this._COMPONENT_RANDOM_ID}:hover{
-             ${tools_public.renderListStyle(prop_borderStylesHover)}
-         }
-         
          #${this._COMPONENT_ID} #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
              opacity: 0.25;
          }
@@ -6085,14 +6021,8 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
      ${this.templateFn("part_border") ?? ""}
      
      <component-icon id="component-border-icon-more-${this._COMPONENT_RANDOM_ID}"></component-icon>
-     
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
+                `;
+        return this.templateBasic_render_structure(content , ["position-relative"]);
     }
 
     template_render_border(partName) {
@@ -6105,7 +6035,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
             return `
 <section data-part-name="${partName}" 
          id="component-border-border-${this._COMPONENT_RANDOM_ID}"
-         class="p-2" >
+         class="" >
          
      <style>
          #${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}{
@@ -6132,27 +6062,29 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
             const prop_btnMore_show  =  data.hasOwnProperty("prop_btnMore_show")         ?  data.prop_btnMore_show      : false;
             const prop_btnMore_link  =  data.hasOwnProperty("prop_btnMore_link")         ?  data.prop_btnMore_link      : null;
 
-            new window.ComponentIcon(
-                `component-border-icon-more-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_icon: prop_btnMore_icon ,
-                    prop_show: prop_btnMore_show ,
+            if (prop_btnMore_show){
+                new window.ComponentIcon(
+                    `component-border-icon-more-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_btnMore_icon ,
 
-                    prop_iconClass: ["position-absolute" , "border-dark" , "rounded"  , "shadow-sm" , "p-1"] ,
-                    prop_iconStyles: {
-                        "top" : "10px" ,
-                        "left" : "10px" ,
-                        "background-color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_backgroundColor")  ? tools_const.styles.elementBorder.btnMore_backgroundColor : "" ,
-                        "color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_color")  ? tools_const.styles.elementBorder.btnMore_color : "" ,
-                        "cursor" : "pointer" ,
-                        "z-index" : "9" ,
-                    } ,
+                        prop_iconClass: ["position-absolute" , "border-dark" , "rounded"  , "shadow-sm" , "p-1"] ,
+                        prop_iconStyles: {
+                            "top" : "10px" ,
+                            "left" : "10px" ,
+                            "background-color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_backgroundColor")  ? tools_const.styles.elementBorder.btnMore_backgroundColor : "" ,
+                            "color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_color")  ? tools_const.styles.elementBorder.btnMore_color : "" ,
+                            "cursor" : "pointer" ,
+                            "z-index" : "9" ,
+                        } ,
 
-                    fn_callback: ()=>{
-                        this.runFn("fn_onCLickIconMore" , "event" , prop_btnMore_link);
+                        fn_callback: (event)=>{
+                            this.fn_onCLickIconMore(event , prop_btnMore_link);
+                        }
                     }
-                }
-            )
+                )
+            }
+
         }
 
     }
