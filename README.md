@@ -24,10 +24,9 @@ if (typeof listComponent === 'undefined') {
         ComponentLabel:                      "component-label" ,                          //17
         ComponentIcon:                       "component-icon" ,                           //18
         ComponentPositionElement:            "component-position-element" ,               //19
-        ComponentInfo:                       "component-info" ,                           //20
-        ComponentBorder:                     "component-border" ,                         //21
-        ComponentImage:                      "component-image" ,                          //22
-        ComponentLink:                       "component-link" ,                           //23
+        ComponentBorder:                     "component-border" ,                         //20
+        ComponentImage:                      "component-image" ,                          //21
+        ComponentLink:                       "component-link" ,                           //22
     }
 }
 ```
@@ -670,28 +669,7 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**20) Component Info:**
-```
-/*-------------------------------------
- Component Info
--------------------------------------
-@prop_icon
-@prop_title
-@prop_iconClass
-@prop_iconStyles
--------------------------------------*/
-    new window.ComponentInfo(
-        "element_id" ,
-        {
-            
-        }
-    )
-```
-
-
-
-
-**21) Component Border:**
+**20) Component Border:**
 ```
 /*-------------------------------------
  Component border
@@ -719,17 +697,22 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**22) Component Image:**
+**21) Component Image:**
 ```
 /*-------------------------------------
- Component image
+ 21) Component image
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_imageSource
 @prop_imageTitle
+@prop_imageAlt
 @prop_imageClass
 @prop_imageStyles
 
-@fn_elementClick
+@fn_callback
 -------------------------------------*/
     new window.ComponentImage(
         "element_id" ,
@@ -742,11 +725,15 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**23) Component Link:**
+**22) Component Link:**
 ```
 /*-------------------------------------
- Component link
+ 22) Component link
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_image source , title , class , styles
 @prop_icon  source , title , class , styles
 @prop_title content , style , class

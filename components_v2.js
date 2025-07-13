@@ -41,12 +41,11 @@ if (typeof listComponent === 'undefined') {
         ComponentLabel:                      "component-label" ,                          //17
         ComponentIcon:                       "component-icon" ,                           //18
         ComponentPositionElement:            "component-position-element" ,               //19
-        ComponentInfo:                       "component-info" ,                           //20
-        ComponentBorder:                     "component-border" ,                         //21
-        ComponentImage:                      "component-image" ,                          //22
-        ComponentLink:                       "component-link" ,                           //23
-        ComponentDescription:                "component-description" ,                    //24
-        ComponentChart:                      "component-chart" ,                          //25
+        ComponentBorder:                     "component-border" ,                         //20
+        ComponentImage:                      "component-image" ,                          //21
+        ComponentLink:                       "component-link" ,                           //22
+        ComponentDescription:                "component-description" ,                    //23
+        ComponentChart:                      "component-chart" ,                          //24
     }
 }
 if (typeof components === 'undefined') {
@@ -489,7 +488,6 @@ class ComponentBase{
     }
 
 }
-
 
 
 
@@ -4398,8 +4396,6 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
 
 
-
-
 /*-------------------------------------
  14) Component Input
 -------------------------------------
@@ -4819,8 +4815,6 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
     }
 
 }
-
-
 
 
 
@@ -5836,6 +5830,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
             const prop_height             =  data.hasOwnProperty("prop_height")                                                        ?  data.prop_height               :   "200px";
 
            //---------------
+            prop_elementStyles["z-index"] = "9";
             if (prop_positionType != null){
                 prop_elementStyles["position"] = prop_positionType;
             }
@@ -5906,26 +5901,8 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 
 
 
-/*/!*-------------------------------------
- 20) Component Info
--------------------------------------
-@prop_icon
-@prop_title
-@prop_infoClass
-@prop_infoStyles
-@prop_iconClass
-@prop_iconStyles
--------------------------------------*!/
-window.ComponentInfo = class ComponentInfo extends ComponentBase{
-
-}*/
-
-
-
-
-
 /*-------------------------------------
- 21) Component border
+ 20) Component border
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -5936,8 +5913,6 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
 @prop_btnMore_icon
 @prop_btnMore_show
 @prop_btnMore_link
-
-@fn_elementClick
 -------------------------------------*/
 window.ComponentBorder = class ComponentBorder extends ComponentBase{
 
@@ -5947,7 +5922,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
     _COMPONENT_PROPS = {
         part_structure: [
             {prop : "prop_structureClass"            , default: ["border" , "shadow-sm" , "rounded" , "px-1" , "px-2"]} ,
-            {prop : "prop_structureStyles"           , default: {}} ,
+            {prop : "prop_structureStyles"           , default: {"position" : "relative"}} ,
         ] ,
         part_border: [
             {prop : "prop_content"                , default: null} ,
@@ -6012,7 +5987,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
          #${this._COMPONENT_ID} #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
              opacity: 0.25;
          }
-         #${this._COMPONENT_ID} #component-border-structure-${this._COMPONENT_RANDOM_ID}:hover #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
+         #${this._COMPONENT_ID}:hover #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
              transition: opacity 200ms ease;
              opacity: 0.75;
          }
@@ -6022,7 +5997,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
      
      <component-icon id="component-border-icon-more-${this._COMPONENT_RANDOM_ID}"></component-icon>
                 `;
-        return this.templateBasic_render_structure(content , ["position-relative"]);
+        return this.templateBasic_render_structure(content );
     }
 
     template_render_border(partName) {
@@ -6100,3 +6075,340 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
         }
     }
 }
+
+
+
+
+
+
+/*-------------------------------------
+ 21) Component image
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_imageSource
+@prop_imageTitle
+@prop_imageAlt
+@prop_imageClass
+@prop_imageStyles
+
+@fn_callback
+-------------------------------------*/
+window.ComponentImage = class ComponentImage extends ComponentBase{
+
+
+    /* ---------------------------------------------
+     PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            {prop : "prop_structureClass"            , default: ["border" , "shadow-sm" , "rounded" , "px-1" , "px-2" , "mx-auto"]} ,
+            {prop : "prop_structureStyles"           , default: {"position" : "relative"}} ,
+        ] ,
+        part_image: [
+            {prop : "prop_imageSource"               , default: ""} ,
+            {prop : "prop_imageTitle"                , default: ""} ,
+            {prop : "prop_imageAlt"                  , default: ""} ,
+            {prop : "prop_imageClass"                , default: ["text-center"]} ,
+            {prop : "prop_imageStyles"               , default: {}} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_image: {} ,
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentImage.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_image":
+                return this.template_render_image(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+ ${this.templateFn("part_image") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_image(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_imageSource     =  data.hasOwnProperty("prop_imageSource")        ?  data.prop_imageSource     : "";
+            const prop_imageTitle      =  data.hasOwnProperty("prop_imageTitle")         ?  data.prop_imageTitle      : "";
+            const prop_imageAlt        =  data.hasOwnProperty("prop_imageAlt")           ?  data.prop_imageAlt        : "";
+            const prop_imageClass      =  data.hasOwnProperty("prop_imageClass")         ?  data.prop_imageClass      : [];
+            const prop_imageStyles     =  data.hasOwnProperty("prop_imageStyles")        ?  data.prop_imageStyles     : {};
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-image-image-${this._COMPONENT_RANDOM_ID}"
+         class="${tools_public.renderListClass(prop_imageClass)}"
+         onclick="${this.getFn("fn_callback" , "event")}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-image-image-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_imageStyles)}
+         }
+     </style>
+     
+      <img id="component-image-image-${this._COMPONENT_RANDOM_ID}" src="${prop_imageSource}" title="${prop_imageTitle}" alt="${prop_imageAlt}"/>
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_callback(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+}
+
+
+
+
+
+
+/*-------------------------------------
+ 22) Component link
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_image source , title , class , styles
+@prop_icon  source , title , class , styles
+@prop_title content , style , class
+@prop_linkClass
+@prop_linkStyles
+@prop_linkHref
+-------------------------------------*/
+window.ComponentLink = class ComponentLink extends ComponentBase{
+
+
+    /* ---------------------------------------------
+     PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_border: [
+
+        ] ,
+        part_image: [
+
+        ] ,
+        part_icon: [
+
+        ] ,
+        part_title: [
+
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_border: {
+                part_image: {} ,
+                part_icon: {} ,
+                part_title: {} ,
+            }
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentLink.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_border");
+        this.templateFn("part_image");
+        this.templateFn("part_icon");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
+            case "part_image":
+                return this.componentFn_render_image(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
+            case "part_title":
+                return this.template_render_title(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+   <component-border id="component-link-border-${this._COMPONENT_RANDOM_ID}" class="row px-2 py-1 m-0">
+       <component-body>
+         
+          <component-icon id="component-link-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+         
+          <component-image id="component-link-image-${this._COMPONENT_RANDOM_ID}"></component-image>
+ 
+          ${this.templateFn("part_title") ?? ""}
+         
+       </component-body>
+   </component-border>
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+
+
+    componentFn_render_border(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            new window.ComponentBorder(
+                `component-link-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    //prop_structureClass:  [] ,
+                    prop_structureStyles: {"cursor" : "pointer"} ,
+                }
+            )
+        }
+
+    }
+
+    componentFn_render_image(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            new window.ComponentImage(
+                `component-link-image-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  [] ,
+                    prop_structureStyles: {} ,
+                }
+            )
+        }
+
+    }
+
+    componentFn_render_icon(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            new window.ComponentIcon(
+                `component-link-icon-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  [] ,
+                    prop_structureStyles: {} ,
+                }
+            )
+        }
+
+    }
+
+
+    template_render_title(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-link-title-${this._COMPONENT_RANDOM_ID}"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-link-title-${this._COMPONENT_RANDOM_ID}{
+
+         }
+     </style>
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+}
+
