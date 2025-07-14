@@ -86,7 +86,6 @@ class ComponentBase{
 
     onCreate( config , props, schema){
         if (props != null && props.hasOwnProperty("part_structure")){
-
             if (props.hasOwnProperty("part_structure")){
                 if (!props.part_structure.hasOwnProperty("prop_show")){
                     props["part_structure"].push( {prop: "prop_show"           , default: true});
@@ -96,6 +95,9 @@ class ComponentBase{
                 }
                 if (!props.part_structure.hasOwnProperty("prop_structureStyles")){
                     props["part_structure"].push( {prop: "prop_structureStyles", default: {}});
+                }
+                if (!props.part_structure.hasOwnProperty("prop_structureHoverStyles")){
+                    props["part_structure"].push( {prop: "prop_structureHoverStyles", default: {}});
                 }
             }
         }
@@ -446,9 +448,9 @@ class ComponentBase{
     //--------------------------------------------------
     // Template Reader
     //--------------------------------------------------
-    templateBasic_render() {
+    templateBasic_render(moreClass="mb-2") {
         return `
-<section class="component-element-structure mb-2">
+<section class="component-element-structure  ${tools_public.renderListClass(moreClass)}">
    ${this.templateFn("part_structure") ?? ""}
 </section>
         `;
@@ -459,9 +461,10 @@ class ComponentBase{
         const data = this.getPartProps(partName);
 
         if (data != null){
-            const prop_show             =   data.hasOwnProperty("prop_show")                ?  data.prop_show               : true;
-            const prop_structureClass   =   data.hasOwnProperty("prop_structureClass")      ?  data.prop_structureClass     : [];
-            const prop_structureStyles  =   data.hasOwnProperty("prop_structureStyles")     ? data.prop_structureStyles     : {};
+            const prop_show                  =   data.hasOwnProperty("prop_show")                     ?  data.prop_show                    : true;
+            const prop_structureClass        =   data.hasOwnProperty("prop_structureClass")           ?  data.prop_structureClass          : [];
+            const prop_structureStyles       =   data.hasOwnProperty("prop_structureStyles")          ? data.prop_structureStyles          : {};
+            const prop_structureHoverStyles  =   data.hasOwnProperty("prop_structureHoverStyles")     ? data.prop_structureHoverStyles     : {};
 
             if (prop_show){
                 return `
@@ -472,6 +475,9 @@ class ComponentBase{
     <style>
         #${this._COMPONENT_ID} #component-${this._COMPONENT_NAME}-structure-${this._COMPONENT_RANDOM_ID}{
            ${tools_public.renderListStyle(prop_structureStyles)}
+        }
+        #${this._COMPONENT_ID}:hover #component-${this._COMPONENT_NAME}-structure-${this._COMPONENT_RANDOM_ID}{
+           ${tools_public.renderListStyle(prop_structureHoverStyles)}
         }
     </style>
     
@@ -1295,12 +1301,12 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn( componentSlots , var_randomId){
+    componentFn(){
         this.templateFn(  "part_border");
         this.templateFn(  "part_button_submit");
     }
 
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
                 return this.template_render_structure(partName);
@@ -1732,8 +1738,6 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 @prop_structureClass
 @prop_structureStyles
 
-@prop_classList
-
 @prop_icon
 
 @prop_size
@@ -1863,8 +1867,6 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
             const prop_borderClass =      data.hasOwnProperty("prop_borderClass")     ? data.prop_borderClass    : null;
             const prop_borderStyles =     data.hasOwnProperty("prop_borderStyles")    ? data.prop_borderStyles   : null;
 
-            console.log(data)
-
             new window.ComponentBorder(
                 `component-header-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
@@ -1980,7 +1982,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn( componentSlots , var_randomId){
+    componentFn(){
         this.templateFn("part_collapse_header_title")
         this.templateFn("part_collapse_header_icon")
     }
@@ -2709,7 +2711,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    templateFn(partName = null  , componentSlots  , var_randomId){
+    templateFn(partName = null){
         switch (partName){
             case "part_structure":
                 return this.template_render_structure(partName);
@@ -5319,10 +5321,665 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         }
     }
 
+}
 
+
+
+
+
+
+
+/*-------------------------------------
+ 16) Component Date
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_name
+@prop_value
+
+
+@prop_type
+
+@prop_background1
+@prop_background2
+@prop_color
+
+@prop_prevYears
+@prop_nextYears
+
+@prop_langs
+
+@fn_addNewItem
+-------------------------------------*/
+window.ComponentDate = class ComponentDate extends ComponentBase{
+
+    TYPE_YAER = "YEAR";
+    TYPE_MONTH = "MONTH";
+    TYPE_DAY = "DAY";
+
+    TYPE_INPUT_ONE_DIGIT = 0;
+    TYPE_INPUT_PART_DIGIT = 1;
+    TYPE_INPUT_FULL_DIGIT = 2;
+    TYPE_INPUT_FRIZE_DIGIT = 3;
+
+    DEFULAT_COLOR = component_props.shanColor1;
+    DEFULAT_BACKGROUND_1 = component_props.primaryColor2;
+    DEFULAT_BACKGROUND_2 = component_props.primaryColor1;
+    DEFULAT_PERV_YEAR = 100;
+    DEFULAT_NEXT_YEAR = 25;
+    DEFULAT_YEAR = 1400;
+
+    statusChange = null;
+    statusChangeDuration = 1000;
+
+
+    /* ---------------------------------------------
+   PROPERTYs
+   --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_label: [
+            {prop : "prop_labelClass"            , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"           , default: null} ,
+            {prop : "prop_labelHoverStyles"      , default: null} ,
+            {prop : "prop_title"                 , default: "TITLE"} ,
+        ] ,
+        part_value: [
+            {prop : "prop_name"                  , default: ""} ,
+            {prop : "prop_value"                 , default: null} ,
+        ] ,
+        part_header: [
+
+        ] ,
+        part_header_inputs: [
+            {prop : "prop_type"                 , default: 0} ,
+        ] ,
+        part_header_icon_clear: [
+
+        ] ,
+        part_header_icon_calender: [
+
+        ] ,
+        part_body: [
+
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label: {} ,
+            part_value: {} ,
+            part_header: {
+                part_header_inputs:{} ,
+                part_header_icon_clear:{} ,
+                part_header_icon_calender:{} ,
+            } ,
+            part_body: {
+
+            } ,
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentDate.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+
+    }
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_header_icon_clear");
+        this.templateFn("part_header_icon_calender");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_value":
+                return this.template_render_value(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_header":
+                return this.template_render_header(partName);
+            case "part_header_inputs":
+                return this.template_render_headerInputs(partName);
+            case "part_header_icon_clear":
+                return this.componentFn_render_headerIconClear(partName);
+            case "part_header_icon_calender":
+                return this.componentFn_render_headerIconCalender(partName);
+            case "part_body":
+                return this.componentFn_render_body(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+     <component-label id="component-input-date-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
+     
+     ${this.templateFn("part_value") ?? ""}
+     
+     ${this.templateFn("part_header") ?? ""}
+     
+     <component-position-element id="component-input-date-body-${this._COMPONENT_RANDOM_ID}">
+        <component-body>
+        
+        </component-body>
+     </component-position-element>
+                `;
+        return this.templateBasic_render_structure(content , ["position-relative"]);
+    }
+
+    template_render_value(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name    =   data.hasOwnProperty("prop_name")               ?  data.prop_name                    :  "";
+            const prop_value   =   data.hasOwnProperty("prop_value")              ?  data.prop_value                   :  null;
+
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-date-value-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-date-value-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+     </style>
+
+     <input name="${prop_name}"  value="${prop_value != null ? prop_value : ""}"  type="hidden"/>
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_header(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-date-header-${this._COMPONENT_RANDOM_ID}"  
+          class="position-relative  form-control p-0" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-date-header-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+     </style>
+         
+     ${this.templateFn("part_header_inputs") ?? ""}
+     
+     <component-icon id="component-input-date-header-icon-clear-${this._COMPONENT_RANDOM_ID}"></component-icon>  
+     
+     <component-icon id="component-input-date-header-icon-calender-${this._COMPONENT_RANDOM_ID}"></component-icon>  
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_headerInputs(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_type    =   data.hasOwnProperty("prop_type")               ?  data.prop_type                    :  0;
+
+            let inputs = "";
+            if (prop_type == this.TYPE_INPUT_ONE_DIGIT){
+
+                const yearDigitOne   =  this.fn_getDigitDatePart(this.TYPE_YAER , 1);
+                const yearDigitTwo   =  this.fn_getDigitDatePart(this.TYPE_YAER , 2);
+                const yearDigitThree =  this.fn_getDigitDatePart(this.TYPE_YAER , 3);
+                const yearDigitFour  =  this.fn_getDigitDatePart(this.TYPE_YAER , 4);
+
+                const monthDigitOne  =  this.fn_getDigitDatePart(this.TYPE_MONTH , 1);
+                const monthDigitTwo  =  this.fn_getDigitDatePart(this.TYPE_MONTH , 2);
+
+                const dayDigitOne    = this.fn_getDigitDatePart(this.TYPE_DAY , 1);
+                const dayDigitTwo    = this.fn_getDigitDatePart(this.TYPE_DAY , 2);
+
+                inputs = `
+                    <div class="row parts-form-input-date">
+                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                                  <div class="col-3 pe-0 ps-1 m-0">
+                                       <input
+                                             id="Date_1-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="${ this.getFn("fn_moveToNext" , "event" , "Date_2-"+this._COMPONENT_RANDOM_ID) };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_YAER}"` , 1)}" 
+                                             onfocus="${ this.getFn("fn_onFocus" , "event" ,  "Date_1-"+this._COMPONENT_RANDOM_ID) };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev" , "event" ,  null) };"
+                                             value="${yearDigitOne}" 
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
+                                  </div>
+                                  <div class="col-3 pe-0 ps-1 m-0">
+                                       <input
+                                             id="Date_2-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , "Date_3-"+this._COMPONENT_RANDOM_ID)  };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_YAER}"` , 2)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_2-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_1-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${yearDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
+                                  </div>
+                                  <div class="col-3 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_3-${this._COMPONENT_RANDOM_ID}"
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , "Date_4-"+this._COMPONENT_RANDOM_ID)  };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_YAER}"` , 3)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_3-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_2-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${yearDigitThree}"
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
+                                  </div>
+                                  <div class="col-3 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_4-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , "Date_5-"+this._COMPONENT_RANDOM_ID)  };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_YAER}"` , 4)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_4-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_3-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${yearDigitFour}" 
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
+                                  <div class="col-6 pe-0 ps-1 m-0">
+                                       <input                                           
+                                             id="Date_5-${this._COMPONENT_RANDOM_ID}"
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , "Date_6-"+this._COMPONENT_RANDOM_ID)  };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_MONTH}"` , 1)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_5-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_4-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${monthDigitOne}" 
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
+                                  </div>
+                                  <div class="col-6 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_6-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , "Date_7-"+this._COMPONENT_RANDOM_ID)  };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_MONTH}"` , 2)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_6-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_5-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${monthDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                                  <div class="col-6 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_7-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , "Date_8-"+this._COMPONENT_RANDOM_ID)  };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_DAY}"` , 1)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_7-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_6-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${dayDigitOne}"
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
+                                  </div>
+                                  <div class="col-6 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_8-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , null)                                 };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_DAY}"` , 2)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_8-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_7-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${dayDigitTwo}" 
+                                             type="text"  maxlength="1" class="inputs-date  form-control text-center"  />
+                                  </div>
+                             </div>
+                         </div>
+            `;
+            }
+            else if (prop_type == this.TYPE_INPUT_PART_DIGIT){
+
+                const yearDigitOne   = this.fn_getDigitDatePart(this.TYPE_YAER);
+
+                const monthDigitOne  = this.fn_getDigitDatePart(this.TYPE_MONTH);
+
+                const dayDigitOne    = this.fn_getDigitDatePart(this.TYPE_DAY);
+
+                inputs = `
+                    <div class="row parts-form-input-date">
+                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <input
+                                             id="Date_1-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , "Date_2-"+this._COMPONENT_RANDOM_ID)  };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_YAER}"` , 1)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_1-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  ,  null)  };"
+                                             value="${yearDigitOne}" 
+                                             type="text"  maxlength="4" class="inputs-date  form-control text-center"  />
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <input                                           
+                                             id="Date_2-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , "Date_3-"+this._COMPONENT_RANDOM_ID)  };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_MONTH}"` , 2)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_2-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_1-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${monthDigitOne}" 
+                                             type="text"  maxlength="2" class="inputs-date  form-control text-center"  />
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <input 
+                                             id="Date_3-${this._COMPONENT_RANDOM_ID}" 
+                                             oninput="  ${ this.getFn("fn_moveToNext"  , "event"  , null)                                 };  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_DAY}"` , 3)}" 
+                                             onfocus="  ${ this.getFn("fn_onFocus"     , "event"  , "Date_3-"+this._COMPONENT_RANDOM_ID)  };"
+                                             onkeydown="${ this.getFn("fn_moveToPrev"  , "event"  , "Date_2-"+this._COMPONENT_RANDOM_ID)  };"
+                                             value="${dayDigitOne}"
+                                             type="text"  maxlength="2" class="inputs-date  form-control text-center"  />
+                                  </div>
+                             </div>
+                     </div>
+            `;
+            }
+            else if (prop_type == this.TYPE_INPUT_FULL_DIGIT){
+                const digitAll   = this.fn_getDigitDatePart();
+                inputs = `
+                    <div class="row parts-form-input-date">
+                    
+                           <input
+                                 id="Date_1-${this._COMPONENT_RANDOM_ID}" 
+                                 oninput="  ${this.getFn("fn_onChangeDateDigit" , "event" , `"${this.TYPE_YAER}"` , 1)}" 
+                                 onfocus="  ${ this.getFn("fn_onFocus"          , "event"  )  };"
+                                 onkeydown="${ this.getFn("fn_commitNewDatev"   , "event"  )  };"
+                                 value="${digitAll}" 
+                                 type="text"  maxlength="10" class="inputs-date  form-control text-center "  />
+                                 
+                    </div>
+            `;
+            }
+            else if (prop_type == this.TYPE_INPUT_FRIZE_DIGIT){
+                const yearDigitOne   = this.fn_getDigitDatePart(this.TYPE_YAER);
+
+                const monthDigitOne  = this.fn_getDigitDatePart(this.TYPE_MONTH);
+
+                const dayDigitOne    = this.fn_getDigitDatePart(this.TYPE_DAY);
+
+                inputs = `
+                    <div class="row parts-form-input-date" onclick="${this.getFn("fn_selectDate" , "event")}">
+                          
+                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <span class="inputs-date  form-control text-center">
+                                               ${yearDigitOne}
+                                        </span>
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                       <span class="inputs-date  form-control text-center">
+                                               ${monthDigitOne}
+                                        </span>
+                                  </div>
+                             </div>
+                             
+                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                                  <div class="col-12 pe-0 ps-1 m-0">
+                                         <span class="inputs-date  form-control text-center">
+                                               ${dayDigitOne}
+                                        </span>
+                                  </div>
+                             </div>
+                     </div>
+            `;
+            }
+
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-date-header-inputs-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-date-header-inputs-${this._COMPONENT_RANDOM_ID}{
+              padding-right: calc(30px + 20%);
+              padding-left: calc(20px + 20%);
+              padding-top: 2px;
+              padding-bottom: 2px;
+              height: 35px;
+         }
+         
+         #${this._COMPONENT_ID} .parts-form-input-date{
+              width: 175px;
+              margin: auto;
+         }
+         #${this._COMPONENT_ID} .part-form-input-date-1:after , .part-form-input-date-2:after{
+              content: "/";
+              right: -5px;
+              line-height: 34px;
+              position: absolute;
+         }
+         #${this._COMPONENT_ID} .inputs-date{
+              border-color: #ebebeb;
+              line-height: 30px;
+              padding: 0;
+              margin: 0;
+              border: none;
+              outline: none;
+         }
+     </style>
+     
+     ${inputs}
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+    
+    componentFn_render_label(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title            = data.hasOwnProperty("prop_title")            ? data.prop_title            : "title";
+            const prop_labelClass       = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass       : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
+            const prop_labelStyles      = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles      : {};
+            const prop_labelHoverStyles = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles : {};
+
+            new window.ComponentLabel(
+                `component-input-date-label-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_title:  prop_title ,
+                    prop_for  :  `component-input-input-${ this._COMPONENT_RANDOM_ID}` ,
+
+                    prop_labelClass:       prop_labelClass ,
+                    prop_labelStyles:      prop_labelStyles ,
+                    prop_labelHoverStyles: prop_labelHoverStyles ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_headerIconClear(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl : false;
+
+            const styles = {
+                "z-index" : "10",
+                "width" :   "35px",
+                "line-height" : "35px",
+                "right" : "5px",
+                "cursor" : "pointer",
+                "height" : "30px" ,
+                "top" : "0" ,
+                "text-align" : "center" ,
+            }
+            styles[directionRtl ? "left" : "right"] = "5px";
+
+            new window.ComponentIcon(
+                `component-input-date-header-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: []  ,
+                    styles: {
+                        "height" : "35px"
+                    }  ,
+
+                   // prop_show: !var_showFormSelector ,
+
+                    prop_iconClass : ["position-absolute"] ,
+                    prop_iconStyles : styles ,
+                    prop_icon : "&#10540;" ,
+
+                    fn_callback: (event)=>{
+                        this.fn_onCLickIconClear(event)
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_headerIconCalender(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const directionRtl =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl : false;
+
+            const styles = {
+                "z-index" : "10",
+                "width" :   "35px",
+                "line-height" : "35px",
+                "cursor" : "pointer",
+                "height" : "30px" ,
+                "top" : "0" ,
+                "text-align" : "center" ,
+            }
+            styles[directionRtl ? "right" : "left"] = "5px";
+
+            new window.ComponentIcon(
+                `component-input-date-header-icon-calender-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: []  ,
+                    styles: {
+                        "height" : "38px"
+                    }  ,
+                    prop_iconClass : ["position-absolute"] ,
+                    prop_iconStyles : styles ,
+                    prop_icon : "&#128467;" ,
+
+                    fn_callback: (event)=>{
+                        this.fn_onCLickIconCalender(event)
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_body(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+
+        }
+
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickIconClear(event){
+        console.log("icon clear")
+    }
+
+    fn_onCLickIconCalender(event){
+        console.log("icon calender")
+    }
+
+    fn_selectDate(event){
+        console.log("icon selectDate")
+    }
+
+
+
+    fn_getDigitDatePart(type=null , digit=null){
+
+        return 0
+    }
+
+    fn_onFocus(event , myElId){
+
+    }
+
+    fn_moveToPrev(event , prevFieldID , type=null , digit=null){
+
+    }
+
+    fn_moveToNext(event , nextFieldID , type=null){
+
+    }
+
+    fn_onChangeDateDigit(event , type=null , index=null){
+
+    }
+
+    fn_commitNewDate(event ){
+
+    }
 
 
 }
+
+
 
 
 
@@ -5444,8 +6101,6 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
             if (prop_labelBackgroundColor != null){
                 prop_labelStyles["background-color"] = prop_labelBackgroundColor;
             }
-
-            console.log(prop_labelStyles);
 
             new window.ComponentBorder(
                 `component-label-border-${this._COMPONENT_RANDOM_ID}` ,
@@ -5594,7 +6249,7 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
             case "part_icon":
                 return this.template_render_label(partName);
             default:
-                return this.templateBasic_render();
+                return this.templateBasic_render([]);
         }
     }
 
@@ -5908,11 +6563,15 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 @prop_structureClass
 @prop_structureStyles
 
+@prop_borderClass
+@prop_borderStyles
 @prop_content
 
 @prop_btnMore_icon
 @prop_btnMore_show
 @prop_btnMore_link
+
+@fn_callback
 -------------------------------------*/
 window.ComponentBorder = class ComponentBorder extends ComponentBase{
 
@@ -5925,6 +6584,8 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
             {prop : "prop_structureStyles"           , default: {"position" : "relative"}} ,
         ] ,
         part_border: [
+            {prop : "prop_borderClass"            , default: []} ,
+            {prop : "prop_borderStyles"           , default: {}} ,
             {prop : "prop_content"                , default: null} ,
         ] ,
         part_icon_more: [
@@ -6004,17 +6665,21 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content   :   (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+
+            const prop_borderClass      =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass   : [];
+            const prop_borderStyles     =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles  : {};
+            const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content       : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
 
             prop_content
             return `
 <section data-part-name="${partName}" 
          id="component-border-border-${this._COMPONENT_RANDOM_ID}"
-         class="" >
+         class="${tools_public.renderListClass(prop_borderClass)}"
+         onclick="${this.getFn("fn_callback" , "event")}">
          
      <style>
          #${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}{
-             
+             ${tools_public.renderListStyle(prop_borderStyles)}
          }
      </style>
      
@@ -6074,6 +6739,14 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
             window.open(prop_btnMore_link,'_blank');
         }
     }
+
+    fn_callback(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
 }
 
 
@@ -6226,12 +6899,26 @@ window.ComponentImage = class ComponentImage extends ComponentBase{
 @prop_structureClass
 @prop_structureStyles
 
-@prop_image source , title , class , styles
-@prop_icon  source , title , class , styles
-@prop_title content , style , class
-@prop_linkClass
-@prop_linkStyles
+@prop_borderClass
+@prop_borderStyles
+@prop_borderHoverStyles
+
 @prop_linkHref
+
+@prop_imageSource
+@prop_imageTitle
+@prop_imageAlt
+@prop_imageClass
+@prop_imageStyles
+
+@prop_iconSource
+@prop_iconIsItalik
+@prop_iconClass
+@prop_iconStyles
+
+@prop_title
+@prop_titleClass
+@prop_titleStyles
 -------------------------------------*/
 window.ComponentLink = class ComponentLink extends ComponentBase{
 
@@ -6244,16 +6931,38 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
 
         ] ,
         part_border: [
-
+            {prop : "prop_borderClass"                  , default: ["row"  , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded"]} ,
+            {prop : "prop_borderStyles"                 , default: {
+                    "cursor" : "pointer" ,
+                    "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("normal") && tools_const.styles.elementLink.normal.hasOwnProperty("backgroundColor")  ? tools_const.styles.elementLink.normal.backgroundColor : ""
+                }} ,
+            {prop : "prop_borderHoverStyles"            , default: {
+                    "transition" : "background-color ease 300ms" ,
+                    "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("hover") && tools_const.styles.elementLink.hover.hasOwnProperty("backgroundColor") ? tools_const.styles.elementLink.hover.backgroundColor : ""
+                }} ,
+            {prop : "prop_linkHref"                     , default: null} ,
         ] ,
         part_image: [
-
+            {prop : "prop_imageSource"                  , default: null} ,
+            {prop : "prop_imageTitle"                   , default: null} ,
+            {prop : "prop_imageAlt"                     , default: null} ,
+            {prop : "prop_imageClass"                   , default: ["text-center"]} ,
+            {prop : "prop_imageStyles"                  , default: null} ,
         ] ,
         part_icon: [
-
+            {prop : "prop_iconSource"                   , default: null} ,
+            {prop : "prop_iconIsItalik"                 , default: false} ,
+            {prop : "prop_iconClass"                    , default: ["text-center"]} ,
+            {prop : "prop_iconStyles"                   , default: null} ,
         ] ,
         part_title: [
-
+            {prop : "prop_title"                        , default: ""} ,
+            {prop : "prop_titleClass"                   , default: []} ,
+            {prop : "prop_titleStyles"                  , default: {
+                    "height": "100%",
+                    "line-height": "500%",
+                    "text-align": "center"
+                }} ,
         ] ,
     }
 
@@ -6330,19 +7039,62 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
         return this.templateBasic_render_structure(content );
     }
 
+    template_render_title(partName) {
+        const data = this.getPartProps(partName)
 
+        if (data != null){
+
+            const prop_title            =  data.hasOwnProperty("prop_title")               ?  data.prop_title            : [];
+            const prop_titleClass       =  data.hasOwnProperty("prop_titleClass")          ?  data.prop_titleClass       : {};
+            const prop_titleStyles      =  data.hasOwnProperty("prop_titleStyles")         ?  data.prop_titleStyles      : {};
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-link-title-${this._COMPONENT_RANDOM_ID}"
+         class="${tools_public.renderListClass(prop_titleClass)} col-8">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-link-title-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_titleStyles)}
+         }
+     </style>
+     
+     <b class="d-block text-center" style="font-size: 12pt">
+${prop_title}
+     </b>
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
 
     componentFn_render_border(partName) {
 
         const data = this.getPartProps(partName);
+
+        const prop_borderClass            =  data.hasOwnProperty("prop_borderClass")               ?  data.prop_borderClass            : [];
+        const prop_borderStyles           =  data.hasOwnProperty("prop_borderStyles")              ?  data.prop_borderStyles           : {};
+        const prop_borderHoverStyles      =  data.hasOwnProperty("prop_borderHoverStyles")         ?  data.prop_borderHoverStyles      : {};
+        const prop_linkHref               =  data.hasOwnProperty("prop_linkHref")                  ?  data.prop_linkHref               : null;
 
         if (data != null){
 
             new window.ComponentBorder(
                 `component-link-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    //prop_structureClass:  [] ,
-                    prop_structureStyles: {"cursor" : "pointer"} ,
+                    prop_structureClass:  prop_borderClass ,
+                    prop_structureStyles: prop_borderStyles ,
+                    prop_structureHoverStyles: prop_borderHoverStyles ,
+
+                    prop_borderClass: ["row"],
+
+                    fn_callback  :  (event) => {
+                        this.fn_callbackLink(event,  prop_linkHref)
+                    } ,
                 }
             )
         }
@@ -6355,13 +7107,31 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
 
         if (data != null){
 
-            new window.ComponentImage(
-                `component-link-image-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_structureClass:  [] ,
-                    prop_structureStyles: {} ,
-                }
-            )
+            const prop_imageSource            =  data.hasOwnProperty("prop_imageSource")               ?  data.prop_imageSource            : null;
+            const prop_imageTitle             =  data.hasOwnProperty("prop_imageTitle")                ?  data.prop_imageTitle             : null;
+            const prop_imageAlt               =  data.hasOwnProperty("prop_imageAlt")                  ?  data.prop_imageAlt               : null;
+            const prop_imageClass             =  data.hasOwnProperty("prop_imageClass")                ?  data.prop_imageClass             : null;
+            const prop_imageStyles            =  data.hasOwnProperty("prop_imageStyles")               ?  data.prop_imageStyles            : null;
+
+            if (prop_imageSource != null){
+                new window.ComponentImage(
+                    `component-link-image-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList:  ["col-4" ] ,
+
+                        prop_structureClass:  [] ,
+                        prop_structureStyles: {} ,
+
+                        prop_imageTitle : prop_imageTitle ,
+                        prop_imageAlt : prop_imageAlt ,
+
+                        prop_imageSource  :  prop_imageSource,
+                        prop_imageClass   :  prop_imageClass,
+                        prop_imageStyles  :  prop_imageStyles,
+                    }
+                )
+            }
+
         }
 
     }
@@ -6372,34 +7142,262 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
 
         if (data != null){
 
-            new window.ComponentIcon(
-                `component-link-icon-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_structureClass:  [] ,
-                    prop_structureStyles: {} ,
-                }
-            )
+            const prop_iconSource            =  data.hasOwnProperty("prop_iconSource")             ?  data.prop_iconSource           : null;
+            const prop_iconIsItalik          =  data.hasOwnProperty("prop_iconIsItalik")           ?  data.prop_iconIsItalik         : false;
+            const prop_iconClass             =  data.hasOwnProperty("prop_iconClass")              ?  data.prop_iconClass            : null;
+            const prop_iconStyles            =  data.hasOwnProperty("prop_iconStyles")             ?  data.prop_iconStyles           : null;
+
+            if (prop_iconSource != null){
+                new window.ComponentIcon(
+                    `component-link-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList:  ["col-4" ] ,
+
+                        prop_structureClass:  [] ,
+                        prop_structureStyles: {} ,
+
+                        prop_icon : prop_iconSource ,
+                        prop_isItalik : prop_iconIsItalik ,
+
+                        prop_iconClass : prop_iconClass ,
+                        prop_iconStyles : prop_iconStyles
+                    }
+                )
+            }
+
         }
 
     }
 
 
-    template_render_title(partName) {
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_callbackLink(event , prop_linkHref){
+        if (prop_linkHref != null){
+            window.open(prop_linkHref, '_blank');
+        }
+    }
+
+}
+
+
+
+
+
+
+/*-------------------------------------
+ 23) Component Description
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_icon
+@prop_title
+
+@prop_description
+@prop_descriptionClass
+@prop_descriptionStyles
+
+@prop_buttonTitleMore
+@prop_buttonTitleLess
+
+
+@prop_height
+@prop_button   title_more|title_less|prop_show
+-------------------------------------*/
+window.ComponentDescription = class ComponentDescription extends ComponentBase{
+
+    /* ---------------------------------------------
+     PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_border: [
+
+        ] ,
+        part_border_content: [
+            {prop : "prop_height"                , default: 250} ,
+            {prop : "var_showContent"            , default: false} ,
+        ] ,
+        part_header: [
+            {prop : "prop_icon"                  , default: null} ,
+            {prop : "prop_title"                 , default: ""} ,
+            {prop : "var_showContent"            , default: false} ,
+        ] ,
+        part_description: [
+            {prop : "prop_description"           , default: ""} ,
+            {prop : "prop_descriptionClass"      , default: []} ,
+            {prop : "prop_descriptionStyles"     , default: {}} ,
+            {prop : "prop_height"                , default: 250} ,
+            {prop : "var_showContent"            , default: false} ,
+        ] ,
+        part_btnMore: [
+            {prop : "var_showContent"            , default: false} ,
+            {prop : "prop_buttonTitleMore"       , default: "more ..."} ,
+            {prop : "prop_buttonTitleLess"       , default: "less ..."} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_border: {
+                part_border_content: {
+                    part_header: {} ,
+                    part_description: {} ,
+                    part_btnMore: {} ,
+                }
+            }
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentDescription.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_border");
+        this.templateFn("part_header");
+        this.templateFn("part_btnMore");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
+            case "part_border_content":
+                return this.template_render_borderContnet(partName);
+            case "part_header":
+                return this.componentFn_render_header(partName);
+            case "part_description":
+                return this.template_render_description(partName);
+            case "part_btnMore":
+                return this.componentFn_render_btnMore(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+   <component-border id="component-description-border-${this._COMPONENT_RANDOM_ID}" class="row px-2 py-1 m-0">
+       <component-body>
+            
+              ${this.templateFn("part_border_content") ?? ""}
+              
+       </component-body>
+   </component-border>
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_borderContnet(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
 
+            const prop_height              =  data.hasOwnProperty("prop_height")                          ?  data.prop_height                  :  250;
+            const var_showContent          =  data.hasOwnProperty("var_showContent")                      ?  data.var_showContent              :  false;
+
+            let styles = {};
+            if (!var_showContent){
+                styles["overflow"]= "hidden";
+                styles["height"]= prop_height + "px";
+            }
+            else{
+                styles["overflow"]= "auto";
+                styles["height"]= "auto";
+            }
+
 
             return `
 <section data-part-name="${partName}" 
-         id="component-link-title-${this._COMPONENT_RANDOM_ID}"
-         class="">
+         id="component-description-border-content-${this._COMPONENT_RANDOM_ID}"
+         class="px-2 pt-2 position-relative">
          
      <style>
-         #${this._COMPONENT_ID} #component-link-title-${this._COMPONENT_RANDOM_ID}{
-
+         #${this._COMPONENT_ID} #component-description-border-content-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(styles)}
+         }
+         
+         
+         #${this._COMPONENT_ID} #component-description-button-${this._COMPONENT_RANDOM_ID}{
+             opacity: 0.6;
+         }
+         
+         #${this._COMPONENT_ID} #component-description-border-content-${this._COMPONENT_RANDOM_ID}:hover #component-description-button-${this._COMPONENT_RANDOM_ID}{
+             opacity: 1;
          }
      </style>
+     
+     <component-header id="component-description-header-${this._COMPONENT_RANDOM_ID}"></component-header>
+                
+     ${this.templateFn("part_description") ?? ""}
+                
+     <component-button id="component-description-button-${this._COMPONENT_RANDOM_ID}"></component-button>
+                
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_description(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_description         =  data.hasOwnProperty("prop_description")                     ?  data.prop_description             : "";
+            const prop_descriptionClass    =  data.hasOwnProperty("prop_descriptionClass")                ?  data.prop_descriptionClass        : [];
+            const prop_descriptionStyles   =  data.hasOwnProperty("prop_descriptionStyles")               ?  data.prop_descriptionStyles       : {};
+
+            prop_descriptionStyles["text-align"] = "justify";
+            prop_descriptionStyles["display"] = "-webkit-box";
+            prop_descriptionStyles["-webkit-box-orient"] = "vertical";
+            prop_descriptionStyles["padding-bottom"] = "40px";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-description-description-${this._COMPONENT_RANDOM_ID}"
+         class="${tools_public.renderListClass(prop_descriptionClass)}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-description-description-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_descriptionStyles)}
+         }
+     </style>
+     
+     ${prop_description}
      
 </section>
         `;
@@ -6410,5 +7408,318 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
         `;
     }
 
+    componentFn_render_border(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            new window.ComponentBorder(
+                `component-description-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+
+                }
+            )
+        }
+    }
+
+    componentFn_render_header(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_title            =  data.hasOwnProperty("prop_title")               ?  data.prop_title            : "";
+            const prop_icon             =  data.hasOwnProperty("prop_icon")                ?  data.prop_icon             : null;
+
+            new window.ComponentHeader(
+                `component-description-header-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_icon: prop_icon,
+                    prop_size: 5,
+                    prop_title: prop_title,
+                }
+            )
+        }
+
+    }
+
+    componentFn_render_btnMore(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_buttonTitleMore        =  data.hasOwnProperty("prop_buttonTitleMore")           ?  data.prop_buttonTitleMore        : "";
+            const prop_buttonTitleLess        =  data.hasOwnProperty("prop_buttonTitleLess")           ?  data.prop_buttonTitleLess        : "";
+            const var_showContent             =  data.hasOwnProperty("var_showContent")                ?  data.var_showContent             : false;
+
+            new window.ComponentButton(
+                `component-description-button-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_show: !var_showContent ? this.fn_checkShowDescription() : true ,
+
+                    prop_structureClass:  ["position-absolute"] ,
+                    prop_structureStyles: {
+                        "bottom" : "5px" ,
+                        "left" : "5px" ,
+                        "right" : "5px" ,
+                    } ,
+
+                    prop_title: `<b>${var_showContent ? prop_buttonTitleLess :  prop_buttonTitleMore}</b>` ,
+                    fn_callback: (event) => {
+                        this.fn_callbackBtnMore(event);
+                    }
+                }
+            )
+        }
+
+    }
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+   --------------------------------------------- */
+    fn_callbackBtnMore(event){
+        let var_showContent = this.get("var_showContent" , false);
+        this.set("var_showContent" , !var_showContent)
+    }
+
+    fn_checkShowDescription(){
+        const borderElement = document.querySelector(`#component-description-border-${this._COMPONENT_RANDOM_ID}`).querySelector("[data-part-name=part_structure]");
+        const descritionElement = document.querySelector(`#component-description-description-${this._COMPONENT_RANDOM_ID}`);
+
+        if (borderElement != null && descritionElement != null){
+            const borderHeight = borderElement.getBoundingClientRect().height;
+            const descritionHeight = descritionElement.getBoundingClientRect().height;
+
+            return  descritionHeight > borderHeight;
+        }
+
+        return true
+
+
+    }
 }
 
+
+
+
+
+
+/*-------------------------------------
+ 24) Component Chart
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_type
+@prop_TypeDirection
+
+@prop_title_text
+@prop_title_align
+
+@prop_description_text
+@prop_description_align
+
+@prop_y_title_text
+@prop_y_title_align
+
+@prop_x_title_text
+@prop_x_title_align
+
+@prop_categories
+@prop_series
+
+@prop_tooltip_header
+@prop_tooltip_format
+-------------------------------------*/
+window.ComponentChart = class ComponentChart extends ComponentBase{
+
+
+    /* ---------------------------------------------
+     PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_chart_element: [
+
+        ] ,
+        part_chart_view: [
+            {prop : "prop_type"                  , default: 0} ,
+            {prop : "prop_TypeDirection"         , default: 0} ,
+            {prop : "prop_height"                , default: null} ,
+            {prop : "prop_title_text"            , default: null} ,
+            {prop : "prop_title_align"           , default: "left"} ,
+            {prop : "prop_x_title_text"          , default: null} ,
+            {prop : "prop_x_title_align"         , default: "left"} ,
+            {prop : "prop_categories"            , default: []} ,
+            {prop : "prop_series"                , default: []} ,
+            {prop : "prop_tooltip_header"        , default: `<b>{series.name}</b><br />`} ,
+            {prop : "prop_tooltip_format"        , default: `{point.y}`} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_chart_element: {
+                part_chart_view: {}
+            }
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentChart.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+    /* ---------------------------------------------
+    TEMPLATEs
+   --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_chart_view");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_chart_element":
+                return this.template_render_chartElement(partName);
+            case "part_chart_view":
+                return this.componentFn_render_chartView(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+  ${this.templateFn("part_chart_element") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_chartElement(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-chart-element-${this._COMPONENT_RANDOM_ID}"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-chart-element-${this._COMPONENT_RANDOM_ID}{
+        
+         }
+     </style>
+     
+     <div id="component-chart-view-${this._COMPONENT_RANDOM_ID}"></div>
+      
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_chartView(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_type            =  data.hasOwnProperty("prop_type")            ?  data.prop_type           : 0;
+            let typeStr = "";
+            switch (prop_type){
+                case 0: typeStr = "line";       break;
+                case 1: typeStr = "column";     break;
+                case 2: typeStr = "bar";        break;
+                case 3: typeStr = "pie";        break;
+                case 4: typeStr = "area";       break;
+                case 5: typeStr = "spline";     break;
+                case 6: typeStr = "scatter";    break;
+                case 7: typeStr = "areaspline"; break;
+                case 8: typeStr = "heatmap";    break;
+            }
+
+            const prop_TypeDirection   =  data.hasOwnProperty("prop_type")            ?  data.prop_type           : 0;
+            const prop_height          =  data.hasOwnProperty("prop_height")          ?  data.prop_height         : null;
+
+            const prop_title_text      =  data.hasOwnProperty("prop_title_text")      ?  data.prop_title_text     : null;
+            const prop_title_align     =  data.hasOwnProperty("prop_title_align")     ?  data.prop_title_align    : "left";
+
+            const prop_x_title_text    =  data.hasOwnProperty("prop_x_title_text")    ?  data.prop_x_title_text   : null;
+            const prop_x_title_align   =  data.hasOwnProperty("prop_x_title_align")   ?  data.prop_x_title_align  : "left";
+
+            const prop_y_title_text    =  data.hasOwnProperty("prop_y_title_text")    ?  data.prop_y_title_text   : null;
+            const prop_y_title_align   =  data.hasOwnProperty("prop_y_title_align")   ?  data.prop_y_title_align  : "left";
+
+            const prop_categories      =  data.hasOwnProperty("prop_categories")      ?  data.prop_categories     : [];
+            const prop_series          =  data.hasOwnProperty("prop_series")          ?  data.prop_series         : [];
+
+            const prop_tooltip_header  =  data.hasOwnProperty("prop_tooltip_header")  ?  data.prop_tooltip_header : '<b>{series.name}</b><br />';
+            const prop_tooltip_format  =  data.hasOwnProperty("prop_tooltip_format")  ?  data.prop_tooltip_format : '{point.y}';
+
+
+
+            const chartOptions = {
+                chart: {
+                    type: typeStr,
+                    height: prop_height,
+                },
+
+                title: {
+                    text: prop_title_text ,
+                    align: prop_title_align ,
+                },
+
+                xAxis: {
+                    title: {
+                        text: prop_x_title_text ,
+                        align: prop_x_title_align ,
+                    },
+                    categories: prop_TypeDirection != null && prop_TypeDirection == 0 ? prop_categories : null
+                },
+
+                yAxis: {
+                    title: {
+                        text: prop_y_title_text ,
+                        align: prop_y_title_align ,
+                    } ,
+                    categories: prop_TypeDirection != null && prop_TypeDirection == 1 ? prop_categories : null
+                },
+
+                series: prop_series ,
+
+                tooltip: {
+                    headerFormat: prop_tooltip_header,
+                    pointFormat: prop_tooltip_format
+                },
+
+            }
+
+            Highcharts.chart(`component-chart-view-${this._COMPONENT_RANDOM_ID}`, chartOptions );
+
+        }
+
+    }
+
+}

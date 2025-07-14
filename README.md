@@ -672,18 +672,21 @@ if (typeof listComponent === 'undefined') {
 **20) Component Border:**
 ```
 /*-------------------------------------
- Component border
+ 20) Component border
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_borderClass
 @prop_borderStyles
-@prop_borderStylesHover
 @prop_content
 
 @prop_btnMore_icon
 @prop_btnMore_show
 @prop_btnMore_link
 
-@fn_elementClick
+@fn_callback
 -------------------------------------*/
     new window.ComponentBorder(
         "element_id" ,
@@ -734,12 +737,26 @@ if (typeof listComponent === 'undefined') {
 @prop_structureClass
 @prop_structureStyles
 
-@prop_image source , title , class , styles
-@prop_icon  source , title , class , styles
-@prop_title content , style , class
-@prop_linkClass
-@prop_linkStyles
+@prop_borderClass
+@prop_borderStyles
+@prop_borderHoverStyles
+
 @prop_linkHref
+
+@prop_imageSource
+@prop_imageTitle
+@prop_imageAlt
+@prop_imageClass
+@prop_imageStyles
+
+@prop_iconSource
+@prop_iconIsItalik
+@prop_iconClass
+@prop_iconStyles
+
+@prop_title
+@prop_titleClass
+@prop_titleStyles
 -------------------------------------*/
     new window.ComponentLink(
         "element_id" ,
@@ -752,7 +769,9 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**24) Component Description:**
+
+
+**23) Component Description:**
 ```
 /*-------------------------------------
  Component Description
@@ -774,11 +793,17 @@ if (typeof listComponent === 'undefined') {
 
 
 
+
+
 **25) Component Chart:**
 ```
 /*-------------------------------------
- Component Chart
+ 24) Component Chart
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_type
 @prop_TypeDirection
 
