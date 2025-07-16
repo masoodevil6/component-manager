@@ -156,6 +156,18 @@ tools_init = {
                 color : component_props.darkColor1 ,
             } ,
 
+            inputDate: {
+                backgroundColor_main : component_props.primaryColor2 ,
+
+                backgroundColor_btn  : component_props.secondaryColor1 ,
+                backgroundColor_btnHover  : component_props.secondaryColor2 ,
+                color_btn  : component_props.darkColor1 ,
+
+                backgroundColor_rowSelected  : component_props.secondaryColor1 ,
+                backgroundColor_colSelected : component_props.secondaryColor2 ,
+                color_columnSelected  : component_props.darkColor1 ,
+            } ,
+
 
 
             backShadow: {
@@ -317,6 +329,8 @@ tools_component = {
         const elForm = document.createElement(tools_converter.toKebabCase(ComponentName));
         elForm.id = ComponentId
         container.appendChild(elForm);
+
+        console.log(containerId , ComponentName , ComponentId , ComponentProps)
 
         new window[ComponentName](
             ComponentId ,
