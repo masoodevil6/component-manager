@@ -25,13 +25,40 @@
         ComponentInput:                      "component-input" ,                          //03-04
         ComponentInputPrice:                 "component-input-price" ,                    //03-05
         ComponentDate:                       "component-date" ,                           //03-06
+        ComponentUpload:                     "component-upload" ,                         //03-07
         
-    // [04] Table and Tabs
-        ComponentCollapse:                   "component-collapse" ,                       //04-01
-        ComponentTable:                      "component-table" ,                          //04-02
-        ComponentChart:                      "component-chart" ,                          //04-03
-        ComponentTabs:                       "component-tabs" ,                           //04-04
+
         
+        
+        
+    // [10] Tables
+        ComponentTable:                      "component-table" ,                          //10-01
+        
+    // [11] Tabs
+        ComponentTabs:                       "component-tabs" ,                           //11-01
+        
+    // [12] Collapse
+        ComponentCollapse:                   "component-collapse" ,                       //12-01
+        
+        
+        
+        
+        
+        
+    // [20] Charts
+        ComponentChart:                      "component-chart" ,                          //20-01
+
+    // [21] QR CODE
+        ComponentQrCode:                     "component-qr-code" ,                        //21-01
+        
+        
+
+    // [30] Camera
+        ComponentCameraQrCode:               "component-camera-qr-code" ,                 //30-01
+        
+        
+
+
     // [99] Others
         ComponentIcon:                       "component-icon" ,                           //99-01
         ComponentPositionElement:            "component-position-element" ,               //99-02
@@ -50,7 +77,7 @@
 **01-01) Component Message:**
 ```
 /*-------------------------------------
- 1) Component Messages
+ 01-01) Component Messages
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -73,7 +100,7 @@
 **01-02) Component Is Empty:**
 ```
 /*-------------------------------------
- 5) Component Is Empty
+ 01-02) Component Is Empty
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -104,7 +131,7 @@
 **01-03) Component Header:**
 ```
 /*-------------------------------------
- 6) Component Header
+ 01-03) Component Header
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -129,7 +156,7 @@
 **01-04) Component Label:**
 ```
 /*-------------------------------------
- 17) Component label
+ 01-04) Component label
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -157,7 +184,7 @@
 **01-05) Component Link:**
 ```
 /*-------------------------------------
- 22) Component link
+ 01-05) Component link
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -196,7 +223,7 @@
 **01-06) Component Description:**
 ```
 /*-------------------------------------
- Component Description
+ 01-06) Component Description
 -------------------------------------
 @prop_icon
 @prop_title
@@ -247,7 +274,7 @@
 **02-01) Component Loading:**
 ```
 /*-------------------------------------
- 2) Component Loading
+ 02-01) Component Loading
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -269,7 +296,7 @@
 **02-02) Component 404:**
 ```
 /*-------------------------------------
- 3) Component 404
+ 02-02) Component 404
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -295,7 +322,7 @@
 **02-03) Component Form:**
 ```
 /*-------------------------------------
- 4) Component Form
+ 02-03) Component Form
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -360,7 +387,7 @@
 **03-01) Component Button:**
 ```
 /*-------------------------------------
- 9) Component Button
+ 03-01) Component Button
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -476,7 +503,7 @@
 **03-04) Component Input:**
 ```
 /*-------------------------------------
- 14) Component Input
+ 03-04) Component Input
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -515,7 +542,7 @@
 **03-05) Component Input Price:**
 ```
 /*-------------------------------------
- 03-04) Component Input
+ 03-05) Component Input
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -555,7 +582,7 @@
 **03-06) Component Date:**
 ```
 /*-------------------------------------
- 16) Component Date
+ 03-06) Component Date
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -621,38 +648,17 @@
 
 
 
+
+
+
 /* ====================
-[04] TABLEs And TABs
-==================================== */
+[10] Tables
+============================================= */
 
-**04-01) Component Collapse:**
+**10-01) Component Table:**
 ```
 /*-------------------------------------
- 7) Component Collapse
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_title
-
-@prop_bodyBackgroundColor
-@prop_body
-@prop_bodyShow
--------------------------------------*/
-    new window.ComponentCollapse(
-        "element_id" ,
-        {
-
-        }
-    )
-```
-
-
-**04-02) Component Table:**
-```
-/*-------------------------------------
- 8) Component Table
+ 04-02) Component Table
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -698,10 +704,15 @@
 ```
 
 
-**04-03) Component Tab:**
+
+/* ====================
+[11] Tabs
+============================================== */
+
+**11-01) Component Tab:**
 ```
 /*-------------------------------------
- 11) Component Tabs
+ 11-01) Component Tabs
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -724,10 +735,45 @@
 ```
 
 
-**04-03) Component Chart:**
+
+/* ====================
+[12] Collapse
+========================================== */
+
+**12-01) Component Collapse:**
 ```
 /*-------------------------------------
- 24) Component Chart
+ 04-01) Component Collapse
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+
+@prop_bodyBackgroundColor
+@prop_body
+@prop_bodyShow
+-------------------------------------*/
+    new window.ComponentCollapse(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+
+/* ====================
+[20] Charts
+==================================== */
+
+**20-01) Component Chart:**
+```
+/*-------------------------------------
+ 20-01) Component Chart
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -766,17 +812,53 @@
 
 
 
+/* ====================
+[21] QR CODE
+==================================== */
+
+**21-01) Component Qr Code:**
+```
+/*-------------------------------------
+ 21-01) Component Qr Code
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_formClass
+@prop_formStyles
+
+@prop_value
+@prop_size
+@prop_version
+-------------------------------------*/
+    new window.ComponentQrCode(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+
 
 
 /* ====================
 [99] OTHERs
 =========================================== */
 
-
 **99-01) Component Icon:**
 ```
 /*-------------------------------------
- 18) Component Icon
+ 99-01) Component Icon
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -802,7 +884,7 @@
 **99-02) Component Position Element:**
 ```
 /*-------------------------------------
- Component Position Element
+ 99-02) Component Position Element
 -------------------------------------
 @prop_elementClass
 @prop_elementStyles
@@ -828,7 +910,7 @@
 **99-03) Component Border:**
 ```
 /*-------------------------------------
- 20) Component border
+ 99-03) Component border
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -856,7 +938,7 @@
 **99-04) Component Image:**
 ```
 /*-------------------------------------
- 21) Component image
+ 99-04) Component image
 -------------------------------------
 @prop_show
 @prop_structureClass

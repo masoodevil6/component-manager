@@ -168,6 +168,11 @@ tools_init = {
                 color_columnSelected  : component_props.darkColor1 ,
             } ,
 
+            inputFile: {
+                boderColor : component_props.secondaryColor1 ,
+                textColor : component_props.secondaryColor1 ,
+            } ,
+
 
 
             backShadow: {
@@ -256,71 +261,53 @@ tools_component = {
     } ,
 
 
-    widgetRender: function(element , dataForApi=[] , insert=true){
+    widgetRender: function(element , fetchData=[] , insert=true){
         const closestComponent = element.closest("component-widget");
+
         if (closestComponent != null){
-            const data = closestComponent.getAttribute("data");
-            if (data != null){
-                try {
-                    let dataJson = JSON.parse(data);
-                    let var_randomId = dataJson.hasOwnProperty("var_randomId") ? dataJson.var_randomId : null;
+            const componentRandomId = closestComponent.getAttribute("data-component-id");
+            if (componentRandomId != null && components.hasOwnProperty(componentRandomId) ){
 
-                    if (var_randomId != null){
-                        const prop_fetch = dataJson.hasOwnProperty("prop_fetch") ? dataJson.prop_fetch : {};
-                        let fetchData = dataForApi;
-                        if (insert){
+                const prop_fetch = components[componentRandomId].get("prop_fetch" , {});
+                if (!prop_fetch.hasOwnProperty("data") || Array.isArray(prop_fetch.data)){
+                    prop_fetch.data = {};
+                }
+                if (!prop_fetch.data.hasOwnProperty("data")){
+                    prop_fetch.data.data = {};
+                }
+                console.log(prop_fetch)
 
-                            if (prop_fetch.hasOwnProperty("data") && !Array.isArray(prop_fetch.data)){
-                                fetchData = prop_fetch.data.hasOwnProperty("data") ? prop_fetch.data.data : [];
 
-                                for (let x = 0; x < dataForApi.length ; x++) {
-                                    const itemApi = dataForApi[x];
+                if (insert){
 
-                                    let exist = false;
-                                    if (itemApi.hasOwnProperty("name") && itemApi.hasOwnProperty("value") ){
-                                        for (let i = 0; i < fetchData.length ; i++) {
-                                            const item = fetchData[i];
-                                            if (item.hasOwnProperty("name") && item.name == itemApi.name){
-                                                fetchData[i] = itemApi;
-                                                exist = true;
-                                                break;
-                                            }
-                                        }
-                                    }
+                    for (let x = 0; x < fetchData.length ; x++) {
+                        const itemApi = fetchData[x];
 
-                                    if (!exist){
-                                        fetchData.push(itemApi);
-                                    }
+                        let exist = false;
+                        if (itemApi.hasOwnProperty("name") && itemApi.hasOwnProperty("value") ){
+                            for (let i = 0; i < prop_fetch.data.data.length ; i++) {
+                                const item = prop_fetch.data.data[i];
+                                if (item.hasOwnProperty("name") && item.name == itemApi.name){
+                                    prop_fetch.data.data[i] = itemApi;
+                                    exist = true;
+                                    break;
                                 }
-
-
                             }
                         }
 
-
-                        if (!prop_fetch.hasOwnProperty("data") || Array.isArray(prop_fetch.data)){
-                            prop_fetch.data = {};
+                        if (!exist){
+                            prop_fetch.data.data.push(itemApi);
                         }
-                        if (!prop_fetch.data.hasOwnProperty("data")){
-                            prop_fetch.data.data = {};
-                        }
-                        prop_fetch.data.data = fetchData;
-                        dataJson["prop_fetch"] = prop_fetch;
-
-                        if (typeof components != "undefined"){
-                            components[var_randomId] = dataJson;
-                        }
-
-                        closestComponent.setAttribute("data" , JSON.stringify(dataJson))
                     }
-
-
                 }
-                catch (e){
-                    console.error(e)
+
+                if ( typeof components[componentRandomId].call_fetchWidget !== "undefined"){
+                    components[componentRandomId].call_fetchWidget();
                 }
             }
+
         }
+
     } ,
 
 
@@ -456,7 +443,15 @@ tools_submit = {
                     /// set messages
                     if (componentMessagesData != null) {
                         componentMessagesData.prop_messages = response.hasOwnProperty("messages") ? response.messages : [];
-                        componentMessagesData.prop_status = response.hasOwnProperty("status") ? response.status : true;
+
+
+                        let messageType = "success";
+                        if (response.hasOwnProperty("status")){
+                            messageType = response.status ? "success" : "error";
+                        }
+                        componentMessagesData.prop_type = messageType;
+
+
                         tools_component.control("ComponentMessages" , componentMessagesData);
                     }
 
