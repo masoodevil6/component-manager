@@ -9080,6 +9080,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
             background-color: ${prop_blurBackgroundColor};
             top: 0;
             left: 0;
+            z-index: 11;
        }
     </style>
     
