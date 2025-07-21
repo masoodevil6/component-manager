@@ -25,12 +25,11 @@
         ComponentInput:                      "component-input" ,                          //03-04
         ComponentInputPrice:                 "component-input-price" ,                    //03-05
         ComponentDate:                       "component-date" ,                           //03-06
-        ComponentUpload:                     "component-upload" ,                         //03-07
-        
-
+        ComponentInputFile:                  "component-input-file" ,                     //03-07
         
         
         
+     
     // [10] Tables
         ComponentTable:                      "component-table" ,                          //10-01
         
@@ -40,7 +39,9 @@
     // [12] Collapse
         ComponentCollapse:                   "component-collapse" ,                       //12-01
         
-        
+    // [13] Window
+        ComponentWindow:                     "component-window" ,                         //13-01
+
         
         
         
@@ -645,7 +646,43 @@
 ```
 
 
+**03-07) Component Input File:**
+```
+/*-------------------------------------
+ 03-07) Component Input File
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
+@prop_name
+@prop_accept
+@prop_maxCount
+@prop_maxSize
+@prop_textValidateSize
+@prop_textValidateAccept
+
+@prop_title
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderColor
+@prop_borderColorHover
+@prop_borderHeight
+
+@prop_textColor
+@prop_text
+
+-------------------------------------*/
+new window.ComponentInputFile(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
 
 
 
@@ -756,6 +793,47 @@
 @prop_bodyShow
 -------------------------------------*/
     new window.ComponentCollapse(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+/* ====================
+[13] Window
+==================================== */
+
+**13-01) Component Window:**
+```
+/*-------------------------------------
+ 13-01) Component Window
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_blurBackgroundColor
+
+@prop_windowBackgroundColor
+@prop_windowWidth
+@prop_windowHeight
+@prop_windowRound
+
+@prop_title
+
+@prop_body     [or component-body]
+ 
+@prop_footer   [or component-footer]
+
+// call_close
+// call_open
+// call_resize
+// call_minimize
+-------------------------------------*/
+    new window.ComponentWindow(
         "element_id" ,
         {
 

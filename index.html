@@ -148,6 +148,21 @@
     </component-collapse>
 
 
+    <component-collapse  id="window">
+        <component-body>
+
+            <section class="row p-0 m-0">
+
+                <component-window id="window-sample" ></component-window>
+                <component-button id="button-show-window"></component-button>
+
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
+
 
 
 
@@ -287,8 +302,6 @@
         }
     )
 
-
-
     /*-------------------------------------
      01-04) Component label
     -------------------------------------*/
@@ -324,7 +337,6 @@
         }
     )
 
-    
     /*-------------------------------------
        01-06) Component link
     -------------------------------------*/
@@ -617,6 +629,8 @@
 
             prop_title: "input File" ,
             prop_accept: "image/*" ,
+            prop_maxCount: 3 ,
+            prop_maxSize: 3000000 ,
         }
     )
 
@@ -790,6 +804,37 @@
 
 
 
+    /* ====================
+      [13] Window
+    ==================================== */
+    /*-------------------------------------
+      13-01) Component Window
+    -------------------------------------*/
+
+    const componentWindow = new window.ComponentWindow(
+        "window-sample" ,
+        {
+            prop_body: "<p class='m-2'>this is a test body</p>" ,
+            prop_footer: "<p class='m-2'>this is a test footer</p>" ,
+        }
+    )
+
+    new window.ComponentButton(
+        "button-show-window" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "show window" ,
+            fn_callback: (event)=>{
+                componentWindow.call_open()
+            }
+        }
+    )
+
+
+
+
+
 
     /* ====================
       [20] Charts
@@ -954,7 +999,7 @@
 
 
 
-    //// Collapse
+    //// Collapses Categories
     new window.ComponentCollapse(
         "text-and-message" ,
         {
@@ -979,7 +1024,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [03] Button And Inputs" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
 
@@ -1010,6 +1055,15 @@
 
             prop_title: " [12] Collapses " ,
             prop_bodyShow: false
+        }
+    )
+    new window.ComponentCollapse(
+        "window" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: " [13] Window " ,
+            prop_bodyShow: true
         }
     )
 

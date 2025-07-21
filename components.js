@@ -44,7 +44,8 @@ if (typeof listComponent === 'undefined') {
         // [12] Collapse
         ComponentCollapse:                   "component-collapse" ,                       //12-01
 
-
+        // [13] Window
+        ComponentWindow:                     "component-window" ,                         //13-01
 
 
 
@@ -7261,7 +7262,6 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 }
 
-
 /*-------------------------------------
  03-07) Component Input File
 -------------------------------------
@@ -7271,12 +7271,23 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 @prop_name
 @prop_accept
+@prop_maxCount
+@prop_maxSize
+@prop_textValidateSize
+@prop_textValidateAccept
 
 @prop_title
 @prop_labelShow
 @prop_labelClass
 @prop_labelStyles
 @prop_labelHoverStyles
+
+@prop_borderColor
+@prop_borderColorHover
+@prop_borderHeight
+
+@prop_textColor
+@prop_text
 
 -------------------------------------*/
 window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
@@ -7292,6 +7303,10 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         part_value: [
             {prop : "prop_name"                  , default: "NAME"} ,
             {prop : "prop_accept"                , default: "*"} ,
+            {prop : "prop_maxCount"              , default: null} ,
+            {prop : "prop_maxSize"               , default: null} ,
+            {prop : "prop_textValidateSize"      , default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"} ,
+            {prop : "prop_textValidateAccept"    , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
         ] ,
         part_label: [
             {prop : "prop_title"                 , default: "TITLE"} ,
@@ -7301,12 +7316,20 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
             {prop : "prop_labelHoverStyles"      , default: null} ,
         ] ,
         part_body: [
-            {prop : "part_borderColor"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor")   ? tools_const.styles.inputFile.boderColor : "red"} ,
+            {prop : "prop_borderColor"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor")   ? tools_const.styles.inputFile.boderColor : "red"} ,
+            {prop : "prop_borderColorHover"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColorHover")   ? tools_const.styles.inputFile.boderColorHover : "red"} ,
             {prop : "prop_borderHeight"          , default: "150px"} ,
         ] ,
         part_body_text: [
-            {prop : "part_textColor"             , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("textColor")   ? tools_const.styles.inputFile.textColor : "red"} ,
-            {prop : "part_text"                  , default: "لطفا فایل خود را بکشید و رها کنید یا برای انتخاب کلیک کنید "} ,
+            {prop : "prop_textColor"             , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("textColor")   ? tools_const.styles.inputFile.textColor : "red"} ,
+            {prop : "prop_text"                  , default: "لطفا فایل خود را بکشید و رها کنید یا برای انتخاب کلیک کنید "} ,
+        ] ,
+        part_footer: [
+
+        ] ,
+        part_footer_files: [
+            {prop : "var_fileIsValid"           , default: null} ,
+            {prop : "var_fileIsNotValid"        , default: null} ,
         ] ,
     }
 
@@ -7317,6 +7340,9 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
             part_body : {
                 part_body_text:{}
             },
+            part_footer: {
+                part_footer_files:{}
+            }
         } ,
     }
 
@@ -7338,14 +7364,6 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         this.onTemplateComplete();
         this.onRegister();
 
-
-       /* document.addEventListener("dragover", function(e) {
-            e.preventDefault();
-        });
-
-        document.addEventListener("drop", function(e) {
-            e.preventDefault();
-        });*/
     }
 
 
@@ -7355,20 +7373,31 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
  --------------------------------------------- */
     componentFn(){
         this.templateFn("part_label");
+
+        document.addEventListener("dragover", e => e.preventDefault());
+        document.addEventListener("drop", e => e.preventDefault());
     }
 
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
                 return this.template_render_structure(partName);
+
             case "part_label":
                 return this.componentFn_render_label(partName);
+
             case "part_value":
                 return this.template_render_value(partName);
+
             case "part_body":
                 return this.template_render_body(partName);
             case "part_body_text":
                 return this.template_render_bodyText(partName);
+
+            case "part_footer":
+                return this.template_render_bodyFooter(partName);
+            case "part_footer_files":
+                return this.template_render_bodyFooterFiles(partName);
 
             default:
                 return this.templateBasic_render();
@@ -7385,6 +7414,8 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
      ${this.templateFn("part_value") ?? ""}
      
      ${this.templateFn("part_body") ?? ""}
+
+     ${this.templateFn("part_footer") ?? ""}
         
                 `;
         return this.templateBasic_render_structure(content , ["position-relative"]);
@@ -7396,8 +7427,9 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
         if (data != null){
 
-            const prop_name    =   data.hasOwnProperty("prop_name")               ?  data.prop_name                    :  "";
-            const prop_accept  =   data.hasOwnProperty("prop_accept")             ?  data.prop_accept                  :  "";
+            const prop_name      =   data.hasOwnProperty("prop_name")               ?  data.prop_name                    :  "";
+            const prop_accept    =   data.hasOwnProperty("prop_accept")             ?  data.prop_accept                  :  "";
+            const prop_maxCount  =   data.hasOwnProperty("prop_maxCount")           ?  data.prop_maxCount                :  null;
 
             return                                       `
 <section  data-part-name="${partName}"
@@ -7413,6 +7445,8 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
      <input id="component-input-file-value-input-${this._COMPONENT_RANDOM_ID}" name="${prop_name}" 
             type="file" 
             class="d-none" 
+            onchange=" ${this.getFn("fn_onChangeFiles" , "event")};"
+            ${prop_maxCount != null && prop_maxCount > 1 ? "multiple" : ''}
             accept="${prop_accept}"/>
        
 </section>
@@ -7430,35 +7464,36 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
         if (data != null){
 
-            const part_borderColor    =   data.hasOwnProperty("part_borderColor")               ?  data.part_borderColor                    :  "";
-            const prop_borderHeight   =   data.hasOwnProperty("prop_borderHeight")              ?  data.prop_borderHeight                   :  "";
-
-            /*document.addEventListener("dragstart", function(e) {
-                e.preventDefault();
-            });*/
+            const prop_borderColor         =   data.hasOwnProperty("prop_borderColor")               ?  data.prop_borderColor                    :  "";
+            const prop_borderColorHover    =   data.hasOwnProperty("prop_borderColorHover")          ?  data.prop_borderColorHover               :  "";
+            const prop_borderHeight        =   data.hasOwnProperty("prop_borderHeight")              ?  data.prop_borderHeight                   :  "";
 
             return                                       `
 <section  data-part-name="${partName}"
           id="component-input-file-body-${this._COMPONENT_RANDOM_ID}"  
+          draggable="true"
           onclick="${this.getFn("fn_clickToFileInput")}"
           ondragover="${this.getFn("fn_onDragStart" , "event")}"
           ondragenter="${this.getFn("fn_onDragStart" , "event")}"
           ondragleave="${this.getFn("fn_onDragEnd" , "event")}"
-          ondrag="${this.getFn("fn_onDrag" , "event")};"
+          ondrop=" ${this.getFn("fn_onDrap" , "event")};"
           class="p-2 rounded position-relative" >
           
      <style>
-         /** {
-             -webkit-user-drag: none;
-             user-drag: none;
-         }*/
-     
          #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}{
              cursor: pointer;
              border-style: dashed;
              border-width: 2px;
-             border-color: ${part_borderColor};
+             border-color: ${prop_borderColor};
              height: ${prop_borderHeight}
+         }
+         
+         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}:hover{
+             border-color: ${prop_borderColorHover} !important;
+         }
+     
+         #${this._COMPONENT_ID} .component-input-file-body-${this._COMPONENT_RANDOM_ID}-active{
+             border-color: ${prop_borderColorHover} !important;
          }
      </style>
      
@@ -7479,8 +7514,8 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
         if (data != null){
 
-            const part_textColor    =   data.hasOwnProperty("part_textColor")               ?  data.part_textColor                    :  "";
-            const part_text         =   data.hasOwnProperty("part_text")                    ?  data.part_text                         :  "";
+            const prop_textColor    =   data.hasOwnProperty("prop_textColor")               ?  data.prop_textColor                    :  "";
+            const prop_text         =   data.hasOwnProperty("prop_text")                    ?  data.prop_text                         :  "";
 
             return                                       `
 <section  data-part-name="${partName}"
@@ -7489,7 +7524,7 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
           
      <style>
          #${this._COMPONENT_ID} #component-input-file-body-text-${this._COMPONENT_RANDOM_ID}{
-             color: ${part_textColor};
+             color: ${prop_textColor};
              font-size: 11pt;
              transform: translate(-50% , -50%);
              left: 50%;
@@ -7497,7 +7532,7 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
          }
      </style>
 
-     <b> ${part_text} </b>
+     <b> ${prop_text} </b>
 
 </section>
         `;
@@ -7508,6 +7543,148 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         `;
     }
 
+    template_render_bodyFooter(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-footer-${this._COMPONENT_RANDOM_ID}"  
+          class="row" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-footer-${this._COMPONENT_RANDOM_ID}{
+             
+         }
+     </style>
+
+     ${this.templateFn("part_footer_files") ?? ""}
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+    template_render_bodyFooterFiles(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const var_fileIsValid        =   data.hasOwnProperty("var_fileIsValid")         ?  data.var_fileIsValid             :  null;
+            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
+
+            let counter = 1;
+
+            let htmlAcceptFiles = "";
+            if (var_fileIsValid != null){
+                for (let i = 0; i < var_fileIsValid.length; i++) {
+                    const itemFile = var_fileIsValid[i];
+
+                    const formatted = (itemFile.size / 10000).toFixed(3);
+
+                    htmlAcceptFiles += `
+<div class="  shadow-sm bg-info rounded row px-1 py-1 mx-0 my-1">
+
+   <span class="counter col-1 bg-white rounded ">${counter}</span>
+   
+   <span class="fileName col-7 text-start ">  ${itemFile.name}</span>
+   
+   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
+      <span class="col-8">
+         ${formatted}
+      </span>
+      <span class="col-4">
+          KB
+      </span>
+   </span>
+   
+   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("deleteFileSelected" , "event" , `'${itemFile.name}'`)}"> &#x1F5D1; </span>
+  
+</div>
+                    `;
+
+                    counter ++;
+                }
+            }
+
+
+            let htmlUnAcceptFiles = "";
+            if (var_fileIsNotValid != null){
+                for (let i = 0; i < var_fileIsNotValid.length; i++) {
+                    const itemFile = var_fileIsNotValid[i];
+
+                    const formatted = (itemFile.size / 10000).toFixed(3);
+
+                    htmlUnAcceptFiles += `
+<div class="  shadow-sm bg-danger rounded row px-1 py-1 mx-0 my-1">
+
+   <span class="counter col-1 bg-white rounded ">${counter}</span>
+   
+   <span class="fileName col-7 text-start text-white  ">  ${itemFile.name}</span>
+   
+   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
+      <span class="col-8">
+         ${formatted}
+      </span>
+      <span class="col-4">
+          KB
+      </span>
+   </span>
+  
+</div>
+                    `;
+
+                    counter ++;
+                }
+            }
+
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}"  
+          class=" " >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}{
+        
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .counter{
+         
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileName{
+              font-size: 10pt;
+              white-space: nowrap;        /* فقط یک خط */
+              overflow: hidden;           /* جلوگیری از overflow */
+              text-overflow: ellipsis;    /* نمایش سه نقطه ... */
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileSize{
+              font-size: 10pt;
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileDelete{
+              cursor: pointer;
+         }
+     </style>
+
+     ${htmlAcceptFiles}
+     ${htmlUnAcceptFiles}
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
 
     componentFn_render_label(partName) {
 
@@ -7549,43 +7726,175 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
-    fn_getDragArea(){
+    fn_getInput(){
         return document.querySelector(`input#component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`);
     }
+    fn_getDragArea(){
+        return document.querySelector(`section#component-input-file-body-${this._COMPONENT_RANDOM_ID}`);
+    }
     fn_clickToFileInput(){
-        const elInput = this.fn_getDragArea();
+        const elInput = this.fn_getInput();
         if (elInput != null){
             elInput.click();
         }
     }
     fn_onDragStart(event){
         event.preventDefault();
-        const elInput = this.fn_getDragArea();
-        if (elInput != null){
-            elInput.classList.add("hover");
+        const elDrag = this.fn_getDragArea();
+        if (elDrag != null){
+            elDrag.classList.add(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
         }
-        //console.log("start")
     }
     fn_onDragEnd(event){
         event.preventDefault();
-        const elInput = this.fn_getDragArea();
-        if (elInput != null){
-            elInput.classList.remove("hover");
+        const elDrag = this.fn_getDragArea();
+        if (elDrag != null){
+            elDrag.classList.remove(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
         }
-       // console.log("end")
     }
-    fn_onDrag(event){
+    fn_onDrap(event){
+        this.fn_onDragEnd(event);
 
-       // this.fn_onDragEnd(event);
-
-        //const file = event.dataTransfer.files[0];
-        /*if (file) {
-            //handleFile(file);
-            console.log(file)
-        }*/
-        console.log(event)
+        const files = event.dataTransfer.files;
+        if (files) {
+            this.fn_onValidateCountFiles(files)
+        }
     }
 
+
+    fn_onChangeFiles(event){
+        this.fn_onValidateCountFiles(event.target.files)
+    }
+    fn_onValidateCountFiles(files){
+        const data = this._COMPONENT_CONFIG;
+
+        const dataTransfer = new DataTransfer();
+        const filesAccepts = [];
+        const filesUnAccepts = [];
+
+        const elInput = this.fn_getInput();
+        if (elInput != null){
+
+            let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
+            let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
+            const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
+            const prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
+
+            prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
+            prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
+
+            let limit = files.length;
+            if (data.hasOwnProperty("prop_maxCount") && data.prop_maxCount != null){
+                limit = Math.min(files.length, data.prop_maxCount);
+            }
+
+            let numberAceppted = 0;
+            for (let i = 0; i < files.length; i++) {
+                const fileSelected = files[i];
+                fileSelected.errors = [];
+
+                const validateSize = this.fn_onValidateSizeFiles(fileSelected);
+                const validateAccept = this.fn_onIsAccepted(fileSelected);
+                console.log(validateSize , validateAccept)
+
+                let isValid = false;
+                if (validateSize && validateAccept){
+                    isValid = true;
+                }
+
+                if (!validateSize){
+                    fileSelected.errors.push(prop_textValidateSize);
+                    isValid = false;
+                }
+                if (!validateAccept){
+                    fileSelected.errors.push(prop_textValidateAccept);
+                    isValid = false;
+                }
+
+                if (isValid){
+                    dataTransfer.items.add(fileSelected);
+                    filesAccepts.push(fileSelected);
+                    numberAceppted++;
+                }
+                else{
+                    filesUnAccepts.push(fileSelected);
+                }
+
+                if(limit <= numberAceppted){
+                    break;
+                }
+            }
+
+            elInput.files = dataTransfer.files;
+        }
+
+        console.log(filesUnAccepts)
+
+        this.set("var_fileIsValid" , filesAccepts);
+        this.set("var_fileIsNotValid" , filesUnAccepts);
+    }
+    fn_onValidateSizeFiles(file){
+        const data = this._COMPONENT_CONFIG;
+
+        if (file != null){
+            if (data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null){
+                const sizeValidate =  data.prop_maxSize*1000;
+
+                if (file.size <= sizeValidate){
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    fn_onIsAccepted(file) {
+        const data = this._COMPONENT_CONFIG;
+        let accept = "";
+        if (data.hasOwnProperty("prop_accept") && data.prop_accept != null){
+            accept = data.prop_accept;
+        }
+
+        if (!accept) return true;
+
+        const mime = file.type;
+        const name = file.name;
+
+        return accept.split(',').some(type => {
+            type = type.trim();
+            if (type.endsWith('/*')) {
+                return mime.startsWith(type.replace('/*', ''));
+            } else if (type.startsWith('.')) {
+                return name.toLowerCase().endsWith(type.toLowerCase());
+            } else {
+                return mime === type;
+            }
+        });
+    }
+
+
+    deleteFileSelected(event , filename){
+
+        const elInput = this.fn_getInput();
+        if (elInput != null){
+            const dt = new DataTransfer();
+            const files = elInput.files;
+
+            Array.from(files).forEach((file, index) => {
+                console.log(file , filename , file.name !== filename)
+                if (file.name !== filename) {
+                    dt.items.add(file);
+                }
+            });
+
+            this.fn_onValidateCountFiles(dt.files);
+        }
+    }
 
 }
 
@@ -8416,9 +8725,6 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
     }
 
 
-
-
-
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
@@ -8435,10 +8741,6 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
         this.onTemplateComplete();
         this.onRegister();
     }
-
-
-
-
 
 
     /* ---------------------------------------------
@@ -8587,7 +8889,6 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
         const el = document.querySelector(`#component-collapse-body-${this._COMPONENT_RANDOM_ID}`);
         const dataShow = el.getAttribute("data-show")
         const statusShow = dataShow == "false" ;
-        console.log(el , dataShow , statusShow)
 
         if (statusShow){
             el.classList.remove("d-none");
@@ -8600,6 +8901,649 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
     }
 
 }
+
+
+
+
+
+/* ===============================================================================================================
+ [13] Window
+=============================================================================================================== */
+
+/*-------------------------------------
+ 13-01) Component Window
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_blurBackgroundColor
+
+@prop_windowBackgroundColor
+@prop_windowWidth
+@prop_windowHeight
+@prop_windowRound
+
+@prop_title
+
+@prop_body     [or component-body]
+
+@prop_footer   [or component-footer]
+
+// call_close
+// call_open
+// call_resize
+// call_minimize
+-------------------------------------*/
+window.ComponentWindow = class ComponentWindow extends ComponentBase {
+
+    _IS_FULL_SIZE = false;
+
+    /* ---------------------------------------------
+      PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+        part_blur: [
+            {prop : "prop_blurBackgroundColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("window") && tools_const.styles.window.hasOwnProperty("backgroundColor_blur")   ? tools_const.styles.window.backgroundColor_blur : ""} ,
+
+        ],
+        part_window: [
+            {prop : "prop_windowBackgroundColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("window") && tools_const.styles.window.hasOwnProperty("backgroundColor_window")   ? tools_const.styles.window.backgroundColor_window : ""} ,
+            {prop : "prop_windowWidth"                      , default: 700} ,
+            {prop : "prop_windowHeight"                     , default: 400} ,
+            {prop : "prop_windowRound"                      , default: "0"} ,
+        ],
+        part_window_header: [
+
+        ],
+        part_window_header_title: [
+            {prop : "prop_title"                            , default: "TITLE"} ,
+
+        ],
+        part_window_header_icons: [
+
+        ],
+        part_window_header_icons_icon_close: [
+
+        ],
+        part_window_header_icons_icon_resize: [
+
+        ],
+        part_window_body: [
+            {prop : "prop_body"                             , default: null} ,
+        ],
+        part_window_footer: [
+            {prop : "prop_footer"                           , default: null} ,
+        ],
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_blur:{
+                part_window:{
+                    part_window_header:{
+                        part_window_header_title: {},
+                        part_window_header_icons: {
+                            part_window_header_icons_icon_close:{},
+                            part_window_header_icons_icon_resize:{},
+                        },
+                    },
+                    part_window_body:{},
+                    part_window_footer:{}
+                }
+            }
+        }
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentWindow.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+    /* ---------------------------------------------
+   TEMPLATEs
+--------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_window_header_icons_icon_close");
+        this.templateFn("part_window_header_icons_icon_resize");
+        this.fn_setUnvisableWindow();
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_blur":
+                return this.template_render_blur(partName);
+            case "part_window":
+                return this.template_render_window(partName);
+
+            case "part_window_header":
+                return this.template_render_windowHeader(partName);
+
+            case "part_window_header_title":
+                return this.template_render_windowHeaderTitle(partName);
+
+            case "part_window_header_icons":
+                return this.template_render_windowHeaderIcons(partName);
+            case "part_window_header_icons_icon_close":
+                return this.componentFn_render_windowHeaderIconClose(partName);
+            case "part_window_header_icons_icon_resize":
+                return this.componentFn_render_windowHeaderIconResize(partName);
+
+            case "part_window_body":
+                return this.template_render_windowBody(partName);
+            case "part_window_footer":
+                return this.template_render_windowFooter(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+         ${this.templateFn("part_blur") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_blur(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_blurBackgroundColor       = data.hasOwnProperty("prop_blurBackgroundColor")          ?  data.prop_blurBackgroundColor     : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-blur-${this._COMPONENT_RANDOM_ID}" 
+         onclick="${this.getFn("fn_onCLicCloseWindow" , "event")}"
+         class="position-fixed w-100 h-100" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-blur-${this._COMPONENT_RANDOM_ID}{
+            background-color: ${prop_blurBackgroundColor};
+            top: 0;
+            left: 0;
+       }
+    </style>
+    
+     ${this.templateFn("part_window") ?? ""}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_window(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_windowBackgroundColor       = data.hasOwnProperty("prop_windowBackgroundColor")          ?  data.prop_windowBackgroundColor     : "";
+            const prop_windowWidth                 = data.hasOwnProperty("prop_windowWidth")                    ?  data.prop_windowWidth               : "";
+            const prop_windowHeight                = data.hasOwnProperty("prop_windowHeight")                   ?  data.prop_windowHeight              : "";
+            const prop_windowRound                 = data.hasOwnProperty("prop_windowRound")                    ?  data.prop_windowRound               : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-window-${this._COMPONENT_RANDOM_ID}" 
+         class="position-absolute shadow" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-window-${this._COMPONENT_RANDOM_ID}{
+            transition: width 250ms ease, height 250ms ease;
+            background-color: ${prop_windowBackgroundColor};
+            top: 50%;
+            left: 50%;
+            transform: translate(-50% , -50%);
+            width: ${prop_windowWidth}px;
+            height: ${prop_windowHeight}px;
+            border-radius: ${prop_windowRound};
+       }
+       
+       @keyframes window-visable-${this._COMPONENT_RANDOM_ID}{
+           0% {
+              width: ${prop_windowWidth * 2 / 3}px;
+              height: ${prop_windowHeight * 2 / 3 }px;
+           }
+           50% {
+              width: ${prop_windowWidth * 4 / 3}px;
+              height: ${prop_windowHeight * 4 / 3 }px;
+           }
+           100% {
+               width: ${prop_windowWidth}px;
+               height: ${prop_windowHeight}px;
+           }
+        }
+
+        @keyframes window-unvisable-${this._COMPONENT_RANDOM_ID} {
+            0% {
+               width: ${prop_windowWidth}px;
+               height: ${prop_windowHeight}px;
+            }
+            50% {
+              width: ${prop_windowWidth * 4 / 3}px;
+              height: ${prop_windowHeight * 4 / 3 }px;
+            }
+            100% {
+               width: ${prop_windowWidth * 2 / 3}px;
+               height: ${prop_windowHeight * 2 / 3 }px;
+            }
+         }
+        
+         .window-visable-animation-${this._COMPONENT_RANDOM_ID} {
+              animation: window-visable-${this._COMPONENT_RANDOM_ID} 0.25s forwards ease-in-out;
+         }
+
+         .window-unvisable-animation-${this._COMPONENT_RANDOM_ID} {
+              animation: window-unvisable-${this._COMPONENT_RANDOM_ID} 0.25s forwards ease-in-out;
+         }
+         
+
+       @keyframes window-full-size-${this._COMPONENT_RANDOM_ID}{
+           0% {
+              width: ${prop_windowWidth}px;
+              height: ${prop_windowHeight}px;
+           }
+           100% {
+               width: calc(100% - 40px);
+               height: calc(100% - 40px);
+           }
+        }
+
+        @keyframes window-real-size-${this._COMPONENT_RANDOM_ID} {
+            0% {
+               width: calc(100% - 40px);
+               height: calc(100% - 40px);
+            }
+            100% {
+               width: ${prop_windowWidth}px;
+               height: ${prop_windowHeight}px;
+            }
+         }
+        
+         .window-full-size-animation-${this._COMPONENT_RANDOM_ID} {
+              animation: window--full-size-${this._COMPONENT_RANDOM_ID} 0.25s forwards ease-in-out;
+         }
+         
+          .window-real-size-animation-${this._COMPONENT_RANDOM_ID} {
+              animation: window-real-size-${this._COMPONENT_RANDOM_ID} 0.25s forwards ease-in-out;
+         }
+        
+         .window-full-size-${this._COMPONENT_RANDOM_ID} {
+              width: calc(100% - 40px) !important;
+              height: calc(100% - 40px) !important;
+         }
+
+         window-full-size-${this._COMPONENT_RANDOM_ID} {
+              width: ${prop_windowWidth}px !important;
+              height: ${prop_windowHeight}px !important;
+         }
+         
+    </style>
+    
+    ${this.templateFn("part_window_header") ?? ""}
+    ${this.templateFn("part_window_body") ?? ""}
+    ${this.templateFn("part_window_footer") ?? ""}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_windowHeader(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-window-header-${this._COMPONENT_RANDOM_ID}" 
+         class=" border-bottom row p-0 m-0" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-window-header-${this._COMPONENT_RANDOM_ID}{
+            height: 35px;
+       }
+    </style>
+    
+    ${this.templateFn("part_window_header_title") ?? ""}
+    
+    ${this.templateFn("part_window_header_icons") ?? ""}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_windowHeaderTitle(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title                 = data.hasOwnProperty("prop_title")                    ?  data.prop_title               : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-window-header-title-${this._COMPONENT_RANDOM_ID}" 
+         class=" col-8" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-window-header-title-${this._COMPONENT_RANDOM_ID}{
+            line-height: 35px;
+       }
+    </style>
+   
+    <b>${prop_title}</b>
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_windowHeaderIcons(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-window-header-title-${this._COMPONENT_RANDOM_ID}" 
+         class="col-4 position-relative" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-window-header-title-${this._COMPONENT_RANDOM_ID}{
+            height: 35px;
+       }
+    </style>
+   
+    <component-button id="component-windwow-window-header-icon-close-${this._COMPONENT_RANDOM_ID}"></component-button>
+    
+    <component-button id="component-windwow-window-header-icon-resize-${this._COMPONENT_RANDOM_ID}"></component-button>
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_windowBody(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_body        =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-window-body-${this._COMPONENT_RANDOM_ID}" 
+         class=" " >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-window-body-${this._COMPONENT_RANDOM_ID}{
+            height: calc(100% - 90px);
+       }
+    </style>
+    
+    ${prop_body}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_windowFooter(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_footer        =   data.hasOwnProperty("prop_footer") && data.prop_footer !=null       ?  data.prop_footer        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("footer") ? this._COMPONENT_SLOTS.footer : '');
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-window-footer-${this._COMPONENT_RANDOM_ID}" 
+         class=" border-top" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-window-footer-${this._COMPONENT_RANDOM_ID}{
+            height: 55px;
+       }
+    </style>
+    
+    ${prop_footer}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    componentFn_render_windowHeaderIconClose(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const directionRtl  =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            const styles = {
+                "top" : "5px"
+            }
+            styles[directionRtl ? "left" : "right"] =  "10px";
+
+            new window.ComponentButton(
+                `component-windwow-window-header-icon-close-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  ["position-absolute"] ,
+                    prop_structureStyles: styles ,
+
+                    prop_btnClass: [
+
+                    ],
+                    prop_btnStyles: {
+                        "width" : "25px" ,
+                        "height" : "25px" ,
+                        "line-height" : "18px" ,
+                        "padding" : "0 !important" ,
+                    },
+
+                    prop_title: `&#x00D7;` ,
+
+                    fn_callback: (event) => {
+                        this.fn_onCLicCloseWindow(event)
+                    }
+                }
+            )
+
+        }
+
+    }
+
+    componentFn_render_windowHeaderIconResize(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl  =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            const styles = {
+                "top" : "5px"
+            }
+            styles[directionRtl ? "left" : "right"] =  "40px";
+
+
+            new window.ComponentButton(
+                `component-windwow-window-header-icon-resize-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  ["position-absolute"] ,
+                    prop_structureStyles: styles ,
+
+                    prop_btnClass: [
+
+                    ],
+                    prop_btnStyles: {
+                        "width" : "25px" ,
+                        "height" : "25px" ,
+                        "line-height" : "18px" ,
+                        "padding" : "0 !important" ,
+                    },
+
+                    prop_title: `🗗` ,
+
+                    fn_callback: (event) => {
+                        this.fn_onCLicResizeWindow(event)
+                    }
+                }
+            )
+        }
+
+    }
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onGetStuctureElement(){
+        return document.querySelector(`section#component-${this._COMPONENT_NAME}-structure-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_onGetWindowElement(){
+        return document.querySelector(`section#component-windwow-window-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+    fn_setUnvisableWindow(){
+        const el = this.fn_onGetStuctureElement();
+        el.classList.add("d-none");
+    }
+
+
+    fn_onRemoveClass(event){
+        const elWindow = this.fn_onGetWindowElement();
+
+        elWindow.classList.remove(`window-full-size-${this._COMPONENT_RANDOM_ID}`);
+        elWindow.classList.remove(`window-real-size-${this._COMPONENT_RANDOM_ID}`);
+
+        elWindow.classList.remove(`window-full-size-animation-${this._COMPONENT_RANDOM_ID}`);
+        elWindow.classList.remove(`window-real-size-animation-${this._COMPONENT_RANDOM_ID}`);
+
+        elWindow.classList.remove(`window-visable-animation-${this._COMPONENT_RANDOM_ID}`);
+        elWindow.classList.remove(`window-unvisable-animation-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+
+    fn_onCLicOpenWindow(event){
+        this.fn_onRemoveClass();
+
+        const el = this.fn_onGetStuctureElement();
+        el.classList.remove("d-none");
+
+        const elWindow = this.fn_onGetWindowElement();
+        elWindow.classList.add(`window-visable-animation-${this._COMPONENT_RANDOM_ID}`);
+
+        this._IS_FULL_SIZE = false;
+    }
+
+    fn_onCLicCloseWindow(event){
+        this.fn_onRemoveClass();
+
+        const elWindow = this.fn_onGetWindowElement();
+        elWindow.classList.add(`window-unvisable-animation-${this._COMPONENT_RANDOM_ID}`);
+
+        const el = this.fn_onGetStuctureElement();
+        setTimeout(() => {
+            el.classList.add("d-none");
+        } , 250)
+
+        this._IS_FULL_SIZE = false;
+    }
+
+    fn_onCLicResizeWindow(event){
+        this.fn_onRemoveClass();
+
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_windowWidth")   && data.hasOwnProperty("prop_windowHeight")  ){
+            const prop_windowWidth   =  data.prop_windowWidth ;
+            const prop_windowHeight  = data.prop_windowHeight ;
+
+            const elWindow = this.fn_onGetWindowElement();
+            if (this._IS_FULL_SIZE){
+                elWindow.classList.add(`window-real-size-animation-${this._COMPONENT_RANDOM_ID}`);
+                elWindow.classList.add(`window-real-size-${this._COMPONENT_RANDOM_ID}`);
+                this._IS_FULL_SIZE = false;
+            }
+            else {
+                elWindow.classList.add(`window-full-size-animation-${this._COMPONENT_RANDOM_ID}`);
+                elWindow.classList.add(`window-full-size-${this._COMPONENT_RANDOM_ID}`);
+                this._IS_FULL_SIZE = true;
+            }
+        }
+
+    }
+
+    fn_onCLicMinimizeWindow(event){
+
+    }
+
+
+
+    call_close(event){
+        this.fn_onCLicCloseWindow(event);
+    }
+    call_open(event){
+        this.fn_onCLicOpenWindow(event);
+    }
+    call_resize(event){
+        this.fn_onCLicResizeWindow(event);
+    }
+    call_minimize(event){
+        this.fn_onCLicMinimizeWindow(event);
+    }
+
+
+}
+
+
 
 
 

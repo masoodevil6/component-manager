@@ -169,8 +169,14 @@ tools_init = {
             } ,
 
             inputFile: {
-                boderColor : component_props.secondaryColor1 ,
-                textColor : component_props.secondaryColor1 ,
+                boderColor : component_props.primaryColor1 ,
+                boderColorHover : component_props.secondaryColor1 ,
+                textColor : component_props.primaryColor1 ,
+            } ,
+
+            window: {
+                backgroundColor_blur : component_props.shadowColor1 ,
+                backgroundColor_window : component_props.shanColor1 ,
             } ,
 
 
