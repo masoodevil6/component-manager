@@ -95,6 +95,19 @@
     </component-collapse>
 
 
+    <component-collapse  id="tooltips">
+        <component-body>
+
+            <section class="row p-0 m-0">
+
+                <component-tooltip-description  id="tooltip-description"></component-tooltip-description>
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
+
 
 
 
@@ -154,7 +167,12 @@
             <section class="row p-0 m-0">
 
                 <component-window id="window-sample" ></component-window>
+                <component-window-confirm id="window-confirm" ></component-window-confirm>
+
+
                 <component-button id="button-show-window"></component-button>
+
+                <component-button id="button-show-window-confirm"></component-button>
 
 
             </section>
@@ -182,6 +200,10 @@
             <section class="row p-0 m-0">
 
                 <component-qr-code  id="qr-code"></component-qr-code>
+
+                <component-camera-qr-code-reader  id="camera-qr-code-reader"></component-camera-qr-code-reader>
+
+                <component-upload-qr-code-reader  id="upload-qr-code-reader"></component-upload-qr-code-reader>
 
             </section>
         </component-body>
@@ -312,6 +334,8 @@
 
             prop_title: "test text" ,
             prop_for: "test" ,
+
+            prop_tooltipDescription: "test description" ,
 
             fn_callback: (event , prop_for) => {
                 console.log(event , prop_for)
@@ -637,6 +661,27 @@
 
 
 
+
+    /* ====================
+     [04] Tooltips
+    ==================================== */
+
+    /*-------------------------------------
+       04-01) Component tooltips description
+     -------------------------------------*/
+    new window.ComponentTooltipDescription(
+        "tooltip-description" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_icon: " &#x2315; " ,
+            prop_description: " یک توضیحات نمونه " ,
+        }
+    )
+
+
+
+
     /* ====================
      [10] Tables
     ==================================== */
@@ -814,6 +859,7 @@
     const componentWindow = new window.ComponentWindow(
         "window-sample" ,
         {
+            prop_header: "Header" ,
             prop_body: "<p class='m-2'>this is a test body</p>" ,
             prop_footer: "<p class='m-2'>this is a test footer</p>" ,
         }
@@ -832,6 +878,30 @@
     )
 
 
+
+    const ComponentWindowConfirm = new window.ComponentWindowConfirm(
+        "window-confirm" ,
+        {
+            prop_header: "Request Delete File" ,
+            prop_body: "<p class='m-2'>Are you sure for delete File Selected?</p>" ,
+
+            fn_callback:(event , data)=>{
+                console.log(data)
+            }
+        }
+    )
+
+    new window.ComponentButton(
+        "button-show-window-confirm" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "show window confirm" ,
+            fn_callback: (event)=>{
+                ComponentWindowConfirm.call_open(event , {name:"ali"})
+            }
+        }
+    )
 
 
 
@@ -897,6 +967,40 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_value: "abs"
+        }
+    );
+
+    /*-------------------------------------
+      21-02) Component Camera Qr Code Reader
+    -------------------------------------*/
+    new window.ComponentCameraQrCodeReader(
+        "camera-qr-code-reader" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "QR Code Reader (Camera)" ,
+            prop_labelTooltipDescription: "This is for QR Code Reader Camera",
+
+            fn_callback: (qrCode)=>{
+                console.log(qrCode)
+            }
+        }
+    );
+
+    /*-------------------------------------
+      21-02) Component Camera Qr Code Reader
+    -------------------------------------*/
+    new window.ComponentUploadQrCodeReader(
+        "upload-qr-code-reader" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "QR Code Reader (Upload)" ,
+            prop_labelTooltipDescription: "This is for QR Code Reader Upload File" ,
+
+            fn_callback: (qrCode)=>{
+                console.log(qrCode)
+            }
         }
     );
 
@@ -1027,6 +1131,15 @@
             prop_bodyShow: false
         }
     )
+    new window.ComponentCollapse(
+        "tooltips" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: " [04] Tooltips" ,
+            prop_bodyShow: false
+        }
+    )
 
 
 
@@ -1063,7 +1176,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [13] Window " ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
 
@@ -1082,7 +1195,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [21] QR Codes " ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
 

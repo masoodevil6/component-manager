@@ -179,6 +179,11 @@ tools_init = {
                 backgroundColor_window : component_props.shanColor1 ,
             } ,
 
+            tooltipDescription: {
+                backgroundColor_description : component_props.secondaryColor1 ,
+                color_description : component_props.darkColor1 ,
+            } ,
+
 
 
             backShadow: {

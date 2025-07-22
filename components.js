@@ -32,6 +32,8 @@ if (typeof listComponent === 'undefined') {
         ComponentDate:                       "component-date" ,                           //03-06
         ComponentInputFile:                  "component-input-file" ,                     //03-07
 
+        // [04] tooltips
+        ComponentTooltipDescription:         "component-tooltip-description" ,            //04-01
 
 
 
@@ -46,6 +48,7 @@ if (typeof listComponent === 'undefined') {
 
         // [13] Window
         ComponentWindow:                     "component-window" ,                         //13-01
+        ComponentWindowConfirm:              "component-window-confirm" ,                 //13-02
 
 
 
@@ -54,11 +57,11 @@ if (typeof listComponent === 'undefined') {
 
         // [21] QR CODE
         ComponentQrCode:                     "component-qr-code" ,                        //21-01
+        ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //21-02
+        ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //21-03
+        ComponentQrCodeReader:               "component-qr-code-reader" ,                 //21-04
 
 
-
-        // [30] Camera
-        ComponentCameraQrCode:               "component-camera-qr-code" ,                 //30-01
 
 
 
@@ -1164,6 +1167,9 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
 @prop_for
 @prop_labelColor
 
+@prop_tooltipIcon
+@prop_tooltipDescription
+
 @fn_callback
 -------------------------------------*/
 window.ComponentLabel  = class ComponentLabel extends ComponentBase{
@@ -1185,6 +1191,10 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
             {prop : "prop_title"                 , default: null} ,
             {prop : "prop_for"                   , default: null} ,
             {prop : "prop_labelColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")             ? tools_const.styles.label.color           : ""} ,
+        ] ,
+        part_tooltip_desctiopn: [
+            {prop : "prop_tooltipIcon"           , default: "!"} ,
+            {prop : "prop_tooltipDescription"    , default: null} ,
         ]
     }
 
@@ -1192,6 +1202,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
         part_structure: {
             part_border: {
                 part_label: {} ,
+                part_tooltipDesctiopn: {} ,
             } ,
         } ,
     }
@@ -1225,6 +1236,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
     --------------------------------------------- */
     componentFn(){
         this.templateFn("part_border");
+        this.templateFn("part_tooltip_desctiopn");
     }
     templateFn(partName = null){
         switch (partName){
@@ -1234,6 +1246,8 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
                 return this.componentFn_render_border( partName );
             case "part_label":
                 return this.template_render_label(partName);
+            case "part_tooltip_desctiopn":
+                return this.componentFn_render_tooltipDesctiopn(partName);
             default:
                 return this.templateBasic_render();
         }
@@ -1244,37 +1258,14 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
         <component-border id="component-label-border-${this._COMPONENT_RANDOM_ID}">
             <component-body>
                 ${this.templateFn("part_label") ?? ""}
+                
+                <component-tooltip-description id="component-label-tooltip-description-${this._COMPONENT_RANDOM_ID}"></component-tooltip-description>
+                
             </component-body>
         </component-border>
                 `;
-        return this.templateBasic_render_structure(content);
+        return this.templateBasic_render_structure(content , ["position-relative"]);
     }
-
-
-    componentFn_render_border(partName) {
-
-        const data = this.getPartProps(partName);
-
-        if (data != null){
-            const prop_labelClass              =   data.hasOwnProperty("prop_labelClass")    && data.prop_labelClass != null    ?  data.prop_labelClass              : [];
-            const prop_labelStyles             =   data.hasOwnProperty("prop_labelStyles")   && data.prop_labelStyles != null   ?  data.prop_labelStyles             : {};
-            const prop_labelBackgroundColor    =   data.hasOwnProperty("prop_labelBackgroundColor")                             ?  data.prop_labelBackgroundColor    : null;
-            //---------------
-            if (prop_labelBackgroundColor != null){
-                prop_labelStyles["background-color"] = prop_labelBackgroundColor;
-            }
-
-            new window.ComponentBorder(
-                `component-label-border-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_structureClass: prop_labelClass ,
-                    prop_structureStyles: prop_labelStyles ,
-                }
-            )
-        }
-
-    }
-
 
     template_render_label(partName) {
 
@@ -1309,6 +1300,66 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
         return `
 <section data-part-name="${partName}"></section>
         `;
+    }
+
+    componentFn_render_border(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_labelClass              =   data.hasOwnProperty("prop_labelClass")    && data.prop_labelClass != null    ?  data.prop_labelClass              : [];
+            const prop_labelStyles             =   data.hasOwnProperty("prop_labelStyles")   && data.prop_labelStyles != null   ?  data.prop_labelStyles             : {};
+            const prop_labelBackgroundColor    =   data.hasOwnProperty("prop_labelBackgroundColor")                             ?  data.prop_labelBackgroundColor    : null;
+            //---------------
+            if (prop_labelBackgroundColor != null){
+                prop_labelStyles["background-color"] = prop_labelBackgroundColor;
+            }
+
+            new window.ComponentBorder(
+                `component-label-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass: prop_labelClass ,
+                    prop_structureStyles: prop_labelStyles ,
+                }
+            )
+        }
+
+    }
+
+    componentFn_render_tooltipDesctiopn(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_tooltipDescription        =   data.hasOwnProperty("prop_tooltipDescription") && data.prop_tooltipDescription !=null       ?  data.prop_tooltipDescription        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("description") ? this._COMPONENT_SLOTS.description : null);
+            const prop_tooltipIcon               =   data.hasOwnProperty("prop_tooltipIcon")                                                     ?  data.prop_tooltipIcon               : "";
+
+            if (prop_tooltipDescription != null){
+
+                const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                const styles = {
+                    "top" : "10px" ,
+                };
+                styles[directionRtl ? "left" : "right"] = "10px"
+
+
+                new window.ComponentTooltipDescription(
+                    `component-label-tooltip-description-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_structureClass: ["position-absolute"] ,
+                        prop_structureStyles: styles,
+
+                        prop_icon: prop_tooltipIcon ,
+                        prop_description: prop_tooltipDescription ,
+                    }
+                )
+
+            }
+
+        }
+
     }
 
 
@@ -3111,7 +3162,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 @prop_structureClass
 @prop_structureStyles
 
-@prop_type
+@prop_type   // cancel  //submit //null
 @prop_title
 
 @prop_btnClass
@@ -3135,7 +3186,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 
         ] ,
         part_button: [
-            {prop : "prop_type"                         , default: "submit"  } ,  // error  //submit //null
+            {prop : "prop_type"                         , default: "submit"  } ,  // cancel  //submit //null
             {prop : "prop_title"                        , default: "BTN"     } ,
             {prop : "prop_btnClass"                     , default: ["w-100"] } ,
             {prop : "prop_btnStyles"                    , default: {}        } ,
@@ -4433,6 +4484,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 @prop_name
 @prop_value
 @prop_placeholder
+@prop_isDisable
 
 @prop_icon
 
@@ -4453,11 +4505,12 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 
         ] ,
         part_label: [
-            {prop : "prop_labelShow"             , default: false} ,
-            {prop : "prop_labelClass"            , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"           , default: null} ,
-            {prop : "prop_labelHoverStyles"      , default: null} ,
-            {prop : "prop_title"                 , default: null} ,
+            {prop : "prop_title"                        , default: null} ,
+            {prop : "prop_labelShow"                    , default: true} ,
+            {prop : "prop_labelTooltipDescription"      , default: null} ,
+            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"                  , default: null} ,
+            {prop : "prop_labelHoverStyles"             , default: null} ,
         ] ,
         part_input: [
             {prop : "prop_inputClass"            , default: [" form-control"]} ,
@@ -4468,6 +4521,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             {prop : "prop_placeholder"           , default: null} ,
             {prop : "prop_icon"                  , default: null} ,
             {prop : "prop_btnAddStatus"          , default: false} ,
+            {prop : "prop_isDisable"             , default: false} ,
         ] ,
         part_icon_clear: [
             {prop : "prop_btnAddStatus"          , default: false} ,
@@ -4575,6 +4629,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                   :  null;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
             const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
 
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
 
@@ -4604,6 +4659,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             type="${prop_type || "" }"  
             value="${prop_value || ""}"
             placeholder="${prop_placeholder || ""}"
+            ${prop_isDisable ? 'disabled' : ''}
             onInput="${this.getFn("fn_onInputCallBack" , "event")}"
             onblur="${this.getFn("fn_onBlurCallBack" , "event")}"
             onfocus="${this.getFn("fn_onFocusCallBack" , "event")}"
@@ -4624,24 +4680,32 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 
         if (data != null){
 
-            const prop_labelShow        = data.hasOwnProperty("prop_labelShow")        ? data.prop_labelShow        : false;
-            const prop_title            = data.hasOwnProperty("prop_title")            ? data.prop_title            : "title";
-            const prop_labelClass       = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass       : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles      = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles      : {};
-            const prop_labelHoverStyles = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles : {};
+            const prop_title                       = data.hasOwnProperty("prop_title") && data.prop_title !=null         ?  data.prop_title                      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("label") ? this._COMPONENT_SLOTS.label : null);
+            const prop_labelShow                   = data.hasOwnProperty("prop_labelShow")                               ? data.prop_labelShow                   : true;
+            const prop_labelClass                  = data.hasOwnProperty("prop_labelClass")                              ? data.prop_labelClass                  : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
+            const prop_labelStyles                 = data.hasOwnProperty("prop_labelStyles")                             ? data.prop_labelStyles                 : {};
+            const prop_labelHoverStyles            = data.hasOwnProperty("prop_labelHoverStyles")                        ? data.prop_labelHoverStyles            : {};
+            const prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")                 ? data.prop_labelTooltipDescription     : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("tooltip") ? this._COMPONENT_SLOTS.tooltip : null);
 
-            if (prop_labelShow){
+            if (prop_labelShow && prop_title != null){
+
                 new window.ComponentLabel(
                     `component-input-label-${ this._COMPONENT_RANDOM_ID}` ,
                     {
                         prop_title:  prop_title ,
-                        prop_for  :  `component-input-input-${ this._COMPONENT_RANDOM_ID}` ,
 
                         prop_labelClass:       prop_labelClass ,
                         prop_labelStyles:      prop_labelStyles ,
                         prop_labelHoverStyles: prop_labelHoverStyles ,
+
+                        prop_tooltipDescription: prop_labelTooltipDescription ,
+
+                        fn_callback: () => {
+
+                        } ,
                     }
                 )
+
             }
 
         }
@@ -7262,6 +7326,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 }
 
+
 /*-------------------------------------
  03-07) Component Input File
 -------------------------------------
@@ -7275,6 +7340,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 @prop_maxSize
 @prop_textValidateSize
 @prop_textValidateAccept
+@prop_labelTooltipDescription
 
 @prop_title
 @prop_labelShow
@@ -7289,9 +7355,17 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 @prop_textColor
 @prop_text
 
+@prop_showListFiles
+
+@prop_deleteBody
+@prop_deleteBtnCancel
+@prop_deleteBtnAccept
+
+@fn_callback
 -------------------------------------*/
 window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
+    _COMPONENT_WINDOW_DELETE = null;
 
     /* ---------------------------------------------
    PROPERTYs
@@ -7309,11 +7383,16 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
             {prop : "prop_textValidateAccept"    , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
         ] ,
         part_label: [
-            {prop : "prop_title"                 , default: "TITLE"} ,
-            {prop : "prop_labelShow"             , default: true} ,
-            {prop : "prop_labelClass"            , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"           , default: null} ,
-            {prop : "prop_labelHoverStyles"      , default: null} ,
+            {prop : "prop_title"                        , default: "TITLE"} ,
+            {prop : "prop_labelShow"                    , default: true} ,
+            {prop : "prop_labelTooltipDescription"      , default: null} ,
+            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"                  , default: null} ,
+            {prop : "prop_labelHoverStyles"             , default: null} ,
+            {prop : "prop_maxCount"                     , default: null} ,
+            {prop : "prop_maxSize"                      , default: null} ,
+            {prop : "prop_textValidateSize"             , default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"} ,
+            {prop : "prop_textValidateAccept"           , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
         ] ,
         part_body: [
             {prop : "prop_borderColor"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor")   ? tools_const.styles.inputFile.boderColor : "red"} ,
@@ -7328,8 +7407,18 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
         ] ,
         part_footer_files: [
+            {prop : "prop_showListFiles"        , default: true} ,
             {prop : "var_fileIsValid"           , default: null} ,
             {prop : "var_fileIsNotValid"        , default: null} ,
+        ] ,
+        part_footer_files_tooltips: [
+            {prop : "prop_showListFiles"        , default: true} ,
+            {prop : "var_fileIsNotValid"        , default: null} ,
+        ] ,
+        part_window_confirm: [
+            {prop : "prop_deleteBody"            , default: "آیا از حذف قایل مطمئن هستید"} ,
+            {prop : "prop_deleteBtnCancel"       , default: "لغو"} ,
+            {prop : "prop_deleteBtnAccept"       , default: "تایید"} ,
         ] ,
     }
 
@@ -7342,7 +7431,8 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
             },
             part_footer: {
                 part_footer_files:{}
-            }
+            },
+            part_window_confirm: {}
         } ,
     }
 
@@ -7373,11 +7463,12 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
  --------------------------------------------- */
     componentFn(){
         this.templateFn("part_label");
+        this.templateFn("part_window_confirm");
+        this.templateFn("part_footer_files_tooltips");
 
         document.addEventListener("dragover", e => e.preventDefault());
         document.addEventListener("drop", e => e.preventDefault());
     }
-
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
@@ -7398,6 +7489,11 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
                 return this.template_render_bodyFooter(partName);
             case "part_footer_files":
                 return this.template_render_bodyFooterFiles(partName);
+            case "part_footer_files_tooltips":
+                return this.template_render_bodyFooterFilesTooltips(partName);
+
+            case "part_window_confirm":
+                return this.componentFn_render_windowConfirmDelete(partName);
 
             default:
                 return this.templateBasic_render();
@@ -7405,7 +7501,6 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
     }
 
     template_render_structure(partName) {
-        const data = this.getPartProps(partName)
 
         const content = `
   
@@ -7416,6 +7511,8 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
      ${this.templateFn("part_body") ?? ""}
 
      ${this.templateFn("part_footer") ?? ""}
+     
+      <component-window-confirm id="component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}" ></component-window-confirm>
         
                 `;
         return this.templateBasic_render_structure(content , ["position-relative"]);
@@ -7578,19 +7675,22 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
         if (data != null){
 
+            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
             const var_fileIsValid        =   data.hasOwnProperty("var_fileIsValid")         ?  data.var_fileIsValid             :  null;
             const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
 
-            let counter = 1;
+            if (prop_showListFiles){
 
-            let htmlAcceptFiles = "";
-            if (var_fileIsValid != null){
-                for (let i = 0; i < var_fileIsValid.length; i++) {
-                    const itemFile = var_fileIsValid[i];
+                let counter = 1;
 
-                    const formatted = (itemFile.size / 10000).toFixed(3);
+                let htmlAcceptFiles = "";
+                if (var_fileIsValid != null){
+                    for (let i = 0; i < var_fileIsValid.length; i++) {
+                        const itemFile = var_fileIsValid[i];
 
-                    htmlAcceptFiles += `
+                        const formatted = (itemFile.size / 10000).toFixed(3);
+
+                        htmlAcceptFiles += `
 <div class="  shadow-sm bg-info rounded row px-1 py-1 mx-0 my-1">
 
    <span class="counter col-1 bg-white rounded ">${counter}</span>
@@ -7606,24 +7706,24 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
       </span>
    </span>
    
-   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("deleteFileSelected" , "event" , `'${itemFile.name}'`)}"> &#x1F5D1; </span>
+   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("fn_showWindowDelete" , "event" , `'${itemFile.name}'`)}"> &#x1F5D1; </span>
   
 </div>
                     `;
 
-                    counter ++;
+                        counter ++;
+                    }
                 }
-            }
 
 
-            let htmlUnAcceptFiles = "";
-            if (var_fileIsNotValid != null){
-                for (let i = 0; i < var_fileIsNotValid.length; i++) {
-                    const itemFile = var_fileIsNotValid[i];
+                let htmlUnAcceptFiles = "";
+                if (var_fileIsNotValid != null){
+                    for (let i = 0; i < var_fileIsNotValid.length; i++) {
+                        const itemFile = var_fileIsNotValid[i];
 
-                    const formatted = (itemFile.size / 10000).toFixed(3);
+                        const formatted = (itemFile.size / 10000).toFixed(3);
 
-                    htmlUnAcceptFiles += `
+                        htmlUnAcceptFiles += `
 <div class="  shadow-sm bg-danger rounded row px-1 py-1 mx-0 my-1">
 
    <span class="counter col-1 bg-white rounded ">${counter}</span>
@@ -7638,16 +7738,18 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
           KB
       </span>
    </span>
+   
+    <component-tooltip-description  id="component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}"> </component-tooltip-description>
+  
   
 </div>
                     `;
 
-                    counter ++;
+                        counter ++;
+                    }
                 }
-            }
 
-
-            return                                       `
+                return                                       `
 <section  data-part-name="${partName}"
           id="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}"  
           class=" " >
@@ -7678,6 +7780,9 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
 </section>
         `;
+
+            }
+
         }
 
         return `
@@ -7692,11 +7797,31 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
         if (data != null){
 
-            const prop_title            = data.hasOwnProperty("prop_title")            ? data.prop_title            : "title";
-            const prop_labelShow        = data.hasOwnProperty("prop_labelShow")        ? data.prop_labelShow        : false;
-            const prop_labelClass       = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass       : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles      = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles      : {};
-            const prop_labelHoverStyles = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles : {};
+            const prop_title             = data.hasOwnProperty("prop_title")            ? data.prop_title             : "title";
+            const prop_labelShow         = data.hasOwnProperty("prop_labelShow")        ? data.prop_labelShow         : false;
+            const prop_labelClass        = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass        : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
+            const prop_labelStyles       = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles       : {};
+            const prop_labelHoverStyles  = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles  : {};
+            let   prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")    ? data.prop_labelTooltipDescription     : null;
+
+            if (prop_labelTooltipDescription == null){
+
+                let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
+                let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
+                const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
+                let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
+
+                prop_maxSize = (prop_maxSize / 10000).toFixed(3);
+
+                prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
+                prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
+
+                prop_labelTooltipDescription = `
+     <div> - ${prop_textValidateSize} </div>
+     <div> - ${prop_textValidateAccept} </div>
+                `;
+
+            }
 
             if (prop_labelShow){
 
@@ -7709,6 +7834,9 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
                         prop_labelClass:       prop_labelClass ,
                         prop_labelStyles:      prop_labelStyles ,
                         prop_labelHoverStyles: prop_labelHoverStyles ,
+
+                        prop_tooltipDescription: prop_labelTooltipDescription ,
+
                         fn_callback: () => {
                             this.fn_selectDate(event)
                         } ,
@@ -7720,6 +7848,67 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         }
     }
 
+    componentFn_render_windowConfirmDelete(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_deleteBtnCancel            = data.hasOwnProperty("prop_deleteBtnCancel")            ? data.prop_deleteBtnCancel            : "";
+            const prop_deleteBtnAccept            = data.hasOwnProperty("prop_deleteBtnAccept")            ? data.prop_deleteBtnAccept            : "";
+            const prop_deleteBody                 = data.hasOwnProperty("prop_deleteBody")                 ? data.prop_deleteBody                 : "";
+
+            this._COMPONENT_WINDOW_DELETE = new window.ComponentWindowConfirm(
+                `component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_titleBtnCancel:  prop_deleteBtnCancel ,
+                    prop_titleBtnAccept  :  prop_deleteBtnAccept,
+                    prop_body  :  prop_deleteBody,
+                    fn_callback: (event , data) => {
+                        this.fn_deleteFileSelected(event , data);
+                    } ,
+                }
+            )
+
+
+        }
+    }
+
+    template_render_bodyFooterFilesTooltips(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
+
+            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
+
+            if (prop_showListFiles && var_fileIsNotValid != null) {
+                for (let i = 0; i < var_fileIsNotValid.length; i++) {
+                    const itemFile = var_fileIsNotValid[i];
+
+                    let htmlError = "";
+                    if (itemFile.hasOwnProperty("errors")){
+                        for (const itemError of itemFile.errors) {
+                            htmlError += `<div> - ${itemError}</div>`
+                        }
+                    }
+
+                    new window.ComponentTooltipDescription(
+                        `component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}` ,
+                        {
+                            classList: "fileDelete col-1"  ,
+
+                            prop_icon: "?" ,
+                            prop_description: htmlError,
+                        }
+                    )
+                }
+            }
+
+        }
+    }
 
 
 
@@ -7778,7 +7967,9 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
             let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
             let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
             const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
-            const prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
+            let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
+
+            prop_maxSize = (prop_maxSize / 10000).toFixed(3);
 
             prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
             prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
@@ -7826,6 +8017,8 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
             }
 
             elInput.files = dataTransfer.files;
+
+            this.fn_callback(dataTransfer.files);
         }
 
         console.log(filesUnAccepts)
@@ -7878,7 +8071,10 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
     }
 
 
-    deleteFileSelected(event , filename){
+    fn_showWindowDelete(event , filename){
+        this._COMPONENT_WINDOW_DELETE.call_open(event , filename)
+    }
+    fn_deleteFileSelected(event , filename){
 
         const elInput = this.fn_getInput();
         if (elInput != null){
@@ -7896,9 +8092,230 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         }
     }
 
+
+    fn_callback(files){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , files);
+        }
+    }
+
 }
 
 
+
+/* ===============================================================================================================
+ [04] Tooltips
+=============================================================================================================== */
+
+/*-------------------------------------
+ 04-01) Component tooltips description
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_icon
+@prop_iconClass
+@prop_iconStyles
+
+@prop_descriptionBackground
+@prop_descriptionColor
+@prop_description
+@prop_descriptionWidth
+-------------------------------------*/
+window.ComponentTooltipDescription = class ComponentTooltipDescription extends ComponentBase {
+
+    _COMPONENT_WINDOW_DELETE = null;
+
+    /* ---------------------------------------------
+   PROPERTYs
+   --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+        part_icon: [
+            {prop : "prop_icon"                       , default: ""} ,
+            {prop : "prop_iconClass"                  , default: ["shadow-sm" , "bg-dark" , "text-white" , "rounded" , "d-inline-block" , "text-center"]} ,
+            {prop : "prop_iconStyles"                 , default: {"width" : "20px" , "height" : "20px", "line-height" : "20px", "cursor" : "pointer"}} ,
+        ],
+        part_description: [
+            {prop : "prop_descriptionBackground"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tooltipDescription") && tools_const.styles.tooltipDescription.hasOwnProperty("backgroundColor_description")   ? tools_const.styles.tooltipDescription.backgroundColor_description : "black"} ,
+            {prop : "prop_descriptionColor"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tooltipDescription") && tools_const.styles.tooltipDescription.hasOwnProperty("color_description")   ? tools_const.styles.tooltipDescription.color_description : "black"} ,
+            {prop : "prop_description"                , default: null} ,
+            {prop : "prop_descriptionWidth"           , default: "300px"} ,
+        ],
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_icon:{},
+            part_description:{},
+        },
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentTooltipDescription.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+   TEMPLATEs
+ --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_icon")
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
+            case "part_description":
+                return this.template_render_description(partName);
+
+            default:
+                return this.templateBasic_render([]);
+        }
+    }
+
+    template_render_structure(partName) {
+
+        const content = `
+  
+     <component-icon id="component-tooltip-description-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+          
+     ${this.templateFn("part_description") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content , ["position-relative"]);
+    }
+
+    template_render_description(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_description                 =   data.hasOwnProperty("prop_description")                ?  data.prop_description                   :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_descriptionColor            =   data.hasOwnProperty("prop_descriptionColor")           ?  data.prop_descriptionColor              :  "";
+            const prop_descriptionBackground       =   data.hasOwnProperty("prop_descriptionBackground")      ?  data.prop_descriptionBackground         :  "";
+            const prop_descriptionWidth            =   data.hasOwnProperty("prop_descriptionWidth")           ?  data.prop_descriptionWidth              :  "";
+
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-tooltip-description-description-${this._COMPONENT_RANDOM_ID}"  
+          class="rounded position-absolute shadow-sm py-2 px-3 d-none" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-tooltip-description-description-${this._COMPONENT_RANDOM_ID}{
+             background-color: ${prop_descriptionBackground};
+             color: ${prop_descriptionColor};
+             width: ${prop_descriptionWidth};
+             border: white solid 1px;
+             top: 35px;
+             left: -20px;
+             font-size: 10pt;
+             z-index: 11;
+         }
+         #${this._COMPONENT_ID} #component-tooltip-description-description-${this._COMPONENT_RANDOM_ID}:after{
+             content: "";
+             width: 0px;
+             height: 0px;
+             border-style: solid;
+             border-width: 0 7.5px 15px 7.5px;
+             border-color: transparent transparent ${prop_descriptionBackground} transparent;
+             transform: rotate(0deg);
+             position:absolute;
+             top: -15px;
+             left: 25px;
+         }
+     </style>
+
+     ${prop_description}
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+    componentFn_render_icon(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                ?  data.prop_icon               :  null;
+            const prop_iconClass     =   data.hasOwnProperty("prop_iconClass")           ?  data.prop_iconClass          :  [];
+            const prop_iconStyles    =   data.hasOwnProperty("prop_iconStyles")          ?  data.prop_iconStyles         :  {};
+
+            if (prop_icon != null){
+                new window.ComponentIcon(
+                    `component-tooltip-description-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_icon ,
+
+                        prop_iconClass : prop_iconClass ,
+                        prop_iconStyles : prop_iconStyles ,
+
+                        fn_onHoverIcon: ()=>{
+                            this.showTooptipDescription();
+                        } ,
+                        fn_onBlurIcon: ()=>{
+                            this.hideTooptipDescription();
+                        }
+                    }
+                )
+            }
+
+        }
+    }
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+    --------------------------------------------- */
+    fn_getElDescription(){
+        return document.querySelector(`section#component-tooltip-description-description-${this._COMPONENT_RANDOM_ID}`);
+    }
+    showTooptipDescription(){
+        const el = this.fn_getElDescription();
+        if (el != null){
+            el.classList.remove("d-none");
+        }
+    }
+    hideTooptipDescription(){
+        const el = this.fn_getElDescription();
+        if (el != null){
+            el.classList.add("d-none");
+        }
+    }
+}
 
 
 
@@ -8924,7 +9341,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
 @prop_windowHeight
 @prop_windowRound
 
-@prop_title
+@prop_header   [or component-header]
 
 @prop_body     [or component-body]
 
@@ -8960,8 +9377,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
 
         ],
         part_window_header_title: [
-            {prop : "prop_title"                            , default: "TITLE"} ,
-
+            {prop : "prop_header"                            , default: null} ,
         ],
         part_window_header_icons: [
 
@@ -9108,6 +9524,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
             return `
 <section data-part-name="${partName}" 
          id="component-windwow-window-${this._COMPONENT_RANDOM_ID}" 
+         onclick="${this.getFn("fn_onclickWindow" , "event")}"
          class="position-absolute shadow" >
          
     <style>
@@ -9153,11 +9570,11 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
          }
         
          .window-visable-animation-${this._COMPONENT_RANDOM_ID} {
-              animation: window-visable-${this._COMPONENT_RANDOM_ID} 0.25s forwards ease-in-out;
+              animation: window-visable-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
          }
 
          .window-unvisable-animation-${this._COMPONENT_RANDOM_ID} {
-              animation: window-unvisable-${this._COMPONENT_RANDOM_ID} 0.25s forwards ease-in-out;
+              animation: window-unvisable-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
          }
          
 
@@ -9184,11 +9601,11 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
          }
         
          .window-full-size-animation-${this._COMPONENT_RANDOM_ID} {
-              animation: window--full-size-${this._COMPONENT_RANDOM_ID} 0.25s forwards ease-in-out;
+              animation: window--full-size-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
          }
          
           .window-real-size-animation-${this._COMPONENT_RANDOM_ID} {
-              animation: window-real-size-${this._COMPONENT_RANDOM_ID} 0.25s forwards ease-in-out;
+              animation: window-real-size-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
          }
         
          .window-full-size-${this._COMPONENT_RANDOM_ID} {
@@ -9250,7 +9667,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
 
         if (data != null){
 
-            const prop_title                 = data.hasOwnProperty("prop_title")                    ?  data.prop_title               : "";
+            const prop_header        =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header       :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("header") ? this._COMPONENT_SLOTS.header : '');
 
             return `
 <section data-part-name="${partName}" 
@@ -9263,7 +9680,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
        }
     </style>
    
-    <b>${prop_title}</b>
+    <b>${prop_header}</b>
     
 </section>
         `;
@@ -9458,6 +9875,10 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
         el.classList.add("d-none");
     }
 
+    fn_onclickWindow(event){
+        event.stopImmediatePropagation();
+    }
+
 
     fn_onRemoveClass(event){
         const elWindow = this.fn_onGetWindowElement();
@@ -9494,7 +9915,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
         const el = this.fn_onGetStuctureElement();
         setTimeout(() => {
             el.classList.add("d-none");
-        } , 250)
+        } , 150)
 
         this._IS_FULL_SIZE = false;
     }
@@ -9546,6 +9967,334 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
 
 
 
+
+/*-------------------------------------
+ 13-02) Component Window Confirm
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_header   [or component-header]
+
+@prop_body     [or component-body]
+
+@prop_titleBtnCancel
+@prop_titleBtnAccept
+
+@fn_callback
+// call_close
+// call_open
+// call_resize
+// call_minimize
+-------------------------------------*/
+window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBase {
+
+    _COMPONENT_WINDOW = null;
+    _COMPONENT_DATA_CALLBACK = null;
+
+    /* ---------------------------------------------
+      PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+        part_window: [
+
+        ],
+        part_window_header: [
+            {prop : "prop_header"                            , default: null} ,
+        ],
+        part_window_body: [
+            {prop : "prop_body"                              , default: null} ,
+        ],
+        part_window_footer: [
+
+        ],
+        part_window_footer_btn_candel: [
+            {prop : "prop_titleBtnCancel"                    , default: "لغو"} ,
+        ],
+        part_window_footer_btn_accept: [
+            {prop : "prop_titleBtnAccept"                    , default: "تایید"} ,
+        ],
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_window:{
+                part_window_header: {} ,
+                part_window_body: {} ,
+                part_window_footer: {
+                    part_window_footer_btn_candel:{},
+                    part_window_footer_btn_accept:{},
+                } ,
+            }
+        }
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentWindowConfirm.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_window");
+        this.templateFn("part_window_footer_btn_candel");
+        this.templateFn("part_window_footer_btn_accept");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_window":
+                return this.componentFn_render_window(partName);
+            case "part_window_header":
+                return this.template_render_windowHeader(partName);
+            case "part_window_body":
+                return this.template_render_windowBody(partName);
+            case "part_window_footer":
+                return this.template_render_windowFooter(partName);
+            case "part_window_footer_btn_candel":
+                return this.componentFn_render_windowFooterBtnCancel(partName);
+            case "part_window_footer_btn_accept":
+                return this.componentFn_render_windowFooterBtnAccept(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+<component-window id="component-windwow-confirm-winddow-${this._COMPONENT_RANDOM_ID}">
+
+    <component-header>
+          ${this.templateFn("part_window_header") ?? ""}
+    </component-header> 
+    
+    <component-body>
+          ${this.templateFn("part_window_body") ?? ""}
+    </component-body> 
+      
+    <component-footer>
+          ${this.templateFn("part_window_footer") ?? ""}
+    </component-footer>
+    
+</component-window>
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_windowHeader(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_header = data.hasOwnProperty("prop_header") && data.prop_header != null ? data.prop_header : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("header") ? this._COMPONENT_SLOTS.header : '');
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-confirm-winddow-header-${this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-confirm-winddow-header-${this._COMPONENT_RANDOM_ID}{
+            
+       }
+    </style>
+    
+    ${prop_header}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_windowBody(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_body = data.hasOwnProperty("prop_body") && data.prop_body != null ? data.prop_body : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-confirm-winddow-body-${this._COMPONENT_RANDOM_ID}" 
+         class="m-2" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-confirm-winddow-body-${this._COMPONENT_RANDOM_ID}{
+            
+       }
+    </style>
+    
+    ${prop_body}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_windowFooter(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-windwow-confirm-winddow-footer-${this._COMPONENT_RANDOM_ID}" 
+         class="mx-2" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-windwow-confirm-winddow-footer-${this._COMPONENT_RANDOM_ID}{
+            
+       }
+    </style>
+    
+    <component-button id="component-windwow-confirm-winddow-footer-btn-cancel${this._COMPONENT_RANDOM_ID}"></component-button>
+    
+    <component-button id="component-windwow-confirm-winddow-footer-btn-accept${this._COMPONENT_RANDOM_ID}"></component-button>
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    componentFn_render_window(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            this._COMPONENT_WINDOW = new window.ComponentWindow(
+                `component-windwow-confirm-winddow-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_windowWidth: 500 ,
+                    prop_windowHeight: 125
+                }
+            )
+        }
+    }
+
+    componentFn_render_windowFooterBtnCancel(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_titleBtnCancel = data.hasOwnProperty("prop_titleBtnCancel")  ? data.prop_titleBtnCancel : "";
+
+            new window.ComponentButton(
+                `component-windwow-confirm-winddow-footer-btn-cancel${this._COMPONENT_RANDOM_ID}` ,
+                {
+
+                    prop_structureClass:  ["float-start" , "me-2"] ,
+                    prop_structureStyles: {
+                        "width" : "150px"
+                    } ,
+
+                    prop_type:"cancel" ,
+
+                    prop_title: prop_titleBtnCancel ,
+                    fn_callback: (event) => {
+                        this.call_close(event);
+                    }
+                }
+            )
+        }
+    }
+
+    componentFn_render_windowFooterBtnAccept(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_titleBtnAccept = data.hasOwnProperty("prop_titleBtnAccept")  ? data.prop_titleBtnAccept : "";
+
+            new window.ComponentButton(
+                `component-windwow-confirm-winddow-footer-btn-accept${this._COMPONENT_RANDOM_ID}` ,
+                {
+
+                    prop_structureClass:  ["float-start" , "me-2"] ,
+                    prop_structureStyles: {
+                        "width" : "150px"
+                    } ,
+
+                    prop_type:"submit" ,
+
+                    prop_title: prop_titleBtnAccept ,
+                    fn_callback: (event) => {
+                        this.fn_callback(event)
+                    }
+                }
+            )
+        }
+    }
+
+
+
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+    --------------------------------------------- */
+    fn_callback(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , this._COMPONENT_DATA_CALLBACK);
+        }
+
+        this.call_close(event);
+    }
+
+    call_close(event){
+        this._COMPONENT_WINDOW.fn_onCLicCloseWindow(event);
+    }
+    call_open(event , data=null){
+        this._COMPONENT_WINDOW.fn_onCLicOpenWindow(event);
+
+        this._COMPONENT_DATA_CALLBACK = data;
+    }
+    call_resize(event){
+        this._COMPONENT_WINDOW.fn_onCLicResizeWindow(event);
+    }
+    call_minimize(event){
+        this._COMPONENT_WINDOW.fn_onCLicMinimizeWindow(event);
+    }
+
+}
 
 
 
@@ -10072,9 +10821,6 @@ TEMPLATEs
     }
 
 
-
-
-
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
@@ -10092,24 +10838,41 @@ TEMPLATEs
 }
 
 
-
-
-
-
-/* ===============================================================================================================
- [30] Camera
-=============================================================================================================== */
-
 /*-------------------------------------
- 21-01) Component Qr Code
+ 21-02) Component Camera Qr Code Reader
 -------------------------------------
 @prop_show
 @prop_structureClass
 @prop_structureStyles
 
--------------------------------------*/
-window.ComponentCameraQrCode = class ComponentCameraQrCode extends ComponentBase{
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
 
+@prop_formMinHight
+
+@prop_fps
+@prop_qrbox
+
+@prop_titleErrorExistCamera
+
+@prop_titleErrorPermisionCamera
+@prop_titleBtnRetry
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends ComponentBase{
+
+    _COMPONENT_CAMERA = null;
+    _COMPONENT_ERROR_EXIST_CAMERA = null;
+    _COMPONENT_ERROR_PERMISION_CAMERA = null;
+    _COMPONENT_INPUT = null;
 
     /* ---------------------------------------------
     PROPERTYs
@@ -10118,11 +10881,44 @@ window.ComponentCameraQrCode = class ComponentCameraQrCode extends ComponentBase
         part_structure: [
 
         ] ,
+        part_label: [
+            {prop : "prop_title"                        , default: null} ,
+            {prop : "prop_labelShow"                    , default: true} ,
+            {prop : "prop_labelTooltipDescription"      , default: null} ,
+            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block"]} ,
+            {prop : "prop_labelStyles"                  , default: null} ,
+            {prop : "prop_labelHoverStyles"             , default: null} ,
+        ] ,
+        part_form: [
+            {prop : "prop_formMinHight"                 , default: "150px"} ,
+        ] ,
+        part_element: [
+            {prop : "prop_fps"                          , default: 10} ,
+            {prop : "prop_qrbox"                        , default: 250} ,
+        ] ,
+        part_error_exist_camera: [
+            {prop : "prop_titleErrorExistCamera"        , default: "دوربینی در دستگاه شما یافت نشد"} ,
+            {prop : "prop_titleBtnRetry"                , default: "تلاج مجدد"} ,
+        ] ,
+        part_error_permision_camera: [
+            {prop : "prop_titleErrorPermisionCamera"    , default: "مجوز برای درخواست دوربین تایید نشد"} ,
+            {prop : "prop_titleBtnRetry"                , default: "تلاج مجدد"} ,
+        ] ,
+        part_input: [
+            {prop : "prop_showInput"                    , default: true} ,
+            {prop : "prop_name"                         , default: "camera_qr_code"} ,
+        ] ,
     }
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-
+            part_label:{} ,
+            part_form:{
+                part_element:{},
+                part_error_exist_camera:{},
+                part_error_permision_camera:{},
+            } ,
+            part_input:{}
         }
     }
 
@@ -10133,7 +10929,7 @@ window.ComponentCameraQrCode = class ComponentCameraQrCode extends ComponentBase
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentCameraQrCode.name] ,
+            listComponent[ComponentCameraQrCodeReader.name] ,
             elId
         );
         this.onCreate(
@@ -10143,13 +10939,499 @@ window.ComponentCameraQrCode = class ComponentCameraQrCode extends ComponentBase
         )
         this.onTemplateComplete();
         this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_element");
+        this.templateFn("part_input");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_form":
+                return this.template_render_form(partName);
+            case "part_element":
+                return this.componentFn_render_formElement(partName);
+            case "part_error_exist_camera":
+                return this.componentFn_render_formErrorExistCamera(partName);
+            case "part_error_permision_camera":
+                return this.componentFn_render_formErrorPermisionCamera(partName);
+            case "part_input":
+                return this.componentFn_render_input(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+  
+  <component-label id="component-camera-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+  
+   ${this.templateFn("part_form") ?? ""}
+  
+  <component-input id="component-camera-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
+
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_form(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_formMinHight          = data.hasOwnProperty("prop_formMinHight")                      ? data.prop_formMinHight          : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-camera-qr-code-reader-form-${this._COMPONENT_RANDOM_ID}"
+         class="border rounded my-2 px-2">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-camera-qr-code-reader-form-${this._COMPONENT_RANDOM_ID}{
+             min-height: ${prop_formMinHight};
+         }
+     </style>
+     
+     <component-is-empty id="component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}"></component-is-empty>
+      
+     <component-is-empty id="component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}"></component-is-empty>
+  
+     <section id="component-camera-qr-code-reader-element-${this._COMPONENT_RANDOM_ID}" ></section>
+ 
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title                       = data.hasOwnProperty("prop_title") && data.prop_title !=null         ?  data.prop_title                      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("label") ? this._COMPONENT_SLOTS.label : null);
+            const prop_labelShow                   = data.hasOwnProperty("prop_labelShow")                               ? data.prop_labelShow                   : true;
+            const prop_labelClass                  = data.hasOwnProperty("prop_labelClass")                              ? data.prop_labelClass                  : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
+            const prop_labelStyles                 = data.hasOwnProperty("prop_labelStyles")                             ? data.prop_labelStyles                 : {};
+            const prop_labelHoverStyles            = data.hasOwnProperty("prop_labelHoverStyles")                        ? data.prop_labelHoverStyles            : {};
+            const prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")                 ? data.prop_labelTooltipDescription     : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("tooltip") ? this._COMPONENT_SLOTS.tooltip : null);
+
+            if (prop_labelShow && prop_title != null){
+
+                new window.ComponentLabel(
+                    `component-camera-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_title:  prop_title ,
+
+                        prop_labelClass:       prop_labelClass ,
+                        prop_labelStyles:      prop_labelStyles ,
+                        prop_labelHoverStyles: prop_labelHoverStyles ,
+
+                        prop_tooltipDescription: prop_labelTooltipDescription ,
+
+                        fn_callback: () => {
+
+                        } ,
+                    }
+                )
+
+            }
+
+        }
 
     }
+
+    componentFn_render_formElement(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_fps            = data.hasOwnProperty("prop_fps")                        ? data.prop_fps            : 10;
+            const prop_qrbox          = data.hasOwnProperty("prop_qrbox")                      ? data.prop_qrbox          : 250;
+
+            let  cameraExist = false;
+
+            this._COMPONENT_CAMERA = new Html5Qrcode(
+                `component-camera-qr-code-reader-element-${this._COMPONENT_RANDOM_ID}`
+            );
+            Html5Qrcode.getCameras().then(devices => {
+
+                for (const device of devices) {
+                    if (device.hasOwnProperty("id") && device.id != ""){
+
+                        html5QrCode.start(
+                            cameraId,
+                            {
+                                fps: prop_fps,
+                                qrbox: prop_qrbox,
+                            },
+                            (decodedText, decodedResult) => {
+                                this.fn_onScanSuccess(decodedText, decodedResult);
+                            },
+                            (errorMessage) => {
+                                console.log(errorMessage);
+                            }
+                        ).catch(err => {
+                            console.log(err);
+                        });
+
+                        cameraExist = true;
+                        break;
+                    }
+                }
+
+            }).catch(err => {
+                this.templateFn("part_error_permision_camera");
+                this.fn_hiddenErrorExistCamera();
+                cameraExist = true;
+            });
+
+            if (!cameraExist){
+                this.templateFn("part_error_exist_camera");
+                this.fn_hiddenErrorPermoisionCamera();
+            }
+
+        }
+    }
+
+    componentFn_render_formErrorExistCamera(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_titleErrorExistCamera    = data.hasOwnProperty("prop_titleErrorExistCamera")    ? data.prop_titleErrorExistCamera      : "";
+            const prop_titleBtnRetry            = data.hasOwnProperty("prop_titleBtnRetry")            ? data.prop_titleBtnRetry              : "";
+
+            this._COMPONENT_ERROR_EXIST_CAMERA = new window.ComponentIsEmpty(
+                `component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: "m-2"  ,
+
+                    prop_title:  prop_titleErrorExistCamera ,
+                    prop_btnAddStatus: true,
+                    prop_btnAddTitle:  prop_titleBtnRetry ,
+
+                    fn_callback: () => {
+                        this.templateFn("part_element");
+                    } ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_formErrorPermisionCamera(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_titleErrorPermisionCamera            = data.hasOwnProperty("prop_titleErrorPermisionCamera")                        ? data.prop_titleErrorPermisionCamera            : "";
+            const prop_titleBtnRetry            = data.hasOwnProperty("prop_titleBtnRetry")            ? data.prop_titleBtnRetry              : "";
+
+            this._COMPONENT_ERROR_PERMISION_CAMERA = new window.ComponentIsEmpty(
+                `component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: "m-2"  ,
+
+                    prop_title:  prop_titleErrorPermisionCamera ,
+
+                    prop_btnAddStatus: true,
+                    prop_btnAddTitle:  prop_titleBtnRetry ,
+
+                    fn_callback: () => {
+                        this.templateFn("part_element");
+                    } ,
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_input(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+            const prop_showInput       = data.hasOwnProperty("prop_showInput")       ? data.prop_showInput         : true;
+
+            this._COMPONENT_INPUT = new window.ComponentInput(
+                `component-camera-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: [prop_showInput ? "" : "d-none"]  ,
+
+                    prop_type:"string" ,
+                    prop_icon:"&#x25A3;" ,
+                    prop_name: prop_name ,
+                    prop_isDisable: true ,
+
+                }
+            )
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onScanSuccess(decodedText, decodedResult) {
+        this._COMPONENT_INPUT.set("prop_value" , decodedText);
+        this.fn_onCallback(decodedText);
+    }
+
+    fn_hiddenErrorExistCamera() {
+        document.querySelector(`#component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}`).innerHTML=""
+    }
+    fn_hiddenErrorPermoisionCamera() {
+        document.querySelector(`#component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}`).innerHTML=""
+    }
+
+
+    fn_onCallback(qrCodde){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(qrCodde);
+        }
+    }
+
+
+}
+
+
+/*-------------------------------------
+ 21-03) Component Upload Qr Code Reader
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_formHight
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends ComponentBase {
+
+    _COMPONENT_INPUT_FILE = null;
+    _COMPONENT_ERROR_EXIST_CAMERA = null;
+    _COMPONENT_ERROR_PERMISION_CAMERA = null;
+    _COMPONENT_INPUT = null;
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+        part_element: [
+            {prop: "prop_title"                     , default: null},
+            {prop: "prop_labelShow"                 , default: true},
+            {prop: "prop_labelTooltipDescription"   , default: null},
+            {prop: "prop_labelClass"                , default: ["shadow-sm", "px-2", "py-1", "d-block"]},
+            {prop: "prop_labelStyles"               , default: null},
+            {prop: "prop_labelHoverStyles"          , default: null},
+
+            {prop: "prop_formHight"                 , default: 150},
+        ],
+        part_input: [
+            {prop : "prop_showInput"                , default: true} ,
+            {prop: "prop_name"                      , default: "upload_qr_code"},
+        ],
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label: {},
+            part_element: {},
+            part_input: {}
+        }
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentUploadQrCodeReader.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+        this.templateFn("part_element");
+        this.templateFn("part_input");
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_element":
+                return this.componentFn_render_formElement(partName);
+            case "part_input":
+                return this.componentFn_render_input(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+  
+  <component-label id="component-upload-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+  
+  <div id="component-upload-qr-code-reader-input-reader-${this._COMPONENT_RANDOM_ID}" style="display: none"></div>
+  <component-input-file id="component-upload-qr-code-reader-input-file-${this._COMPONENT_RANDOM_ID}"></component-input-file>
+  
+  <component-input id="component-upload-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
+
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+    componentFn_render_formElement(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title                       = data.hasOwnProperty("prop_title") && data.prop_title !=null         ?  data.prop_title                      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("label") ? this._COMPONENT_SLOTS.label : null);
+            const prop_labelShow                   = data.hasOwnProperty("prop_labelShow")                               ? data.prop_labelShow                   : true;
+            const prop_labelClass                  = data.hasOwnProperty("prop_labelClass")                              ? data.prop_labelClass                  : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
+            const prop_labelStyles                 = data.hasOwnProperty("prop_labelStyles")                             ? data.prop_labelStyles                 : {};
+            const prop_labelHoverStyles            = data.hasOwnProperty("prop_labelHoverStyles")                        ? data.prop_labelHoverStyles            : {};
+            const prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")                 ? data.prop_labelTooltipDescription     : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("tooltip") ? this._COMPONENT_SLOTS.tooltip : null);
+
+            const prop_formHight     = data.hasOwnProperty("prop_formHight")                 ? data.prop_formHight     : 150;
+
+            new window.ComponentInputFile(
+                `component-upload-qr-code-reader-input-file-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_title ,
+                    prop_labelShow ,
+                    prop_labelClass ,
+                    prop_labelStyles ,
+                    prop_labelHoverStyles ,
+                    prop_labelTooltipDescription ,
+
+                    prop_accept:  "image/*" ,
+                    prop_maxCount: 1 ,
+                    prop_borderHeight: prop_formHight ,
+                    prop_showListFiles: false ,
+
+                    fn_callback: (event , files) => {
+                        if (files != null && files.length > 0){
+                            this.fn_onScanSuccess(files[0]);
+                        }
+                    } ,
+
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_input(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+            const prop_showInput       = data.hasOwnProperty("prop_showInput")       ? data.prop_showInput         : true;
+
+            this._COMPONENT_INPUT = new window.ComponentInput(
+                `component-upload-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: [prop_showInput ? "" : "d-none"]  ,
+
+                    prop_type:"string" ,
+                    prop_icon:"&#x25A3;" ,
+                    prop_name: prop_name ,
+                    prop_isDisable: true ,
+
+                }
+            )
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onScanSuccess(file) {
+        const html5Qr = new Html5Qrcode(
+            `component-upload-qr-code-reader-input-reader-${this._COMPONENT_RANDOM_ID}`
+        );
+        html5Qr.scanFile(file, true)
+            .then(decodedText => {
+                this._COMPONENT_INPUT.set("prop_value" , decodedText);
+                this.fn_onCallback(decodedText);
+            })
+            .catch(err => {
+                console.log("خطا در خواندن QR: " + err)
+            });
+    }
+
+
+    fn_onCallback(qrCodde){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(qrCodde);
+        }
+    }
+
+
 }
 
 
 
 
+
+ComponentQrCodeReader
 
 
 /* ===============================================================================================================
@@ -10170,6 +11452,8 @@ window.ComponentCameraQrCode = class ComponentCameraQrCode extends ComponentBase
 @prop_iconStyles
 
 @fn_callback
+@fn_onHoverIcon
+@fn_onBlurIcon
 -------------------------------------*/
 window.ComponentIcon  = class ComponentIcon extends ComponentBase{
 
@@ -10196,10 +11480,6 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
     }
 
 
-
-
-
-
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
@@ -10219,10 +11499,6 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
     }
 
 
-
-
-
-
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
@@ -10240,15 +11516,12 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
         }
     }
 
-
     template_render_structure(partName) {
         const content = `
 ${this.templateFn_render_icon("part_icon")} 
                 `;
         return this.templateBasic_render_structure(content);
     }
-
-
 
     templateFn_render_icon(partName){
 
@@ -10265,7 +11538,10 @@ ${this.templateFn_render_icon("part_icon")}
 <${prop_isItalik ? "i" : "span"} 
        id="component-icon-icon-${this._COMPONENT_RANDOM_ID}"
        class="${tools_public.renderListClass(prop_iconClass)}" 
-       onclick="${this.getFn('fn_onCLickIcon' , "event")}">
+       onclick="${this.getFn('fn_onCLickIcon' , "event")}"
+       onmouseenter="${this.getFn('fn_onHoverIcon' , "event")}"
+       onmouseleave="${this.getFn('fn_onBlurIcon' , "event")}"
+       >
     
       <style>
          #${this._COMPONENT_ID} #component-icon-icon-${this._COMPONENT_RANDOM_ID}{
@@ -10285,9 +11561,6 @@ ${this.templateFn_render_icon("part_icon")}
     }
 
 
-
-
-
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
@@ -10295,6 +11568,18 @@ ${this.templateFn_render_icon("part_icon")}
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
             data.fn_callback(event);
+        }
+    }
+    fn_onHoverIcon(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onHoverIcon") && typeof data.fn_onHoverIcon != null){
+            data.fn_onHoverIcon(event);
+        }
+    }
+    fn_onBlurIcon(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onBlurIcon") && typeof data.fn_onBlurIcon != null){
+            data.fn_onBlurIcon(event);
         }
     }
 

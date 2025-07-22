@@ -27,8 +27,10 @@
         ComponentDate:                       "component-date" ,                           //03-06
         ComponentInputFile:                  "component-input-file" ,                     //03-07
         
-        
-        
+    // [04] tooltips
+        ComponentTooltipDescription:         "component-tooltip-description" ,            //04-01
+     
+     
      
     // [10] Tables
         ComponentTable:                      "component-table" ,                          //10-01
@@ -41,7 +43,7 @@
         
     // [13] Window
         ComponentWindow:                     "component-window" ,                         //13-01
-
+        ComponentWindowConfirm:              "component-window-confirm" ,                 //13-02
         
         
         
@@ -51,13 +53,10 @@
 
     // [21] QR CODE
         ComponentQrCode:                     "component-qr-code" ,                        //21-01
-        
-        
+        ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //21-02
+        ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //21-03
+        ComponentQrCodeReader:               "component-qr-code-reader" ,                 //21-04
 
-    // [30] Camera
-        ComponentCameraQrCode:               "component-camera-qr-code" ,                 //30-01
-        
-        
 
 
     // [99] Others
@@ -170,6 +169,9 @@
 @prop_title
 @prop_for
 @prop_labelColor
+
+@prop_tooltipIcon
+@prop_tooltipDescription
 
 @fn_callback
 -------------------------------------*/
@@ -394,7 +396,7 @@
 @prop_structureClass
 @prop_structureStyles
 
-@prop_type
+@prop_type   // cancel  //submit //null
 @prop_title
 
 @prop_btnClass
@@ -561,6 +563,7 @@
 @prop_name
 @prop_value
 @prop_placeholder
+@prop_isDisable
 
 @prop_icon
 
@@ -661,6 +664,7 @@
 @prop_maxSize
 @prop_textValidateSize
 @prop_textValidateAccept
+@prop_labelTooltipDescription
 
 @prop_title
 @prop_labelShow
@@ -675,6 +679,12 @@
 @prop_textColor
 @prop_text
 
+@prop_showListFiles
+
+@prop_deleteBody
+@prop_deleteBtnCancel
+@prop_deleteBtnAccept
+
 -------------------------------------*/
 new window.ComponentInputFile(
         "element_id" ,
@@ -683,6 +693,40 @@ new window.ComponentInputFile(
         }
     )
 ```
+
+
+
+
+/* ====================
+[04] tooltips
+============================================= */
+
+**04-01) Component Tooltips Description:**
+```
+/*-------------------------------------
+ 04-01) Component tooltips description
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_icon
+@prop_iconClass
+@prop_iconStyles
+
+@prop_descriptionBackground
+@prop_descriptionColor
+@prop_description
+@prop_descriptionWidth
+-------------------------------------*/
+new window.ComponentTooltipDescription(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
 
 
 
@@ -822,12 +866,44 @@ new window.ComponentInputFile(
 @prop_windowHeight
 @prop_windowRound
 
-@prop_title
+@prop_header   [or component-header]
 
 @prop_body     [or component-body]
- 
+
 @prop_footer   [or component-footer]
 
+// call_close
+// call_open
+// call_resize
+// call_minimize
+-------------------------------------*/
+    new window.ComponentWindow(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+**13-02) Component Window Confirm:**
+```
+/*-------------------------------------
+ 13-02) Component Window Confirm
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_header   [or component-header]
+
+@prop_body     [or component-body]
+
+@prop_titleBtnCancel
+@prop_titleBtnAccept
+
+@fn_callback
 // call_close
 // call_open
 // call_resize
@@ -921,6 +997,79 @@ new window.ComponentInputFile(
             
         }
     )
+**21-01) Component Qr Code:**
+```
+
+
+**21-02) Component Camera Qr Code Reader:**
+```
+/*-------------------------------------
+ 21-02) Component Camera Qr Code Reader
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_formMinHight
+
+@prop_fps
+@prop_qrbox
+
+@prop_titleErrorExistCamera
+
+@prop_titleErrorPermisionCamera
+@prop_titleBtnRetry
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentCameraQrCodeReader(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**21-03) Component Upload Qr Code Reader:**
+```
+/*-------------------------------------
+ 21-03)  Component Upload Qr Code Reader
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_formHight
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentUploadQrCodeReader(
+        "element_id" ,
+        {
+            
+        }
+    )
 ```
 
 
@@ -949,6 +1098,8 @@ new window.ComponentInputFile(
 @prop_iconStyles
 
 @fn_callback
+@fn_onHoverIcon
+@fn_onBlurIcon
 -------------------------------------*/
     new window.ComponentIcon(
         "element_id" ,
