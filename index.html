@@ -205,6 +205,8 @@
 
                 <component-upload-qr-code-reader  id="upload-qr-code-reader"></component-upload-qr-code-reader>
 
+                <component-qr-code-reader  id="qr-code-reader"></component-qr-code-reader>
+
             </section>
         </component-body>
     </component-collapse>
@@ -988,7 +990,7 @@
     );
 
     /*-------------------------------------
-      21-02) Component Camera Qr Code Reader
+      21-03) Component Upload Qr Code Reader
     -------------------------------------*/
     new window.ComponentUploadQrCodeReader(
         "upload-qr-code-reader" ,
@@ -1001,6 +1003,21 @@
             fn_callback: (qrCode)=>{
                 console.log(qrCode)
             }
+        }
+    );
+
+    /*-------------------------------------
+      21-04) Component Qr Code Reader
+    -------------------------------------*/
+    new window.ComponentQrCodeReader(
+        "qr-code-reader" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "QR Code Reader" ,
+            prop_labelTooltipDescription: "This is for QR Code Reader Upload File/Camera/Input" ,
+
+
         }
     );
 

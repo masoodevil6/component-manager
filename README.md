@@ -807,7 +807,7 @@ new window.ComponentTooltipDescription(
 
 @fn_callback
 -------------------------------------*/
-    new window.ComponentTab(
+    new window.ComponentTabs(
         "element_id" ,
         {
 

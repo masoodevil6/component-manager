@@ -108,19 +108,37 @@ class ComponentBase{
 
     onCreate( config , props, schema){
         if (props != null && props.hasOwnProperty("part_structure")){
-            if (props.hasOwnProperty("part_structure")){
-                if (!props.part_structure.hasOwnProperty("prop_show")){
-                    props["part_structure"].push( {prop: "prop_show"           , default: true});
-                }
-                if (!props.part_structure.hasOwnProperty("prop_structureClass")){
-                    props["part_structure"].push( {prop: "prop_structureClass" , default: []});
-                }
-                if (!props.part_structure.hasOwnProperty("prop_structureStyles")){
-                    props["part_structure"].push( {prop: "prop_structureStyles", default: {}});
-                }
-                if (!props.part_structure.hasOwnProperty("prop_structureHoverStyles")){
-                    props["part_structure"].push( {prop: "prop_structureHoverStyles", default: {}});
-                }
+            if (!props.part_structure.hasOwnProperty("prop_show")){
+                props["part_structure"].push( {prop: "prop_show"           , default: true});
+            }
+            if (!props.part_structure.hasOwnProperty("prop_structureClass")){
+                props["part_structure"].push( {prop: "prop_structureClass" , default: []});
+            }
+            if (!props.part_structure.hasOwnProperty("prop_structureStyles")){
+                props["part_structure"].push( {prop: "prop_structureStyles", default: {}});
+            }
+            if (!props.part_structure.hasOwnProperty("prop_structureHoverStyles")){
+                props["part_structure"].push( {prop: "prop_structureHoverStyles", default: {}});
+            }
+        }
+        if (props != null && props.hasOwnProperty("part_label")){
+            if (!props.part_label.hasOwnProperty("prop_title")){
+                props["part_label"].push( {prop: "prop_title"                       , default: null});
+            }
+            if (!props.part_label.hasOwnProperty("prop_labelShow")){
+                props["part_label"].push( {prop: "prop_labelShow"                   , default: true});
+            }
+            if (!props.part_label.hasOwnProperty("prop_labelTooltipDescription")){
+                props["part_label"].push( {prop: "prop_labelTooltipDescription"     , default: null});
+            }
+            if (!props.part_label.hasOwnProperty("prop_labelClass")){
+                props["part_label"].push( {prop: "prop_labelClass"                  , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block"]});
+            }
+            if (!props.part_label.hasOwnProperty("prop_labelStyles")){
+                props["part_label"].push( {prop: "prop_labelStyles"                 , default:  { "font-size" : "10pt"}});
+            }
+            if (!props.part_label.hasOwnProperty("prop_labelHoverStyles")){
+                props["part_label"].push( {prop: "prop_labelHoverStyles"             , default: null});
             }
         }
 
@@ -513,6 +531,42 @@ class ComponentBase{
         return `
 <section data-part-name="${partName}"></section>
         `;
+    }
+
+    componentFneBasic_render_structure(elementId , props = {}) {
+        const partName = "part_label";
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title                       = data.hasOwnProperty("prop_title") && data.prop_title !=null         ?  data.prop_title                      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("label") ? this._COMPONENT_SLOTS.label : null);
+            const prop_labelShow                   = data.hasOwnProperty("prop_labelShow")                               ? data.prop_labelShow                   : true;
+            const prop_labelClass                  = data.hasOwnProperty("prop_labelClass")                              ? data.prop_labelClass                  : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
+            const prop_labelStyles                 = data.hasOwnProperty("prop_labelStyles")                             ? data.prop_labelStyles                 : {"height": "25px" , "line-hight" : "25px"};
+            const prop_labelHoverStyles            = data.hasOwnProperty("prop_labelHoverStyles")                        ? data.prop_labelHoverStyles            : {};
+            const prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")                 ? data.prop_labelTooltipDescription     : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("tooltip") ? this._COMPONENT_SLOTS.tooltip : null);
+
+            if (prop_labelShow && (prop_title != null || (props != null && props.hasOwnProperty("prop_title")))){
+
+                new window.ComponentLabel(
+                    elementId ,
+                    {
+                        prop_title:  (props != null && props.hasOwnProperty("prop_title") ? props.prop_title : prop_title) ,
+                        prop_for:  (props != null && props.hasOwnProperty("prop_for") ? props.prop_for : null) ,
+
+                        prop_labelClass:       prop_labelClass ,
+                        prop_labelStyles:      prop_labelStyles ,
+                        prop_labelHoverStyles: prop_labelHoverStyles ,
+
+                        prop_tooltipDescription: (props != null && props.hasOwnProperty("prop_labelTooltipDescription") ? props.prop_labelTooltipDescription : prop_labelTooltipDescription) ,
+
+                        fn_callback: (props != null && props.hasOwnProperty("fn_callback") ? props.fn_callback : null) ,
+                    }
+                )
+
+            }
+
+        }
     }
 
 }
@@ -1340,7 +1394,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
                 const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
 
                 const styles = {
-                    "top" : "10px" ,
+                    "top" : "7.5px" ,
                 };
                 styles[directionRtl ? "left" : "right"] = "10px"
 
@@ -3399,7 +3453,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         ] ,
         part_header: [
             {prop : "prop_titleClass"                        , default:  ["  form-control " , " px-2"]} ,
-            {prop : "prop_titleStyles"                       , default:  {"line-height" : "24px" , "height": "38px"}} ,
+            {prop : "prop_titleStyles"                       , default:  {"line-height" : "24px" , "height": "30px"}} ,
         ] ,
         part_header_icon: [
             {prop : "prop_icon"                              , default: null} ,
@@ -3589,7 +3643,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
         if (data != null){
             const prop_titleClass           =  data.hasOwnProperty("prop_titleClass")                ?  data.prop_titleClass                    :  ["  form-control " , " px-2" ];
-            const prop_titleStyles          =  data.hasOwnProperty("prop_titleStyles")               ?  data.prop_titleStyles                   :  {"line-height" : "24px" , "height": "38px"};
+            const prop_titleStyles          =  data.hasOwnProperty("prop_titleStyles")               ?  data.prop_titleStyles                   :  {"line-height" : "24px" , "height": "30px"};
 
             return `
 <section data-part-name="${partName}" 
@@ -3646,7 +3700,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             overflow: hidden;
             text-overflow: ellipsis;
             height: 28px;
-            line-height: 35px;
+            line-height: 30px;
          }
      </style>
 
@@ -3720,37 +3774,15 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     }
 
     componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_title            = data.hasOwnProperty("prop_title")            ? data.prop_title            : "title";
-
-            const prop_labelClass       = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass       : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles      = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles      : {};
-            const prop_labelHoverStyles = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles : {};
-
-            if (prop_title != null){
-                new window.ComponentLabel(
-                    `component-select-option-label-${ this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_title:  prop_title ,
-                        prop_for  :  `component-select-option-header-${ this._COMPONENT_RANDOM_ID}` ,
-
-                        prop_labelClass:       prop_labelClass ,
-                        prop_labelStyles:      prop_labelStyles ,
-                        prop_labelHoverStyles: prop_labelHoverStyles ,
-
-                        fn_callback: ()=>{
-                            this.runFn("fn_showListOptions" , "event" )
-                        }
-
-                    }
-                )
+        this.componentFneBasic_render_structure(
+            `component-select-option-label-${ this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for: `component-select-option-header-${ this._COMPONENT_RANDOM_ID}` ,
+                fn_callback: ()=>{
+                    this.runFn("fn_showListOptions" , "event" )
+                }
             }
-
-        }
+        );
     }
 
     componentFn_render_headerIcon(partName) {
@@ -3765,7 +3797,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                 "z-index" : "10",
                 "margin" : "0 5px",
                 "width" : "30px",
-                "line-height" :   "35px",
+                "line-height" :   "30px",
                 "cursor" : "pointer",
                 "font-size" : "20pt;",
                 "top" : "0" ,
@@ -3803,7 +3835,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
             let styles = {
                 "font-size" : "20pt",
-                "height" : "34px",
+                "height" : "30px",
                 "margin" : "0 10px",
                 "top" : "0px",
             }
@@ -3815,10 +3847,10 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             }
 
             if (var_showFormSelectOption){
-                styles["line-height"]= "10pt";
+                styles["line-height"]= "5pt";
             }
             else{
-                styles["line-height"]= "40pt";
+                styles["line-height"]= "35pt";
             }
 
             new window.ComponentIcon(
@@ -3852,8 +3884,8 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                     "top" : "0" ,
                     "cursor" : "pointer" ,
                     "width" : "160px" ,
-                    "height" : "38px" ,
-                    "line-height" : "25px" ,
+                    "height" : "30px" ,
+                    "line-height" : "20px" ,
                 };
                 if (directionRtl){
                     styles["left"] = "0";
@@ -4340,23 +4372,24 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
             const prop_langs            =   data.hasOwnProperty("prop_langs")            ?  data.prop_langs            : {};
             const prop_input            =   data.hasOwnProperty("prop_input")            ?  data.prop_input            :  null;
 
-            new window.ComponentLabel(
+            this.componentFneBasic_render_structure(
                 `component-otp-label-${ this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_title:  `
+                    prop_title:
+                        `
 <p class="title-otp text-center  mb-0 px-2 ">
     ${prop_langs.hasOwnProperty("_title_otp_description") ? prop_langs._title_otp_description : ""}
     <b style="display:block; direction: ltr">
        ${prop_input}
     </b>
 </p>
-                    ` ,
-
-                    prop_for  :  `component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}0` ,
-
+                `,
+                    prop_for:  `component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}0`,
                 }
-            )
+            );
         }
+
+
     }
 
 
@@ -4597,8 +4630,6 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         }
     }
 
-
-
     template_render_structure() {
         const content = `
          <component-label id="component-input-label-${this._COMPONENT_RANDOM_ID}"></component-label>
@@ -4643,8 +4674,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
          
          }
          #${this._COMPONENT_ID} #component-input-input-${this._COMPONENT_RANDOM_ID}{
-              line-height: 24px;
-              height: 38px;
+              height: 30px;
               
               ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? "180px" : "20"};
      
@@ -4675,40 +4705,12 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
     }
 
     componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_title                       = data.hasOwnProperty("prop_title") && data.prop_title !=null         ?  data.prop_title                      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("label") ? this._COMPONENT_SLOTS.label : null);
-            const prop_labelShow                   = data.hasOwnProperty("prop_labelShow")                               ? data.prop_labelShow                   : true;
-            const prop_labelClass                  = data.hasOwnProperty("prop_labelClass")                              ? data.prop_labelClass                  : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles                 = data.hasOwnProperty("prop_labelStyles")                             ? data.prop_labelStyles                 : {};
-            const prop_labelHoverStyles            = data.hasOwnProperty("prop_labelHoverStyles")                        ? data.prop_labelHoverStyles            : {};
-            const prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")                 ? data.prop_labelTooltipDescription     : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("tooltip") ? this._COMPONENT_SLOTS.tooltip : null);
-
-            if (prop_labelShow && prop_title != null){
-
-                new window.ComponentLabel(
-                    `component-input-label-${ this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_title:  prop_title ,
-
-                        prop_labelClass:       prop_labelClass ,
-                        prop_labelStyles:      prop_labelStyles ,
-                        prop_labelHoverStyles: prop_labelHoverStyles ,
-
-                        prop_tooltipDescription: prop_labelTooltipDescription ,
-
-                        fn_callback: () => {
-
-                        } ,
-                    }
-                )
-
+        this.componentFneBasic_render_structure(
+            `component-input-label-${ this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for:  `component-input-input-${this._COMPONENT_RANDOM_ID}` ,
             }
-
-        }
+        );
     }
 
     componentFn_render_iconClear(partName) {
@@ -4723,9 +4725,9 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             let styles = {
                 "z-index" : "10",
                 "width" :   "35px",
-                "line-height" : "38px",
+                "line-height" : "30px",
                 "cursor" : "pointer",
-                "height" : "38px" ,
+                "height" : "30px" ,
                 "top" : "0" ,
                 "text-align" : "center" ,
             };
@@ -4735,7 +4737,6 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             else {
                 styles["right"]=  prop_btnAddStatus ?  "160px" : "5px";
             }
-
 
             new window.ComponentIcon(
                 `component-input-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
@@ -4770,7 +4771,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
                 "z-index" : "10",
                 "margin" : "0 5px",
                 "width" : "30px",
-                "line-height" :   "35px",
+                "line-height" :   "30px",
                 "cursor" : "pointer",
                 "font-size" : "20pt;",
                 "top" : "0" ,
@@ -4818,8 +4819,8 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
                     "top" : "0" ,
                     "cursor" : "pointer" ,
                     "width" : "160px" ,
-                    "height" : "38px" ,
-                    "line-height" : "25px" ,
+                    "height" : "30px" ,
+                    "line-height" : "20px" ,
                 };
                 if (directionRtl){
                     styles["left"] = "0";
@@ -5084,8 +5085,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
          
          }
          #${this._COMPONENT_ID} #component-input-input-${this._COMPONENT_RANDOM_ID}{
-              line-height: 24px;
-              height: 38px;
+              height: 30px;
 
               ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? "180px" : "20"};
      
@@ -5115,32 +5115,12 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
     }
 
     componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_labelShow        = data.hasOwnProperty("prop_labelShow")        ? data.prop_labelShow        : true;
-            const prop_title            = data.hasOwnProperty("prop_title")            ? data.prop_title            : "title";
-            const prop_labelClass       = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass       : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles      = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles      : {};
-            const prop_labelHoverStyles = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles : {};
-
-            if (prop_labelShow){
-                new window.ComponentLabel(
-                    `component-input-label-${ this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_title:  prop_title ,
-                        prop_for  :  `component-input-input-${ this._COMPONENT_RANDOM_ID}` ,
-
-                        prop_labelClass:       prop_labelClass ,
-                        prop_labelStyles:      prop_labelStyles ,
-                        prop_labelHoverStyles: prop_labelHoverStyles ,
-                    }
-                )
+        this.componentFneBasic_render_structure(
+            `component-input-label-${ this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for:  `component-input-input-${ this._COMPONENT_RANDOM_ID}` ,
             }
-
-        }
+        );
     }
 
     componentFn_render_iconClear(partName) {
@@ -5155,9 +5135,9 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             let styles = {
                 "z-index" : "10",
                 "width" :   "35px",
-                "line-height" : "38px",
+                "line-height" : "30px",
                 "cursor" : "pointer",
-                "height" : "38px" ,
+                "height" : "30px" ,
                 "top" : "0" ,
                 "text-align" : "center" ,
             };
@@ -5202,7 +5182,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                 "z-index" : "10",
                 "margin" : "0 5px",
                 "width" : "30px",
-                "line-height" :   "35px",
+                "line-height" :   "30px",
                 "cursor" : "pointer",
                 "font-size" : "20pt;",
                 "top" : "0" ,
@@ -5251,8 +5231,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                     "top" : "0" ,
                     "cursor" : "pointer" ,
                     "width" : "160px" ,
-                    "height" : "38px" ,
-                    "line-height" : "25px" ,
+                    "height" : "30px" ,
+                    "line-height" : "20px" ,
                 };
                 if (directionRtl){
                     styles["left"] = "0";
@@ -6062,7 +6042,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
               padding-left: calc(20px + 20%);
               padding-top: 2px;
               padding-bottom: 2px;
-              height: 35px;
+              height: 30px;
               direction: ltr !important;
          }
          
@@ -6073,12 +6053,12 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
          #${this._COMPONENT_ID} .part-form-input-date-1:after , .part-form-input-date-2:after{
               content: "/";
               right: -5px;
-              line-height: 34px;
+              line-height: 30px;
               position: absolute;
          }
          #${this._COMPONENT_ID} .inputs-date{
               border-color: #ebebeb;
-              line-height: 30px;
+              line-height: 28px;
               padding: 0;
               margin: 0;
               border: none;
@@ -6281,31 +6261,15 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
     componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_title            = data.hasOwnProperty("prop_title")            ? data.prop_title            : "title";
-            const prop_labelClass       = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass       : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles      = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles      : {};
-            const prop_labelHoverStyles = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles : {};
-
-            new window.ComponentLabel(
-                `component-input-date-label-${ this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_title:  prop_title ,
-                    prop_for  :  `component-input-input-${ this._COMPONENT_RANDOM_ID}` ,
-
-                    prop_labelClass:       prop_labelClass ,
-                    prop_labelStyles:      prop_labelStyles ,
-                    prop_labelHoverStyles: prop_labelHoverStyles ,
-                    fn_callback: () => {
-                        this.fn_selectDate(event)
-                    } ,
-                }
-            )
-        }
+        this.componentFneBasic_render_structure(
+            `component-input-date-label-${ this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for:  `component-input-input-${ this._COMPONENT_RANDOM_ID}` ,
+                fn_callback:  () => {
+                    this.fn_selectDate(event)
+                } ,
+            }
+        );
     }
 
     componentFn_render_headerIconClear(partName) {
@@ -6317,8 +6281,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
             const styles = {
                 "z-index" : "10",
-                "width" :   "35px",
-                "line-height" : "35px",
+                "width" :   "30px",
+                "line-height" : "30px",
                 "cursor" : "pointer",
                 "height" : "30px" ,
                 "top" : "0" ,
@@ -6359,8 +6323,8 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
             const styles = {
                 "z-index" : "10",
-                "width" :   "35px",
-                "line-height" : "35px",
+                "width" :   "30px",
+                "line-height" : "30px",
                 "cursor" : "pointer",
                 "height" : "30px" ,
                 "top" : "0" ,
@@ -7797,11 +7761,6 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
         if (data != null){
 
-            const prop_title             = data.hasOwnProperty("prop_title")            ? data.prop_title             : "title";
-            const prop_labelShow         = data.hasOwnProperty("prop_labelShow")        ? data.prop_labelShow         : false;
-            const prop_labelClass        = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass        : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles       = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles       : {};
-            const prop_labelHoverStyles  = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles  : {};
             let   prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")    ? data.prop_labelTooltipDescription     : null;
 
             if (prop_labelTooltipDescription == null){
@@ -7823,28 +7782,17 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
             }
 
-            if (prop_labelShow){
 
-                new window.ComponentLabel(
-                    `component-input-file-label-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_title:  prop_title ,
-                        prop_for  :  `component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`,
-
-                        prop_labelClass:       prop_labelClass ,
-                        prop_labelStyles:      prop_labelStyles ,
-                        prop_labelHoverStyles: prop_labelHoverStyles ,
-
-                        prop_tooltipDescription: prop_labelTooltipDescription ,
-
-                        fn_callback: () => {
-                            this.fn_selectDate(event)
-                        } ,
-                    }
-                )
-
-            }
-
+            this.componentFneBasic_render_structure(
+                `component-input-file-label-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_for:  `component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`,
+                    prop_labelTooltipDescription: prop_labelTooltipDescription ,
+                    fn_callback: () => {
+                        this.fn_selectDate(event)
+                    } ,
+                }
+            );
         }
     }
 
@@ -8104,6 +8052,8 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 
 
 
+
+
 /* ===============================================================================================================
  [04] Tooltips
 =============================================================================================================== */
@@ -8138,7 +8088,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
         part_icon: [
             {prop : "prop_icon"                       , default: ""} ,
             {prop : "prop_iconClass"                  , default: ["shadow-sm" , "bg-dark" , "text-white" , "rounded" , "d-inline-block" , "text-center"]} ,
-            {prop : "prop_iconStyles"                 , default: {"width" : "20px" , "height" : "20px", "line-height" : "20px", "cursor" : "pointer"}} ,
+            {prop : "prop_iconStyles"                 , default: {"width" : "15px" , "height" : "15px", "line-height" : "15px", "cursor" : "pointer"}} ,
         ],
         part_description: [
             {prop : "prop_descriptionBackground"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tooltipDescription") && tools_const.styles.tooltipDescription.hasOwnProperty("backgroundColor_description")   ? tools_const.styles.tooltipDescription.backgroundColor_description : "black"} ,
@@ -8838,6 +8788,7 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 
 
 
+
 /* ===============================================================================================================
  [11] Tabs
 =============================================================================================================== */
@@ -8948,7 +8899,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
             let tabStyle = "";
             if (prop_type == 0){
                 tabClass = "row m-0 mb-2";
-                tabStyle = "height: 60px;"
+                //tabStyle = "height: 60px;"
                 if (prop_tabs != null){
                     let tabClassCol = "";
                     switch (prop_tabs.length){
@@ -9118,7 +9069,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
         part_collapse_header: [
             {prop : "prop_title"                          , default: "---"} ,
         ] ,
-        part_collapse_header_title: [
+        part_label: [
 
         ] ,
         part_collapse_header_icon: [
@@ -9164,8 +9115,9 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
        TEMPLATEs
     --------------------------------------------- */
     componentFn(){
-        this.templateFn("part_collapse_header_title")
+
         this.templateFn("part_collapse_header_icon")
+        this.templateFn("part_label")
     }
 
     templateFn(partName = null){
@@ -9174,7 +9126,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
                 return this.template_render_structure(partName);
             case "part_collapse_header":
                 return this.template_render_collapseHeader(partName);
-            case "part_collapse_header_title":
+            case "part_label":
                 return this.componentFn_render_label(partName);
             case "part_collapse_header_icon":
                 return this.componentFn_render_icon(partName);
@@ -9201,20 +9153,19 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
             const prop_title  = data.hasOwnProperty("prop_title")     ?  data.prop_title     :  "---";
 
             return `
-<section data-part-name="${partName}" id="component-collapse-header-${this._COMPONENT_RANDOM_ID}" class="" >
+<section data-part-name="${partName}" 
+         id="component-collapse-header-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative" >
+         
     <style>
         #${this._COMPONENT_ID} #component-collapse-header-${this._COMPONENT_RANDOM_ID}{
             
        }
     </style>
-    <component-label id="component-collapse-header-label-${this._COMPONENT_RANDOM_ID}">
-             <component-body>
-                 <div>
-                     ${prop_title}
-                     <component-icon id="component-collapse-header-label-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
-                 </div>
-             </component-body>
-    </component-label>
+    <component-label id="component-collapse-header-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+    
+   <component-icon id="component-collapse-header-label-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+
 </section>
         `;
         }
@@ -9257,42 +9208,44 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
     }
 
     componentFn_render_label (partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            new window.ComponentLabel(
-                "component-collapse-header-label-"+  this._COMPONENT_RANDOM_ID ,
-                {
-                    fn_callback: (event)=>{
-                        this.fn_onCLickHeaderCollapse(event)
-                    }
+        this.componentFneBasic_render_structure(
+            `component-collapse-header-label-${this._COMPONENT_RANDOM_ID}` ,
+            {
+                fn_callback: (event)=>{
+                    this.fn_onCLickHeaderCollapse(event)
                 }
-            )
-        }
+            }
+        );
     }
 
-    componentFn_render_icon (partName) {
+    componentFn_render_icon (partName , bodyShow=null) {
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_bodyShow             = data.hasOwnProperty("prop_bodyShow")                                ?  data.prop_bodyShow             : false;
+
+            const prop_bodyShow   =  bodyShow != null ? bodyShow : (data.hasOwnProperty("prop_bodyShow")     ?  data.prop_bodyShow    : true);
+            const directionRtl =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl : false;
+
+            const styles =  {
+                "font-size" : "20pt",
+                    "margin" : "0 10px",
+                    "color" : "#000000",
+                    "line-height" : prop_bodyShow  ? "50px" : "0px" ,
+                    "height" : "35px",
+                    "top": "0px" ,
+            };
+
+            styles[directionRtl ? "left" : "right"] = "0px";
 
             new window.ComponentIcon(
                 `component-collapse-header-label-icon-${ this._COMPONENT_RANDOM_ID}` ,
                 {
-                    classList: [ (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl) ? "float-start" : "float-end"] ,
-
                     prop_icon : prop_bodyShow  ? "&#129171;" : "&#129169" ,
-                    prop_iconClass : [] ,
-                    prop_iconStyles : {
-                        "font-size" : "20pt",
-                        "margin" : "0 10px",
-                        "color" : "#000000",
-                        "line-height" :prop_bodyShow  ? "" : "0",
-                        "padding-top" :prop_bodyShow  ? "15px" : "0px"
-                    } ,
+                    prop_iconClass : ["position-absolute"] ,
+                    prop_iconStyles :styles,
                 }
             )
+
         }
     }
 
@@ -9315,6 +9268,8 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
         }
 
         el.setAttribute("data-show" , (statusShow ? "true" : "false"))
+
+        this.componentFn_render_icon("part_collapse_header_icon" , statusShow)
     }
 
 }
@@ -10560,10 +10515,7 @@ window.ComponentQrCode = class ComponentQrCode extends ComponentBase{
 
         ] ,
         part_label: [
-            {prop : "prop_title"                      , default: "title"} ,
-            {prop : "prop_labelClass"                 , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                , default: {}} ,
-            {prop : "prop_labelHoverStyles"           , default: {}} ,
+
         ] ,
         part_qr_code_element: [
             {prop : "prop_formClass"                  , default: [ "border" , "rounded" , "shadow-sm" , "text-center"]} ,
@@ -10747,31 +10699,12 @@ TEMPLATEs
     }
 
     componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_title            = data.hasOwnProperty("prop_title")            ? data.prop_title            : "title";
-            const prop_labelClass       = data.hasOwnProperty("prop_labelClass")       ? data.prop_labelClass       : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles      = data.hasOwnProperty("prop_labelStyles")      ? data.prop_labelStyles      : {};
-            const prop_labelHoverStyles = data.hasOwnProperty("prop_labelHoverStyles") ? data.prop_labelHoverStyles : {};
-
-            new window.ComponentLabel(
-                `component-qr-code-label-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_title:  prop_title ,
-                    prop_for  :  `component-input-input-${ this._COMPONENT_RANDOM_ID}` ,
-
-                    prop_labelClass:       prop_labelClass ,
-                    prop_labelStyles:      prop_labelStyles ,
-                    prop_labelHoverStyles: prop_labelHoverStyles ,
-                    fn_callback: () => {
-                        this.fn_onCLickCopy(event)
-                    } ,
-                }
-            )
-        }
+        this.componentFneBasic_render_structure(
+            `component-qr-code-label-${this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for:  `component-input-input-${ this._COMPONENT_RANDOM_ID}`
+            }
+        );
     }
 
     componentFn_render_qrCodeView(partName) {
@@ -10882,12 +10815,7 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
 
         ] ,
         part_label: [
-            {prop : "prop_title"                        , default: null} ,
-            {prop : "prop_labelShow"                    , default: true} ,
-            {prop : "prop_labelTooltipDescription"      , default: null} ,
-            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block"]} ,
-            {prop : "prop_labelStyles"                  , default: null} ,
-            {prop : "prop_labelHoverStyles"             , default: null} ,
+
         ] ,
         part_form: [
             {prop : "prop_formMinHight"                 , default: "150px"} ,
@@ -11019,41 +10947,9 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
     }
 
     componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_title                       = data.hasOwnProperty("prop_title") && data.prop_title !=null         ?  data.prop_title                      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("label") ? this._COMPONENT_SLOTS.label : null);
-            const prop_labelShow                   = data.hasOwnProperty("prop_labelShow")                               ? data.prop_labelShow                   : true;
-            const prop_labelClass                  = data.hasOwnProperty("prop_labelClass")                              ? data.prop_labelClass                  : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles                 = data.hasOwnProperty("prop_labelStyles")                             ? data.prop_labelStyles                 : {};
-            const prop_labelHoverStyles            = data.hasOwnProperty("prop_labelHoverStyles")                        ? data.prop_labelHoverStyles            : {};
-            const prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")                 ? data.prop_labelTooltipDescription     : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("tooltip") ? this._COMPONENT_SLOTS.tooltip : null);
-
-            if (prop_labelShow && prop_title != null){
-
-                new window.ComponentLabel(
-                    `component-camera-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_title:  prop_title ,
-
-                        prop_labelClass:       prop_labelClass ,
-                        prop_labelStyles:      prop_labelStyles ,
-                        prop_labelHoverStyles: prop_labelHoverStyles ,
-
-                        prop_tooltipDescription: prop_labelTooltipDescription ,
-
-                        fn_callback: () => {
-
-                        } ,
-                    }
-                )
-
-            }
-
-        }
-
+        this.componentFneBasic_render_structure(
+            `component-camera-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
+        );
     }
 
     componentFn_render_formElement(partName) {
@@ -11251,14 +11147,8 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [],
+        part_label: [],
         part_element: [
-            {prop: "prop_title"                     , default: null},
-            {prop: "prop_labelShow"                 , default: true},
-            {prop: "prop_labelTooltipDescription"   , default: null},
-            {prop: "prop_labelClass"                , default: ["shadow-sm", "px-2", "py-1", "d-block"]},
-            {prop: "prop_labelStyles"               , default: null},
-            {prop: "prop_labelHoverStyles"          , default: null},
-
             {prop: "prop_formHight"                 , default: 150},
         ],
         part_input: [
@@ -11298,6 +11188,7 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
       TEMPLATEs
     --------------------------------------------- */
     componentFn() {
+        this.templateFn("part_label");
         this.templateFn("part_element");
         this.templateFn("part_input");
     }
@@ -11306,6 +11197,8 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
         switch (partName) {
             case "part_structure":
                 return this.template_render_structure(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
             case "part_element":
                 return this.componentFn_render_formElement(partName);
             case "part_input":
@@ -11330,34 +11223,28 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
     }
 
 
+    componentFn_render_label(partName) {
+        this.componentFneBasic_render_structure(
+            `component-upload-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
+        );
+    }
+
     componentFn_render_formElement(partName) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
 
-            const prop_title                       = data.hasOwnProperty("prop_title") && data.prop_title !=null         ?  data.prop_title                      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("label") ? this._COMPONENT_SLOTS.label : null);
-            const prop_labelShow                   = data.hasOwnProperty("prop_labelShow")                               ? data.prop_labelShow                   : true;
-            const prop_labelClass                  = data.hasOwnProperty("prop_labelClass")                              ? data.prop_labelClass                  : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles                 = data.hasOwnProperty("prop_labelStyles")                             ? data.prop_labelStyles                 : {};
-            const prop_labelHoverStyles            = data.hasOwnProperty("prop_labelHoverStyles")                        ? data.prop_labelHoverStyles            : {};
-            const prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")                 ? data.prop_labelTooltipDescription     : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("tooltip") ? this._COMPONENT_SLOTS.tooltip : null);
-
             const prop_formHight     = data.hasOwnProperty("prop_formHight")                 ? data.prop_formHight     : 150;
 
             new window.ComponentInputFile(
                 `component-upload-qr-code-reader-input-file-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_title ,
-                    prop_labelShow ,
-                    prop_labelClass ,
-                    prop_labelStyles ,
-                    prop_labelHoverStyles ,
-                    prop_labelTooltipDescription ,
+                    prop_labelShow: false ,
 
                     prop_accept:  "image/*" ,
                     prop_maxCount: 1 ,
-                    prop_borderHeight: prop_formHight ,
+                    prop_borderHeight: prop_formHight+"px" ,
                     prop_showListFiles: false ,
 
                     fn_callback: (event , files) => {
@@ -11428,10 +11315,321 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
 }
 
 
+/*-------------------------------------
+ 21-04) Component Qr Code Reader
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_formHight
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentBase {
+
+    _COMPONENT_LABEL = null;
+    _COMPONENT_TABS = null;
+    _COMPONENT_INPUT = null;
+    _COMPONENT_QR_CODE_CAMERA = null;
+    _COMPONENT_QR_CODE_UPLOAD = null;
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+        part_label: [
+
+        ],
+        part_tabs: [
+            {prop : "prop_titleTabCamera"               , default: "دوربین"} ,
+            {prop : "prop_titleTabFile"                 , default: "فایل"} ,
+            {prop : "prop_titleTabInput"                , default: "ورودی"} ,
+        ],
+        part_qr_code: [
+
+        ],
+        part_qr_code_file: [
+
+        ],
+        part_qr_code_camera: [
+
+        ],
+        part_input: [
+            {prop : "prop_name"                          , default: ""} ,
+        ],
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label: {},
+            part_tabs: {},
+            part_qr_code: {
+                part_qr_code_file: {} ,
+                part_qr_code_camera: {} ,
+            },
+            part_input: {}
+        }
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentQrCodeReader.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+        this.templateFn("part_label");
+        this.templateFn("part_tabs");
+        this.templateFn("part_tabs");
+        this.templateFn("part_input");
+
+        this.fn_onSelectTab(1);
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_tabs":
+                return this.componentFn_render_tabs(partName);
+            case "part_qr_code":
+                return this.template_render_qrCode(partName);
+            case "part_qr_code_camera":
+                return this.componentFn_render_qrCodeCamera(partName);
+            case "part_qr_code_file":
+                return this.componentFn_render_qrCodeFile(partName);
+            case "part_input":
+                return this.componentFn_render_input(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+
+    template_render_structure(partName) {
+        const content = `
+  
+  <component-label id="component-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+
+  <component-tabs id="component-qr-code-reader-tabs-${this._COMPONENT_RANDOM_ID}"></component-tabs>
+  
+   ${this.templateFn("part_qr_code") ?? ""}
+  
+  <component-input id="component-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
+  
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_qrCode(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-qr-code-reader-qr-code-${this._COMPONENT_RANDOM_ID}"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-qr-code-reader-qr-code-${this._COMPONENT_RANDOM_ID}{
+        
+         }
+     </style>
+     
+     
+     <component-camera-qr-code-reader  id="component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}"></component-camera-qr-code-reader>
+     
+     <component-upload-qr-code-reader  id="component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}"></component-upload-qr-code-reader>
+      
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label(partName) {
+        this.componentFneBasic_render_structure(
+            `component-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
+        );
+    }
+
+    componentFn_render_tabs(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_titleTabCamera        = data.hasOwnProperty("prop_titleTabCamera")          ? data.prop_titleTabCamera                   : "";
+            const prop_titleTabFile          = data.hasOwnProperty("prop_titleTabFile")            ? data.prop_titleTabFile                     : "";
+            const prop_titleTabInput         = data.hasOwnProperty("prop_titleTabInput")           ? data.prop_titleTabInput                    : "";
+
+            this._COMPONENT_TABS = new window.ComponentTabs(
+                `component-qr-code-reader-tabs-${this._COMPONENT_RANDOM_ID}` ,
+                {
+
+                    prop_type: 0 ,
+                    prop_tabSelected: 1 ,
+                    prop_firstCallBack: false ,
+                    prop_tabs: [
+                        {id:1 , title: prop_titleTabCamera } ,
+                        {id:2 , title: prop_titleTabFile   },
+                        {id:3 , title: prop_titleTabInput  }
+                    ] ,
+                    fn_callback: (event , tabIndex) =>{
+                        this.fn_onSelectTab(tabIndex)
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_input(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+
+            this._COMPONENT_INPUT = new window.ComponentInput(
+                `component-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_type:"string" ,
+                    prop_icon:"&#x25A3;" ,
+                    prop_name: prop_name ,
+                    prop_isDisable: true ,
+
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_qrCodeCamera(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+
+            this._COMPONENT_QR_CODE_CAMERA = new window.ComponentCameraQrCodeReader(
+                `component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_labelShow: false ,
+                    prop_showInput: false ,
+
+                    fn_callback: (qrCode)=>{
+                        this.fn_onScanSuccess(qrCode);
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_qrCodeFile(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+
+            this._COMPONENT_QR_CODE_UPLOAD = new window.ComponentUploadQrCodeReader(
+                `component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_labelShow: false ,
+                    prop_showInput: false ,
+
+                    fn_callback: (qrCode)=>{
+                        this.fn_onScanSuccess(qrCode);
+                    }
+                }
+            )
+
+        }
+    }
 
 
 
-ComponentQrCodeReader
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+
+    fn_onSelectTab(tabId) {
+        const tabCamera = document.querySelector(`#component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}`);
+        const tabUpload = document.querySelector(`#component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}`);
+
+        tabCamera.innerHTML = "";
+        tabUpload.innerHTML = "";
+        this._COMPONENT_INPUT.set("prop_isDisable" , true);
+
+        if (tabId == 1){
+            this.templateFn("part_qr_code_camera");
+        }
+        else if (tabId == 2){
+            this.templateFn("part_qr_code_file");
+        }
+        else if (tabId == 3){
+            this._COMPONENT_INPUT.set("prop_isDisable" , false);
+        }
+    }
+
+    fn_onScanSuccess(decodedText) {
+        this._COMPONENT_INPUT.set("prop_value" , decodedText);
+        this.fn_onCallback(decodedText);
+    }
+
+    fn_onCallback(qrCodde){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(qrCodde);
+        }
+    }
+}
+
+
+
+
 
 
 /* ===============================================================================================================
@@ -11800,7 +11998,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
     _COMPONENT_PROPS = {
         part_structure: [
             {prop : "prop_structureClass"            , default: ["border" , "shadow-sm" , "rounded" , "px-1" , "px-2"]} ,
-            {prop : "prop_structureStyles"           , default: {"position" : "relative"}} ,
+            {prop : "prop_structureStyles"           , default: {"position" : "relative" }} ,
         ] ,
         part_border: [
             {prop : "prop_borderClass"            , default: []} ,
