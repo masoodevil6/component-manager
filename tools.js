@@ -375,7 +375,7 @@ tools_submit = {
 
         if (body != null && Array.isArray(body)){
             for (const itemData of body) {
-                if (itemData.hasOwnProperty("name")){
+                if (itemData.hasOwnProperty("name") && itemData.hasOwnProperty("value") && itemData.value != null){
                     const type = itemData.hasOwnProperty("type") ? itemData.type : "text";
                     const name = itemData.name;
                     switch (type){
@@ -414,6 +414,7 @@ tools_submit = {
             .then(
                 response => {
                     switch (response.status){
+
                         case 404:
 
                             if (componentLoadingData != null) {
@@ -473,7 +474,8 @@ tools_submit = {
                         callback(resultExp , data);
                     }
 
-                    return resultExp;
+                    return {resultExp, data};
+                   // return resultExp ,data;
                 }
             ).catch(
                 e=>{
@@ -729,6 +731,78 @@ tools_public = {
         }
 
         return styles;
+    } ,
+
+    getScriptJson(scriptJsonId){
+        const dataScript = document.getElementById(scriptJsonId);
+        if (dataScript) {
+            try {
+                return JSON.parse(dataScript.textContent);
+            } catch (e) {
+                console.error("json.encode for" ,jsonId ,  e)
+            }
+        }
+
+        return  null;
     }
 
+}
+
+
+
+tools_stepper = {
+
+    createStepper(elementId , manifest , botUrl){
+        steps = [];
+        workFlow = {};
+        if (manifest != null){
+            if (manifest.hasOwnProperty("steps")){
+                steps = tools_stepper.readyListSteps(manifest.steps , botUrl)
+            }
+            if (manifest.hasOwnProperty("workflow")){
+                workFlow = tools_stepper.readyListStepperWorkflow(manifest.workflow , steps);
+            }
+        }
+
+        return new NavStepper(elementId , workFlow);
+    } ,
+
+
+    readyListSteps(steps , botUrl) {
+        let resultExp = [];
+        Object.keys(steps).forEach(key => {
+            const itemStep = steps[key];
+
+            if (itemStep.hasOwnProperty("name")){
+                const name = itemStep.name;
+                const type = itemStep.hasOwnProperty("type") ? itemStep.type : null;
+                const params = itemStep.hasOwnProperty("params") ? itemStep.params : null;
+                const tagId = itemStep.hasOwnProperty("tagId") ? itemStep.tagId : null;
+                const reload = itemStep.hasOwnProperty("reload") ? itemStep.reload : false;
+                const componentProp = itemStep.hasOwnProperty("componentProp") ? itemStep.componentProp : {};
+
+                resultExp.push(
+                    new window.NavStep(
+                        name , botUrl  , params , type , tagId , reload, componentProp
+                    )
+                )
+            }
+        })
+        return resultExp;
+    } ,
+
+    readyListStepperWorkflow(node, steps) {
+        if (node.step) {
+            const found = steps.find(s => s.getName() === node.step);
+            if (found) {
+                node.step = found;
+            }
+        }
+        if (Array.isArray(node.workflow)) {
+            for (let child of node.workflow) {
+                tools_stepper.readyListStepperWorkflow(child, steps);
+            }
+        }
+        return node;
+    }
 }

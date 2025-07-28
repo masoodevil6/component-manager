@@ -23,6 +23,7 @@ if (typeof listComponent === 'undefined') {
         ComponentForm:                       "component-form" ,                           //02-03
         ComponentWidget:                     "component-widget" ,                         //02-04
 
+
         // [03] Button and Inputs
         ComponentButton:                     "component-button" ,                         //03-01
         ComponentSelectOption:               "component-select-option" ,                  //03-02
@@ -70,6 +71,7 @@ if (typeof listComponent === 'undefined') {
         ComponentPositionElement:            "component-position-element" ,               //99-02
         ComponentBorder:                     "component-border" ,                         //99-03
         ComponentImage:                      "component-image" ,                          //99-04
+        ComponentLayout:                     "component-layout" ,                         //99-05
 
     }
 }
@@ -2988,8 +2990,12 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
 @prop_fetch      url    data
 
 //call_fetchWidget
+//call_getComponentLayout
 -------------------------------------*/
 window.ComponentWidget = class ComponentWidget extends ComponentBase{
+
+    _COMPONENT_LAYOUT = null;
+
 
     /* ---------------------------------------------
       PROPERTYs
@@ -2999,8 +3005,8 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
         ] ,
         part_border: [
-            {prop : "prop_widgetClass"                    , default:  ["border" , "shadow-sm" , "rounded" , "p-1"]} ,
-            {prop : "prop_widgetStyles"                   , default:  {"min-height" : "120px"}} ,
+            {prop : "prop_widgetClass"                    , default:  []} ,
+            {prop : "prop_widgetStyles"                   , default:  {"min-height" : "80px"}} ,
             {prop : "prop_widgetMinHeight"                , default:  null} ,
             {prop : "prop_btnMore_icon"                   , default:  ""} ,
             {prop : "prop_btnMore_show"                   , default:  false} ,
@@ -3058,8 +3064,8 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
         const content = `
    <component-border id="border-widget-component-${this._COMPONENT_RANDOM_ID}">
        <component-body>
-             <section id="response-widget-component-${this._COMPONENT_RANDOM_ID}"></section>
-    
+             <component-layout id="response-widget-component-${this._COMPONENT_RANDOM_ID}"></component-layout>
+   
              <component-404 id="widget-component-404-${this._COMPONENT_RANDOM_ID}"></component-404>
 
              <component-loading id="widget-component-loading-${this._COMPONENT_RANDOM_ID}"></component-loading>
@@ -3119,16 +3125,33 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
             false
         )
     }
-    fn_readyResponse = (response) => {
-        const el = document.querySelector(`section#response-widget-component-${this._COMPONENT_RANDOM_ID}`);
-        console.log(el , response)
+    fn_readyResponse = (response , request = {}) => {
+       // const el = document.querySelector(`section#response-widget-component-${this._COMPONENT_RANDOM_ID}`);
+
+        const params = response.hasOwnProperty("params") ? response.params : {};
+
+        let requestData={};
+        if (request && request.hasOwnProperty("data")){
+            for (let i = 0; i < request.data.length; i++) {
+                const itemRequest = request.data[i];
+                if (itemRequest.hasOwnProperty("name") && itemRequest.hasOwnProperty("value")){
+                    requestData[itemRequest.name] = itemRequest.value;
+                }
+            }
+        }
 
 
         if (response != null){
             if (response.hasOwnProperty("html")){
-                el.innerHTML = response.html;
 
-                const scripts = el.querySelectorAll('script');
+                this._COMPONENT_LAYOUT = new window.ComponentLayout(
+                    `response-widget-component-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_layoutContent: response.html
+                    }
+                )
+
+                /*const scripts = el.querySelectorAll('script');
                 scripts.forEach(oldScript => {
                     const newScript = document.createElement('script');
                     if (oldScript.src) {
@@ -3137,27 +3160,49 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
                         newScript.textContent = oldScript.textContent;
                     }
                     document.body.appendChild(newScript);
-                });
+                });*/
             }
             if (response.hasOwnProperty("script_src")){
-                const script = document.createElement('script');
-                script.src = response.script_src;
-                script.defer = true; // یا async
-                document.body.appendChild(script);
+                // const script = document.createElement('script');
+                // script.src = response.script_src;
+                // script.defer = true; // یا async
+                // document.body.appendChild(script);
+
+                console.log(response.script_src)
+
+                fetch(response.script_src)
+                    .then((res) => res.text())
+                    .then((code) => {
+                        const fullCode = `
+      (function() {
+        const __params = ${JSON.stringify(params)};
+        const __request = ${JSON.stringify(requestData)};
+        ${code}
+      })();
+    `;
+                        eval(fullCode);
+                    })
+                    .catch(console.error);
             }
             if (response.hasOwnProperty("script")){
-                response.script.forEach(oldScript => {
-                    const newScript = document.createElement('script');
-                    if (oldScript.src) {
-                        newScript.src = oldScript.src;
-                    } else {
-                        newScript.textContent = oldScript.textContent;
-                    }
-                    document.body.appendChild(newScript);
-                });
+
+                try {
+
+                    const fullCode = `
+      (function() {
+        const __params = ${JSON.stringify(params)};
+        const __request = ${JSON.stringify(requestData)};
+    ${response.script}
+      })();
+    `;
+                    eval(fullCode);
+                } catch (e) {
+                    console.error("❌ خطا در اجرای کد:", e);
+                }
             }
         }
     }
+
     call_fetchWidget(){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_onGetNewToken") && typeof data.fn_onGetNewToken != null){
@@ -3194,6 +3239,10 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
             this.fn_readyResponse("<!--empty-component-->")
         }
 
+    }
+
+    call_getComponentLayout(){
+        return this._COMPONENT_LAYOUT;
     }
 
 }
@@ -12300,6 +12349,144 @@ window.ComponentImage = class ComponentImage extends ComponentBase{
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
             data.fn_callback(event);
         }
+    }
+
+}
+
+
+
+/*-------------------------------------
+ 99-04) Component image
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_layoutClass
+@prop_layoutStyles
+@prop_layoutContent
+-------------------------------------*/
+window.ComponentLayout = class ComponentLayout extends ComponentBase{
+
+
+    /* ---------------------------------------------
+     PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            {prop : "prop_structureClass"            , default: []} ,
+            {prop : "prop_structureStyles"           , default: {}} ,
+        ] ,
+        part_layout: [
+            {prop : "prop_layoutClass"               , default: []} ,
+            {prop : "prop_layoutStyles"              , default: {}} ,
+            {prop : "prop_layoutContent"             , default: null} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_layout: {} ,
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentLayout.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_layout":
+                return this.template_render_layout(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure() {
+        const content = `
+ ${this.templateFn("part_layout") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_layout(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_layoutClass     =  data.hasOwnProperty("prop_layoutClass")                                        ?  data.prop_layoutClass     : [];
+            const prop_layoutStyles    =  data.hasOwnProperty("prop_layoutStyles")                                       ?  data.prop_layoutStyles    : {};
+            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-layout-layout-${this._COMPONENT_RANDOM_ID}"
+         class=" ${tools_public.renderListClass(prop_layoutClass)}"
+         >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-layout-layout-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_layoutStyles)}
+         }
+     </style>
+     
+      ${prop_layoutContent}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_callback(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+
+
+    call_addElement(html , tagId= null){
+
+        let elTarget = document.querySelector(`section#component-layout-layout-${this._COMPONENT_RANDOM_ID}`);
+        if (tagId != null){
+            elTarget = elTarget.querySelector(`#${tagId}`)
+        }
+        elTarget.innerHTML += html;
     }
 
 }
