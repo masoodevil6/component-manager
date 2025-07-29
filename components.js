@@ -51,6 +51,10 @@ if (typeof listComponent === 'undefined') {
         ComponentWindow:                     "component-window" ,                         //13-01
         ComponentWindowConfirm:              "component-window-confirm" ,                 //13-02
 
+        // [14] Slider Shows
+        ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //14-01
+
+
 
 
         // [20] Charts
@@ -61,8 +65,6 @@ if (typeof listComponent === 'undefined') {
         ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //21-02
         ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //21-03
         ComponentQrCodeReader:               "component-qr-code-reader" ,                 //21-04
-
-
 
 
 
@@ -3476,6 +3478,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @prop_optionItemHoverBackground
 @prop_optionItemSelectedBackground
 
+@prop_firstCallback
 @fn_callback
 @fn_clickBtnTools
 -------------------------------------*/
@@ -3537,6 +3540,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
         ] ,
         part_body_options: [
+            {prop : "prop_firstCallback"                      , default:  false} ,
             {prop : "prop_itemSelected"                       , default:  null} ,
             {prop : "prop_options"                            , default:  []} ,
             {prop : "prop_optionItemNotSelectedBackground"    , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemNotSelected")  ? tools_const.styles.selectOption.backgroundColor_itemNotSelected : "" } ,
@@ -3595,6 +3599,8 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         this.templateFn("part_header_button");
         this.templateFn("part_body");
         this.templateFn("part_body_searcher");
+
+        this.fn_firstCallback();
     }
     templateFn(partName = null){
         switch (partName){
@@ -4025,6 +4031,13 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     /* ---------------------------------------------
       FUNCTIONs
      --------------------------------------------- */
+    fn_firstCallback(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_firstCallback") && data.prop_firstCallback){
+            this.fn_onSelectItemSelectOption(null ,  data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null );
+        }
+    }
+
     fn_clickBtnTools(event){
         event.stopPropagation();
         const data = this._COMPONENT_CONFIG;
@@ -9970,8 +9983,6 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
 }
 
 
-
-
 /*-------------------------------------
  13-02) Component Window Confirm
 -------------------------------------
@@ -10299,6 +10310,445 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
     }
 
 }
+
+
+/* ===============================================================================================================
+ [14] Slider Shows
+=============================================================================================================== */
+/*-------------------------------------
+ 14-01) Slider Show Overlapping
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderClass
+@prop_borderStyles
+
+@prop_imageDuration
+@prop_imageSelected
+@prop_images
+-------------------------------------*/
+window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping extends ComponentBase {
+
+    _TILE_INTERVAL = null;
+
+    /* ---------------------------------------------
+      PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+        part_label: [
+            {prop: "prop_labelClass"                               , default:  [ "text-center"]},
+            {prop: "prop_labelStyles"                              , default:  { "font-size" : "16pt"}}
+        ] ,
+        part_border: [
+            {prop : "prop_borderClass"                            , default: ["border" , "shadow-sm" , "my-2" , "mx-auto" , "d-block" , "p-1"]} ,
+            {prop : "prop_borderStyles"                           , default: {}} ,
+        ],
+        part_btn_next: [
+
+        ],
+        part_btn_previous: [
+
+        ],
+        part_bottom_selector: [
+            {prop : "prop_imageDuration"                        , default: 3000} ,
+            {prop : "prop_imageSelected"                        , default: 0} ,
+            {prop : "prop_images"                               , default: []} ,
+        ],
+        part_images: [
+            {prop : "prop_imageSelected"                        , default: 0} ,
+            {prop : "prop_images"                               , default: []} ,
+        ],
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label: {} ,
+            part_border: {
+                part_btn_next : {} ,
+                part_btn_previous : {} ,
+                part_bottom_selector : {} ,
+                part_images : {} ,
+            }
+        }
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentSliderShowOverlapping.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+        this.templateFn("part_label");
+        this.templateFn("part_border");
+        this.templateFn("part_btn_next");
+        this.templateFn("part_btn_previous");
+
+        this.fn_defineTimeInterval();
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
+            case "part_btn_next":
+                return this.componentFn_render_iconBtnNext(partName);
+            case "part_btn_previous":
+                return this.componentFn_render_iconBtnPrevious(partName);
+            case "part_bottom_selector":
+                return this.template_render_bottomSelector(partName);
+            case "part_images":
+                return this.template_render_images(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+<component-label id="component-slider-show-overlapping-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+
+<component-border id="component-slider-show-overlapping-border-${this._COMPONENT_RANDOM_ID}">
+    <component-body>
+        
+        <style>
+        
+          #${this._COMPONENT_ID} #component-slider-show-overlapping-btn-pervious-${this._COMPONENT_RANDOM_ID}{
+              transition: opacity 250ms ease;
+              opacity:0.4;
+          }
+          #${this._COMPONENT_ID} #component-slider-show-overlapping-btn-next-${this._COMPONENT_RANDOM_ID}{
+              transition: opacity 250ms ease;
+              opacity:0.4;
+          }
+        
+          #${this._COMPONENT_ID} #component-slider-show-overlapping-border-${this._COMPONENT_RANDOM_ID}:hover #component-slider-show-overlapping-btn-pervious-${this._COMPONENT_RANDOM_ID}{
+              opacity:1;
+          }
+          #${this._COMPONENT_ID} #component-slider-show-overlapping-border-${this._COMPONENT_RANDOM_ID}:hover #component-slider-show-overlapping-btn-next-${this._COMPONENT_RANDOM_ID}{
+             opacity:1;
+          }
+          
+       </style>
+   
+       <component-icon id="component-slider-show-overlapping-btn-pervious-${this._COMPONENT_RANDOM_ID}"></component-icon>
+       
+       <component-icon id="component-slider-show-overlapping-btn-next-${this._COMPONENT_RANDOM_ID}"></component-icon>
+       
+       ${this.templateFn("part_bottom_selector") ?? ""}
+       
+       ${this.templateFn("part_images") ?? ""}
+       
+   </component-body>
+</component-border>
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_bottomSelector(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_imageSelected   =  data.hasOwnProperty("prop_imageSelected")      ?  data.prop_imageSelected     : 0;
+            const prop_images          =  data.hasOwnProperty("prop_images")                ?  data.prop_images            : [];
+            let htmlSelector = "";
+            if (prop_images != null && Array.isArray(prop_images)){
+                for (let i = 0; i < prop_images.length ; i++) {
+                    htmlSelector += `<div class="item-for-selected mx-1 float-start ${ prop_imageSelected == i ? 'item-selected' : ''}" onclick="${this.getFn('fn_selectItemImage' , 'event' , i)}"></div>`
+                }
+            }
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-slider-show-overlapping-bottom-selector-${this._COMPONENT_RANDOM_ID}" 
+         class="position-absolute" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-slider-show-overlapping-bottom-selector-${this._COMPONENT_RANDOM_ID}{
+            bottom: 0%;
+            left: 50%;
+            transform: translate(-50% , -50%);
+            z-index: 2;
+       }
+       #${this._COMPONENT_ID} #component-slider-show-overlapping-bottom-selector-${this._COMPONENT_RANDOM_ID} .item-for-selected{
+            width:10px;
+            height: 10px;
+            border-radius: 100%;
+            cursor: pointer;
+            border: #9b9b9b 2px solid;
+       }
+       #${this._COMPONENT_ID} #component-slider-show-overlapping-bottom-selector-${this._COMPONENT_RANDOM_ID} .item-selected{
+            width:20px !important;
+            border-radius: 25px !important;
+            background-color: white;
+       }
+    </style>
+    
+    ${htmlSelector}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_images(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+            const prop_imageSelected   =  data.hasOwnProperty("prop_imageSelected")      ?  data.prop_imageSelected     : 0;
+            const prop_images          =  data.hasOwnProperty("prop_images")                ?  data.prop_images            : [];
+            let htmlImg = "";
+            if (prop_images != null && Array.isArray(prop_images)){
+                for (let i = 0; i < prop_images.length ; i++) {
+                    if (prop_imageSelected == i){
+                        htmlImg += `<img src="${prop_images[i]}" alt=""/>`
+                        break;
+                    }
+                }
+            }
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-slider-show-overlapping-images-${this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-slider-show-overlapping-images-${this._COMPONENT_RANDOM_ID}{
+            
+       }
+        #${this._COMPONENT_ID} #component-slider-show-overlapping-images-${this._COMPONENT_RANDOM_ID} img{
+            margin: auto;
+            display: block;
+            max-width: 100%;
+            z-index: 1;
+       }
+    </style>
+    
+    ${htmlImg}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label(partName) {
+        this.componentFneBasic_render_structure(
+            `component-slider-show-overlapping-label-${this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for:  `component-input-input-${ this._COMPONENT_RANDOM_ID}`
+            }
+        );
+    }
+
+    componentFn_render_border(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_borderClass       =  data.hasOwnProperty("prop_borderClass")             ?  data.prop_borderClass         : [];
+            const prop_borderStyles      =  data.hasOwnProperty("prop_borderStyles")            ?  data.prop_borderStyles        : {};
+
+            //---------------
+            prop_borderStyles["position"] = "relative";
+
+
+            new window.ComponentBorder(
+                `component-slider-show-overlapping-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  prop_borderClass ,
+                    prop_structureStyles: prop_borderStyles ,
+                }
+            )
+        }
+
+    }
+
+    componentFn_render_iconBtnNext(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            let styles = {
+                "width" : "45px" ,
+                "height" : "45px" ,
+                "border-radius" : "100%" ,
+                "line-height" : "40px" ,
+                "top" : "50%" ,
+                "transform" : "translate(-50%, -50%)" ,
+                "z-index" : "2" ,
+            }
+            if (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl){
+                styles[ "left"] = "0";
+            }
+            else{
+                styles[ "right"] = "-45px";
+            }
+
+            new window.ComponentIcon(
+                `component-slider-show-overlapping-btn-next-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList:     [ "position-absolute" , "border" , 'shadow-sm' , "bg-white" , "text-center"] ,
+                    styles:     styles,
+                    prop_icon:     "&gt;"  ,
+
+                    prop_iconClass : ["d-block" , "text-center" ] ,
+                    prop_iconStyles : {
+                        "cursor" : "pointer" ,
+                        "font-size" : "20pt" ,
+                        "color" : "#cecece" ,
+                    } ,
+
+                    fn_callback: (event) =>{
+                        this.fn_gotoNextImage(event);
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_iconBtnPrevious(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            let styles = {
+                "width" : "45px" ,
+                "height" : "45px" ,
+                "border-radius" : "100%" ,
+                "line-height" : "40px" ,
+                "top" : "50%" ,
+                "right" : "0%" ,
+                "transform" : "translate(-50%, -50%)" ,
+                "z-index" : "2" ,
+            }
+            if (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl){
+                styles[ "right"] = "-45px";
+            }
+            else{
+                styles[ "left"] = "0";
+            }
+
+            new window.ComponentIcon(
+                `component-slider-show-overlapping-btn-pervious-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList:     [ "position-absolute" , "border" , 'shadow-sm' , "bg-white" , "text-center"] ,
+                    styles:       styles,
+                    prop_icon:     "&lt;"  ,
+
+                    prop_iconClass : ["d-block" , "text-center" ] ,
+                    prop_iconStyles : {
+                        "cursor" : "pointer" ,
+                        "font-size" : "20pt" ,
+                        "color" : "#cecece" ,
+                    } ,
+
+                    fn_callback: (event) =>{
+                        this.fn_gotoPreviousImage(event);
+                    }
+                }
+            )
+
+        }
+    }
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_gotoNextImage(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_imageSelected")){
+            this.fn_selectItemImage(event , data.prop_imageSelected + 1 );
+        }
+    }
+    fn_gotoPreviousImage(event, timeInterval=true){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_imageSelected")){
+            this.fn_selectItemImage(event , data.prop_imageSelected - 1 );
+        }
+    }
+
+    fn_selectItemImage(event , indexImage ){
+
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_images")){
+            const length = data.prop_images.length;
+            if (indexImage >= 0 && indexImage <= length-1){
+                this.fn_defineTimeInterval(indexImage);
+            }
+            else if (indexImage > length-1){
+                this.fn_defineTimeInterval(0);
+            }
+            else if (indexImage < 0){
+                this.fn_defineTimeInterval( length-1);
+            }
+        }
+    }
+
+    fn_defineTimeInterval(indexImage = null){
+
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_imageDuration")){
+
+            if (indexImage != null){
+                this.set("prop_imageSelected" , indexImage);
+            }
+
+            if (this._TILE_INTERVAL != null){
+                clearInterval(this._TILE_INTERVAL)
+            }
+
+            this._TILE_INTERVAL = setInterval(() => {
+                this.fn_gotoNextImage();
+            } , data.prop_imageDuration);
+
+        }
+    }
+
+}
+
+
 
 
 
@@ -12481,12 +12931,11 @@ window.ComponentLayout = class ComponentLayout extends ComponentBase{
 
 
     call_addElement(html , tagId= null){
-
         let elTarget = document.querySelector(`section#component-layout-layout-${this._COMPONENT_RANDOM_ID}`);
         if (tagId != null){
             elTarget = elTarget.querySelector(`#${tagId}`)
         }
-        elTarget.innerHTML += html;
+        elTarget.innerHTML = html;
     }
 
 }

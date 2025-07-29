@@ -298,7 +298,7 @@ window.NavStepper = class NavStepper  {
     /* ---------------------------------------------
        direction path
      --------------------------------------------- */
-    isDirectionForwardNext(steps){
+    isDirectionForwardNext(steps , stepData){
         if (this._LAST_STEP_ACTIVE != null){
             if (steps != null){
                 for (let i = 0; i < steps.length ; i++) {
@@ -332,8 +332,9 @@ window.NavStepper = class NavStepper  {
     getParam(stepName , key){
         const stepData = this.getNavStep_self(stepName);
         if (stepData != null){
-            stepData.getParam(key)
+            return stepData.getParam(key)
         }
+        return null;
     }
 
 
@@ -494,13 +495,13 @@ window.NavStepper = class NavStepper  {
         this.goToStep();
     }
 
-    goToStep(stepActive = null){
+    goToStep(stepActive = null , forceForward=false){
         let data = [];
 
         const stepData = this.getNavStep_self(stepActive);
         const stepParentData = this.getNavStep_parent(this._WORK_FLOW, stepActive);
         const steps = this.getNavStep_path(stepActive);
-        const isForwardNext = this.isDirectionForwardNext(steps);
+        const isForwardNext = this.isDirectionForwardNext(steps , stepData);
 
         /// masir ==> all params
         /// others ==> delete
@@ -530,8 +531,9 @@ window.NavStepper = class NavStepper  {
             }
         }
 
+
         this._LAST_STEP_ACTIVE = stepData.getName();
-        if ((stepData.getIsReload() || isForwardNext)){
+        if ((stepData.getIsReload() || isForwardNext || forceForward)){
             this.createStep(stepParentData , stepData , data);
         }
 

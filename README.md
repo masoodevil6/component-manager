@@ -3,7 +3,9 @@
 
 **List Of Components:**
 ```
-    // [01] text
+ var listComponent = {
+
+        // [01] text
         ComponentMessages:                   "component-messages" ,                       //01-01
         ComponentIsEmpty:                    "component-is-empty" ,                       //01-02
         ComponentHeader:                     "component-header" ,                         //01-03
@@ -11,14 +13,15 @@
         ComponentDescription:                "component-description" ,                    //01-05
         ComponentLink:                       "component-link" ,                           //01-06
         ComponentInfo:                       "component-info" ,                           //01-07
-        
-    // [02] Fetch
+
+        // [02] Fetch
         ComponentLoading:                    "component-loading" ,                        //02-01
         Component404:                        "component-404" ,                            //02-02
         ComponentForm:                       "component-form" ,                           //02-03
         ComponentWidget:                     "component-widget" ,                         //02-04
-        
-    // [03] Button and Inputs
+
+
+        // [03] Button and Inputs
         ComponentButton:                     "component-button" ,                         //03-01
         ComponentSelectOption:               "component-select-option" ,                  //03-02
         ComponentOtp:                        "component-otp" ,                            //03-03
@@ -26,45 +29,50 @@
         ComponentInputPrice:                 "component-input-price" ,                    //03-05
         ComponentDate:                       "component-date" ,                           //03-06
         ComponentInputFile:                  "component-input-file" ,                     //03-07
-        
-    // [04] tooltips
+
+        // [04] tooltips
         ComponentTooltipDescription:         "component-tooltip-description" ,            //04-01
-     
-     
-     
-    // [10] Tables
+
+
+
+        // [10] Tables
         ComponentTable:                      "component-table" ,                          //10-01
-        
-    // [11] Tabs
+
+        // [11] Tabs
         ComponentTabs:                       "component-tabs" ,                           //11-01
-        
-    // [12] Collapse
+
+        // [12] Collapse
         ComponentCollapse:                   "component-collapse" ,                       //12-01
-        
-    // [13] Window
+
+        // [13] Window
         ComponentWindow:                     "component-window" ,                         //13-01
         ComponentWindowConfirm:              "component-window-confirm" ,                 //13-02
-        
-        
-        
-        
-    // [20] Charts
+
+        // [14] Slider Shows
+        ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //14-01
+
+
+
+
+        // [20] Charts
         ComponentChart:                      "component-chart" ,                          //20-01
 
-    // [21] QR CODE
+        // [21] QR CODE
         ComponentQrCode:                     "component-qr-code" ,                        //21-01
         ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //21-02
         ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //21-03
         ComponentQrCodeReader:               "component-qr-code-reader" ,                 //21-04
 
 
-
-    // [99] Others
+        
+        // [99] Others
         ComponentIcon:                       "component-icon" ,                           //99-01
         ComponentPositionElement:            "component-position-element" ,               //99-02
         ComponentBorder:                     "component-border" ,                         //99-03
         ComponentImage:                      "component-image" ,                          //99-04
-    
+        ComponentLayout:                     "component-layout" ,                         //99-05
+
+    }
 ```
 
 
@@ -916,6 +924,45 @@ new window.ComponentTooltipDescription(
         }
     )
 ```
+
+
+
+
+/* ====================
+[14] Slider Shows
+==================================== */
+
+**14-01) Component Window Confirm:**
+```
+/*-------------------------------------
+ 14-01) Slider Show Overlapping
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderClass
+@prop_borderStyles
+
+@prop_imageDuration
+@prop_imageSelected
+@prop_images
+-------------------------------------*/
+    new window.ComponentSliderShowOverlapping(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
 
 
 

@@ -37,12 +37,6 @@
         </component-body>
     </component-collapse>
 
-
-
-
-
-
-
     <component-collapse  id="fetch-and-loading">
         <component-body>
 
@@ -63,12 +57,6 @@
 
         </component-body>
     </component-collapse>
-
-
-
-
-
-
 
     <component-collapse  id="btn-and-input">
         <component-body>
@@ -93,7 +81,6 @@
 
         </component-body>
     </component-collapse>
-
 
     <component-collapse  id="tooltips">
         <component-body>
@@ -127,8 +114,6 @@
         </component-body>
     </component-collapse>
 
-
-
     <component-collapse  id="tabs">
         <component-body>
 
@@ -141,8 +126,6 @@
 
         </component-body>
     </component-collapse>
-
-
 
     <component-collapse  id="collapses">
         <component-body>
@@ -159,7 +142,6 @@
 
         </component-body>
     </component-collapse>
-
 
     <component-collapse  id="window">
         <component-body>
@@ -184,6 +166,27 @@
 
 
 
+
+    <component-collapse  id="sliderShow">
+        <component-body>
+
+            <section class="row p-0 m-0">
+
+                <component-slider-show-overlapping id="slider-show-overlapping" ></component-slider-show-overlapping>
+
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
+
+
+
+
+
+
+
     <component-collapse  id="charts">
         <component-body>
             <section class="row p-0 m-0">
@@ -193,7 +196,6 @@
             </section>
         </component-body>
     </component-collapse>
-
 
     <component-collapse  id="qr-codes">
         <component-body>
@@ -911,6 +913,26 @@
 
 
     /* ====================
+     [14] Slider Show
+    ==================================== */
+    new window.ComponentSliderShowOverlapping(
+        "slider-show-overlapping" ,
+        {
+            classList: "col-md-6 col-12 mt-2"  ,
+
+            prop_title: `<b> slider show overlapping </b>` ,
+            prop_height: "210px" ,
+            prop_images: [
+                "https://localhost/component/Images/banner_top_fa.png" ,
+                "https://localhost/component/Images/banner_top_en.png" ,
+            ]
+        }
+    )
+
+
+
+
+    /* ====================
       [20] Charts
     ==================================== */
 
@@ -1211,6 +1233,15 @@
             prop_bodyShow: false
         }
     )
+    new window.ComponentCollapse(
+        "sliderShow" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: " [14] Slider Show " ,
+            prop_bodyShow: true
+        }
+    )
 
     new window.ComponentCollapse(
         "charts" ,
@@ -1237,7 +1268,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [99] Others" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
 
