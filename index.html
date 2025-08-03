@@ -499,6 +499,7 @@
     /*-------------------------------------
       03-02)  Component Select Option
     -------------------------------------*/
+
     new window.ComponentSelectOption(
         "select-option-1" ,
         {
@@ -509,6 +510,7 @@
             prop_itemSelected: 1 ,
             prop_icon: "&#10124;" ,
             prop_options: [
+                {name: "default"} ,
                 {id:1 , name: "test 1"} ,
                 {id:2 , name: "test 2"} ,
                 {id:3 , name: "test 3"} ,
@@ -516,6 +518,20 @@
                 {id:5 , name: "test 5"} ,
                 {id:6 , name: "test 6"} ,
             ] ,
+            prop_listIcons: [
+                {
+                    icon: "&#10124;" ,
+                    method: (id) => {
+                        alert(`item selected [1]: ${id}`)
+                    } ,
+                } ,
+                {
+                    icon: "&#10125;" ,
+                    method: (id) => {
+                        alert(`item selected [2]: ${id}`)
+                    }
+                }
+            ],
 
             prop_btnAddStatus: true ,
 
@@ -1182,7 +1198,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [03] Button And Inputs" ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -1239,7 +1255,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [14] Slider Show " ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
 

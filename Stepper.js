@@ -142,7 +142,6 @@ window.NavStepper = class NavStepper  {
     _ELEMENT_ID = null;
     _ELEMENT = null;
     _WORK_FLOW = [];
-    _LAST_STEP_ACTIVE = null;
     /// ------------------------------
 
 
@@ -296,26 +295,84 @@ window.NavStepper = class NavStepper  {
 
 
     /* ---------------------------------------------
-       direction path
+    trans step Selected path
      --------------------------------------------- */
-    isDirectionForwardNext(steps , stepData){
-        if (this._LAST_STEP_ACTIVE != null){
-            if (steps != null){
-                for (let i = 0; i < steps.length ; i++) {
-                    const item = steps[i];
-                    if (item.hasOwnProperty("step") && this._LAST_STEP_ACTIVE == item.step.getName() &&
-                        item.hasOwnProperty("active") && item.active ){
+    findTransByStep(node, targetStep) {
+        if (node.step === targetStep) {
+            return node.trans || null;
+        }
 
+        if (Array.isArray(node.workflow)) {
+            for (let child of node.workflow) {
+                const result = this.findTransByStep(child, targetStep);
+                if (result !== null) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    /* ---------------------------------------------
+     get non step
+     --------------------------------------------- */
+    getNodesOutsideSelectedPath(root, selectedStep) {
+        const selectedPath = [];
+        let selectedNode = null;
+
+        // پیدا کردن مسیر تا selectedStep و نود مربوطه
+        function findPath(node, target, path = []) {
+            const currentPath = [...path, node];
+            if (node.step === target) {
+                selectedPath.push(...currentPath);
+                selectedNode = node;
+                return true;
+            }
+
+            if (Array.isArray(node.workflow)) {
+                for (let child of node.workflow) {
+                    if (findPath(child, target, currentPath)) {
                         return true;
                     }
                 }
             }
-            return  false;
+
+            return false;
         }
-        else {
-            return true;
+
+        // چک کردن اینکه آیا یک نود در زیرشاخه‌ی selectedNode هست یا نه
+        function isInSubtree(node, parent) {
+            if (parent === null || !Array.isArray(parent.workflow)) return false;
+            if (parent.workflow.includes(node)) return true;
+            return parent.workflow.some(child => isInSubtree(node, child));
         }
+
+        // جمع کردن نودهایی که نه اجداد هستند، نه خودش هستند، نه فرزندانش
+        const result = [];
+
+        function collectValidNodes(node) {
+            const isInPath = selectedPath.includes(node);
+            const isSub = isInSubtree(node, selectedNode);
+
+            if (!isInPath && !isSub) {
+                result.push(node.step ?? node.step);
+            }
+
+            if (Array.isArray(node.workflow)) {
+                for (let child of node.workflow) {
+                    collectValidNodes(child);
+                }
+            }
+        }
+
+        findPath(root, selectedStep);
+        collectValidNodes(root);
+        return result;
     }
+
+
 
 
 
@@ -379,8 +436,6 @@ window.NavStepper = class NavStepper  {
      --------------------------------------------- */
     getWidgetId( parentStep= null){
         if (parentStep != null){
-
-
             return this._ELEMENT_ID + "-component-widget-step-"+parentStep.getName();
         }
         return this._ELEMENT_ID;
@@ -391,7 +446,7 @@ window.NavStepper = class NavStepper  {
         return document.getElementById(id);
     }
 
-    createComponentWidget(stepData, stepParentData){
+    createComponentWidget(stepData, stepParentData , typeDirection){
         // widget id
         const widgetElementId =  this.getWidgetId(stepData);
         const newWidget = `<component-widget id="${widgetElementId}"></component-widget>`;
@@ -401,7 +456,7 @@ window.NavStepper = class NavStepper  {
             if (componentWidget != null){
                 const componentLayout = componentWidget.call_getComponentLayout()
 
-                componentLayout.call_addElement( newWidget , stepData.getTagId());
+                componentLayout.call_addElement( newWidget , stepData.getTagId() , typeDirection);
             }
 
         }
@@ -418,7 +473,7 @@ window.NavStepper = class NavStepper  {
 
 
 
-    createStep(stepParentData , stepData , data = {}){
+    createStep(stepParentData , stepData , data = {} , typeDirection=false){
         if (stepData != null){
             const url = stepData.getUrl();
             const type = stepData.getType();
@@ -426,7 +481,7 @@ window.NavStepper = class NavStepper  {
 
 
             // create widget
-            const widgetElementId = this.createComponentWidget(stepData , stepParentData);
+            const widgetElementId = this.createComponentWidget(stepData , stepParentData , typeDirection);
 
 
             // create component
@@ -440,46 +495,6 @@ window.NavStepper = class NavStepper  {
             stepData.setComponentWidget(widgetElementId ,componentProps);
 
 
-
-
-           /* if (hasView){
-                // create widget
-                this.createComponentWidget(widgetId , stepData.getName());
-
-                // create component
-                componentProps.prop_fetch = {
-                    url ,
-                    data: {
-                        type: type ,
-                        data: data
-                    }
-                };
-                new window.ComponentWidget(widgetId ,componentProps)
-            }
-            else {
-                tools_submit.fetcth(
-                    url ,
-                    {
-                        data: {
-                            type: type ,
-                            data: data
-                        },
-                        componentMessagesData: {
-                            elId : this.getComponentMessagesId()
-                        },
-                        componentLoadingData: {
-                            elId : this.getComponentLoadingId()
-                        },
-                        component404Data: {
-                            elId : this.getComponent404Id() ,
-                            prop_type : "simple_animation" ,
-                            fn_callback: () =>{
-                                this.goToStep(stepData.getName());
-                            }
-                        },
-                    }
-                )
-            }*/
         }
     }
 
@@ -495,16 +510,14 @@ window.NavStepper = class NavStepper  {
         this.goToStep();
     }
 
-    goToStep(stepActive = null , forceForward=false){
+    goToStep(stepActive = null){
         let data = [];
 
         const stepData = this.getNavStep_self(stepActive);
         const stepParentData = this.getNavStep_parent(this._WORK_FLOW, stepActive);
         const steps = this.getNavStep_path(stepActive);
-        const isForwardNext = this.isDirectionForwardNext(steps , stepData);
 
         /// masir ==> all params
-        /// others ==> delete
         if (steps != null){
             for (let i = 0; i < steps.length ; i++) {
                 const item = steps[i];
@@ -517,26 +530,25 @@ window.NavStepper = class NavStepper  {
                             data.push(...params)
                         }
                     }
-                    else {
-                        // empty params widget
-                        item.step.setEmptyParams();
-
-                        // delete params widget
-                        const elWidget = this.getWidgetElement(item.step);
-                        if (elWidget != null){
-                            elWidget.remove();
-                        }
-                    }
                 }
             }
         }
 
 
-        this._LAST_STEP_ACTIVE = stepData.getName();
-        if ((stepData.getIsReload() || isForwardNext || forceForward)){
-            this.createStep(stepParentData , stepData , data);
+        const trans = this.findTransByStep(this._WORK_FLOW ,stepParentData);
+        let typeDirection = true;
+        if (trans == "direction"){
+            typeDirection = false;
+
+            const pathNone = this.getNodesOutsideSelectedPath(this._WORK_FLOW ,stepData);
+            for (let i = 0; i < pathNone.length ; i++) {
+                const item = pathNone[i];
+                // empty params widget
+                item.setEmptyParams();
+            }
         }
 
+        this.createStep(stepParentData , stepData , data , typeDirection);
     }
 
 }

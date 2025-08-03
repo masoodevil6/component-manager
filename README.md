@@ -1119,6 +1119,39 @@ new window.ComponentTooltipDescription(
     )
 ```
 
+**21-04) Component Qr Code Reader:**
+```
+/*-------------------------------------
+ 21-04)  Component Qr Code Reader
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_placeholder
+
+@prop_formHight
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentQrCodeReader(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
 
 
 
