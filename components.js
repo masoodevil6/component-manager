@@ -54,6 +54,9 @@ if (typeof listComponent === 'undefined') {
         // [14] Slider Shows
         ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //14-01
 
+        // [15] Breadcrumb
+        ComponentBreadcrumb :                "component-breadcrumb" ,                     //15-01
+
 
 
 
@@ -172,6 +175,10 @@ class ComponentBase{
         components[this._COMPONENT_RANDOM_ID] = this;
 
         this.setComponents();
+
+       /* window.addEventListener('resize', (event)=>{
+            this.setComponents();
+        });*/
     }
 
 
@@ -349,7 +356,7 @@ class ComponentBase{
         }
 
         if (typeof this.templateFn !== "undefined"){
-            html = this.templateFn(partName  , this._COMPONENT_SLOTS  , this._COMPONENT_RANDOM_ID);
+            html = this.templateFn(partName );
 
             if (el != null && html != null){
                 if (isMain){
@@ -400,10 +407,37 @@ class ComponentBase{
 
     setComponents(){
         if (typeof this.componentFn !== "undefined"){
-            this.componentFn(this._COMPONENT_SLOTS , this._COMPONENT_RANDOM_ID);
+            this.componentFn();
         }
     }
 
+
+    //--------------------------------------------------
+    // tools
+    //--------------------------------------------------
+    getScreenWidth(){
+        let screanWidth = window.innerWidth;
+        let screanWidthType = "";
+        if (screanWidth < 576) {
+            screanWidthType = "xs"
+        }
+        else if (screanWidth >= 576 && screanWidth < 768) {
+            screanWidthType = "s"
+        }
+        else if (screanWidth >= 768 && screanWidth < 992) {
+            screanWidthType = "m"
+        }
+        else if (screanWidth >= 992 && screanWidth < 1200) {
+            screanWidthType = "l"
+        }
+        else if (screanWidth >= 1200 && screanWidth < 1200) {
+            screanWidthType = "xl"
+        }
+        else if (screanWidth >=1200) {
+            screanWidthType = "xxl"
+        }
+        return screanWidthType;
+    }
 
 
     //--------------------------------------------------
@@ -3410,7 +3444,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
      }
    </style>
 
-   <button id="component-button-${this._COMPONENT_RANDOM_ID}" class=" ${tools_public.renderListClass(prop_btnClass)}  shadow-sm border-0 px-2 py-1 rounded "
+   <button id="component-button-${this._COMPONENT_RANDOM_ID}" class="shadow-sm border-0 rounded ${tools_public.renderListClass(prop_btnClass)}   "
             onclick="${this.getFn('fn_onCLickBtn' , "event")}">
       ${prop_title}
    </button>
@@ -3476,7 +3510,7 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 @prop_positionBottom
 @prop_positionRight
 
-@prop_listIcons      [{icon , method} , ...]
+@prop_listIcons      [{icon ,name ,  method} , ...]
 @prop_options
 @prop_optionStyles
 @prop_optionWidth
@@ -3510,7 +3544,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             {prop : "prop_labelHoverStyles"                  , default:  {}} ,
         ] ,
         part_header: [
-            {prop : "prop_titleClass"                        , default:  ["  form-control " , " px-2"]} ,
+            {prop : "prop_titleClass"                        , default:  ["form-control" , " px-2"]} ,
             {prop : "prop_titleStyles"                       , default:  {"line-height" : "24px" , "height": "30px"}} ,
         ] ,
         part_header_icon: [
@@ -3599,17 +3633,18 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     /* ---------------------------------------------
       TEMPLATEs
     --------------------------------------------- */
-    componentFn(){
+    componentFn(screanWidthType){
         this.templateFn("part_label");
-        this.templateFn("part_header_icon");
-        this.templateFn("part_header_arrow_icon");
-        this.templateFn("part_header_button");
-        this.templateFn("part_body");
-        this.templateFn("part_body_searcher");
+        this.templateFn("part_header_icon" );
+        this.templateFn("part_header_arrow_icon" );
+        this.templateFn("part_header_button" );
+        this.templateFn("part_body" );
+        this.templateFn("part_body_searcher" );
 
         this.fn_firstCallback();
     }
     templateFn(partName = null){
+
         switch (partName){
             case "part_structure":
                 return this.template_render_structure(partName);
@@ -3638,7 +3673,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    template_render_structure(partName) {
+    template_render_structure(partName ) {
         const content = `
       
      <style>
@@ -3669,7 +3704,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         return this.templateBasic_render_structure(content);
     }
 
-    template_render_value(partName) {
+    template_render_value(partName ) {
 
         const data = this.getPartProps(partName)
 
@@ -3699,7 +3734,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         `;
     }
 
-    template_render_header(partName) {
+    template_render_header(partName ) {
 
         const data = this.getPartProps(partName)
 
@@ -3716,6 +3751,15 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
          #${this._COMPONENT_ID} #component-select-option-header-${ this._COMPONENT_RANDOM_ID}{
                ${tools_public.renderListStyle(prop_titleStyles)}
                cursor: pointer;
+         }
+         
+         @media (max-width: 768px) {
+               #${this._COMPONENT_ID} #component-select-option-header-button-text-${ this._COMPONENT_RANDOM_ID}{
+                    display: none;
+               }
+               #${this._COMPONENT_ID} #component-select-option-header-button-icon-${ this._COMPONENT_RANDOM_ID}{
+                 
+               }
          }
      </style>
      
@@ -3736,11 +3780,12 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         `;
     }
 
-    template_render_headerTitle(partName) {
-
+    template_render_headerTitle(partName ) {
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
             const prop_options              =  data.hasOwnProperty("prop_options")                   ?  data.prop_options                       : [];
             const prop_itemSelected         =  data.hasOwnProperty("prop_itemSelected")              ?  data.prop_itemSelected                  : [];
             const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
@@ -3750,13 +3795,19 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
             const var_itemSelectedTitle =this.fn_getItemSelectedTitle(prop_options , prop_itemSelected , prop_placeholder)
 
+
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
+            }
+
             return `
 <section data-part-name="${partName}"
          id="component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}"
          class=" d-block" >
      <style>
          #${this._COMPONENT_ID} #component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}{
-            ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? "180px" : "20"};
+            ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? padding : "20"};
             ${directionRtl ? "padding-right" : "padding-left"} : ${prop_icon != null ? "30px" : "0"} ;
             white-space: nowrap;
             overflow: hidden;
@@ -3781,7 +3832,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         `;
     }
 
-    template_render_bodyOptions(partName) {
+    template_render_bodyOptions(partName ) {
 
         const data = this.getPartProps(partName)
 
@@ -3812,7 +3863,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
          }
          #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}{
              background-color: ${prop_optionItemNotSelectedBackground};
-             padding: 0 10px !important;
+             padding: 3px 10px !important;
          }
          #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}:hover{
              background-color: ${prop_optionItemHoverBackground};
@@ -3846,7 +3897,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         `;
     }
 
-    componentFn_render_label(partName) {
+    componentFn_render_label(partName ) {
         this.componentFneBasic_render_structure(
             `component-select-option-label-${ this._COMPONENT_RANDOM_ID}` ,
             {
@@ -3858,7 +3909,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         );
     }
 
-    componentFn_render_headerIcon(partName) {
+    componentFn_render_headerIcon(partName ) {
 
         const data = this.getPartProps(partName)
 
@@ -3897,11 +3948,13 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_headerArrowIcon(partName) {
+    componentFn_render_headerArrowIcon(partName ) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
             const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
             const var_showFormSelectOption  =  data.hasOwnProperty("var_showFormSelectOption")           ?  data.var_showFormSelectOption        : false;
@@ -3913,10 +3966,20 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                 "top" : "0px",
             }
             if (directionRtl){
-                styles["left"]= prop_btnAddStatus ? "165px" : "0px";
+                if (screanWidthType == "xs"){
+                    styles["left"]= prop_btnAddStatus ? "30px" : "0px";
+                }
+                else{
+                    styles["left"]= prop_btnAddStatus ? "165px" : "0px";
+                }
             }
             else {
-                styles["right"]= prop_btnAddStatus ? "165px" : "0px";
+                if (screanWidthType == "xs"){
+                    styles["right"]= prop_btnAddStatus ? "30px" : "0px";
+                }
+                else{
+                    styles["right"]= prop_btnAddStatus ? "165px" : "0px";
+                }
             }
 
             if (var_showFormSelectOption){
@@ -3925,6 +3988,9 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             else{
                 styles["line-height"]= "35pt";
             }
+
+
+
 
             new window.ComponentIcon(
                 `component-select-option-header-icon-arrow-${ this._COMPONENT_RANDOM_ID}` ,
@@ -3939,11 +4005,13 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_headerButton(partName) {
+    componentFn_render_headerButton(partName ) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
             const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
 
             if (prop_btnAddStatus){
@@ -3956,7 +4024,6 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                     "z-index" : "10" ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
-                    "width" : "160px" ,
                     "height" : "30px" ,
                     "line-height" : "20px" ,
                 };
@@ -3967,19 +4034,27 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                     styles["right"] = "0";
                 }
 
+                if (screanWidthType == "xs"){
+                    styles["width"] = "30px";
+                }
+                else{
+                    styles["width"] = "160px";
+                }
+
                 new window.ComponentButton(
                     `component-select-option-header-button-${ this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
+                        prop_btnClass: "border shadow-sm position-absolute p-0 m-0   " + prop_btnAddClass.join(" ") ,
                         prop_btnStyles: styles ,
                         prop_title: `
-<span class="mx-3">
+<span id="component-select-option-header-button-icon-${ this._COMPONENT_RANDOM_ID}" class="mx-3">
     ${prop_btnAddIcon}
 </span>
-<span class="d-none d-md-inline">
+<span id="component-select-option-header-button-text-${ this._COMPONENT_RANDOM_ID}" class="d-md-inline">
     ${prop_btnAddTitle}
 </span>
                     `,
+
 
                         fn_callback: (event)=>{
                             this.runFn("fn_clickBtnTools" , "event")
@@ -3991,7 +4066,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_body(partName) {
+    componentFn_render_body(partName ) {
 
         const data = this.getPartProps(partName)
 
@@ -4024,7 +4099,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         }
     }
 
-    componentFn_render_bodySearcher(partName) {
+    componentFn_render_bodySearcher(partName ) {
 
         const data = this.getPartProps(partName)
 
@@ -4069,12 +4144,14 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         const data = this._COMPONENT_CONFIG;
         const prop_options      = data != null && data.hasOwnProperty("prop_options")      ? data.prop_options      : [];
 
+        let itemSelectedId = null;
         let itemSelectedData = null;
         if (prop_options != null && Array.isArray(prop_options)){
             for (const itemOption of prop_options) {
                 if (itemOption.hasOwnProperty("id") && itemOption.hasOwnProperty("name") && itemOption.id == itemIdSelected){
+                    itemSelectedId = itemOption.id;
                     itemSelectedData = itemOption;
-                    this.set("prop_itemSelected" , itemOption.id)
+                    this.set("prop_itemSelected" , itemSelectedId)
                     break;
                 }
             }
@@ -4082,7 +4159,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         this.fn_showListOptions(event , false);
 
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(event , data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null , itemSelectedData);
+            data.fn_callback(event , itemSelectedId , itemSelectedData);
         }
     }
 
@@ -4116,8 +4193,6 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 
     fn_onGetBodyOptions(prop_options  , prop_itemSelected , var_searcherSelectOption , prop_listIcons=null){
 
-
-
         let optionsStr = "";
 
         if (prop_options != null && Array.isArray(prop_options)){
@@ -4131,13 +4206,14 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                     if (prop_listIcons != null && Array.isArray(prop_listIcons) && item.hasOwnProperty('id') && item.id != null){
                         for (let j = 0; j < prop_listIcons.length; j++) {
                             const itemIcon = prop_listIcons[j];
-                            if (itemIcon.hasOwnProperty("icon") && itemIcon.hasOwnProperty("method") && typeof itemIcon.method != "undefined"){
+                            if (itemIcon.hasOwnProperty("icon") && itemIcon.hasOwnProperty("name") && itemIcon.hasOwnProperty("method") && typeof itemIcon.method != "undefined"){
                                 const itemIconHtml = itemIcon["icon"];
                                 const itemIconMethod = itemIcon.method;
+                                const itemIconName = itemIcon.name;
 
                                 iconsHtml += `
                                 <i class="component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID} "
-                                    onclick="${this.getFn("fn_onClickIconOption" , "event" , itemIconMethod , value)}">
+                                    onclick="${this.getFn("fn_onClickIconOption" , "event" , `'${itemIconName}'` , value)}">
                                       ${itemIconHtml} 
                                 </i>
                                 `;
@@ -4164,10 +4240,20 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
         return optionsStr;
     }
 
-    fn_onClickIconOption(event , method , id){
+    fn_onClickIconOption(event , name , id){
         event.stopPropagation()
-        const callback = eval(method);
-        callback(event , id);
+
+        const data = this._COMPONENT_CONFIG;
+        const prop_listIcons      = data != null && data.hasOwnProperty("prop_listIcons")      ? data.prop_listIcons      : [];
+        if (prop_listIcons != null && Array.isArray(prop_listIcons)){
+            for (let j = 0; j < prop_listIcons.length; j++) {
+                const itemIcon = prop_listIcons[j];
+                if (itemIcon.hasOwnProperty("name") && itemIcon.hasOwnProperty("method") && typeof itemIcon.method != "undefined" && name == itemIcon.name) {
+                    const itemIconMethod = itemIcon.method;
+                    itemIconMethod(event , id);
+                }
+            }
+        }
     }
 
 }
@@ -4722,6 +4808,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         this.templateFn("part_icon");
         this.templateFn("part_button");
     }
+
     templateFn(partName = null){
         switch (partName){
             case "part_structure":
@@ -4743,6 +4830,17 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 
     template_render_structure() {
         const content = `
+         <style>
+            @media (max-width: 768px) {
+               #${this._COMPONENT_ID} #component-input-button-text-${ this._COMPONENT_RANDOM_ID}{
+                    display: none;
+               }
+               #${this._COMPONENT_ID} #component-input-button-icon-${ this._COMPONENT_RANDOM_ID}{
+                 
+               }
+           }
+        </style>
+
          <component-label id="component-input-label-${this._COMPONENT_RANDOM_ID}"></component-label>
 
         <div class="position-relative">
@@ -4762,6 +4860,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const screanWidthType = this.getScreenWidth();
 
             const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                    :  [];
             const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                   :  {};
@@ -4775,6 +4874,11 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
 
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
+            }
+
             return `
 <section  data-part-name="${partName}"
           id="component-input-input-element-${this._COMPONENT_RANDOM_ID}"  
@@ -4787,7 +4891,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
          #${this._COMPONENT_ID} #component-input-input-${this._COMPONENT_RANDOM_ID}{
               height: 30px;
               
-              ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? "180px" : "20"};
+              ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? padding : "20"};
      
               ${directionRtl ? "padding-right" : "padding-left"}: ${(prop_icon != null && prop_icon != "") ?  "30px"  : "10px"}!important;
               ${tools_public.renderListStyle(prop_inputStyles)}
@@ -4829,8 +4933,10 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
+
             const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
             if (!prop_isDisable){
+                const screanWidthType = this.getScreenWidth();
 
                 const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
                 const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
@@ -4845,10 +4951,20 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
                     "text-align" : "center" ,
                 };
                 if (directionRtl){
-                    styles["left"]=  prop_btnAddStatus ?  "160px" : "5px";
+                    if (screanWidthType == "xs"){
+                        styles["left"]= prop_btnAddStatus ? "30px" : "5px";
+                    }
+                    else{
+                        styles["left"]= prop_btnAddStatus ? "165px" : "5px";
+                    }
                 }
                 else {
-                    styles["right"]=  prop_btnAddStatus ?  "160px" : "5px";
+                    if (screanWidthType == "xs"){
+                        styles["right"]= prop_btnAddStatus ? "30px" : "5px";
+                    }
+                    else{
+                        styles["right"]= prop_btnAddStatus ? "165px" : "5px";
+                    }
                 }
 
                 new window.ComponentIcon(
@@ -4921,6 +5037,8 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
             const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
 
             if (prop_btnAddStatus){
@@ -4933,15 +5051,22 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
                     "z-index" : "10" ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
-                    "width" : "160px" ,
                     "height" : "30px" ,
                     "line-height" : "20px" ,
                 };
+
                 if (directionRtl){
                     styles["left"] = "0";
                 }
                 else {
                     styles["right"] = "0";
+                }
+
+                if (screanWidthType == "xs"){
+                    styles["width"] = "30px";
+                }
+                else{
+                    styles["width"] = "160px";
                 }
 
                 new window.ComponentButton(
@@ -4950,10 +5075,10 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
                         prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
                         prop_btnStyles: styles ,
                         prop_title: `
-<span class="mx-3">
+<span id="component-input-button-icon-${ this._COMPONENT_RANDOM_ID}" class="">
     ${prop_btnAddIcon}
 </span>
-<span class="d-none d-md-inline">
+<span  id="component-input-button-text-${ this._COMPONENT_RANDOM_ID}" class=" d-md-inline">
     ${prop_btnAddTitle}
 </span>
                     `,
@@ -5132,6 +5257,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         this.templateFn("part_icon");
         this.templateFn("part_button");
         this.templateFn("part_information");
+
+        this.fn_onInputCallBack();
     }
     templateFn(partName = null){
         switch (partName){
@@ -5156,6 +5283,18 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 
     template_render_structure(partName) {
         const content = `
+
+     <style>
+            @media (max-width: 768px) {
+               #${this._COMPONENT_ID} #component-input-price-button-text-${ this._COMPONENT_RANDOM_ID}{
+                    display: none;
+               }
+               #${this._COMPONENT_ID} #component-input-price-button-icon-${ this._COMPONENT_RANDOM_ID}{
+                 
+               }
+           }
+     </style>
+
      <component-label id="component-input-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
      
      <div class="position-relative">
@@ -5178,6 +5317,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const screanWidthType = this.getScreenWidth();
 
             const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
             const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
@@ -5189,6 +5329,11 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                                 : false;
 
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
+
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
+            }
 
             return `
 <section  data-part-name="${partName}"
@@ -5202,7 +5347,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
          #${this._COMPONENT_ID} #component-input-input-${this._COMPONENT_RANDOM_ID}{
               height: 30px;
 
-              ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? "180px" : "20"};
+              ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? padding : "20"};
      
               ${directionRtl ? "padding-right" : "padding-left"}: ${(prop_icon != null && prop_icon != "") ?  "30px"  : "10px"}!important;
               ${tools_public.renderListStyle(prop_inputStyles)}
@@ -5243,6 +5388,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
             const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
 
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
@@ -5256,11 +5403,22 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                 "top" : "0" ,
                 "text-align" : "center" ,
             };
+
             if (directionRtl){
-                styles["left"]=  prop_btnAddStatus ?  "160px" : "5px";
+                if (screanWidthType == "xs"){
+                    styles["left"]= prop_btnAddStatus ? "30px" : "5px";
+                }
+                else{
+                    styles["left"]= prop_btnAddStatus ? "165px" : "5px";
+                }
             }
             else {
-                styles["right"]=  prop_btnAddStatus ?  "160px" : "5px";
+                if (screanWidthType == "xs"){
+                    styles["right"]= prop_btnAddStatus ? "30px" : "5px";
+                }
+                else{
+                    styles["right"]= prop_btnAddStatus ? "165px" : "5px";
+                }
             }
 
 
@@ -5336,6 +5494,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
 
             if (prop_btnAddStatus){
+                const screanWidthType = this.getScreenWidth();
+
                 const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
                 const prop_btnAddIcon           =  data.hasOwnProperty("prop_btnAddIcon")                 ?  data.prop_btnAddIcon                    : "&plus;";
                 const prop_btnAddTitle          =  data.hasOwnProperty("prop_btnAddTitle")                ?  data.prop_btnAddTitle                   : "add item";
@@ -5345,15 +5505,23 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                     "z-index" : "10" ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
-                    "width" : "160px" ,
+
                     "height" : "30px" ,
                     "line-height" : "20px" ,
                 };
+
                 if (directionRtl){
                     styles["left"] = "0";
                 }
                 else {
                     styles["right"] = "0";
+                }
+
+                if (screanWidthType == "xs"){
+                    styles["width"] = "30px";
+                }
+                else{
+                    styles["width"] = "160px";
                 }
 
                 new window.ComponentButton(
@@ -5362,10 +5530,10 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                         prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
                         prop_btnStyles: styles ,
                         prop_title: `
-<span class="mx-3">
+<span id="component-input-price-button-icon-${ this._COMPONENT_RANDOM_ID}" class="">
     ${prop_btnAddIcon}
 </span>
-<span class="d-none d-md-inline">
+<span id="component-input-price-button-text-${ this._COMPONENT_RANDOM_ID}" class=" d-md-inline">
     ${prop_btnAddTitle}
 </span>
                     `,
@@ -7927,6 +8095,7 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
                     prop_titleBtnCancel:  prop_deleteBtnCancel ,
                     prop_titleBtnAccept  :  prop_deleteBtnAccept,
                     prop_body  :  prop_deleteBody,
+                    prop_showBtnResize : false ,
                     fn_callback: (event , data) => {
                         this.fn_deleteFileSelected(event , data);
                     } ,
@@ -9593,6 +9762,9 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
             const prop_windowHeight                = data.hasOwnProperty("prop_windowHeight")                   ?  data.prop_windowHeight              : "";
             const prop_windowRound                 = data.hasOwnProperty("prop_windowRound")                    ?  data.prop_windowRound               : "";
 
+
+
+
             return `
 <section data-part-name="${partName}" 
          id="component-windwow-window-${this._COMPONENT_RANDOM_ID}" 
@@ -9610,93 +9782,96 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
             width: ${prop_windowWidth}px;
             height: ${prop_windowHeight}px;
             border-radius: ${prop_windowRound};
+            max-height: calc(100vh - 30%) !important;
        }
        
        @media (max-width: ${prop_windowWidth}px) {
            #${this._COMPONENT_ID} #component-windwow-window-${this._COMPONENT_RANDOM_ID} {
-              width: %100 !important;
+              width: calc(90%) !important;
           }
        }
-       
-       @keyframes window-visable-${this._COMPONENT_RANDOM_ID}{
-           0% {
-              width: ${prop_windowWidth * 2 / 3}px;
-              height: ${prop_windowHeight * 2 / 3 }px;
-           }
-           50% {
-              width: ${prop_windowWidth * 4 / 3}px;
-              height: ${prop_windowHeight * 4 / 3 }px;
-           }
-           100% {
-               width: ${prop_windowWidth}px;
-               height: ${prop_windowHeight}px;
-           }
-        }
-
-        @keyframes window-unvisable-${this._COMPONENT_RANDOM_ID} {
-            0% {
-               width: ${prop_windowWidth}px;
-               height: ${prop_windowHeight}px;
+     
+       @media (min-width: ${prop_windowWidth}px) {
+            @keyframes window-visable-${this._COMPONENT_RANDOM_ID}{
+                0% {
+                   width: ${prop_windowWidth * 2 / 3}px;
+                   height: ${prop_windowHeight * 2 / 3 }px;
+                }
+                50% {
+                   width: ${prop_windowWidth * 4 / 3}px;
+                   height: ${prop_windowHeight * 4 / 3 }px;
+                }
+                100% {
+                   width: ${prop_windowWidth}px;
+                   height: ${prop_windowHeight}px;
+                }
             }
-            50% {
-              width: ${prop_windowWidth * 4 / 3}px;
-              height: ${prop_windowHeight * 4 / 3 }px;
-            }
-            100% {
-               width: ${prop_windowWidth * 2 / 3}px;
-               height: ${prop_windowHeight * 2 / 3 }px;
-            }
-         }
-        
-         .window-visable-animation-${this._COMPONENT_RANDOM_ID} {
-              animation: window-visable-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
-         }
 
-         .window-unvisable-animation-${this._COMPONENT_RANDOM_ID} {
-              animation: window-unvisable-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
-         }
-         
+            @keyframes window-unvisable-${this._COMPONENT_RANDOM_ID} {
+                 0% {
+                    width: ${prop_windowWidth}px;
+                    height: ${prop_windowHeight}px;
+                 }
+                 50% {
+                    width: ${prop_windowWidth * 4 / 3}px;
+                    height: ${prop_windowHeight * 4 / 3 }px;
+                 }
+                 100% {
+                    width: ${prop_windowWidth * 2 / 3}px;
+                    height: ${prop_windowHeight * 2 / 3 }px;
+                 }
+             }
 
-       @keyframes window-full-size-${this._COMPONENT_RANDOM_ID}{
-           0% {
-              width: ${prop_windowWidth}px;
-              height: ${prop_windowHeight}px;
-           }
-           100% {
-               width: calc(100% - 40px);
-               height: calc(100% - 40px);
-           }
-        }
+             .window-visable-animation-${this._COMPONENT_RANDOM_ID} {
+                animation: window-visable-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
+             }
 
-        @keyframes window-real-size-${this._COMPONENT_RANDOM_ID} {
-            0% {
-               width: calc(100% - 40px);
-               height: calc(100% - 40px);
+             .window-unvisable-animation-${this._COMPONENT_RANDOM_ID} {
+                animation: window-unvisable-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
+             }
+
+
+             @keyframes window-full-size-${this._COMPONENT_RANDOM_ID}{
+                0% {
+                   width: ${prop_windowWidth}px;
+                   height: ${prop_windowHeight}px;
+                }
+                100% {
+                   width: calc(100% - 40px);
+                   height: calc(100% - 40px);
+                }
+             }
+
+            @keyframes window-real-size-${this._COMPONENT_RANDOM_ID} {
+                0% {
+                   width: calc(100% - 40px);
+                   height: calc(100% - 40px);
+                }
+                100% {
+                   width: ${prop_windowWidth}px;
+                   height: ${prop_windowHeight}px;
+                }
             }
-            100% {
-               width: ${prop_windowWidth}px;
-               height: ${prop_windowHeight}px;
-            }
-         }
-        
-         .window-full-size-animation-${this._COMPONENT_RANDOM_ID} {
-              animation: window--full-size-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
-         }
-         
-          .window-real-size-animation-${this._COMPONENT_RANDOM_ID} {
-              animation: window-real-size-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
-         }
-        
-         .window-full-size-${this._COMPONENT_RANDOM_ID} {
-              width: calc(100% - 40px) !important;
-              height: calc(100% - 40px) !important;
-         }
 
-         window-full-size-${this._COMPONENT_RANDOM_ID} {
-              width: ${prop_windowWidth}px !important;
-              height: ${prop_windowHeight}px !important;
-         }
-         
+            .window-full-size-animation-${this._COMPONENT_RANDOM_ID} {
+                animation: window--full-size-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
+            }
+
+           .window-real-size-animation-${this._COMPONENT_RANDOM_ID} {
+                animation: window-real-size-${this._COMPONENT_RANDOM_ID} 0.15s forwards ease-in-out;
+            }
+
+            .window-full-size-${this._COMPONENT_RANDOM_ID} {
+               width: calc(100% - 40px) !important;
+               height: calc(100% - 40px) !important;
+            }
+
+            window-full-size-${this._COMPONENT_RANDOM_ID} {
+               width: ${prop_windowWidth}px !important;
+               height: ${prop_windowHeight}px !important;
+            }
+       }
+
     </style>
     
     ${this.templateFn("part_window_header") ?? ""}
@@ -10061,6 +10236,8 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
 
 @prop_body     [or component-body]
 
+@prop_showBtnResize
+
 @prop_titleBtnCancel
 @prop_titleBtnAccept
 
@@ -10083,7 +10260,7 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
 
         ],
         part_window: [
-
+            {prop : "prop_showBtnResize"                     , default: true} ,
         ],
         part_window_header: [
             {prop : "prop_header"                            , default: null} ,
@@ -10253,7 +10430,7 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
             return `
 <section data-part-name="${partName}" 
          id="component-windwow-confirm-winddow-footer-${this._COMPONENT_RANDOM_ID}" 
-         class="mx-2" >
+         class="row p-0 my-0 mx-2" >
          
     <style>
         #${this._COMPONENT_ID} #component-windwow-confirm-winddow-footer-${this._COMPONENT_RANDOM_ID}{
@@ -10261,9 +10438,9 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
        }
     </style>
     
-    <component-button id="component-windwow-confirm-winddow-footer-btn-cancel${this._COMPONENT_RANDOM_ID}"></component-button>
+    <component-button id="component-windwow-confirm-winddow-footer-btn-cancel-${this._COMPONENT_RANDOM_ID}"></component-button>
     
-    <component-button id="component-windwow-confirm-winddow-footer-btn-accept${this._COMPONENT_RANDOM_ID}"></component-button>
+    <component-button id="component-windwow-confirm-winddow-footer-btn-accept-${this._COMPONENT_RANDOM_ID}"></component-button>
     
 </section>
         `;
@@ -10280,11 +10457,14 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
 
         if (data != null){
 
+            const prop_showBtnResize = data.hasOwnProperty("prop_showBtnResize") ? data.prop_showBtnResize : true;
+
             this._COMPONENT_WINDOW = new window.ComponentWindow(
                 `component-windwow-confirm-winddow-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_windowWidth: 500 ,
-                    prop_windowHeight: 125
+                    prop_windowHeight: 125 ,
+                    prop_showBtnResize: prop_showBtnResize
                 }
             )
         }
@@ -10298,13 +10478,9 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
             const prop_titleBtnCancel = data.hasOwnProperty("prop_titleBtnCancel")  ? data.prop_titleBtnCancel : "";
 
             new window.ComponentButton(
-                `component-windwow-confirm-winddow-footer-btn-cancel${this._COMPONENT_RANDOM_ID}` ,
+                `component-windwow-confirm-winddow-footer-btn-cancel-${this._COMPONENT_RANDOM_ID}` ,
                 {
-
-                    prop_structureClass:  ["float-start" , "me-2"] ,
-                    prop_structureStyles: {
-                        "width" : "150px"
-                    } ,
+                    classList: "col-6 mt-2"  ,
 
                     prop_type:"cancel" ,
 
@@ -10325,13 +10501,9 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
             const prop_titleBtnAccept = data.hasOwnProperty("prop_titleBtnAccept")  ? data.prop_titleBtnAccept : "";
 
             new window.ComponentButton(
-                `component-windwow-confirm-winddow-footer-btn-accept${this._COMPONENT_RANDOM_ID}` ,
+                `component-windwow-confirm-winddow-footer-btn-accept-${this._COMPONENT_RANDOM_ID}` ,
                 {
-
-                    prop_structureClass:  ["float-start" , "me-2"] ,
-                    prop_structureStyles: {
-                        "width" : "150px"
-                    } ,
+                    classList: "col-6 mt-2"  ,
 
                     prop_type:"submit" ,
 
@@ -10822,6 +10994,324 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
 
         }
     }
+
+}
+
+
+/* ===============================================================================================================
+ [15] Breadcrums
+=============================================================================================================== */
+/*-------------------------------------
+ 15-01) Breadcrumb
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_unactiveBreadcrumb
+@prop_activeBreadcrumb
+@prop_breadcrumbs
+
+@fn_callback
+-------------------------------------*/
+window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
+
+    _TILE_INTERVAL = null;
+
+    /* ---------------------------------------------
+      PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+        part_scroller: [
+
+        ],
+        part_breadcrumbs: [
+            {prop : "prop_unactiveBreadcrumb"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("backgroundColor_unactive")   ? tools_const.styles.breadcrumb.backgroundColor_unactive : ""} ,
+            {prop : "prop_activeBreadcrumb"              , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("backgroundColor_active")   ? tools_const.styles.breadcrumb.backgroundColor_active : ""} ,
+            {prop : "prop_breadcrumbs"                   , default: []} ,
+        ],
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_scroller:{
+                part_breadcrumbs:{}
+            }
+        }
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentBreadcrumb.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+
+            case "part_scroller":
+                return this.template_render_scroller(partName);
+
+            case "part_breadcrumbs":
+                return this.template_render_breadcrumbs(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+       ${this.templateFn("part_scroller") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+    template_render_scroller(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-breadcrumb-scroller-${this._COMPONENT_RANDOM_ID}" 
+         class="w-100" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-breadcrumb-scroller-${this._COMPONENT_RANDOM_ID}{
+
+        }
+    </style>
+    
+     ${this.templateFn("part_breadcrumbs") ?? ""}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    template_render_breadcrumbs(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const directionRtl               =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            const prop_unactiveBreadcrumb    =  data.hasOwnProperty("prop_unactiveBreadcrumb")         ?  data.prop_unactiveBreadcrumb            : "";
+            const prop_activeBreadcrumb      =  data.hasOwnProperty("prop_activeBreadcrumb")           ?  data.prop_activeBreadcrumb              : "";
+            const prop_breadcrumbs           =  data.hasOwnProperty("prop_breadcrumbs")                ?  data.prop_breadcrumbs                   : [];
+
+            const {style , html} = this.fn_readyListBreadCrumb(prop_breadcrumbs , prop_activeBreadcrumb , prop_unactiveBreadcrumb , directionRtl);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+    <style>
+    
+        #${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID}{
+              display: flex;
+              white-space: nowrap;
+              overflow-x: auto;
+        } 
+       
+        ${style}
+ 
+    </style>
+    
+    ${html}
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_readyListBreadCrumb(prop_breadcrumbs , prop_activeBreadcrumb , prop_unactiveBreadcrumb , directionRtl){
+        let reusltExp = {
+            html: "" ,
+            style: ""
+        }
+
+
+        if(prop_breadcrumbs != null && Array.isArray(prop_breadcrumbs)){
+            for (let i = 0; i < prop_breadcrumbs.length; i++) {
+                const item = prop_breadcrumbs[i];
+                const itemId = item!= null && item.hasOwnProperty("id") ? item.id : null;
+
+                reusltExp.html += `<div class="item-breadcrumb-${i} position-relative" onclick="${this.getFn("fn_onSelectBreadcrumb" , 'event' , itemId)}"> ${item != null && item.hasOwnProperty("title") ? item.title : "---"} </div>`;
+
+                if (i == 0){
+                    reusltExp.style += `
+#${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}{
+            height: 30px;
+            line-height: 30px;
+            padding-left: ${directionRtl ? "30px": "45px"} ;
+            padding-right: ${directionRtl ? "45px": "30px"} ;
+            background-color: ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            float: left;
+            cursor: pointer;  
+        
+            z-index: ${prop_breadcrumbs.length - i};
+        
+            border-radius:  ${directionRtl ? "0 5px 5px 0": "5px 0 0 5px"} ;
+        }  
+ #${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}:after{
+           content: "";
+           ${directionRtl ? "left": "right"} :  -30px;
+           top: 0;
+           position: absolute;
+           width: 0px;
+           height: 0px;
+           border-style: solid;
+           border-width: ${directionRtl ? " 15px 30px 15px 0": " 15px 0 15px 30px"};
+           border-color: ${directionRtl ? `transparent ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}  transparent transparent;`: `transparent transparent transparent ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}`}; 
+           transform: rotate(0deg);
+        } 
+#${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}:before{
+           content: "";
+           ${directionRtl ? "left": "right"} :  -36px;
+           top: 0;
+           position: absolute;
+           width: 0px;
+           height: 0px;
+           border-style: solid;
+           border-width: ${directionRtl ? " 15px 30px 15px 0": " 15px 0 15px 30px"};
+           border-color: ${directionRtl ? "  transparent #fff transparent transparent ": "  transparent transparent transparent #fff "};
+           transform: rotate(0deg);
+        } 
+                    `;
+
+                }
+                else if (i > 0 && i<prop_breadcrumbs.length - 1){
+
+                    reusltExp.style += `
+#${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}{
+            height: 30px;
+            line-height: 30px;
+            padding-left: ${directionRtl ? "30px": "45px"} ;
+            padding-right: ${directionRtl ? "45px": "30px"} ;
+            background-color: ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            float: left;
+            cursor: pointer;  
+        
+            z-index: ${prop_breadcrumbs.length - i};
+        }  
+ #${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}:after{
+           content: "";
+            ${directionRtl ? "left": "right"} :  -30px;
+           top: 0;
+           position: absolute;
+           width: 0px;
+           height: 0px;
+           border-style: solid;
+           border-width: ${directionRtl ? " 15px 30px 15px 0": " 15px 0 15px 30px"};
+           border-color: ${directionRtl ? `transparent ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}  transparent transparent;`: `transparent transparent transparent ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}`}; 
+           transform: rotate(0deg);
+        } 
+#${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}:before{
+           content: "";
+           ${directionRtl ? "left": "right"} :  -36px;
+           top: 0;
+           position: absolute;
+           width: 0px;
+           height: 0px;
+           border-style: solid;
+           border-width: ${directionRtl ? " 15px 30px 15px 0": " 15px 0 15px 30px"};
+           border-color: ${directionRtl ? "  transparent #fff transparent transparent ": "  transparent transparent transparent #fff "};
+           transform: rotate(0deg);
+        } 
+                    `;
+
+                }
+                else if ( i == prop_breadcrumbs.length - 1){
+                    reusltExp.style += `
+#${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}{
+            height: 30px;
+            line-height: 30px;
+            padding-left: ${directionRtl ? "30px": "45px"} ;
+            padding-right: ${directionRtl ? "45px": "30px"} ;
+            background-color: ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            float: left;
+            cursor: pointer;  
+        
+            z-index: ${prop_breadcrumbs.length - i};
+            
+            border-radius:  ${directionRtl ? "5px 0 0 5px": " 0 5px 5px 0"} ;
+        }  
+                    `;
+                }
+
+            }
+        }
+
+        return reusltExp;
+    }
+
+
+    fn_onSelectBreadcrumb(event , itemId){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            const prop_breadcrumbs = data.hasOwnProperty("prop_breadcrumbs") ? data.prop_breadcrumbs : [];
+
+            let itemData = null;
+            if (prop_breadcrumbs != null && Array.isArray(prop_breadcrumbs)){
+                for (let i = 0; i < prop_breadcrumbs.length; i++) {
+                    const item = prop_breadcrumbs[i];
+                    if (item.hasOwnProperty("id") && item.id == itemId){
+                        itemData = item;
+                        break;
+                    }
+                }
+            }
+
+            data.fn_callback(event , itemData);
+        }
+    }
+
+
+
 
 }
 
@@ -11910,6 +12400,7 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
 @prop_formHight
 
 @prop_name
+@prop_value
 @prop_showInput
 
 @fn_callback
@@ -11948,6 +12439,7 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentBase
         ],
         part_input: [
             {prop : "prop_name"                          , default: ""} ,
+            {prop : "prop_value"                         , default: ""} ,
             {prop : "prop_placeholder"                   , default: ""} ,
         ],
     }
@@ -12106,6 +12598,7 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentBase
         if (data != null){
 
             const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+            const prop_value           = data.hasOwnProperty("prop_value")           ? data.prop_value             : "";
             const prop_placeholder     = data.hasOwnProperty("prop_placeholder")     ? data.prop_placeholder       : "";
 
             this._COMPONENT_INPUT = new window.ComponentInput(
@@ -12114,6 +12607,7 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentBase
                     prop_type:"string" ,
                     prop_icon:"&#x25A3;" ,
                     prop_name: prop_name ,
+                    prop_value: prop_value ,
                     prop_placeholder: prop_placeholder ,
                     prop_isDisable: true ,
 

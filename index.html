@@ -1,5 +1,11 @@
-<link href="./bootstrap.css" rel="stylesheet" type="text/css">
 
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
 
 
 <section id="template-main" class=" mx-2 my-2">
@@ -174,6 +180,20 @@
 
                 <component-slider-show-overlapping id="slider-show-overlapping" ></component-slider-show-overlapping>
 
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
+
+
+    <component-collapse  id="breadcrumbs">
+        <component-body>
+
+            <section class="row p-0 m-0">
+
+                <component-breadcrumb id="Breadcrumb" ></component-breadcrumb>
 
             </section>
 
@@ -521,13 +541,15 @@
             prop_listIcons: [
                 {
                     icon: "&#10124;" ,
-                    method: (id) => {
+                    name: "methodOne" ,
+                    method: (event , id) => {
                         alert(`item selected [1]: ${id}`)
                     } ,
                 } ,
                 {
                     icon: "&#10125;" ,
-                    method: (id) => {
+                    name: "methodTwo" ,
+                    method: (event , id) => {
                         alert(`item selected [2]: ${id}`)
                     }
                 }
@@ -945,6 +967,38 @@
         }
     )
 
+    /* ====================
+     [14] Slider Show
+    ==================================== */
+    new window.ComponentBreadcrumb(
+        "breadcrumb" ,
+        {
+            classList: "col-md-2 col-12 mt-2"  ,
+
+            prop_breadcrumbs: [
+                {
+                    id: 1 ,
+                    title: "item 1" ,
+                    active: true
+                } ,
+                {
+                    id: 2 ,
+                    title: "item 2" ,
+                    active: true
+                },
+                {
+                    id: 3 ,
+                    title: "item 3" ,
+                    active: false
+                }
+            ],
+
+            fn_callback: (event , itemData)=>{
+                console.log(itemData)
+            }
+        }
+    )
+
 
 
 
@@ -1198,7 +1252,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [03] Button And Inputs" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(
@@ -1256,6 +1310,15 @@
 
             prop_title: " [14] Slider Show " ,
             prop_bodyShow: false
+        }
+    )
+    new window.ComponentCollapse(
+        "breadcrumbs" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: " [15] breadcrumbs " ,
+            prop_bodyShow: true
         }
     )
 

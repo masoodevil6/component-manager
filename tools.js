@@ -185,6 +185,11 @@ tools_init = {
             } ,
 
 
+            breadcrumb: {
+                backgroundColor_unactive : component_props.primaryColor1 ,
+                backgroundColor_active : component_props.secondaryColor1 ,
+            } ,
+
 
             backShadow: {
                 backgroundColor: component_props.shadowColor1
