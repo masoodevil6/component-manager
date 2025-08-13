@@ -16,6 +16,7 @@ if (typeof listComponent === 'undefined') {
         ComponentDescription:                "component-description" ,                    //01-05
         ComponentLink:                       "component-link" ,                           //01-06
         ComponentInfo:                       "component-info" ,                           //01-07
+        ComponentCard:                       "component-card" ,                           //01-08
 
         // [02] Fetch
         ComponentLoading:                    "component-loading" ,                        //02-01
@@ -2150,8 +2151,8 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
 
 
     /* ---------------------------------------------
- TEMPLATEs
---------------------------------------------- */
+    TEMPLATEs
+    --------------------------------------------- */
     componentFn(){
         this.templateFn("part_icon");
     }
@@ -2245,6 +2246,187 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
 
 
 
+
+/*-------------------------------------
+ 01-08) Component Card
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_cardClass
+@prop_cardStyles
+
+@prop_header
+@prop_cardHeaderClassBackground
+@prop_cardHeaderClassColor
+
+@prop_body
+@prop_cardBodyClassBackground
+@prop_cardBodyClassColor
+-------------------------------------*/
+window.ComponentCard = class ComponentCard extends ComponentBase {
+
+    /* ---------------------------------------------
+  PROPERTYs
+ --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+        part_card: [
+            {prop : "prop_cardClass"                      , default: []} ,
+            {prop : "prop_cardStyles"                     , default: {}} ,
+        ],
+        part_card_header: [
+            {prop : "prop_header"                         , default: null} ,
+            {prop : "prop_cardHeaderClassBackground"      , default: "bg-secondary"} ,
+            {prop : "prop_cardHeaderClassColor"           , default: "text-white"} ,
+        ],
+        part_card_body: [
+            {prop : "prop_body"                           , default: null} ,
+            {prop : "prop_cardBodyClassBackground"        , default: "bg-white"} ,
+            {prop : "prop_cardBodyClassColor"             , default: "text-dark"} ,
+        ],
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_card_header : {} ,
+            part_card_body : {} ,
+        },
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentCard.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+    TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_card":
+                return this.template_render_card(partName);
+            case "part_card_header":
+                return this.template_render_cardHeader(partName);
+            case "part_card_body":
+                return this.template_render_cardBody(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+  ${this.templateFn("part_card") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_card(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_cardClass    = data.hasOwnProperty("prop_cardClass") ? data.prop_cardClass : [];
+            const prop_cardStyles   = data.hasOwnProperty("prop_cardStyles") ? data.prop_cardStyles : {};
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-card-card-${this._COMPONENT_RANDOM_ID}"
+         class="card mb-1 mx-2 overflow-hidden  ${tools_public.renderListClass(prop_cardClass)}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-card-card-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_cardStyles)}
+         }
+     </style>
+     
+       ${this.templateFn("part_card_header") ?? ""}
+       
+       ${this.templateFn("part_card_body") ?? ""}
+                
+</section>
+        `;
+        }
+    }
+
+    template_render_cardHeader(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+            const prop_header                    =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header                     :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("header") ? this._COMPONENT_SLOTS.header : '');
+            const prop_cardHeaderClassBackground = data.hasOwnProperty("prop_cardHeaderClassBackground")                 ? data.prop_cardHeaderClassBackground   : "";
+            const prop_cardHeaderClassColor      = data.hasOwnProperty("prop_cardHeaderClassColor")                      ? data.prop_cardHeaderClassColor        : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-card-header-${this._COMPONENT_RANDOM_ID}"
+         class="card-header ${prop_cardHeaderClassBackground} ${prop_cardHeaderClassColor}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-card-header-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+     </style>
+     
+  ${prop_header}
+                
+</section>
+        `;
+        }
+    }
+
+    template_render_cardBody(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_cardBodyClassBackground = data.hasOwnProperty("prop_cardBodyClassBackground")               ? data.prop_cardBodyClassBackground   : "";
+            const prop_cardBodyClassColor      = data.hasOwnProperty("prop_cardBodyClassColor")                    ? data.prop_cardBodyClassColor        : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-card-body-${this._COMPONENT_RANDOM_ID}"
+         class="card-header ${prop_cardBodyClassBackground} ${prop_cardBodyClassColor}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-card-body-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+     </style>
+     
+  ${prop_body}
+                
+</section>
+        `;
+        }
+    }
+}
 
 
 
@@ -5163,6 +5345,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 @prop_name
 @prop_value
 @prop_placeholder
+@prop_isDisable
 
 @prop_icon
 
@@ -5197,9 +5380,11 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             {prop : "prop_placeholder"           , default: null} ,
             {prop : "prop_icon"                  , default: null} ,
             {prop : "prop_btnAddStatus"          , default: false} ,
+            {prop : "prop_isDisable"             , default: false} ,
         ] ,
         part_icon_clear: [
             {prop : "prop_btnAddStatus"          , default: false} ,
+            {prop : "prop_isDisable"             , default: false} ,
         ] ,
         part_icon: [
             {prop : "prop_icon"                  , default: null} ,
@@ -5327,6 +5512,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
             const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                                 : false;
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                                    : false;
 
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
 
@@ -5360,6 +5546,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             type="${prop_type || "" }"  
             value="${prop_value || ""}"
             placeholder="${prop_placeholder || ""}"
+            ${prop_isDisable ? 'disabled' : ''}
             onInput="${this.getFn("fn_onHandleInput" , "event")};   ${this.getFn("fn_onInputCallBack" , "event")}"
             onblur=" ${this.getFn("fn_onFormatValue" , "event")};   ${this.getFn("fn_onBlurCallBack" , "event")}"
             onfocus="${this.getFn("fn_onUnFormatValue" , "event")}; ${this.getFn("fn_onFocusCallBack" , "event")}"
@@ -5388,57 +5575,62 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const screanWidthType = this.getScreenWidth();
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
 
-            const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
+            if (!prop_isDisable){
+                const screanWidthType = this.getScreenWidth();
 
-            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
 
-            let styles = {
-                "z-index" : "10",
-                "width" :   "35px",
-                "line-height" : "30px",
-                "cursor" : "pointer",
-                "height" : "30px" ,
-                "top" : "0" ,
-                "text-align" : "center" ,
-            };
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
 
-            if (directionRtl){
-                if (screanWidthType == "xs"){
-                    styles["left"]= prop_btnAddStatus ? "30px" : "5px";
-                }
-                else{
-                    styles["left"]= prop_btnAddStatus ? "165px" : "5px";
-                }
-            }
-            else {
-                if (screanWidthType == "xs"){
-                    styles["right"]= prop_btnAddStatus ? "30px" : "5px";
-                }
-                else{
-                    styles["right"]= prop_btnAddStatus ? "165px" : "5px";
-                }
-            }
+                let styles = {
+                    "z-index" : "10",
+                    "width" :   "35px",
+                    "line-height" : "30px",
+                    "cursor" : "pointer",
+                    "height" : "30px" ,
+                    "top" : "0" ,
+                    "text-align" : "center" ,
+                };
 
-
-            new window.ComponentIcon(
-                `component-input-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    classList: []  ,
-                    styles: {
-                        "height" : "38px"
-                    }  ,
-
-                    prop_iconClass : ["position-absolute"] ,
-                    prop_iconStyles : styles ,
-                    prop_icon : "&#10540;" ,
-
-                    fn_callback: ()=>{
-                        this.runFn("fn_onClearInput" , "event")
+                if (directionRtl){
+                    if (screanWidthType == "xs"){
+                        styles["left"]= prop_btnAddStatus ? "30px" : "5px";
+                    }
+                    else{
+                        styles["left"]= prop_btnAddStatus ? "165px" : "5px";
                     }
                 }
-            )
+                else {
+                    if (screanWidthType == "xs"){
+                        styles["right"]= prop_btnAddStatus ? "30px" : "5px";
+                    }
+                    else{
+                        styles["right"]= prop_btnAddStatus ? "165px" : "5px";
+                    }
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList: []  ,
+                        styles: {
+                            "height" : "38px"
+                        }  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : "&#10540;" ,
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onClearInput" , "event")
+                        }
+                    }
+                )
+            }
+
 
         }
     }

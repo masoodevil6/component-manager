@@ -13,6 +13,7 @@
         ComponentDescription:                "component-description" ,                    //01-05
         ComponentLink:                       "component-link" ,                           //01-06
         ComponentInfo:                       "component-info" ,                           //01-07
+        ComponentCard:                       "component-card" ,                           //01-08
 
         // [02] Fetch
         ComponentLoading:                    "component-loading" ,                        //02-01
@@ -268,6 +269,35 @@
 @prop_infoStyles
 -------------------------------------*/
     new window.ComponentInfo(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**01-08) Component Card:**
+```
+/*-------------------------------------
+ 01-08) Component Card
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_cardClass
+@prop_cardStyles
+
+@prop_header
+@prop_cardHeaderClassBackground
+@prop_cardHeaderClassColor
+
+@prop_body
+@prop_cardBodyClassBackground
+@prop_cardBodyClassColor
+-------------------------------------*/
+    new window.ComponentCard(
         "element_id" ,
         {
             

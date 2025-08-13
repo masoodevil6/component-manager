@@ -124,8 +124,8 @@ window.NavStep = class NavStep {
         if (this._STEP_PARAMS != null){
             for (let i = 0; i <  this._STEP_PARAMS.length; i++) {
                 const itemParam = this._STEP_PARAMS[i];
-                if (itemParam == key && itemParam.hasOwnProperty("value")){
-                    return itemParam.value;
+                if (itemParam != null && itemParam.hasOwnProperty("name") &&  itemParam.name == key){
+                    return itemParam.hasOwnProperty("value") ?  itemParam.value : null;
                 }
             }
         }

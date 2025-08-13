@@ -38,6 +38,8 @@
 
                 <component-info       id="info"></component-info>
 
+                <component-card       id="card"></component-card>
+
             </section>
 
         </component-body>
@@ -422,6 +424,20 @@
             prop_icon: " &#x2315; " ,
             prop_info: " aaaaaaaaaaaaa aaaaaaaaaaaaaaa bbbbbbbbbbbb bbbbbbbbbbbb  aaaaaaaaaaaaa " ,
 
+        }
+    );
+
+
+    /*-------------------------------------
+       01-08) Component card
+    -------------------------------------*/
+    new window.ComponentCard(
+        "card" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_header: "this is the header" ,
+            prop_body: "this is the body" ,
         }
     );
 
@@ -1234,7 +1250,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [01] text " ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -1318,7 +1334,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [15] breadcrumbs " ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
 
