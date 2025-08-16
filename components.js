@@ -5,6 +5,10 @@ Version: 0.2
 */
 
 
+
+
+
+
 if (typeof listComponent === 'undefined') {
     var listComponent = {
 
@@ -44,6 +48,7 @@ if (typeof listComponent === 'undefined') {
 
         // [11] Tabs
         ComponentTabs:                       "component-tabs" ,                           //11-01
+        ComponentTree:                       "component-tree" ,                           //11-02
 
         // [12] Collapse
         ComponentCollapse:                   "component-collapse" ,                       //12-01
@@ -88,9 +93,81 @@ if (typeof components === 'undefined') {
 
 
 
-/* -------------------------------------
- Component Base:
-------------------------------------- */
+
+if (typeof listComponentCategory === 'undefined') {
+    var listComponentCategory = [
+        { id: 1     , name: " [01] text"                                                          , parent_id:0 } ,
+        { id: 1001  , name: " [01-01] " +  listComponent["ComponentMessages"]                     , parent_id:1 } ,
+        { id: 1002  , name: " [01-02] " +  listComponent["ComponentIsEmpty"]                      , parent_id:1 } ,
+        { id: 1003  , name: " [01-03] " +  listComponent["ComponentHeader"]                       , parent_id:1 } ,
+        { id: 1004  , name: " [01-04] " +  listComponent["ComponentLabel"]                        , parent_id:1 } ,
+        { id: 1005  , name: " [01-05] " +  listComponent["ComponentDescription"]                  , parent_id:1 } ,
+        { id: 1006  , name: " [01-06] " +  listComponent["ComponentLink"]                         , parent_id:1 } ,
+        { id: 1007  , name: " [01-07] " +  listComponent["ComponentInfo"]                         , parent_id:1 } ,
+        { id: 1008  , name: " [01-08] " +  listComponent["ComponentCard"]                         , parent_id:1 } ,
+
+        { id: 2     , name: " [02] Fetch"                                                         , parent_id:0 } ,
+        { id: 2001  , name: " [02-01] " +  listComponent["ComponentLoading"]                      , parent_id:2 } ,
+        { id: 2002  , name: " [02-02] " +  listComponent["Component404"]                          , parent_id:2 } ,
+        { id: 2003  , name: " [02-03] " +  listComponent["ComponentForm"]                         , parent_id:2 } ,
+        { id: 2004  , name: " [02-04] " +  listComponent["ComponentWidget"]                       , parent_id:2 } ,
+
+        { id: 3     , name: " [03] Button and Inputs"                                              , parent_id:0 } ,
+        { id: 3001  , name: " [03-01] " +  listComponent["ComponentButton"]                        , parent_id:3 } ,
+        { id: 3002  , name: " [03-02] " +  listComponent["ComponentSelectOption"]                  , parent_id:3 } ,
+        { id: 3003  , name: " [03-03] " +  listComponent["ComponentOtp"]                           , parent_id:3 } ,
+        { id: 3004  , name: " [03-04] " +  listComponent["ComponentInput"]                         , parent_id:3 } ,
+        { id: 3005  , name: " [03-05] " +  listComponent["ComponentInputPrice"]                    , parent_id:3 } ,
+        { id: 3006  , name: " [03-06] " +  listComponent["ComponentDate"]                          , parent_id:3 } ,
+        { id: 3007  , name: " [03-07] " +  listComponent["ComponentInputFile"]                     , parent_id:3 } ,
+
+        { id: 4     , name: " [04] tooltips "                                                      , parent_id:0 } ,
+        { id: 4001  , name: " [04-01] " + listComponent["ComponentTooltipDescription"]             , parent_id:4 } ,
+
+        { id: 10     , name: " [10] Tables "                                                       , parent_id:0 } ,
+        { id: 10001  , name: " [10-01] " + listComponent["ComponentTable"]                         , parent_id:10 } ,
+
+        { id: 11     , name: " [11] Tabs "                                                          , parent_id:0 } ,
+        { id: 11001  , name: " [11-01] " +  listComponent["ComponentTabs"]                          , parent_id:11 } ,
+        { id: 11002  , name: " [11-02] " +  listComponent["ComponentTree"]                          , parent_id:11 } ,
+
+        { id: 12     , name: " [12] Collapse "                                                      , parent_id:0 } ,
+        { id: 12002  , name: " [12-01] " +  listComponent["ComponentCollapse"]                      , parent_id:12} ,
+
+        { id: 13     , name: " [13] Window "                                                        , parent_id:0 } ,
+        { id: 13001  , name: " [13-01] " +  listComponent["ComponentWindow"]                        , parent_id:13 } ,
+        { id: 13002  , name: " [13-02] " +  listComponent["ComponentWindowConfirm"]                 , parent_id:13 } ,
+
+        { id: 14     , name: " [14] Slider Shows "                                                  , parent_id:0 } ,
+        { id: 14001  , name: " [14-01] " +  listComponent["ComponentSliderShowOverlapping"]         , parent_id:14 } ,
+
+        { id: 15     , name: " [15] Breadcrumb "                                                    , parent_id:0 } ,
+        { id: 15001  , name: " [15-01] " + listComponent["ComponentBreadcrumb"]                     , parent_id:15 } ,
+
+        { id: 20     , name: " [20] Charts "                                                        , parent_id:0 } ,
+        { id: 20001  , name: " [20-01] " +  listComponent["ComponentChart"]                        , parent_id:20 } ,
+
+        { id: 21     , name: " [21] QR CODE "                                                       , parent_id:0 } ,
+        { id: 21001  , name: " [21-01] " + listComponent["ComponentQrCode"]                         , parent_id:20 } ,
+        { id: 21002  , name: " [21-02] " + listComponent["ComponentCameraQrCodeReader"]             , parent_id:20 } ,
+        { id: 21003  , name: " [21-03] " + listComponent["ComponentUploadQrCodeReader"]             , parent_id:20 } ,
+        { id: 21004  , name: " [21-04] " + listComponent["ComponentQrCodeReader"]                   , parent_id:20 } ,
+
+        { id: 99     , name: " [99] Others "                                                        , parent_id:0 } ,
+        { id: 99001  , name: " [99-01] " +  listComponent["ComponentIcon"]                          , parent_id:99 } ,
+        { id: 99002  , name: " [99-02] " +  listComponent["ComponentPositionElement"]               , parent_id:99 } ,
+        { id: 99003  , name: " [99-03] " +  listComponent["ComponentBorder"]                        , parent_id:99 } ,
+        { id: 99004  , name: " [99-04] " +  listComponent["ComponentImage"]                         , parent_id:99 } ,
+        { id: 99005  , name: " [99-05] " +  listComponent["ComponentLayout"]                        , parent_id:99 } ,
+
+    ]
+}
+
+
+
+    /* -------------------------------------
+     Component Base:
+    ------------------------------------- */
 class ComponentBase{
 
     _COMPONENT_RANDOM_ID = 0;
@@ -9512,6 +9589,270 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 
 
 }
+
+
+
+/*-------------------------------------
+ 11-02) Component Tabs
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_backgroundColor_unSelected
+@prop_backgroundColor_selected
+@prop_list
+@prop_itemSelected
+
+-------------------------------------*/
+window.ComponentTree = class ComponentTree extends ComponentBase{
+
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_tree: [
+
+            {prop : "prop_backgroundColor_unSelected"          , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tree") && tools_const.styles.tree.hasOwnProperty("backgroundColor_unSelected")   ? tools_const.styles.tree.backgroundColor_unSelected : ""} ,
+            {prop : "prop_backgroundColor_selected"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tree") && tools_const.styles.tree.hasOwnProperty("backgroundColor_selected")   ? tools_const.styles.tree.backgroundColor_selected : ""} ,
+            {prop : "prop_list"                                , default:  [] } ,
+            {prop : "prop_itemSelected"                        , default:  null } ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_tree: {}
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentTree.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.fn_checkExistSelected();
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_tree":
+                return this.template_render_tree(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+            ${this.templateFn("part_tree") ?? ""}
+        `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_tree(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_backgroundColor_unSelected        =   data.hasOwnProperty("prop_backgroundColor_unSelected")          ?  data.prop_backgroundColor_unSelected           : "";
+            const prop_backgroundColor_selected          =   data.hasOwnProperty("prop_backgroundColor_selected")            ?  data.prop_backgroundColor_selected             : "";
+            const prop_list                              =   data.hasOwnProperty("prop_list")                                ?  data.prop_list                                 :  [];
+            const prop_itemSelected                      =   data.hasOwnProperty("prop_itemSelected")                        ?  data.prop_itemSelected                         :  null;
+            const directionRtl                           =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")           ? this._COMPONENT_CONFIG.directionRtl             : false;
+
+            let itemSelected = prop_itemSelected;
+            if (Array.isArray(prop_itemSelected ) && typeof prop_itemSelected[0] != "undefined"){
+                itemSelected = prop_itemSelected[0];
+            }
+
+
+            let treehtml = "";
+            if (prop_list != null && Array.isArray(prop_list)){
+
+                for (let i = 0; i < prop_list.length; i++) {
+                    const itemTree = prop_list[i];
+
+                    if (itemTree.hasOwnProperty("id") && itemTree.hasOwnProperty("name")){
+
+                        let selected = false;
+                        let componentTreeChildId = `${this._COMPONENT_ID}-child-${itemTree.id}`;
+                        if (itemSelected == itemTree["id"]){
+                            selected = true;
+                        }
+
+                        treehtml += `
+                        <div class="item-tree row p-0 mx-0 my-1 " onclick="${this.getFn("fn_onSelectItem" , "event" , itemTree.id ,`'${componentTreeChildId}'` )}">
+                            <span class=" ${selected ? 'icon-arrow-item-tree-active' : ''} icon-arrow-item-tree col-1"> ${selected ?  (directionRtl ? '&#x2BC7;' : '&#x2BC8;' )   :  (directionRtl ? '&#x2BC8;' : '&#x2BC7;' ) }  </span>
+                            <span class=" ${selected ? 'title-item-tree-active' : ''} title-item-tree col-7  rounded">  ${itemTree.name} </span>
+                            <span class=" ${selected ? 'line-item-tree-active' : ''} line-item-tree col-4"></span>
+                            <div class=" ${directionRtl ? 'me-3 ms-0' : 'ms-3 me-0'}  p-0 my-0 ">
+                                <component-tree id="${componentTreeChildId}"></component-tree>
+                            </div>
+                        </div>
+                        `
+                    }
+                }
+
+            }
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-tree-tree-${this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-tree-tree-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+         #${this._COMPONENT_ID} #component-tree-tree-${this._COMPONENT_RANDOM_ID} .item-tree {
+             cursor: pointer;
+         }
+         #${this._COMPONENT_ID} #component-tree-tree-${this._COMPONENT_RANDOM_ID} .item-tree .icon-arrow-item-tree{
+             color: ${prop_backgroundColor_unSelected};
+         }
+         #${this._COMPONENT_ID} #component-tree-tree-${this._COMPONENT_RANDOM_ID} .item-tree .icon-arrow-item-tree-active{
+             color: ${prop_backgroundColor_selected};
+         }
+         #${this._COMPONENT_ID} #component-tree-tree-${this._COMPONENT_RANDOM_ID} .item-tree .title-item-tree{
+             background-color: ${prop_backgroundColor_unSelected};
+         }
+         #${this._COMPONENT_ID} #component-tree-tree-${this._COMPONENT_RANDOM_ID} .item-tree .title-item-tree-active{
+             background-color: ${prop_backgroundColor_selected};
+         }
+         #${this._COMPONENT_ID} #component-tree-tree-${this._COMPONENT_RANDOM_ID} .item-tree .line-item-tree{
+             background-color: ${prop_backgroundColor_unSelected};
+             height: 2px;
+             margin-top: 12.5px;
+         }
+         #${this._COMPONENT_ID} #component-tree-tree-${this._COMPONENT_RANDOM_ID} .item-tree .line-item-tree-active{
+             background-color: ${prop_backgroundColor_selected};
+         }
+     </style>
+     
+     ${treehtml}
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onSelectItem(event , itemId , componentTreeChildId){
+        event.stopPropagation();
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && data.fn_callback != null){
+
+            this.set("prop_itemSelected" , itemId);
+
+            const var_children = data.fn_callback(event , itemId);
+            this.fn_readyItemSelected(componentTreeChildId , var_children);
+        }
+    }
+
+    fn_checkExistSelected(){
+        const data = this._COMPONENT_CONFIG;
+
+        if (data.hasOwnProperty("prop_list") &&  data.prop_list != null &&
+            data.hasOwnProperty("prop_itemSelected") &&  data.prop_itemSelected != null){
+
+            let listSelected = data.prop_itemSelected;
+
+            let itemSelected = listSelected;
+            if (Array.isArray(listSelected ) && typeof listSelected[0] != "undefined"){
+                itemSelected = listSelected[0];
+            }
+
+
+            let itemSelectedExist = false;
+            const prop_list = data.prop_list;
+            if (prop_list != null && Array.isArray(prop_list)){
+                for (let i = 0; i < prop_list.length; i++) {
+                    const itemTree = prop_list[i];
+                    if (itemTree.hasOwnProperty("id") && itemTree.hasOwnProperty("name")) {
+                        if (itemSelected == itemTree["id"]) {
+                            itemSelectedExist= true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            if (itemSelectedExist){
+
+                let childItemSelected = null;
+                if (Array.isArray(listSelected ) && listSelected[0]){
+                    listSelected.splice(0, 1);
+                    childItemSelected = listSelected;
+                }
+
+                let componentTreeChildId = `${this._COMPONENT_ID}-child-${itemSelected}`;
+                const var_children = data.fn_callback(event , itemSelected);
+                this.fn_readyItemSelected(componentTreeChildId , var_children , childItemSelected);
+            }
+
+        }
+    }
+
+    fn_readyItemSelected(componentTreeChildId , var_children , childItemSelected =null){
+        const data = this._COMPONENT_CONFIG;
+
+
+        if ((var_children != null && var_children.length>0) &&
+            data.hasOwnProperty("fn_callback") &&  data.fn_callback != null){
+            new window.ComponentTree(
+                componentTreeChildId ,
+                {
+                    prop_itemSelected: childItemSelected,
+                    prop_list: var_children,
+                    fn_callback: data.fn_callback
+                }
+            )
+        }
+    }
+
+
+}
+
+
 
 
 

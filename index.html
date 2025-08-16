@@ -130,6 +130,8 @@
                 <component-tabs  id="tab-1"></component-tabs>
                 <component-tabs  id="tab-2"></component-tabs>
 
+                <component-tree  id="tree"></component-tree>
+
             </section>
 
         </component-body>
@@ -890,6 +892,77 @@
         }
     )
 
+    /*-------------------------------------
+      11-02)  Component tree
+    -------------------------------------*/
+
+    const treeCategory = [
+        {
+            id: 1 ,
+            name: "a" ,
+            parent_id:0
+        } ,
+        {
+            id: 2 ,
+            name: "b" ,
+            parent_id:0
+        } ,
+        {
+            id: 3 ,
+            name: "c" ,
+            parent_id:1
+        },
+        {
+            id: 4 ,
+            name: "d" ,
+            parent_id:1
+        },
+        {
+            id: 5 ,
+            name: "e" ,
+            parent_id:2
+        },
+        {
+            id: 6 ,
+            name: "f" ,
+            parent_id:3
+        }
+    ];
+
+    function getListTreeCategory(itemSelected=0){
+        let resultExp = [];
+        if (treeCategory != null && Array.isArray(treeCategory)){
+            for (let i = 0; i < treeCategory.length; i++) {
+                const itemTree = treeCategory[i];
+                if (itemTree != null && itemTree.hasOwnProperty("parent_id") && itemSelected == itemTree.parent_id){
+                    resultExp.push(itemTree);
+                }
+            }
+        }
+        return resultExp;
+    }
+
+    const tree = new window.ComponentTree(
+        "tree" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_itemSelected: [1 , 3 , 6] ,
+            prop_list: getListTreeCategory() ,
+            fn_callback: (event , item_id)=>{
+                let list = getListTreeCategory(item_id);
+
+                if (list != null && list.length > 0){
+                    return list;
+                }
+                else {
+                    console.log(item_id)
+                }
+
+                return list;
+            } ,
+        }
+    )
 
 
     /* ====================
@@ -1250,7 +1323,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [01] text " ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(
@@ -1298,7 +1371,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [11] Tabs " ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(

@@ -853,6 +853,29 @@ new window.ComponentTooltipDescription(
     )
 ```
 
+**11-02) Component tree:**
+```
+/*-------------------------------------
+ 11-02) Component Tabs
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_backgroundColor_unSelected
+@prop_backgroundColor_selected
+@prop_list
+@prop_itemSelected
+
+-------------------------------------*/
+    new window.ComponentTree(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
 
 
 /* ====================

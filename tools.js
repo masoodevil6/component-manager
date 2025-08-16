@@ -191,6 +191,12 @@ tools_init = {
             } ,
 
 
+            tree: {
+                backgroundColor_unSelected : component_props.shadowColor1 ,
+                backgroundColor_selected : component_props.secondaryColor1 ,
+            } ,
+
+
             backShadow: {
                 backgroundColor: component_props.shadowColor1
             },
