@@ -75,10 +75,18 @@ tools_init = {
 
         tools_const.styles =  {
             message: {
-                backgroundColor_success: component_props.successColor1 ,
-                color_success:           component_props.darkColor1 ,
-                backgroundColor_error:   component_props.errorColor1 ,
-                color_error:             component_props.shanColor1 ,
+                success: {
+                    backgroundColor: component_props.successColor1 ,
+                    color:           component_props.darkColor1 ,
+                } ,
+                error: {
+                    backgroundColor: component_props.errorColor1 ,
+                    color:           component_props.shanColor1 ,
+                } ,
+                warning: {
+                    backgroundColor: component_props.warningColor1 ,
+                    color:           component_props.darkColor1 ,
+                }
             },
 
             loading: {
@@ -118,7 +126,13 @@ tools_init = {
                 backgroundColor_textSelected: component_props.shanColor1 ,
             },
 
+            otp: {
+
+            },
+
             selectOption: {
+                backgroundColor_itemNotSelected: component_props.shanColor2 ,
+                backgroundColor_itemHover: component_props.primaryColor2 ,
                 backgroundColor_itemSelected: component_props.primaryColor1 ,
                 color_icon: component_props.darkColor1
             },
@@ -137,6 +151,52 @@ tools_init = {
                 btnMore_color : component_props.shanColor1 ,
             } ,
 
+            label: {
+                backgroundColor : component_props.shadowColor2 ,
+                color : component_props.darkColor1 ,
+            } ,
+
+            inputDate: {
+                backgroundColor_main : component_props.primaryColor2 ,
+
+                backgroundColor_btn  : component_props.secondaryColor1 ,
+                backgroundColor_btnHover  : component_props.secondaryColor2 ,
+                color_btn  : component_props.darkColor1 ,
+
+                backgroundColor_rowSelected  : component_props.secondaryColor1 ,
+                backgroundColor_colSelected : component_props.secondaryColor2 ,
+                color_columnSelected  : component_props.darkColor1 ,
+            } ,
+
+            inputFile: {
+                boderColor : component_props.primaryColor1 ,
+                boderColorHover : component_props.secondaryColor1 ,
+                textColor : component_props.primaryColor1 ,
+            } ,
+
+            window: {
+                backgroundColor_blur : component_props.shadowColor1 ,
+                backgroundColor_window : component_props.shanColor1 ,
+            } ,
+
+            tooltipDescription: {
+                backgroundColor_description : component_props.secondaryColor1 ,
+                color_description : component_props.darkColor1 ,
+            } ,
+
+
+            breadcrumb: {
+                backgroundColor_unactive : component_props.primaryColor1 ,
+                color_unactive : component_props.shanColor1 ,
+                backgroundColor_active : component_props.secondaryColor1 ,
+                color_active : component_props.darkColor1 ,
+            } ,
+
+
+            tree: {
+                backgroundColor_unSelected : component_props.shadowColor1 ,
+                backgroundColor_selected : component_props.secondaryColor1 ,
+            } ,
 
 
             backShadow: {
@@ -154,6 +214,7 @@ tools_init = {
 
 
 tools_component = {
+
 
     setup: function (container , tree , withPrefix=null){
 
@@ -224,71 +285,53 @@ tools_component = {
     } ,
 
 
-    widgetRender: function(element , dataForApi=[] , insert=true){
+    widgetRender: function(element , fetchData=[] , insert=true){
         const closestComponent = element.closest("component-widget");
+
         if (closestComponent != null){
-            const data = closestComponent.getAttribute("data");
-            if (data != null){
-                try {
-                    let dataJson = JSON.parse(data);
-                    let var_randomId = dataJson.hasOwnProperty("var_randomId") ? dataJson.var_randomId : null;
+            const componentRandomId = closestComponent.getAttribute("data-component-id");
+            if (componentRandomId != null && components.hasOwnProperty(componentRandomId) ){
 
-                    if (var_randomId != null){
-                        const prop_fetch = dataJson.hasOwnProperty("prop_fetch") ? dataJson.prop_fetch : {};
-                        let fetchData = dataForApi;
-                        if (insert){
+                const prop_fetch = components[componentRandomId].get("prop_fetch" , {});
+                if (!prop_fetch.hasOwnProperty("data") || Array.isArray(prop_fetch.data)){
+                    prop_fetch.data = {};
+                }
+                if (!prop_fetch.data.hasOwnProperty("data")){
+                    prop_fetch.data.data = {};
+                }
+                console.log(prop_fetch)
 
-                            if (prop_fetch.hasOwnProperty("data") && !Array.isArray(prop_fetch.data)){
-                                fetchData = prop_fetch.data.hasOwnProperty("data") ? prop_fetch.data.data : [];
 
-                                for (let x = 0; x < dataForApi.length ; x++) {
-                                    const itemApi = dataForApi[x];
+                if (insert){
 
-                                    let exist = false;
-                                    if (itemApi.hasOwnProperty("name") && itemApi.hasOwnProperty("value") ){
-                                        for (let i = 0; i < fetchData.length ; i++) {
-                                            const item = fetchData[i];
-                                            if (item.hasOwnProperty("name") && item.name == itemApi.name){
-                                                fetchData[i] = itemApi;
-                                                exist = true;
-                                                break;
-                                            }
-                                        }
-                                    }
+                    for (let x = 0; x < fetchData.length ; x++) {
+                        const itemApi = fetchData[x];
 
-                                    if (!exist){
-                                        fetchData.push(itemApi);
-                                    }
+                        let exist = false;
+                        if (itemApi.hasOwnProperty("name") && itemApi.hasOwnProperty("value") ){
+                            for (let i = 0; i < prop_fetch.data.data.length ; i++) {
+                                const item = prop_fetch.data.data[i];
+                                if (item.hasOwnProperty("name") && item.name == itemApi.name){
+                                    prop_fetch.data.data[i] = itemApi;
+                                    exist = true;
+                                    break;
                                 }
-
-
                             }
                         }
 
-
-                        if (!prop_fetch.hasOwnProperty("data") || Array.isArray(prop_fetch.data)){
-                            prop_fetch.data = {};
+                        if (!exist){
+                            prop_fetch.data.data.push(itemApi);
                         }
-                        if (!prop_fetch.data.hasOwnProperty("data")){
-                            prop_fetch.data.data = {};
-                        }
-                        prop_fetch.data.data = fetchData;
-                        dataJson["prop_fetch"] = prop_fetch;
-
-                        if (typeof components != "undefined"){
-                            components[var_randomId] = dataJson;
-                        }
-
-                        closestComponent.setAttribute("data" , JSON.stringify(dataJson))
                     }
-
-
                 }
-                catch (e){
-                    console.error(e)
+
+                if ( typeof components[componentRandomId].call_fetchWidget !== "undefined"){
+                    components[componentRandomId].call_fetchWidget();
                 }
             }
+
         }
+
     } ,
 
 
@@ -297,6 +340,8 @@ tools_component = {
         const elForm = document.createElement(tools_converter.toKebabCase(ComponentName));
         elForm.id = ComponentId
         container.appendChild(elForm);
+
+        console.log(containerId , ComponentName , ComponentId , ComponentProps)
 
         new window[ComponentName](
             ComponentId ,
@@ -318,6 +363,17 @@ tools_submit = {
         let componentMessagesData = args.hasOwnProperty("componentMessagesData") ? args.componentMessagesData: null ;
         let componentLoadingData  = args.hasOwnProperty("componentLoadingData") ? args.componentLoadingData: null ;
         let component404Data      = args.hasOwnProperty("component404Data") ? args.component404Data: null ;
+        if (component404Data != null){
+            component404Data["prop_structureClass"] = ["position-absolute"];
+            component404Data["prop_structureStyles"] = {
+                "width" : "100%" ,
+                "height" : "100%" ,
+                "left" : "0" ,
+                "top" : "0" ,
+            };
+        }
+
+
 
         const formData = new FormData();
 
@@ -332,7 +388,7 @@ tools_submit = {
 
         if (body != null && Array.isArray(body)){
             for (const itemData of body) {
-                if (itemData.hasOwnProperty("name")){
+                if (itemData.hasOwnProperty("name") && itemData.hasOwnProperty("value") && itemData.value != null){
                     const type = itemData.hasOwnProperty("type") ? itemData.type : "text";
                     const name = itemData.name;
                     switch (type){
@@ -371,6 +427,7 @@ tools_submit = {
             .then(
                 response => {
                     switch (response.status){
+
                         case 404:
 
                             if (componentLoadingData != null) {
@@ -383,7 +440,6 @@ tools_submit = {
                             break;
                         case 200:
 
-                            console.log(response)
                             const contentType = data.hasOwnProperty("contentType") ? data.contentType : tools_const.contentTypes.json
                             switch (contentType){
                                 case tools_const.contentTypes.json:
@@ -412,7 +468,15 @@ tools_submit = {
                     /// set messages
                     if (componentMessagesData != null) {
                         componentMessagesData.prop_messages = response.hasOwnProperty("messages") ? response.messages : [];
-                        componentMessagesData.prop_status = response.hasOwnProperty("status") ? response.status : true;
+
+
+                        let messageType = "success";
+                        if (response.hasOwnProperty("status")){
+                            messageType = response.status ? "success" : "error";
+                        }
+                        componentMessagesData.prop_type = messageType;
+
+
                         tools_component.control("ComponentMessages" , componentMessagesData);
                     }
 
@@ -423,7 +487,8 @@ tools_submit = {
                         callback(resultExp , data);
                     }
 
-                    return resultExp;
+                    return {resultExp, data};
+                   // return resultExp ,data;
                 }
             ).catch(
                 e=>{
@@ -646,4 +711,111 @@ tools_validate = {
         );
     }
 
+}
+
+
+
+tools_public = {
+
+    renderListClass: function (data){
+        let classes = "";
+        if (data != null){
+            if (Array.isArray(data)){
+                classes = data.join(" ");
+            }
+            if (typeof data == "string"){
+                classes = data;
+            }
+        }
+        return classes;
+    } ,
+
+    renderListStyle: function (data){
+        let styles = "";
+        if (data != null){
+            if (typeof data == "object"){
+                Object.keys(data).forEach((key)=> {
+                    styles += key + ":" + data[key] + ";";
+                })
+            }
+            if (typeof data == "string"){
+                styles = data;
+            }
+        }
+
+        return styles;
+    } ,
+
+    getScriptJson(scriptJsonId){
+        const dataScript = document.getElementById(scriptJsonId);
+        if (dataScript) {
+            try {
+                return JSON.parse(dataScript.textContent);
+            } catch (e) {
+                console.error("json.encode for" ,jsonId ,  e)
+            }
+        }
+
+        return  null;
+    }
+
+}
+
+
+
+tools_stepper = {
+
+    createStepper(elementId , manifest , botUrl){
+        steps = [];
+        workFlow = {};
+        if (manifest != null){
+            if (manifest.hasOwnProperty("steps")){
+                steps = tools_stepper.readyListSteps(manifest.steps , botUrl)
+            }
+            if (manifest.hasOwnProperty("workflow")){
+                workFlow = tools_stepper.readyListStepperWorkflow(manifest.workflow , steps);
+            }
+        }
+
+        return new NavStepper(elementId , workFlow);
+    } ,
+
+
+    readyListSteps(steps , botUrl) {
+        let resultExp = [];
+        Object.keys(steps).forEach(key => {
+            const itemStep = steps[key];
+
+            if (itemStep.hasOwnProperty("name")){
+                const name = itemStep.name;
+                const type = itemStep.hasOwnProperty("type") ? itemStep.type : null;
+                const params = itemStep.hasOwnProperty("params") ? itemStep.params : null;
+                const tagId = itemStep.hasOwnProperty("tagId") ? itemStep.tagId : null;
+                const reload = itemStep.hasOwnProperty("reload") ? itemStep.reload : false;
+                const componentProp = itemStep.hasOwnProperty("componentProp") ? itemStep.componentProp : {};
+
+                resultExp.push(
+                    new window.NavStep(
+                        name , botUrl  , params , type , tagId , reload, componentProp
+                    )
+                )
+            }
+        })
+        return resultExp;
+    } ,
+
+    readyListStepperWorkflow(node, steps) {
+        if (node.step) {
+            const found = steps.find(s => s.getName() === node.step);
+            if (found) {
+                node.step = found;
+            }
+        }
+        if (Array.isArray(node.workflow)) {
+            for (let child of node.workflow) {
+                tools_stepper.readyListStepperWorkflow(child, steps);
+            }
+        }
+        return node;
+    }
 }

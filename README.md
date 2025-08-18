@@ -3,44 +3,96 @@
 
 **List Of Components:**
 ```
-if (typeof listComponent === 'undefined') {
-    var listComponent = {
-        ComponentMessages:                   "component-messages" ,                       //1
-        ComponentLoading:                    "component-loading" ,                        //2
-        Component404:                        "component-404" ,                            //3
-        ComponentForm:                       "component-form" ,                           //4
-        ComponentIsEmpty:                    "component-is-empty" ,                       //5
-        ComponentHeader:                     "component-header" ,                         //6
-        ComponentCollapse:                   "component-collapse" ,                       //7
-        ComponentTable:                      "component-table" ,                          //8
-        ComponentButton:                     "component-button" ,                         //9
-        ComponentSelectOption:               "component-select-option" ,                  //10
-        ComponentTabs:                       "component-tabs" ,                           //11
-        ComponentOtp:                        "component-otp" ,                            //12
-        ComponentWidget:                     "component-widget" ,                         //13
-        ComponentInput:                      "component-input" ,                          //14
-        ComponentInputPrice:                 "component-input-price" ,                    //15
-        ComponentDate:                       "component-date" ,                           //16
-        ComponentLabel:                      "component-label" ,                          //17
-        ComponentIcon:                       "component-icon" ,                           //18
-        ComponentPositionElement:            "component-position-element" ,               //19
-        ComponentInfo:                       "component-info" ,                           //20
-        ComponentBorder:                     "component-border" ,                         //21
-        ComponentImage:                      "component-image" ,                          //22
-        ComponentLink:                       "component-link" ,                           //23
+ var listComponent = {
+
+        // [01] text
+        ComponentMessages:                   "component-messages" ,                       //01-01
+        ComponentIsEmpty:                    "component-is-empty" ,                       //01-02
+        ComponentHeader:                     "component-header" ,                         //01-03
+        ComponentLabel:                      "component-label" ,                          //01-04
+        ComponentDescription:                "component-description" ,                    //01-05
+        ComponentLink:                       "component-link" ,                           //01-06
+        ComponentInfo:                       "component-info" ,                           //01-07
+        ComponentCard:                       "component-card" ,                           //01-08
+
+        // [02] Fetch
+        ComponentLoading:                    "component-loading" ,                        //02-01
+        Component404:                        "component-404" ,                            //02-02
+        ComponentForm:                       "component-form" ,                           //02-03
+        ComponentWidget:                     "component-widget" ,                         //02-04
+
+
+        // [03] Button and Inputs
+        ComponentButton:                     "component-button" ,                         //03-01
+        ComponentSelectOption:               "component-select-option" ,                  //03-02
+        ComponentOtp:                        "component-otp" ,                            //03-03
+        ComponentInput:                      "component-input" ,                          //03-04
+        ComponentInputPrice:                 "component-input-price" ,                    //03-05
+        ComponentDate:                       "component-date" ,                           //03-06
+        ComponentInputFile:                  "component-input-file" ,                     //03-07
+
+        // [04] tooltips
+        ComponentTooltipDescription:         "component-tooltip-description" ,            //04-01
+
+
+
+        // [10] Tables
+        ComponentTable:                      "component-table" ,                          //10-01
+
+        // [11] Tabs
+        ComponentTabs:                       "component-tabs" ,                           //11-01
+
+        // [12] Collapse
+        ComponentCollapse:                   "component-collapse" ,                       //12-01
+
+        // [13] Window
+        ComponentWindow:                     "component-window" ,                         //13-01
+        ComponentWindowConfirm:              "component-window-confirm" ,                 //13-02
+
+        // [14] Slider Shows
+        ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //14-01
+
+
+
+
+        // [20] Charts
+        ComponentChart:                      "component-chart" ,                          //20-01
+
+        // [21] QR CODE
+        ComponentQrCode:                     "component-qr-code" ,                        //21-01
+        ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //21-02
+        ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //21-03
+        ComponentQrCodeReader:               "component-qr-code-reader" ,                 //21-04
+
+
+        
+        // [99] Others
+        ComponentIcon:                       "component-icon" ,                           //99-01
+        ComponentPositionElement:            "component-position-element" ,               //99-02
+        ComponentBorder:                     "component-border" ,                         //99-03
+        ComponentImage:                      "component-image" ,                          //99-04
+        ComponentLayout:                     "component-layout" ,                         //99-05
+
     }
-}
 ```
 
 
 
 
-**1) Component Message:**
+/* ====================
+[01] TEXT
+============================================= */
+
+**01-01) Component Message:**
 ```
 /*-------------------------------------
- Component Messages
+ 01-01) Component Messages
 -------------------------------------
-@prop_status
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_type                            // success[default] | error | warning | null
 @prop_background
 @prop_color
 @prop_messages
@@ -54,14 +106,222 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-
-
-
-**2) Component Loading:**
+**01-02) Component Is Empty:**
 ```
 /*-------------------------------------
- Component Loading
+ 01-02) Component Is Empty
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_icon
+@prop_iconClass
+@prop_iconStyles
+
+@prop_title
+
+@prop_btnAddStatus
+@prop_btnAddIcon
+@prop_btnAddTitle
+@prop_btnAddClass
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentIsEmpty(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+**01-03) Component Header:**
+```
+/*-------------------------------------
+ 01-03) Component Header
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_classList
+
+@prop_icon
+
+@prop_size
+@prop_title
+-------------------------------------*/
+    new window.ComponentHeader(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+**01-04) Component Label:**
+```
+/*-------------------------------------
+ 01-04) Component label
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_labelClass
+@prop_labelStyles
+@prop_labelBackgroundColor
+
+@prop_title
+@prop_for
+@prop_labelColor
+
+@prop_tooltipIcon
+@prop_tooltipDescription
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentLabel(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**01-05) Component Link:**
+```
+/*-------------------------------------
+ 01-05) Component link
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_borderClass
+@prop_borderStyles
+@prop_borderHoverStyles
+
+@prop_linkHref
+
+@prop_imageSource
+@prop_imageTitle
+@prop_imageAlt
+@prop_imageClass
+@prop_imageStyles
+
+@prop_iconSource
+@prop_iconIsItalik
+@prop_iconClass
+@prop_iconStyles
+
+@prop_title
+@prop_titleClass
+@prop_titleStyles
+-------------------------------------*/
+    new window.ComponentLink(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**01-06) Component Description:**
+```
+/*-------------------------------------
+ 01-06) Component Description
+-------------------------------------
+@prop_icon
+@prop_title
+@prop_description
+@prop_height
+@prop_button   title_more|title_less|prop_show
+-------------------------------------*/
+    new window.ComponentDescription(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+**01-07) Component Info:**
+```
+/*-------------------------------------
+ 01-07) Component Info
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_icon
+@prop_iconClass
+@prop_iconStyles
+
+@prop_info
+@prop_infoClass
+@prop_infoStyles
+-------------------------------------*/
+    new window.ComponentInfo(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**01-08) Component Card:**
+```
+/*-------------------------------------
+ 01-08) Component Card
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_cardClass
+@prop_cardStyles
+
+@prop_header
+@prop_cardHeaderClassBackground
+@prop_cardHeaderClassColor
+
+@prop_body
+@prop_cardBodyClassBackground
+@prop_cardBodyClassColor
+-------------------------------------*/
+    new window.ComponentCard(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+/* ====================
+[02] FETCH
+============================================ */
+
+**02-01) Component Loading:**
+```
+/*-------------------------------------
+ 02-01) Component Loading
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_type                       // circle[default] | null
 @prop_background_loading
 @prop_background_shadow
 -------------------------------------*/
@@ -74,17 +334,20 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-
-
-**3) Component 404:**
+**02-02) Component 404:**
 ```
 /*-------------------------------------
- Component 404
+ 02-02) Component 404
 -------------------------------------
-@prop_type
-@prop_btnRetry    prop_type  prop_title  prop_btnClass
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_type            'simple_animation'
 @prop_width
 @prop_height
+
+@prop_btnRetry        {prop_type: "submit"  , prop_title: "Retry" , prop_btnClass: ["w-100"]}
 
 @fn_callback
 -------------------------------------*/
@@ -97,15 +360,23 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-
-**4) Component Form:**
+**02-03) Component Form:**
 ```
 /*-------------------------------------
- Component Form
+ 02-03) Component Form
 -------------------------------------
-@prop_btnSubmit   prop_type  prop_title  prop_btnClass
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_formClass
+@prop_formStyles
+
+@prop_btnSubmit    {prop_type , prop_title , prop_btnClass}
+
 @prop_forms
+@prop_url
+@prop_data
 -------------------------------------*/
     new window.ComponentForm(
         "element_id" ,
@@ -116,73 +387,30 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-
-
-
-
-
-**5) Component Is Empty:**
-```
-   /*-------------------------------------
-    Component Collapse
-    -------------------------------------
-    @prop_title
-    @prop_icon
-    @prop_iconClass
-
-    @prop_btnAddStatus
-    @prop_btnAddIcon
-    @prop_btnAddTitle
-    @prop_btnAddClass
-
-    @fn_callback
-    -------------------------------------*/
-    new window.ComponentIsEmpty(
-        "element_id" ,
-        {
-
-        }
-    )
-```
-
-
-
-
-
-**6) Component Header:**
+**02-04) Component Widget:**
 ```
 /*-------------------------------------
- Component Header
+ 13) Component Widget
 -------------------------------------
-@prop_size
-@prop_title
-@prop_icon
-@prop_classList
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_widgetClass
+@prop_widgetStyles
+@prop_widgetMinHeight
+
+@prop_btnMore_icon
+@prop_btnMore_show
+@prop_btnMore_link
+
+@prop_error404   type   width   height
+@prop_fetch      url    data
 -------------------------------------*/
-    new window.ComponentHeader(
+    new window.ComponentWidget(
         "element_id" ,
         {
-
-        }
-    )
-```
-
-
-
-
-**7) Component Collapse:**
-```
-   /*-------------------------------------
-    Component Collapse
-    -------------------------------------
-    @prop_title
-    @prop_body
-    @prop_bodyShow
-    -------------------------------------*/
-    new window.ComponentCollapse(
-        "element_id" ,
-        {
-
+            
         }
     )
 ```
@@ -193,41 +421,25 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**8) Component Table:**
+/* ====================
+[03] BUTTONs And INPUTs
+================================ */
+
+**03-01) Component Button:**
 ```
 /*-------------------------------------
- Component Table
+ 03-01) Component Button
 -------------------------------------
-@prop_tableType
-@prop_tableBordered
-@prop_tableStriped
-@prop_tableHover
-@prop_tableBorderless
-@prop_order
-@prop_data
-@prop_header
--------------------------------------*/
-    new window.ComponentTable(
-        "element_id" ,
-        {
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-        }
-    )
-```
-
-
-
-
-
-
-**9) Component Button:**
-```
-/*-------------------------------------
- Component Button
--------------------------------------
-@prop_type
+@prop_type   // cancel  //submit //null
 @prop_title
+
 @prop_btnClass
+@prop_btnStyles
+@prop_btnHoverStyles
 
 @prop_btnBackgroundColor
 @prop_btnBackgroundColor_hover
@@ -244,77 +456,50 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-
-
-
-
-**10) Component Tab:**
+**03-02 Component Select Option:**
 ```
 /*-------------------------------------
- Component Tabs
+ 03-02) Component Select Option
 -------------------------------------
-@prop_tabs           {id   icon}
-@prop_tabSelected
-@prop_type
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-@prop_firstCallBack
-
-@fn_callback
--------------------------------------*/
-    new window.ComponentTab(
-        "element_id" ,
-        {
-
-        }
-    )
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-**10) Component Select Option:**
-```
-/*-------------------------------------
- Component Select Option
--------------------------------------
-@prop_type
 @prop_name
-@prop_title
-@prop_placeholder
-
-@prop_options
-@prop_optionStyles
-@prop_optionWidth
-@prop_optionHeight
-@prop_optionIcon
-@prop_optionIconColor
-@prop_optionItemBackground
-
 @prop_itemSelected
-@prop_selectOptionClass
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
 @prop_titleClass
 @prop_titleStyles
+
+@prop_icon
+
+@prop_options
+@prop_placeholder
 
 @prop_btnAddStatus
 @prop_btnAddIcon
 @prop_btnAddClass
 @prop_btnAddTitle
 
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
+@prop_optionHeight
+@prop_optionWidth
+@prop_optionStyles
+@prop_positionTop
+@prop_positionLeft
+@prop_positionBottom
+@prop_positionRight
 
-@prop_firstCallBack
+@prop_options
+@prop_optionStyles
+@prop_optionWidth
+@prop_optionItemNotSelectedBackground
+@prop_optionItemHoverBackground
+@prop_optionItemSelectedBackground
 
 @fn_callback
 @fn_clickBtnTools
@@ -328,17 +513,26 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-**11) Component Tabs:**
+**03-03) Component OTP:**
 ```
-   /*-------------------------------------
-     Component Tabs
-   -------------------------------------
-   @prop_tabs           {id   icon}
-   @prop_tabSelected
+/*-------------------------------------
+ 03-03) Component OTP
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-   @fn_callback
-   -------------------------------------*/
-    new window.ComponentTabsComponentTabs(
+@prop_name
+@prop_length
+@prop_input
+@prop_langs
+
+@fn_onGetNewToken
+
+//call_startCountdown
+//call_getValue
+-------------------------------------*/
+    new window.ComponentOtp(
         "element_id" ,
         {
             
@@ -347,23 +541,35 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-**14) Component Input:**
+**03-04) Component Input:**
 ```
 /*-------------------------------------
- Component Input
+ 03-04) Component Input
 -------------------------------------
-@prop_type
-@prop_name
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
 @prop_title
-@prop_icon
-@prop_value
 
 @prop_inputClass
 @prop_inputStyles
+@prop_type
+@prop_name
+@prop_value
+@prop_placeholder
+
+@prop_icon
 
 @fn_oninput
 @fn_onfocus
 @fn_onblur
+
+@fn_clickBtnTools
 -------------------------------------*/
     new window.ComponentInput(
         "element_id" ,
@@ -374,23 +580,38 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-
-**15) Component Input Price:**
+**03-05) Component Input Price:**
 ```
-   /*-------------------------------------
-    Component Input price
-    -------------------------------------
-    @prop_btnAddStatus
-    @prop_btnAddIcon
-    @prop_btnAddClass
-    @@prop_btnAddClass
-    @prop_icon
-    @prop_name
-    @prop_title
-    @prop_default
+/*-------------------------------------
+ 03-05) Component Input
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-    @fn_addNewItem
-    -------------------------------------*/
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_inputClass
+@prop_inputStyles
+@prop_type
+@prop_name
+@prop_value
+@prop_placeholder
+@prop_isDisable
+
+@prop_icon
+
+@fn_oninput
+@fn_onfocus
+@fn_onblur
+
+@fn_clickBtnTools
+//call_setValue
+-------------------------------------*/
     new window.ComponentInputPrice(
         "element_id" ,
         {
@@ -400,36 +621,63 @@ if (typeof listComponent === 'undefined') {
 ```   
 
 
-
-
-
-
-**16) Component Date:**
+**03-06) Component Date:**
 ```
-    /*-------------------------------------
-     Component Date
-    -------------------------------------
-    @prop_type
-    
-    @prop_background1
-    @prop_background2
-    @prop_color
-    
-    @prop_name
-    @prop_title
-    @prop_value
-    
-    @prop_labelClass
-    @prop_labelStyles
-    @prop_labelHoverStyles
-    
-    @prop_prevYears
-    @prop_nextYears
-    
-    @prop_langs
-    
-    @fn_addNewItem
-    -------------------------------------*/
+/*-------------------------------------
+ 03-06) Component Date
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_backgroundMain
+
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_name
+@prop_value
+
+@prop_prevYears
+@prop_nextYears
+
+@prop_backgroundRowSelected
+@prop_backgroundColumnSelected
+@prop_colorColumnSelected
+
+@prop_titleBtnAccept
+@prop_backgroundBtnAccept
+@prop_backgroundBtnHoverAccept
+@prop_colorBtnAccept
+
+@prop_titleBtnNow
+@prop_backgroundBtnNow
+@prop_backgroundBtnHoverNow
+@prop_colorBtnNow
+
+@prop_titleMonth0
+@prop_titleMonth1
+@prop_titleMonth2
+@prop_titleMonth3
+@prop_titleMonth4
+@prop_titleMonth5
+@prop_titleMonth6
+@prop_titleMonth7
+@prop_titleMonth8
+@prop_titleMonth9
+@prop_titleMonth10
+@prop_titleMonth11
+
+@prop_titleDay0
+@prop_titleDay1
+@prop_titleDay2
+@prop_titleDay3
+@prop_titleDay4
+@prop_titleDay5
+@prop_titleDay6
+-------------------------------------*/
     new window.ComponentDate(
         "element_id" ,
         {
@@ -439,25 +687,44 @@ if (typeof listComponent === 'undefined') {
 ```
 
 
-
-
-
-
-**17) Component Label:**
+**03-07) Component Input File:**
 ```
-    /*-------------------------------------
-    Component label
-    -------------------------------------
-    @prop_title
-    @prop_for
-    
-    @prop_labelClass
-    @prop_labelStyles
-    @prop_labelHoverStyles
+/*-------------------------------------
+ 03-07) Component Input File
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-    @fn_callback
-    -------------------------------------*/
-    new window.ComponentLabel(
+@prop_name
+@prop_accept
+@prop_maxCount
+@prop_maxSize
+@prop_textValidateSize
+@prop_textValidateAccept
+@prop_labelTooltipDescription
+
+@prop_title
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderColor
+@prop_borderColorHover
+@prop_borderHeight
+
+@prop_textColor
+@prop_text
+
+@prop_showListFiles
+
+@prop_deleteBody
+@prop_deleteBtnCancel
+@prop_deleteBtnAccept
+
+-------------------------------------*/
+new window.ComponentInputFile(
         "element_id" ,
         {
             
@@ -468,73 +735,245 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**18) Component Icon:**
+/* ====================
+[04] tooltips
+============================================= */
+
+**04-01) Component Tooltips Description:**
 ```
 /*-------------------------------------
- Component Icon
+ 04-01) Component tooltips description
 -------------------------------------
-@prop_icon
-@prop_isItalik
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
+@prop_icon
 @prop_iconClass
 @prop_iconStyles
+
+@prop_descriptionBackground
+@prop_descriptionColor
+@prop_description
+@prop_descriptionWidth
+-------------------------------------*/
+new window.ComponentTooltipDescription(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+
+
+/* ====================
+[10] Tables
+============================================= */
+
+**10-01) Component Table:**
+```
+/*-------------------------------------
+ 04-02) Component Table
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_tableClass
+@prop_tableStyles
+@prop_tableType                      // 1) table-dark  |  2) table-primary  | 3) table-secondary  | 4) table-success  | 5) table-danger  | 6) table-warning  | 7) table-info  | 8) table-light  | 0(default)
+@prop_tableBordered                  // 1) border-dark |  2) border-primary | 3) border-secondary | 4) border-success | 5) border-danger | 6) border-warning | 7) border-info | 8) border-light | 0(default)
+@prop_tableStriped
+@prop_tableHover
+@prop_tableBorderless
+
+@prop_tableHeadClass
+@prop_tableHeadStyles
+@prop_tableItemHeadClass
+@prop_tableItemHeadStyles
+
+@prop_order
+@prop_data
+@prop_header
+
+@prop_tableBodyClass
+@prop_tableBodyStyles
+@prop_tableItemBodyClass
+@prop_tableItemBodyStyles
+@prop_tableItemBodyHoverStyles
+
+@prop_valueType
+@prop_valueRow_backgroundColor
+@prop_valueCol_backgroundColor
+@prop_valueCol_textColor
+
+@prop_valueRow
+@prop_valueCol
+-------------------------------------*/
+    new window.ComponentTable(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+/* ====================
+[11] Tabs
+============================================== */
+
+**11-01) Component Tab:**
+```
+/*-------------------------------------
+ 11-01) Component Tabs
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_type           0 | 1
+@prop_tabs           {id  name  icon}
+@prop_tabSelected
+
+@prop_firstCallBack
 
 @fn_callback
 -------------------------------------*/
-    new window.ComponentIcon(
+    new window.ComponentTabs(
         "element_id" ,
         {
-            
+
         }
     )
 ```
 
-
-
-
-**19) Component Position Element:**
+**11-02) Component tree:**
 ```
 /*-------------------------------------
- Component Position Element
+ 11-02) Component Tabs
 -------------------------------------
-@prop_elementClass
-@prop_elementStyles
-@prop_content || component-body
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-@prop_positionTop
-@prop_positionLeft
-@prop_positionBottom
-@prop_positionRight
+@prop_backgroundColor_unSelected
+@prop_backgroundColor_selected
+@prop_list
+@prop_itemSelected
 
-@prop_width
-@prop_height
 -------------------------------------*/
-    new window.ComponentPositionElement(
+    new window.ComponentTree(
         "element_id" ,
         {
-            
+
         }
     )
 ```
 
 
 
+/* ====================
+[12] Collapse
+========================================== */
 
-
-**20) Component Info:**
+**12-01) Component Collapse:**
 ```
 /*-------------------------------------
- Component Info
+ 04-01) Component Collapse
 -------------------------------------
-@prop_icon
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
 @prop_title
-@prop_iconClass
-@prop_iconStyles
+
+@prop_bodyBackgroundColor
+@prop_body
+@prop_bodyShow
 -------------------------------------*/
-    new window.ComponentInfo(
+    new window.ComponentCollapse(
         "element_id" ,
         {
-            
+
+        }
+    )
+```
+
+
+
+/* ====================
+[13] Window
+==================================== */
+
+**13-01) Component Window:**
+```
+/*-------------------------------------
+ 13-01) Component Window
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_blurBackgroundColor
+
+@prop_windowBackgroundColor
+@prop_windowWidth
+@prop_windowHeight
+@prop_windowRound
+
+@prop_header   [or component-header]
+
+@prop_body     [or component-body]
+
+@prop_footer   [or component-footer]
+
+// call_close
+// call_open
+// call_resize
+// call_minimize
+-------------------------------------*/
+    new window.ComponentWindow(
+        "element_id" ,
+        {
+
+        }
+    )
+```
+
+
+
+**13-02) Component Window Confirm:**
+```
+/*-------------------------------------
+ 13-02) Component Window Confirm
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_header   [or component-header]
+
+@prop_body     [or component-body]
+
+@prop_titleBtnCancel
+@prop_titleBtnAccept
+
+@fn_callback
+// call_close
+// call_open
+// call_resize
+// call_minimize
+-------------------------------------*/
+    new window.ComponentWindow(
+        "element_id" ,
+        {
+
         }
     )
 ```
@@ -542,26 +981,36 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**21) Component Border:**
+/* ====================
+[14] Slider Shows
+==================================== */
+
+**14-01) Component Window Confirm:**
 ```
 /*-------------------------------------
- Component border
+ 14-01) Slider Show Overlapping
 -------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
 @prop_borderClass
 @prop_borderStyles
-@prop_borderStylesHover
-@prop_content
 
-@prop_btnMore_icon
-@prop_btnMore_show
-@prop_btnMore_link
-
-@fn_elementClick
+@prop_imageDuration
+@prop_imageSelected
+@prop_images
 -------------------------------------*/
-    new window.ComponentBorder(
+    new window.ComponentSliderShowOverlapping(
         "element_id" ,
         {
-            
+
         }
     )
 ```
@@ -570,79 +1019,20 @@ if (typeof listComponent === 'undefined') {
 
 
 
-**22) Component Image:**
+
+/* ====================
+[20] Charts
+==================================== */
+
+**20-01) Component Chart:**
 ```
 /*-------------------------------------
- Component image
+ 20-01) Component Chart
 -------------------------------------
-@prop_imageSource
-@prop_imageTitle
-@prop_imageClass
-@prop_imageStyles
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-@fn_elementClick
--------------------------------------*/
-    new window.ComponentImage(
-        "element_id" ,
-        {
-            
-        }
-    )
-```
-
-
-
-
-**23) Component Link:**
-```
-/*-------------------------------------
- Component link
--------------------------------------
-@prop_image source , title , class , styles
-@prop_icon  source , title , class , styles
-@prop_title content , style , class
-@prop_linkClass
-@prop_linkStyles
-@prop_linkHref
--------------------------------------*/
-    new window.ComponentLink(
-        "element_id" ,
-        {
-            
-        }
-    )
-```
-
-
-
-
-**24) Component Description:**
-```
-/*-------------------------------------
- Component Description
--------------------------------------
-@prop_icon
-@prop_title
-@prop_description
-@prop_height
-@prop_button   title_more|title_less|prop_show
--------------------------------------*/
-    new window.ComponentDescription(
-        "element_id" ,
-        {
-            
-        }
-    )
-```
-
-
-
-
-**25) Component Chart:**
-```
-/*-------------------------------------
- Component Chart
--------------------------------------
 @prop_type
 @prop_TypeDirection
 
@@ -671,4 +1061,269 @@ if (typeof listComponent === 'undefined') {
         }
     )
 ```
+
+
+
+
+
+/* ====================
+[21] QR CODE
+==================================== */
+
+**21-01) Component Qr Code:**
+```
+/*-------------------------------------
+ 21-01) Component Qr Code
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_formClass
+@prop_formStyles
+
+@prop_value
+@prop_size
+@prop_version
+-------------------------------------*/
+    new window.ComponentQrCode(
+        "element_id" ,
+        {
+            
+        }
+    )
+**21-01) Component Qr Code:**
+```
+
+
+**21-02) Component Camera Qr Code Reader:**
+```
+/*-------------------------------------
+ 21-02) Component Camera Qr Code Reader
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_formMinHight
+
+@prop_fps
+@prop_qrbox
+
+@prop_titleErrorExistCamera
+
+@prop_titleErrorPermisionCamera
+@prop_titleBtnRetry
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentCameraQrCodeReader(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**21-03) Component Upload Qr Code Reader:**
+```
+/*-------------------------------------
+ 21-03)  Component Upload Qr Code Reader
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_formHight
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentUploadQrCodeReader(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+**21-04) Component Qr Code Reader:**
+```
+/*-------------------------------------
+ 21-04)  Component Qr Code Reader
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelShow
+@prop_labelTooltipDescription
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_placeholder
+
+@prop_formHight
+
+@prop_name
+@prop_showInput
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentQrCodeReader(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+
+
+
+/* ====================
+[99] OTHERs
+=========================================== */
+
+**99-01) Component Icon:**
+```
+/*-------------------------------------
+ 99-01) Component Icon
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_icon
+@prop_isItalik
+
+@prop_iconClass
+@prop_iconStyles
+
+@fn_callback
+@fn_onHoverIcon
+@fn_onBlurIcon
+-------------------------------------*/
+    new window.ComponentIcon(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**99-02) Component Position Element:**
+```
+/*-------------------------------------
+ 99-02) Component Position Element
+-------------------------------------
+@prop_elementClass
+@prop_elementStyles
+@prop_content || component-body
+
+@prop_positionTop
+@prop_positionLeft
+@prop_positionBottom
+@prop_positionRight
+
+@prop_width
+@prop_height
+-------------------------------------*/
+    new window.ComponentPositionElement(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**99-03) Component Border:**
+```
+/*-------------------------------------
+ 99-03) Component border
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_borderClass
+@prop_borderStyles
+@prop_content
+
+@prop_btnMore_icon
+@prop_btnMore_show
+@prop_btnMore_link
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentBorder(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+**99-04) Component Image:**
+```
+/*-------------------------------------
+ 99-04) Component image
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_imageSource
+@prop_imageTitle
+@prop_imageAlt
+@prop_imageClass
+@prop_imageStyles
+
+@fn_callback
+-------------------------------------*/
+    new window.ComponentImage(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+
 

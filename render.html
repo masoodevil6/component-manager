@@ -1,0 +1,121 @@
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+
+<component-layout id="template-main">
+    <component-body>
+
+
+        <component-layout id="template-main-toolbars">
+            <component-body>
+
+                <component-tree id="selector-from-component"></component-tree>
+
+            </component-body>
+        </component-layout>
+
+
+        <component-layout id="template-main-body">
+            <component-body>
+
+
+            </component-body>
+        </component-layout>
+
+
+    </component-body>
+</component-layout>
+
+
+<script src="./html5-qrcode.min.js"></script>
+<script src="./qrcode.js"></script>
+<script src="./jalali.js"></script>
+<script src="./highcharts.js"></script>
+<script src="./components.js"></script>
+<script src="./tools.js"></script>
+
+
+<script>
+
+
+    tools_init.renderToolsConst()
+
+
+
+
+    new window.ComponentLayout(
+        'template-main' ,
+        {
+            prop_layoutClass: ["row" , "px-2" , "py-0" , "mx-2" , "my-1" , "border" , "rounded" , "shadow-sm"]
+        }
+    );
+
+
+
+
+
+    new window.ComponentLayout(
+        'template-main-toolbars' ,
+        {
+            classList: ["col-3" , "p-2"  , "border-end" , "overflow-auto"]
+        }
+    );
+
+
+
+
+
+    function getListTreeCategory(itemSelected=0){
+        let resultExp = [];
+        if (listComponentCategory != null && Array.isArray(listComponentCategory)){
+            for (let i = 0; i < listComponentCategory.length; i++) {
+                const itemTree = listComponentCategory[i];
+                if (itemTree != null && itemTree.hasOwnProperty("parent_id") && itemSelected == itemTree.parent_id){
+                    resultExp.push(itemTree);
+                }
+            }
+        }
+        return resultExp;
+    }
+
+
+    const tree = new window.ComponentTree(
+        "selector-from-component" ,
+        {
+            prop_list: getListTreeCategory() ,
+            fn_callback: (event , item_id)=>{
+                let list = getListTreeCategory(item_id);
+
+                if (list != null && list.length > 0){
+                    return list;
+                }
+                else {
+                    console.log(item_id)
+                }
+
+                return list;
+            } ,
+        }
+    )
+
+
+
+
+
+
+
+    new window.ComponentLayout(
+        'template-main-body' ,
+        {
+            classList: ["col-9" , "p-2"]
+        }
+    );
+
+</script>
+
