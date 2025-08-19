@@ -49,6 +49,8 @@
         <component-body>
 
             <section class="row p-0 m-0">
+
+
                 <component-loading    id="loading"></component-loading>
 
                 <component-404        id="c404"></component-404>
@@ -61,6 +63,8 @@
 
                 <component-widget     id="widget"></component-widget>
 
+
+                <component-iframe     id="iframe"></component-iframe>
             </section>
 
         </component-body>
@@ -510,6 +514,19 @@
             prop_fetch : {
                 url: "https://google1.com"
             }
+        }
+    );
+
+    /*-------------------------------------
+     02-04)  Component otp
+    -------------------------------------*/
+    new window.ComponentIframe(
+        "iframe" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_url: "https://google1.com" ,
+            prop_height: "250" ,
         }
     );
 
@@ -1064,26 +1081,28 @@
         {
             classList: "col-md-2 col-12 mt-2"  ,
 
+            prop_stepSelected : 2 ,
             prop_breadcrumbs: [
                 {
                     id: 1 ,
-                    title: "item 1" ,
-                    active: true
+                    title: "item 1"
                 } ,
                 {
                     id: 2 ,
-                    title: "item 2" ,
-                    active: true
+                    title: "item 2"
                 },
                 {
                     id: 3 ,
-                    title: "item 3" ,
-                    active: false
+                    title: "item 3"
                 }
             ],
 
             fn_callback: (event , itemData)=>{
                 console.log(itemData)
+            } ,
+
+            fn_onBackClick: (event)=>{
+                console.log("back")
             }
         }
     )
@@ -1332,7 +1351,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [02] Fetch " ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -1371,7 +1390,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [11] Tabs " ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(

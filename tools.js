@@ -187,7 +187,9 @@ tools_init = {
 
             breadcrumb: {
                 backgroundColor_unactive : component_props.primaryColor1 ,
+                color_unactive : component_props.shanColor1 ,
                 backgroundColor_active : component_props.secondaryColor1 ,
+                color_active : component_props.darkColor1 ,
             } ,
 
 

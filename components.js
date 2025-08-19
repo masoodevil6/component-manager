@@ -27,6 +27,7 @@ if (typeof listComponent === 'undefined') {
         Component404:                        "component-404" ,                            //02-02
         ComponentForm:                       "component-form" ,                           //02-03
         ComponentWidget:                     "component-widget" ,                         //02-04
+        ComponentIframe:                     "component-iframe" ,                         //02-05
 
 
         // [03] Button and Inputs
@@ -111,6 +112,7 @@ if (typeof listComponentCategory === 'undefined') {
         { id: 2002  , name: " [02-02] " +  listComponent["Component404"]                          , parent_id:2 } ,
         { id: 2003  , name: " [02-03] " +  listComponent["ComponentForm"]                         , parent_id:2 } ,
         { id: 2004  , name: " [02-04] " +  listComponent["ComponentWidget"]                       , parent_id:2 } ,
+        { id: 2005  , name: " [02-05] " +  listComponent["ComponentIframe"]                       , parent_id:2 } ,
 
         { id: 3     , name: " [03] Button and Inputs"                                              , parent_id:0 } ,
         { id: 3001  , name: " [03-01] " +  listComponent["ComponentButton"]                        , parent_id:3 } ,
@@ -3543,6 +3545,141 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
     call_getComponentLayout(){
         return this._COMPONENT_LAYOUT;
+    }
+
+}
+
+
+
+/*-------------------------------------
+ 02-04) Component Widget
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_url
+@prop_width
+@prop_height
+@prop_iframeClass
+@prop_iframeStyles
+
+//call_getIframe
+-------------------------------------*/
+window.ComponentIframe = class ComponentIframe extends ComponentBase{
+
+    /* ---------------------------------------------
+      PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_iframe: [
+            {prop : "prop_url"                            , default:  ""} ,
+            {prop : "prop_width"                          , default:  "100%"} ,
+            {prop : "prop_height"                         , default:  "1000"} ,
+            {prop : "prop_iframeClass"                    , default:  []} ,
+            {prop : "prop_iframeStyles"                   , default:  {}} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_iframe:{}
+        } ,
+    }
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config)
+    {
+        super(
+            listComponent[ComponentIframe.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+    /* ---------------------------------------------
+    TEMPLATEs
+   --------------------------------------------- */
+    componentFn(){
+
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_iframe":
+                return this.componentFn_render_iframe(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+
+    template_render_structure(partName) {
+        const content = `
+        
+           ${this.templateFn("part_iframe") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content , ["position-relative"]);
+    }
+
+
+    componentFn_render_iframe(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_url           = data.hasOwnProperty("prop_url")            ? data.prop_url                         : "";
+            const prop_width         = data.hasOwnProperty("prop_width")          ? data.prop_width                       : "";
+            const prop_height        = data.hasOwnProperty("prop_height")         ? data.prop_height                      : "";
+            const prop_iframeClass   = data.hasOwnProperty("prop_iframeClass")    ? data.prop_iframeClass                 : [];
+            const prop_iframeStyles  = data.hasOwnProperty("prop_iframeStyles")   ? data.prop_iframeStyles                : {};
+
+            return `
+<section 
+     id="component-iframe-iframe-${this._COMPONENT_RANDOM_ID}"
+     data-part-name="${partName}"
+     class=" ${tools_public.renderListClass(prop_iframeClass)}">
+     
+    <style>
+        #${this._COMPONENT_ID} #component-iframe-iframe-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_iframeStyles)}
+        }
+    </style>
+    
+    <iframe src="${prop_url}" width="${prop_width}" height="${prop_height}"></iframe>
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+     --------------------------------------------- */
+    call_getIframe(){
+        return document.querySelector(`component-iframe-iframe-${this._COMPONENT_RANDOM_ID} iframe`);
     }
 
 }
@@ -11546,6 +11683,7 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
 @prop_breadcrumbs
 
 @fn_callback
+@fn_onBackClick
 -------------------------------------*/
 window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
 
@@ -11561,16 +11699,23 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
         part_scroller: [
 
         ],
+        part_btnBack: [
+            {prop : "prop_showBtn"                       , default: true} ,
+        ],
         part_breadcrumbs: [
             {prop : "prop_unactiveBreadcrumb"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("backgroundColor_unactive")   ? tools_const.styles.breadcrumb.backgroundColor_unactive : ""} ,
+            {prop : "color_unactive"                     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("color_unactive")   ? tools_const.styles.breadcrumb.color_unactive : ""} ,
             {prop : "prop_activeBreadcrumb"              , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("backgroundColor_active")   ? tools_const.styles.breadcrumb.backgroundColor_active : ""} ,
+            {prop : "color_active"                       , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("color_active")   ? tools_const.styles.breadcrumb.color_active : ""} ,
             {prop : "prop_breadcrumbs"                   , default: []} ,
+            {prop : "prop_stepSelected"                  , default: 1} ,
         ],
     }
 
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_scroller:{
+                part_btnBack:{} ,
                 part_breadcrumbs:{}
             }
         }
@@ -11606,6 +11751,9 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
             case "part_structure":
                 return this.template_render_structure(partName);
 
+            case "part_btnBack":
+                return this.template_render_btnBack(partName);
+
             case "part_scroller":
                 return this.template_render_scroller(partName);
 
@@ -11625,6 +11773,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
     }
 
 
+
     template_render_scroller(partName) {
         const data = this.getPartProps(partName)
 
@@ -11633,7 +11782,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
             return `
 <section data-part-name="${partName}" 
          id="component-breadcrumb-scroller-${this._COMPONENT_RANDOM_ID}" 
-         class="w-100" >
+         class="w-100 position-relative" >
          
     <style>
         #${this._COMPONENT_ID} #component-breadcrumb-scroller-${this._COMPONENT_RANDOM_ID}{
@@ -11641,6 +11790,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
         }
     </style>
     
+     ${this.templateFn("part_btnBack") ?? ""}
      ${this.templateFn("part_breadcrumbs") ?? ""}
     
 </section>
@@ -11653,6 +11803,48 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
     }
 
 
+
+
+    template_render_btnBack(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+            const directionRtl               =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_showBtn               =  data.hasOwnProperty("prop_showBtn")                    ?  data.prop_showBtn                       : true;
+
+            if (prop_showBtn){
+
+                return `
+<section data-part-name="${partName}" 
+         id="component-breadcrumb-btn-back-${this._COMPONENT_RANDOM_ID}" 
+         class="position-absolute border shadow-sm bg-white text-center rounded" onclick="${this.getFn('fn_onBackClick' , 'event')}">
+         
+    <style>
+        #${this._COMPONENT_ID} #component-breadcrumb-btn-back-${this._COMPONENT_RANDOM_ID}{
+             ${directionRtl ? 'right' : 'left'} : 0;
+             top: 0;
+             transform: translate(0 , 0);
+             width: 30px;
+             height: 30px;
+             
+             z-index: 10;
+             cursor: pointer;
+             font-size: 20pt;
+             line-height: 30px;
+        }
+    </style>
+    
+     ${directionRtl ? "&#129170" : "&#129168"}
+    
+</section>
+        `;
+            }
+
+        }
+    }
+
+
+
     template_render_breadcrumbs(partName) {
         const data = this.getPartProps(partName)
 
@@ -11661,10 +11853,13 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
             const directionRtl               =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
 
             const prop_unactiveBreadcrumb    =  data.hasOwnProperty("prop_unactiveBreadcrumb")         ?  data.prop_unactiveBreadcrumb            : "";
+            const color_unactive             =  data.hasOwnProperty("color_unactive")                  ?  data.color_unactive                     : "";
             const prop_activeBreadcrumb      =  data.hasOwnProperty("prop_activeBreadcrumb")           ?  data.prop_activeBreadcrumb              : "";
+            const color_active               =  data.hasOwnProperty("color_active")                    ?  data.color_active                       : "";
             const prop_breadcrumbs           =  data.hasOwnProperty("prop_breadcrumbs")                ?  data.prop_breadcrumbs                   : [];
+            const prop_stepSelected          =  data.hasOwnProperty("prop_stepSelected")               ?  data.prop_stepSelected                  : 1;
 
-            const {style , html} = this.fn_readyListBreadCrumb(prop_breadcrumbs , prop_activeBreadcrumb , prop_unactiveBreadcrumb , directionRtl);
+            const {style , html} = this.fn_readyListBreadCrumb(prop_breadcrumbs , prop_activeBreadcrumb , color_active , prop_unactiveBreadcrumb , color_unactive , prop_stepSelected , directionRtl);
 
             return `
 <section data-part-name="${partName}" 
@@ -11701,7 +11896,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
-    fn_readyListBreadCrumb(prop_breadcrumbs , prop_activeBreadcrumb , prop_unactiveBreadcrumb , directionRtl){
+    fn_readyListBreadCrumb(prop_breadcrumbs , prop_activeBreadcrumb , color_active , prop_unactiveBreadcrumb , color_unactive , prop_stepSelected , directionRtl){
         let reusltExp = {
             html: "" ,
             style: ""
@@ -11722,7 +11917,8 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
             line-height: 30px;
             padding-left: ${directionRtl ? "30px": "45px"} ;
             padding-right: ${directionRtl ? "45px": "30px"} ;
-            background-color: ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            background-color: ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            color: ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? color_active : color_unactive};
             float: left;
             cursor: pointer;  
         
@@ -11739,7 +11935,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
            height: 0px;
            border-style: solid;
            border-width: ${directionRtl ? " 15px 30px 15px 0": " 15px 0 15px 30px"};
-           border-color: ${directionRtl ? `transparent ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}  transparent transparent;`: `transparent transparent transparent ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}`}; 
+           border-color: ${directionRtl ? `transparent ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}  transparent transparent;`: `transparent transparent transparent ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}`}; 
            transform: rotate(0deg);
         } 
 #${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}:before{
@@ -11765,7 +11961,8 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
             line-height: 30px;
             padding-left: ${directionRtl ? "30px": "45px"} ;
             padding-right: ${directionRtl ? "45px": "30px"} ;
-            background-color: ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            background-color: ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            color: ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? color_active : color_unactive};
             float: left;
             cursor: pointer;  
         
@@ -11780,7 +11977,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
            height: 0px;
            border-style: solid;
            border-width: ${directionRtl ? " 15px 30px 15px 0": " 15px 0 15px 30px"};
-           border-color: ${directionRtl ? `transparent ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}  transparent transparent;`: `transparent transparent transparent ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}`}; 
+           border-color: ${directionRtl ? `transparent ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}  transparent transparent;`: `transparent transparent transparent ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb}`}; 
            transform: rotate(0deg);
         } 
 #${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-${this._COMPONENT_RANDOM_ID} .item-breadcrumb-${i}:before{
@@ -11805,7 +12002,8 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
             line-height: 30px;
             padding-left: ${directionRtl ? "30px": "45px"} ;
             padding-right: ${directionRtl ? "45px": "30px"} ;
-            background-color: ${item != null && item.hasOwnProperty("active") && item.active ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            background-color: ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb};
+            color: ${item != null && item.hasOwnProperty("id") && item.id == prop_stepSelected ? color_active : color_unactive};
             float: left;
             cursor: pointer;  
         
@@ -11844,7 +12042,14 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
     }
 
 
+    fn_onBackClick(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onBackClick") && typeof data.fn_onBackClick != null){
+            const prop_stepSelected = data.hasOwnProperty("prop_stepSelected") ? data.prop_stepSelected : null;
 
+            data.fn_onBackClick(event , prop_stepSelected);
+        }
+    }
 
 }
 
