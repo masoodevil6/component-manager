@@ -12203,7 +12203,7 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
         if (data != null){
 
             const prop_type            =  data.hasOwnProperty("prop_type")            ?  data.prop_type           : 0;
-            let typeStr = "";
+            let typeStr = null;
             switch (prop_type){
                 case 0: typeStr = "line";       break;
                 case 1: typeStr = "column";     break;
@@ -12216,7 +12216,7 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
                 case 8: typeStr = "heatmap";    break;
             }
 
-            const prop_TypeDirection   =  data.hasOwnProperty("prop_type")            ?  data.prop_type           : 0;
+            const prop_TypeDirection   =  data.hasOwnProperty("prop_TypeDirection")   ?  data.prop_TypeDirection  : 0;
             const prop_height          =  data.hasOwnProperty("prop_height")          ?  data.prop_height         : null;
 
             const prop_title_text      =  data.hasOwnProperty("prop_title_text")      ?  data.prop_title_text     : null;
@@ -12238,39 +12238,45 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
 
             const chartOptions = {
                 chart: {
-                    type: typeStr,
                     height: prop_height,
                 },
-
                 title: {
                     text: prop_title_text ,
                     align: prop_title_align ,
                 },
-
-                xAxis: {
-                    title: {
-                        text: prop_x_title_text ,
-                        align: prop_x_title_align ,
-                    },
-                    categories: prop_TypeDirection != null && prop_TypeDirection == 0 ? prop_categories : null
-                },
-
-                yAxis: {
-                    title: {
-                        text: prop_y_title_text ,
-                        align: prop_y_title_align ,
-                    } ,
-                    categories: prop_TypeDirection != null && prop_TypeDirection == 1 ? prop_categories : null
-                },
-
                 series: prop_series ,
-
                 tooltip: {
                     headerFormat: prop_tooltip_header,
                     pointFormat: prop_tooltip_format
                 },
-
             }
+
+
+
+            if ( typeStr != null){
+                chartOptions["chart"]["type"] =  typeStr
+            }
+
+            if ( prop_TypeDirection != null && prop_TypeDirection == 0){
+                chartOptions["xAxis"] =  {
+                    title: {
+                        text: prop_x_title_text ,
+                        align: prop_x_title_align ,
+                    },
+                    categories: prop_categories
+                }
+            }
+            if ( prop_TypeDirection != null && prop_TypeDirection == 1){
+                chartOptions["yAxis"] =  {
+                    title: {
+                        text: prop_y_title_text ,
+                        align: prop_y_title_align ,
+                    } ,
+                    categories: prop_categories
+                }
+            }
+
+            console.log(prop_TypeDirection , prop_categories, chartOptions)
 
             Highcharts.chart(`component-chart-view-${this._COMPONENT_RANDOM_ID}`, chartOptions );
 

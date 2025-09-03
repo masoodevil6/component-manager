@@ -1,0 +1,418 @@
+<!--<svg id="mysvg" width="400" height="200" style="border:1px solid #ccc"></svg>
+
+<script>
+  // مختصات سه نقطه
+  const points = [
+    { x: 50,  y: 150 },
+    { x: 200, y: 50  },
+    { x: 350, y: 150 }
+  ];
+
+  const svg = document.getElementById("mysvg");
+
+  // ساخت خط (polyline)
+  const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  polyline.setAttribute("points", points.map(p => `${p.x},${p.y}`).join(" "));
+  polyline.setAttribute("stroke", "black");
+  polyline.setAttribute("stroke-width", "2");
+  polyline.setAttribute("fill", "none");
+  svg.appendChild(polyline);
+
+  // ساخت دایره برای هر نقطه
+  points.forEach(p => {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", p.x);
+    circle.setAttribute("cy", p.y);
+    circle.setAttribute("r", 5);
+    circle.setAttribute("fill", "red");
+    svg.appendChild(circle);
+  });
+</script>-->
+
+
+
+
+
+
+
+
+<!--<svg id="mysvg2" width="400" height="200" style="border:1px solid #ccc"></svg>
+
+<script>
+  // سه نقطه
+  const points = [
+    { x: 50,  y: 150 },
+    { x: 200, y: 50  },
+    { x: 350, y: 150 }
+  ];
+
+  const svg = document.getElementById("mysvg2");
+
+  // مسیر منحنی (Cubic Bezier)
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  const d = `M ${points[0].x},${points[0].y}
+             Q ${points[1].x},${points[1].y}
+               ${points[2].x},${points[2].y}`;
+  path.setAttribute("d", d);
+  path.setAttribute("stroke", "black");
+  path.setAttribute("stroke-width", "2");
+  path.setAttribute("fill", "none");
+  svg.appendChild(path);
+
+  // نمایش سه نقطه به صورت دایره
+  points.forEach(p => {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", p.x);
+    circle.setAttribute("cy", p.y);
+    circle.setAttribute("r", 5);
+    circle.setAttribute("fill", "red");
+    svg.appendChild(circle);
+  });
+</script>-->
+
+
+
+
+
+
+
+<!--<svg id="mysvg2" width="1500" height="1500" style="border:1px solid #ccc"></svg>
+
+<script>
+  // سه نقطه
+  const points = [
+    { x: 0,  y: 0 },
+    { x: 450, y: 360  },
+    { x: 500, y: 400 } ,
+    { x: 550,  y: 360 },
+    { x: 1000, y: 0  }
+  ];
+
+  const svg = document.getElementById("mysvg2");
+
+
+  const polyline1 = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  polyline1.setAttribute("points", `${points[0].x},${points[0].y}  ${points[1].x},${points[1].y}`);
+  polyline1.setAttribute("stroke", "black");
+  polyline1.setAttribute("stroke-width", "2");
+  polyline1.setAttribute("fill", "none");
+  svg.appendChild(polyline1);
+
+  const polyline2 = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  polyline2.setAttribute("points", `${points[3].x},${points[3].y}  ${points[4].x},${points[4].y}`);
+  polyline2.setAttribute("stroke", "black");
+  polyline2.setAttribute("stroke-width", "2");
+  polyline2.setAttribute("fill", "none");
+  svg.appendChild(polyline2);
+
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  const d = `M ${points[1].x},${points[1].y}
+             Q ${points[2].x},${points[2].y}
+               ${points[3].x},${points[3].y}`;
+  path.setAttribute("d", d);
+  path.setAttribute("stroke", "black");
+  path.setAttribute("stroke-width", "2");
+  path.setAttribute("fill", "none");
+  svg.appendChild(path);
+
+
+  // نمایش سه نقطه به صورت دایره
+  points.forEach(p => {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", p.x);
+    circle.setAttribute("cy", p.y);
+    circle.setAttribute("r", 5);
+    circle.setAttribute("fill", "red");
+    svg.appendChild(circle);
+  });
+
+</script>-->
+
+
+
+<!--<svg id="mysvg" width="400" height="200" style="border:1px solid #ccc"></svg>
+
+<script>
+  const svg = document.getElementById("mysvg");
+
+  // سه نقطه نمونه
+  const points = [
+    { x: 50,  y: 150 },
+    { x: 200, y: 50  },
+    { x: 350, y: 150 }
+  ];
+
+  // ساخت دایره‌ها
+  points.forEach((p, i) => {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", p.x);
+    circle.setAttribute("cy", p.y);
+    circle.setAttribute("r", 8);
+    circle.setAttribute("fill", "red");
+    circle.style.cursor = "pointer";
+    svg.appendChild(circle);
+
+    // drag callback
+    let isDragging = false;
+
+    circle.addEventListener("mousedown", (e) => {
+      isDragging = true;
+    });
+
+    svg.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      // مختصات موس نسبت به SVG
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX;
+      pt.y = e.clientY;
+      const cursorpt = pt.matrixTransform(svg.getScreenCTM().inverse());
+
+      // بروز رسانی موقعیت دایره
+      circle.setAttribute("cx", cursorpt.x);
+      circle.setAttribute("cy", cursorpt.y);
+
+      // کال بک: مثلا می‌خوای مختصات جدید رو چاپ کنی
+      console.log(`Point ${i}: x=${cursorpt.x}, y=${cursorpt.y}`);
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
+  });
+</script>-->
+
+
+
+
+<!--<svg id="mysvg" width="400" height="200" style="border:1px solid #ccc">
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="black" />
+    </marker>
+
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L3,3 L0,6 L9,3 z" fill="black" />
+    </marker>
+  </defs>
+
+
+</svg>
+
+<script>
+  // مختصات سه نقطه
+  const points = [
+    { x: 50,  y: 150 },
+    { x: 200, y: 50  }
+  ];
+
+  const svg = document.getElementById("mysvg");
+
+  // ساخت خط (polyline)
+  const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  polyline.setAttribute("points", points.map(p => `${p.x},${p.y}`).join(" "));
+  polyline.setAttribute("stroke", "black");
+  polyline.setAttribute("stroke-width", "2");
+  polyline.setAttribute("fill", "none");
+  polyline.setAttribute("marker-end", "url(#arrow2)");
+  svg.appendChild(polyline);
+
+ /* // ساخت دایره برای هر نقطه
+  points.forEach(p => {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", p.x);
+    circle.setAttribute("cy", p.y);
+    circle.setAttribute("r", 5);
+    circle.setAttribute("fill", "red");
+    svg.appendChild(circle);
+  });*/
+</script>-->
+
+
+
+<!--<svg id="mysvg" width="400" height="200" style="border:1px solid #ccc"></svg>
+
+<script>
+  const svg = document.getElementById("mysvg");
+
+  // ساخت foreignObject
+  const foreign = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+  foreign.setAttribute("x", 100);   // مختصات X
+  foreign.setAttribute("y", 100);   // مختصات Y
+  foreign.setAttribute("width", 120);
+  foreign.setAttribute("height", 50);
+
+  // ساخت یک div داخل foreignObject
+  const div = document.createElement("div");
+  div.setAttribute("xmlns", "http://www.w3.org/1999/xhtml"); // مهم برای HTML داخل SVG
+  div.style.fontSize = "14px";
+  div.style.color = "blue";
+  div.innerText = "سلام 👋 متن HTML داخل SVG";
+
+  // اضافه کردن div به foreignObject
+  foreign.appendChild(div);
+
+  // اضافه کردن foreignObject به SVG
+  svg.appendChild(foreign);
+</script>-->
+
+
+
+
+
+<svg id="mysvg" width="1500" height="1500" style="border:1px solid #ccc">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L3,3 L0,6 L9,3 z" fill="black" />
+    </marker>
+  </defs>
+
+</svg>
+
+<script>
+
+
+  function getPointInLinWithPercent(pointA , pointB , isStart=true , percent=0.1){
+    return {
+      x: (isStart ? percent : (1-percent)) * (pointB.x - pointA.x) + pointA.x ,
+      y: (isStart ? percent : (1-percent)) * (pointB.y - pointA.y) + pointA.y ,
+    }
+  }
+
+  function getPointInLinWithLength(pointA , pointB , isStart=true , length=10){
+    const d = Math.sqrt(Math.pow(pointB.x - pointA.x, 2) + Math.pow(pointB.y - pointA.y, 2));
+    const p = length/d;
+    return getPointInLinWithPercent(pointA , pointB , isStart , p);
+  }
+
+  function connectThreePoint(points , lineWidth=2){
+    const svg = document.getElementById("mysvg");
+
+    const pointsProgressed = [];
+    if (points != null && Array.isArray(points)){
+      for (let i = 0; i < points.length ; i++) {
+        const pointSelected = points[i];
+
+        let isJoin = true;
+        if (i == 0 || i == points.length -1){
+          isJoin = false;
+        }
+
+        if (isJoin){
+          const pointAB = getPointInLinWithLength(points[i-1] , points[i]  , false);
+          pointSelected.isJoin = true;
+          const pointBC = getPointInLinWithLength(points[i]  , points[i+1] , true);
+          pointsProgressed.push(...[pointAB , pointSelected , pointBC])
+        }
+        else {
+          pointsProgressed.push(pointSelected)
+        }
+      }
+    }
+
+
+    for (let i = 0; i < pointsProgressed.length-1 ; i++) {
+      const pointPrevious = pointsProgressed[i-1];
+      const pointSelected = pointsProgressed[i];
+      const pointNext = pointsProgressed[i+1];
+
+      if (!pointNext.hasOwnProperty("isJoin") || !pointNext.isJoin){
+        if (pointSelected.hasOwnProperty("isJoin") && pointSelected.isJoin){
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          const d = `M ${pointPrevious.x},${pointPrevious.y}
+             Q ${pointSelected.x},${pointSelected.y}
+               ${pointNext.x},${pointNext.y}`;
+          path.setAttribute("d", d);
+          path.setAttribute("stroke", "black");
+          path.setAttribute("stroke-width", lineWidth);
+          path.setAttribute("fill", "none");
+          svg.appendChild(path);
+        }
+        else {
+          const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+          polyline.setAttribute("points", `${pointSelected.x},${pointSelected.y}  ${pointNext.x},${pointNext.y}`);
+          polyline.setAttribute("stroke", "black");
+          polyline.setAttribute("stroke-width", lineWidth);
+          polyline.setAttribute("fill", "none");
+          if (pointNext.hasOwnProperty("hasArrow") && pointNext.hasArrow){
+            polyline.setAttribute("marker-end", "url(#arrow)");
+          }
+          svg.appendChild(polyline);
+        }
+      }
+    }
+  }
+
+ /* connectThreePoint(
+      [
+        { x: 50,  y: 50 },
+        { x: 50, y: 100 } ,
+        { x: 100, y: 100  },
+        { x: 100, y: 150  },
+        { x: 150 , y: 150  },
+        { x: 150 , y: 200  , hasArrow:true}
+      ]
+  )*/
+
+
+  function createHtmlOnPoint(html , point){
+    const svg = document.getElementById("mysvg");
+
+    const foreign = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+    foreign.setAttribute("x", point.x);   // مختصات X
+    foreign.setAttribute("y", point.y);   // مختصات Y
+    foreign.setAttribute("width", point.width);
+    foreign.setAttribute("height", point.height);
+
+    foreign.innerHTML=html
+
+    svg.appendChild(foreign);
+  }
+
+
+  function connectTwoPointWithTreeHierarchy(objectA , objectB , LYmin=20){
+
+    let points = null
+    if (objectB.y >= objectA.y + LYmin){
+      const mid = ((objectB.y - objectA.y)/2);
+      points = [
+        { x: objectA.x , y: objectA.y                      } ,
+        { x: objectA.x , y: objectA.y + mid                } ,
+        { x: objectB.x , y: objectB.y - mid                } ,
+        { x: objectB.x , y: objectB.y       , hasArrow:true}
+      ]
+    }
+    else{
+      const mid = ((objectB.x - objectA.x)/2);
+      points = [
+        {x: objectA.x         , y: objectA.y                         },
+        { x: objectA.x        , y: objectA.y + LYmin                 },
+        { x: objectA.x + mid  , y: objectA.y + LYmin                 },
+        { x: objectB.x - mid  , y: objectB.y - LYmin                 },
+        { x: objectB.x        , y: objectB.y - LYmin                 },
+        { x: objectB.x        , y: objectB.y          , hasArrow:true},
+      ]
+    }
+
+    connectThreePoint(points);
+    createHtmlOnPoint(
+            `<p style="border: 1px solid black; width:100px; height:100px">start</p>` ,
+            { x: objectA.x-50 , y: objectA.y - 100 , width:110 , height:110}
+    )
+    createHtmlOnPoint(
+            `<p style="border: 1px solid black; width:100px; height:100px">end</p>` ,
+            { x: objectB.x-50 , y: objectB.y , width:110 , height:110}
+    )
+  }
+
+
+
+  connectTwoPointWithTreeHierarchy(
+          { x: 100,  y: 150 },
+          { x: 200, y: 350 }
+  )
+
+</script>
+
+
