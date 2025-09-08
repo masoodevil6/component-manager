@@ -106,13 +106,6 @@
         </component-body>
     </component-collapse>
 
-
-
-
-
-
-
-
     <component-collapse  id="tables">
         <component-body>
 
@@ -176,11 +169,6 @@
         </component-body>
     </component-collapse>
 
-
-
-
-
-
     <component-collapse  id="sliderShow">
         <component-body>
 
@@ -194,8 +182,6 @@
         </component-body>
     </component-collapse>
 
-
-
     <component-collapse  id="breadcrumbs">
         <component-body>
 
@@ -207,13 +193,6 @@
 
         </component-body>
     </component-collapse>
-
-
-
-
-
-
-
 
     <component-collapse  id="charts">
         <component-body>
@@ -241,11 +220,6 @@
         </component-body>
     </component-collapse>
 
-
-
-
-
-
     <component-collapse  id="others">
         <component-body>
 
@@ -270,6 +244,8 @@
                 <component-image      id="image"></component-image>
 
                 <component-layout     id="layout"></component-layout>
+
+                <component-mouse-scroller     id="mouseScroller"></component-mouse-scroller>
 
             </section>
 
@@ -1312,6 +1288,18 @@
     )
     cLayout.call_addElement('Hi World')
 
+    /*-------------------------------------
+     99-04) Component image
+    -------------------------------------*/
+    new window.ComponentMouseScroller(
+        "mouseScroller" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_layoutContent: "content"
+        }
+    )
+
 
 
 
@@ -1351,7 +1339,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [02] Fetch " ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(
@@ -1455,7 +1443,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [99] Others" ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
 

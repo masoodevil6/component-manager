@@ -76,7 +76,8 @@
 
 
 
-<!--<svg id="mysvg2" width="1500" height="1500" style="border:1px solid #ccc"></svg>
+<!--
+<svg id="mysvg2" width="1500" height="1500" style="border:1px solid #ccc"></svg>
 
 <script>
   // سه نقطه
@@ -97,6 +98,10 @@
   polyline1.setAttribute("stroke-width", "2");
   polyline1.setAttribute("fill", "none");
   svg.appendChild(polyline1);
+
+
+
+
 
   const polyline2 = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
   polyline2.setAttribute("points", `${points[3].x},${points[3].y}  ${points[4].x},${points[4].y}`);
@@ -127,7 +132,8 @@
     svg.appendChild(circle);
   });
 
-</script>-->
+</script>
+-->
 
 
 
@@ -184,8 +190,8 @@
 
 
 
-
-<!--<svg id="mysvg" width="400" height="200" style="border:1px solid #ccc">
+<!--
+<svg id="mysvg" width="400" height="200" style="border:1px solid #ccc">
 
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -231,7 +237,8 @@
 
 
 
-<!--<svg id="mysvg" width="400" height="200" style="border:1px solid #ccc"></svg>
+<!--
+<svg id="mysvg" width="400" height="200" style="border:1px solid #ccc"></svg>
 
 <script>
   const svg = document.getElementById("mysvg");
@@ -255,22 +262,144 @@
 
   // اضافه کردن foreignObject به SVG
   svg.appendChild(foreign);
-</script>-->
+</script>
+-->
 
 
 
+<style>
+  #form-scroller{
+    width: 1000px;
+    height: 1000px;
+    overflow: auto;
+    scrollbar-width: none;
+    cursor: all-scroll;
+    border: #969696 solid 2px;
+    background-color: #f5f5f5;
+    user-select: none;       /* متن قابل انتخاب نباشد */
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge */
+  }
 
+  #form-scroller::-webkit-scrollbar {
+    display: none;        /* Chrome, Safari, Edge */
+  }
 
-<svg id="mysvg" width="2000" height="2000" style="border:1px solid #ccc">
-  <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto">
-      <path d="M0,0 L3,3 L0,6 L9,3 z" fill="black" />
-    </marker>
-  </defs>
+</style>
 
-</svg>
+<section id="form-scroller">
+  <div id="body-scroller">
+    <svg id="mysvg" width="2500" height="2500" style="border:1px solid #ccc" >
+      <defs></defs>
+    </svg>
+  </div>
+</section>
+
 
 <script>
+
+  const section = document.getElementById("form-scroller");
+  const sectionScrollerBody = document.getElementById("body-scroller");
+
+  let isDown = false;  // آیا کلیک نگه داشته شده؟
+  let startX, startY;  // موقعیت اولیه موس
+  let scrollLeft, scrollTop; // موقعیت اولیه scroll
+  let scale = 1;
+  const minScale = 0.2;
+  const maxScale = 5;
+
+  section.addEventListener("mousedown", e => {
+    isDown = true;
+    startX = e.pageX - section.offsetLeft;
+    startY = e.pageY - section.offsetTop;
+    scrollLeft = section.scrollLeft;
+    scrollTop = section.scrollTop;
+
+    e.preventDefault(); // جلوگیری از انتخاب متن
+  });
+
+  section.addEventListener("mousemove", e => {
+    if (!isDown) return;
+    e.preventDefault();  // جلوگیری از رفتار پیش‌فرض مرورگر
+    const x = e.pageX - section.offsetLeft;
+    const y = e.pageY - section.offsetTop;
+    const walkX = (x - startX) * -1;
+    const walkY = (y - startY) * -1;
+    section.scrollLeft = scrollLeft + walkX;
+    section.scrollTop  = scrollTop + walkY;
+  });
+
+  function applyZoom() {
+    sectionScrollerBody.style.transform = `scale(${scale})`;
+    sectionScrollerBody.style.transformOrigin = "0 0"; // همیشه بالا-چپ
+  }
+
+  section.addEventListener("wheel", (e) => {
+    e.preventDefault();
+
+    // موقعیت موس نسبت به section
+    const rect = section.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // مقدار زوم
+    const zoomSpeed = 0.001;
+    const newScale = Math.min(Math.max(scale - e.deltaY * zoomSpeed, minScale), maxScale);
+    const scaleRatio = newScale / scale;
+
+    // محاسبه scroll جدید برای ثابت نگه داشتن نقطه زیر موس
+    section.scrollLeft = (section.scrollLeft + mouseX) * scaleRatio - mouseX;
+    section.scrollTop  = (section.scrollTop + mouseY)  * scaleRatio - mouseY;
+
+    scale = newScale;
+    applyZoom();
+  });
+  section.addEventListener("mouseleave", () => isDown = false);
+  section.addEventListener("mouseup", () => isDown = false);
+
+
+
+
+
+  function addDefsForMarker(svg){
+    let svgDefs = svg.getElementsByTagName("defs");
+    if (svgDefs == null){
+      svg.innerText = svg.innerText + "<defs></defs>";
+    }
+    return svg.getElementsByTagName("defs")[0];
+  }
+  function addMarker(svg , markerName, bgColor){
+
+    let svgDefs = addDefsForMarker(svg);
+    let markerHtml = null;
+    let markerId = `#${markerName}_${Math.random()*1000}`;
+    switch (markerName){
+      case "arrow":
+        markerHtml = `
+        <marker id="${markerId}" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L3,3 L0,6 L9,3 z" fill="${bgColor}" />
+        </marker>
+        `;
+        break;
+      case "circle":
+        markerHtml = `
+        <marker id="${markerId}" markerWidth="20" markerHeight="20" refX="10" refY="10" orient="auto" markerUnits="strokeWidth" >
+          <circle cx="10" cy="10" r="3" fill="white" stroke="${bgColor}" stroke-width="1"  style="pointer-events:none; cursor:pointer;" />
+        </marker>
+        `;
+        break;
+    }
+
+    if (markerHtml != null){
+      svgDefs.innerHTML = svgDefs.innerHTML + markerHtml;
+      return markerId;
+    }
+
+    return null;
+  }
+
+
 
   function getPointInLinWithPercent(pointA , pointB , isStart=true , percent=0.1){
     return {
@@ -285,7 +414,8 @@
     return getPointInLinWithPercent(pointA , pointB , isStart , p);
   }
 
-  function connectTreeYPoint(svgId , points , lineWidth=2){
+  function connectDirectionPoint(svgId , points , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"){
+
     const svg = document.getElementById(svgId);
 
     const pointsProgressed = [];
@@ -310,6 +440,7 @@
       }
     }
 
+    let animTimer = 0;
     for (let i = 0; i < pointsProgressed.length-1 ; i++) {
       const pointPrevious = pointsProgressed[i-1];
       const pointSelected = pointsProgressed[i];
@@ -322,27 +453,91 @@
              Q ${pointSelected.x},${pointSelected.y}
                ${pointNext.x},${pointNext.y}`;
           path.setAttribute("d", d);
-          path.setAttribute("stroke", "black");
+          path.setAttribute("stroke", bgColor);
           path.setAttribute("stroke-width", lineWidth);
           path.setAttribute("fill", "none");
           svg.appendChild(path);
+
+          const length = path.getTotalLength();
+          path.setAttribute("stroke-dasharray", length);
+          path.setAttribute("stroke-dashoffset", length);
+
+
+
+          const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+          animate.setAttribute("attributeName", "stroke-dashoffset");
+          animate.setAttribute("from", length);
+          animate.setAttribute("to", 0);
+          animate.setAttribute("dur", animDuration/2+"ms");
+          animate.setAttribute("fill", "freeze");
+          animate.setAttribute("begin", "indefinite"); // ❌
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              path.getBoundingClientRect(); // force reflow
+              path.style.transition = `stroke-dashoffset ${animDuration}ms linear`;
+              path.style.strokeDashoffset = '0';
+            });
+            animate.beginElement();
+          }, animTimer);
+          path.appendChild(animate);
+
+          animTimer +=animDuration/2
         }
         else {
           const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
           polyline.setAttribute("points", `${pointSelected.x},${pointSelected.y}  ${pointNext.x},${pointNext.y}`);
-          polyline.setAttribute("stroke", "black");
+          polyline.setAttribute("stroke", bgColor);
           polyline.setAttribute("stroke-width", lineWidth);
           polyline.setAttribute("fill", "none");
-          if (pointNext.hasOwnProperty("hasArrow") && pointNext.hasArrow){
-            polyline.setAttribute("marker-end", "url(#arrow)");
+          if (pointSelected.hasOwnProperty("markerStart") && pointSelected.markerStart != null){
+            const markerId = addMarker(svg , pointSelected.markerStart , bgColor)
+            if (markerId != null ){
+              polyline.setAttribute("marker-start", `url(#${markerId})`);
+            }
+          }
+          if (pointNext.hasOwnProperty("markerEnd") && pointNext.markerEnd != null){
+            setTimeout(()=>{
+              const markerId = addMarker(svg , pointNext.markerEnd , bgColor)
+              if (markerId != null ){
+                polyline.setAttribute("marker-end", `url(#${markerId})`);
+              }
+            } , animTimer)
           }
           svg.appendChild(polyline);
+
+          const length = polyline.getTotalLength();
+          polyline.setAttribute("stroke-dasharray", length);
+          polyline.setAttribute("stroke-dashoffset", length);
+
+
+
+          const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+          animate.setAttribute("attributeName", "stroke-dashoffset");
+          animate.setAttribute("from", length);
+          animate.setAttribute("to", 0);
+          animate.setAttribute("dur", animDuration+"ms");
+          animate.setAttribute("fill", "freeze");
+          //animate.setAttribute("begin", animTimer+"ms");
+          animate.setAttribute("begin", "indefinite"); // ❌
+          polyline.appendChild(animate);
+
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              polyline.getBoundingClientRect(); // force reflow
+              polyline.style.transition = `stroke-dashoffset ${animDuration}ms linear`;
+              polyline.style.strokeDashoffset = '0';
+            });
+            animate.beginElement();
+          }, animTimer);
+
+          animTimer +=animDuration;
+
         }
       }
     }
   }
 
-  function createHtmlOnPoint(svgId , html , point){
+  function createHtmlOnPoint(svgId , html , point , animDuration=100 ){
     const svg = document.getElementById(svgId);
 
     const foreign = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
@@ -350,37 +545,56 @@
     foreign.setAttribute("y", point.y);   // مختصات Y
     foreign.setAttribute("width", point.width);
     foreign.setAttribute("height", point.height);
+    foreign.style.position = "relative";
+    foreign.style.zIndex = 2;
 
-    foreign.innerHTML=html
-
+    foreign.insertAdjacentHTML('beforeend', html);
     svg.appendChild(foreign);
+
+    const animY = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+    animY.setAttribute("attributeName", "y");
+    animY.setAttribute("from", point.y - 60);
+    animY.setAttribute("to", point.y);
+    animY.setAttribute("dur", animDuration + "ms");
+    animY.setAttribute("fill", "freeze");
+
+    foreign.appendChild(animY);
   }
 
-  function connectTwoPointWithTreeHierarchy(svgId , objectA , objectB , LYmin=20){
+  function connectTwoPointWithTreeHierarchy(svgId , objectA , objectB , LYmin=20 , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"  , markers={ start:"" , end:"arrow"}   ){
 
     let points = null
-    if (objectB.y >= objectA.y + LYmin){
-      const mid = ((objectB.y - objectA.y)/2);
-      points = [
-        { x: objectA.x , y: objectA.y                      } ,
-        { x: objectA.x , y: objectA.y + mid                } ,
-        { x: objectB.x , y: objectB.y - mid                } ,
-        { x: objectB.x , y: objectB.y       , hasArrow:true}
-      ]
+    if (objectA.x  != objectB.x){
+
+      if (objectB.y >= objectA.y + LYmin){
+        const mid = ((objectB.y - objectA.y)/2);
+        points = [
+          { x: objectA.x , y: objectA.y                   , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+          { x: objectA.x , y: objectA.y + mid                } ,
+          { x: objectB.x , y: objectB.y - mid                } ,
+          { x: objectB.x , y: objectB.y                   , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
+        ]
+      }
+      else{
+        const mid = ((objectB.x - objectA.x)/2);
+        points = [
+          {x: objectA.x         , y: objectA.y            , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+          { x: objectA.x        , y: objectA.y + LYmin                 },
+          { x: objectA.x + mid  , y: objectA.y + LYmin                 },
+          { x: objectB.x - mid  , y: objectB.y - LYmin                 },
+          { x: objectB.x        , y: objectB.y - LYmin                 },
+          { x: objectB.x        , y: objectB.y            , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
+        ]
+      }
     }
-    else{
-      const mid = ((objectB.x - objectA.x)/2);
+    else {
       points = [
-        {x: objectA.x         , y: objectA.y                         },
-        { x: objectA.x        , y: objectA.y + LYmin                 },
-        { x: objectA.x + mid  , y: objectA.y + LYmin                 },
-        { x: objectB.x - mid  , y: objectB.y - LYmin                 },
-        { x: objectB.x        , y: objectB.y - LYmin                 },
-        { x: objectB.x        , y: objectB.y          , hasArrow:true},
+        { x: objectA.x , y: objectA.y                    , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+        { x: objectB.x , y: objectB.y                    , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
       ]
     }
 
-    connectTreeYPoint(svgId , points);
+    connectDirectionPoint(svgId , points , lineWidth ,animDuration , bgColor);
   }
 
 
@@ -400,7 +614,6 @@
     node.row = depth;
 
     if (node.children.length === 0) {
-      // برگ → ستون پشت سر هم با فاصله 2
       node.col = colCounter.value;
       colCounter.value += 2;
     } else {
@@ -417,6 +630,20 @@
       chartTreeY_flatten(node.children, out);
     });
     return out;
+  }
+
+  function chartTreeY_closeLevelDefault(objects , templateOptions){
+    const levelClose = templateOptions.hasOwnProperty("levelClose") ? templateOptions.levelClose : null;
+    if (levelClose != null){
+      for (let i = 0; i < objects.length; i++) {
+        const item = objects[i];
+
+        if (item !=null && item.hasOwnProperty("row") && item.row == levelClose-1 && item.hasOwnProperty("children") && item.children.length >0){
+          objects[i].isOpen = false;
+        }
+      }
+    }
+    return objects;
   }
 
   function chartTreeY_getPosition(objects , templateOptions) {
@@ -440,6 +667,8 @@
     for (let i = 0; i < objects.length ; i++) {
       const itemObject = objects[i];
       const tags = itemObject.hasOwnProperty("tags") ? itemObject.tags : {};
+      tags["id"] = itemObject.id
+      tags["parent"] = itemObject.parent
 
       objects[i].template = template.replace(/{{(.*?)}}/g, (match, key) => {
         return tags[key.trim()] ?? "";
@@ -449,94 +678,249 @@
     return objects;
   }
 
+  function chartTreeY_drawStatus(objects, topDoClose = false) {
+    // کپی سطحی از آبجکت‌ها (اگر نیاز به کپی عمیق‌تری داری،
+    // از JSON.parse(JSON.stringify(objects)) یا روش دلخواه استفاده کن)
+    const objectsCopy = objects.map(item => ({ ...item, tags: { ...item.tags } }));
+
+    // نقشه id -> node برای دسترسی سریع
+    const map = {};
+    objectsCopy.forEach(item => map[item.id] = item);
+
+    // نقشه parent -> [children]
+    const childrenMap = {};
+    objectsCopy.forEach(item => {
+      if (!childrenMap[item.parent]) childrenMap[item.parent] = [];
+      childrenMap[item.parent].push(item);
+    });
+
+    // تابعی برای بستن تمام فرزندان (بازگشتی)
+    function closeChildren(node) {
+      const children = childrenMap[node.id] || [];
+      children.forEach(child => {
+        child.isOpen = false;
+        closeChildren(child);
+      });
+    }
+
+    // همه نودهایی که فعلاً isOpen === false هستند
+    const closedNodes = objectsCopy.filter(n => n.isOpen === false);
+
+    // فیلتر کردن: فقط نودهایی که بالاترین نود بسته در شاخهٔ خود هستند
+    // (یعنی هیچ یک از والدهایشان isOpen === false نباشد)
+    const topClosedNodes = closedNodes.filter(node => {
+      let p = map[node.parent];
+      while (p) {
+        if (p.isOpen === false) {
+          // اگر یک والد بسته پیدا شد، این node دیگر top-most نیست
+          return false;
+        }
+        p = map[p.parent];
+      }
+      return true; // هیچ والد بسته‌ای نبود => این top-most است
+    });
+
+    // حالا فقط همین top-most ها را پردازش کن
+    topClosedNodes.forEach(topClosed => {
+      // اگر بخواهیم بالاترین را باز/بسته کنیم:
+      topClosed.isOpen = !topDoClose; // اگر topDoClose=false → باز شود (true)
+      // و سپس همهٔ فرزندان آن را ببندیم
+      closeChildren(topClosed);
+    });
+
+    return objectsCopy;
+  }
+
+
   function chartTreeY_drawShape(svgId , objects , templateOptions) {
     const Width = templateOptions.hasOwnProperty("W") ? templateOptions.W : 100;
     const Height = templateOptions.hasOwnProperty("H") ? templateOptions.H : 100;
+    const marginX =  templateOptions.hasOwnProperty("marginX") ? templateOptions.marginX : 100;
+    const marginY =  templateOptions.hasOwnProperty("marginY") ? templateOptions.marginY : 100;
+    const zoomCenter =  templateOptions.hasOwnProperty("zoomCenter") ? templateOptions.zoomCenter : false;
 
+    let objectStatus = chartTreeY_drawStatus(objects);
+    for (let i = 0; i < objectStatus.length ; i++) {
+      const itemObject = objectStatus[i];
 
-    for (let i = 0; i < objects.length ; i++) {
-      const itemObject = objects[i];
-      if (itemObject.hasOwnProperty("template") && itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y")){
-        const template = itemObject.template;
-        const x = itemObject.x;
-        const y = itemObject.y;
+      if (itemObject != null && ((itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || !itemObject.hasOwnProperty("isOpen"))){
 
-        createHtmlOnPoint(
-                svgId,
-                template ,
-                { x: x-(Width/2) , y: y  , width:Width+5 , height:Height+5}
-        )
+        if (itemObject.hasOwnProperty("template") && itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y")){
+          const template = itemObject.template;
+          const x = itemObject.x + marginX;
+          const y = itemObject.y + marginY;
+
+          createHtmlOnPoint(
+                  svgId,
+                  template ,
+                  { x: x-(Width/2) , y: y  , width:Width+5 , height:Height+5}
+          )
+
+          if (zoomCenter && i==0){
+            section.scrollLeft = x - section.clientWidth  / 2 ;
+            section.scrollTop  = y - section.clientHeight / 2 + 200 ;
+          }
+        }
+
       }
+
     }
     return objects;
   }
 
   function chartTreeY_drawLine(svgId , objects , templateOptions) {
-    const Height = templateOptions.hasOwnProperty("H") ? templateOptions.H : 100;
-    const h = templateOptions.hasOwnProperty("h") ? templateOptions.h : 30;
-    const dH = templateOptions.hasOwnProperty("dH") ? templateOptions.dH : 50;
+    const Height =        templateOptions.hasOwnProperty("H")            ? templateOptions.H               : 100;
+    const marginX =       templateOptions.hasOwnProperty("marginX")      ? templateOptions.marginX         : 100;
+    const marginY =       templateOptions.hasOwnProperty("marginY")      ? templateOptions.marginY         : 100;
+    const lYMin =         templateOptions.hasOwnProperty("lYMin")        ? templateOptions.lYMin           : 20;
+    const lineWidth =     templateOptions.hasOwnProperty("lineWidth")    ? templateOptions.lineWidth       : 2;
+    const animDuration =  templateOptions.hasOwnProperty("animDuration") ? templateOptions.animDuration    : 250;
+    const bgColor =       templateOptions.hasOwnProperty("animDuration") ? templateOptions.bgColor         : "#9b9b9b";
+    const markerEnd =     templateOptions.hasOwnProperty("markerEnd")    ? templateOptions.markerEnd       : "arrow";
+    const markerStat =    templateOptions.hasOwnProperty("markerStat")   ? templateOptions.markerStat       : "plusMarker";
 
-    for (let i = 0; i < objects.length ; i++) {
-      const itemObject = objects[i];
-      if (itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y") && itemObject.hasOwnProperty("children")){
-        const children = itemObject.children;
-        const positionX1 = itemObject.x;
-        const positionY1 = itemObject.y + Height // - h + dH + Height + 10 //- Height/2// - h + Height + dH;
+    let objectStatus = chartTreeY_drawStatus(objects , true);
+    for (let i = 0; i < objectStatus.length ; i++) {
+      const itemObject = objectStatus[i];
 
-        for (let j = 0; j < children.length; j++) {
-          const itemChild = children[j];
-          if (itemChild.hasOwnProperty("x") && itemChild.hasOwnProperty("y")){
-            const positionX2 = itemChild.x;
-            const positionY2 = itemChild.y - 10 ///- dH - h + 10 //+ Height/2//- h  + dH + 10;
+      if (itemObject != null && ((itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || !itemObject.hasOwnProperty("isOpen"))){
+        if (itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y") && itemObject.hasOwnProperty("children")){
+          const children = itemObject.children;
+          const positionX1 = itemObject.x + marginX;
+          const positionY1 = itemObject.y + Height + marginY;
 
-            connectTwoPointWithTreeHierarchy(
-                    svgId ,
-                    {x: positionX1 , y:positionY1} ,
-                    {x: positionX2 , y:positionY2} ,
-            );
+          for (let j = 0; j < children.length; j++) {
+            const itemChild = children[j];
+            if (itemChild.hasOwnProperty("x") && itemChild.hasOwnProperty("y")){
+              const positionX2 = itemChild.x + marginX;
+              const positionY2 = itemChild.y - 10 + marginY;
+
+              connectTwoPointWithTreeHierarchy(
+                      svgId ,
+                      {x: positionX1 , y:positionY1} ,
+                      {x: positionX2 , y:positionY2} ,
+                      lYMin , lineWidth , animDuration , bgColor ,
+                      {
+                        start: markerStat , end:markerEnd
+                      }
+              );
+            }
+
           }
 
         }
-
       }
+
     }
     return objects;
   }
 
+  function chartTreeY_setSizeChart(svgId , objects , templateOptions ) {
+    const svg = document.getElementById(svgId);
+    const Width =    templateOptions.hasOwnProperty("W")       ? templateOptions.W       : 100;
+    const Height =   templateOptions.hasOwnProperty("H")       ? templateOptions.H       : 100;
+    const dHeight =  templateOptions.hasOwnProperty("dH")      ? templateOptions.dH      : 50;
+    const marginX =  templateOptions.hasOwnProperty("marginX") ? templateOptions.marginX : 100;
+    const marginY =  templateOptions.hasOwnProperty("marginY") ? templateOptions.marginY : 100;
+
+    let width = 0;
+    let height = 0;
+    for (let i = 0; i < objects.length ; i++) {
+      const itemObject = objects[i];
+      if (itemObject.hasOwnProperty("row") && itemObject.hasOwnProperty("col")){
+        const itemWidth  = itemObject.col*(Width) + Width;
+        const itemHeight = (itemObject.row)*(Height+2*dHeight) + (Height+2*dHeight);
+        if (itemWidth > width ){
+          width = itemWidth
+        }
+        if (itemHeight > height ){
+          height = itemHeight
+        }
+      }
+    }
+
+    svg.setAttribute("width", width + 2*marginX);
+    svg.setAttribute("height", height + 2*marginY);
+  }
+
   function chartTreeY_init(svgId , template , templateOptions, objects){
+    const svg =document.getElementById(svgId)
+    svg.innerHTML = "<defs></defs>"
+    svg.style.border = "none"; // حذف border
 
     const tree = chartTreeY_buildTree(objects);
     chartTreeY_assignPositions(tree[0]);
     objects = chartTreeY_flatten(tree);
+    objects = chartTreeY_closeLevelDefault(objects , templateOptions);
     objects = chartTreeY_getPosition(objects , templateOptions);
     objects = chartTreeY_getTemplate(objects , template);
     objects = chartTreeY_drawShape(svgId , objects , templateOptions);
     objects = chartTreeY_drawLine(svgId , objects , templateOptions);
+    chartTreeY_setSizeChart(svgId , objects , templateOptions);
 
-    console.log(objects)
+    return objects;
   }
 
 
 
-  chartTreeY_init(
-          "mysvg" ,
-          `<div style="border: 3px solid black; width:100px;border-radius: 100%; line-height: 100px; height:100px;text-align: center">{{charName}}</div>` ,
-          { W: 100 , H:100 , h:30 , dH:30 } ,
-          [
-            {id:1, parent:0, tags:{charName:"A"}},
-            {id:2, parent:1, tags:{charName:"B"}},
-            {id:3, parent:1, tags:{charName:"C"}},
-            {id:4, parent:2, tags:{charName:"D"}},
-            {id:5, parent:2, tags:{charName:"E"}},
-            {id:6, parent:2, tags:{charName:"F"}},
-            {id:7, parent:2, tags:{charName:"G"}},
-            {id:8, parent:3, tags:{charName:"H"}},
-            {id:9, parent:3, tags:{charName:"k"}},
-            {id:10, parent:9, tags:{charName:"m"}},
-            {id:11, parent:9, tags:{charName:"m"}},
-            {id:11, parent:6, tags:{charName:"m"}},
-          ]
-  );
+
+  function chartRender(objects, levelClose=null , zoomCenter=false){
+    return  chartTreeY_init(
+            "mysvg" ,
+            `
+<div style="border: 3px solid black; width:100px;border-radius: 100%; line-height: 100px; height:100px;text-align: center;cursor: pointer" onclick="test({{id}})">{{charName}}</div>
+` ,
+            {
+              W: 100 , H:100 , h:30 , dH:30 ,
+              marginX:1000, marginY:1000 , lYMin:20 ,
+              lineWidth:2 , animDuration:250 , bgColor:"#9b9b9b" , markerEnd:"arrow" , markerStat:"circle",
+              levelClose , zoomCenter
+            } ,
+            objects
+    );
+  }
+
+  let objects =  [
+    {id:1, parent:0, tags:{charName:"A"}},
+    {id:2, parent:1, tags:{charName:"B"}},
+    {id:11, parent:1, tags:{charName:"C"}},
+    {id:3, parent:1, tags:{charName:"D"}},
+    {id:4, parent:2, tags:{charName:"E"}},
+    {id:5, parent:2, tags:{charName:"F"}},
+    {id:6, parent:2, tags:{charName:"G"}},
+    {id:7, parent:2, tags:{charName:"H"}},
+    {id:8, parent:3, tags:{charName:"K"}},
+    {id:9, parent:3, tags:{charName:"L"}},
+    {id:10, parent:9, tags:{charName:"M"}},
+    {id:12, parent:9, tags:{charName:"N"}},
+    {id:13, parent:11, tags:{charName:"T"}},
+  ]
+  const levelClose = 2;
+  objects = chartRender(objects , levelClose , true);
+
+
+  function test(id) {
+    for (let i = 0; i <objects.length ; i++) {
+      const item = objects[i];
+      if (item.hasOwnProperty("id") && item.id == id && item.hasOwnProperty("children") && item.children.length > 0){
+        objects[i].isOpen = item.hasOwnProperty("isOpen")? !item.isOpen : false;
+        const keysToKeep = ["id", "parent", "tags" , "isOpen"];
+
+        objects = objects.map(obj =>
+                Object.fromEntries(
+                        keysToKeep
+                                .filter(key => key in obj) // ✅ شرط وجود کلید
+                                .map(key => [key, obj[key]])
+                )
+        );
+
+        objects = chartRender(objects);
+        break;
+      }
+    }
+
+  }
+
 
 </script>
 

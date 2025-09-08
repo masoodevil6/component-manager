@@ -30,8 +30,8 @@ if (typeof component_props === 'undefined') {
         shadowColor1: "rgba(98,98,98,0.2)",
         shadowColor2: "rgba(98,98,98,0.07)",
 
-        darkColor1: "rgb(0,0,0)",
-        darkColor2: "rgb(42,42,42)",
+        darkColor1: "rgb(30,30,30)",
+        darkColor2: "rgb(157,157,157)",
 
         shanColor1: "#ffffff",
         shanColor2: "#f3f3f3",
@@ -196,6 +196,12 @@ tools_init = {
             tree: {
                 backgroundColor_unSelected : component_props.shadowColor1 ,
                 backgroundColor_selected : component_props.secondaryColor1 ,
+            } ,
+
+            mosuseScroller: {
+                backgroundColor_dark : component_props.darkColor2 ,
+                backgroundColor_light: component_props.shanColor2 ,
+                backgroundColor_tools: component_props.darkColor1 ,
             } ,
 
 

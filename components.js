@@ -84,6 +84,7 @@ if (typeof listComponent === 'undefined') {
         ComponentBorder:                     "component-border" ,                         //99-03
         ComponentImage:                      "component-image" ,                          //99-04
         ComponentLayout:                     "component-layout" ,                         //99-05
+        ComponentMouseScroller:              "component-mouse-scroller" ,                 //99-06
 
     }
 }
@@ -161,6 +162,7 @@ if (typeof listComponentCategory === 'undefined') {
         { id: 99003  , name: " [99-03] " +  listComponent["ComponentBorder"]                        , parent_id:99 } ,
         { id: 99004  , name: " [99-04] " +  listComponent["ComponentImage"]                         , parent_id:99 } ,
         { id: 99005  , name: " [99-05] " +  listComponent["ComponentLayout"]                        , parent_id:99 } ,
+        { id: 99006  , name: " [99-05] " +  listComponent["ComponentMouseScroller"]                 , parent_id:99 } ,
 
     ]
 }
@@ -14272,3 +14274,325 @@ window.ComponentLayout = class ComponentLayout extends ComponentBase{
 }
 
 
+
+
+
+
+
+/*-------------------------------------
+ 99-04) Component Mouse Scroller
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+-------------------------------------*/
+window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBase{
+
+
+    _BACKGROUND_TYPE_DARK = "dark";
+    _BACKGROUND_TYPE_LIGHT = "light";
+
+    _IS_DOWN=false;
+    _START_X=null;
+    _START_Y=null;
+    _SCROLL_TOP=null;
+    _SCROLL_LEFT=null;
+    _SCALE=1;
+    _MIN_SCALE = 0.2;
+    _MAX_SCALE = 5;
+
+    /* ---------------------------------------------
+     PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            {prop : "prop_structureClass"            , default: []} ,
+            {prop : "prop_structureStyles"           , default: {}} ,
+        ] ,
+        part_layout_scroll: [
+            {prop : "prop_backgroundColor_type"      , default: null } ,
+            {prop : "prop_backgroundColor_dark"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_dark")    ? tools_const.styles.mosuseScroller.backgroundColor_dark : ""} ,
+            {prop : "prop_backgroundColor_light"     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_light")   ? tools_const.styles.mosuseScroller.backgroundColor_light : ""} ,
+
+            {prop : "prop_scollerClass"              , default: ["border" , "border-secondry"]} ,
+            {prop : "prop_scrollerStyles"            , default: {}} ,
+            {prop : "prop_scrollerWidth"             , default: "100%"} ,
+            {prop : "prop_scrollerHeight"            , default: "1000px"} ,
+        ] ,
+        part_layout_tools: [
+            {prop : "prop_backgroundColor_tools"     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_tools")   ? tools_const.styles.mosuseScroller.backgroundColor_tools : ""} ,
+
+        ] ,
+        part_layout_content: [
+
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_layout_scroll: {
+                part_layout_tools: {} ,
+                part_layout_content: {}
+            } ,
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentMouseScroller.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_layout_scroll":
+                return this.template_render_layoutScroll(partName);
+            case "part_layout_tools":
+                return this.template_render_layoutTools(partName);
+            case "part_layout_content":
+                return this.template_render_layoutContent(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure() {
+        const content = `
+ ${this.templateFn("part_layout_scroll") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_layoutScroll(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_scollerClass  =    data.hasOwnProperty("prop_scollerClass")           ?  data.prop_scollerClass       : [];
+            const prop_scrollerStyles  =  data.hasOwnProperty("prop_scrollerStyles")         ?  data.prop_scrollerStyles     : {};
+            const prop_scrollerWidth  =   data.hasOwnProperty("prop_scrollerWidth")          ?  data.prop_scrollerWidth      : "";
+            const prop_scrollerHeight  =  data.hasOwnProperty("prop_scrollerHeight")         ?  data.prop_scrollerHeight     : "";
+            const prop_backgroundColor_light  = data.hasOwnProperty("prop_backgroundColor_light")   ?  data.prop_backgroundColor_light    : "";
+            const prop_backgroundColor_dark  =  data.hasOwnProperty("prop_backgroundColor_dark")    ?  data.prop_backgroundColor_dark     : "";
+            const prop_backgroundColor_type  =  data.hasOwnProperty("prop_backgroundColor_type")    ?  data.prop_backgroundColor_type     : null;
+
+            let backgroundSelected="";
+            switch (prop_backgroundColor_type){
+                case this._BACKGROUND_TYPE_LIGHT:
+                    backgroundSelected = prop_backgroundColor_light;
+                    break;
+                case this._BACKGROUND_TYPE_DARK:
+                    backgroundSelected = prop_backgroundColor_dark;
+                    break;
+                default:
+                    backgroundSelected = prop_backgroundColor_light;
+                    break;
+            }
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-layout-scroll-${this._COMPONENT_RANDOM_ID}"
+         class="${tools_public.renderListClass(prop_scollerClass)} position-relative p-2"
+         onmousedown="${this.getFn("fn_scrollerModusDown" , "event")}"
+         onmousemove="${this.getFn("fn_scrollerModusMove" , "event")}"
+         onmousemove="${this.getFn("fn_scrollerWheel" , "event")}"
+         onmouseleave="${this.getFn("fn_scrollerMouseLeave" , "event")}"
+         onmouseup="${this.getFn("fn_scrollerMouseUp" , "event")}"
+         >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-layout-scroll-${this._COMPONENT_RANDOM_ID}{
+              overflow: auto;
+              cursor: all-scroll;
+              user-select: none;    
+              -webkit-user-select: none;
+              -moz-user-select: none;  
+              -ms-user-select: none; 
+              background-color: ${backgroundSelected}; 
+              width: ${prop_scrollerWidth}; 
+              height: ${prop_scrollerHeight}; 
+              ${tools_public.renderListStyle(prop_scrollerStyles)}
+         }
+         #${this._COMPONENT_ID} #component-layout-scroll-${this._COMPONENT_RANDOM_ID}::-webkit-scrollbar {
+               display: none;
+         }
+
+     </style>
+   
+  
+   
+   ${this.templateFn("part_layout_content") ?? ""}
+    
+</section>
+        `;
+        }
+        /*${this.templateFn("part_layout_tools") ?? ""}*/
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_layoutTools(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_backgroundColor_tools  =  data.hasOwnProperty("prop_backgroundColor_tools")    ?  data.prop_backgroundColor_tools     : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-layout-tools-${this._COMPONENT_RANDOM_ID}"
+         class=" position-absolute  border rounded"
+         >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-layout-scroll-${this._COMPONENT_RANDOM_ID}:hover  #component-layout-tools-${this._COMPONENT_RANDOM_ID}{
+               opacity: 1;
+                 transition: opacity 500ms ease;
+         }
+         
+         #${this._COMPONENT_ID} #component-layout-tools-${this._COMPONENT_RANDOM_ID}{
+          
+            opacity: 0;
+            height: 35px;
+            width: calc(100% - 10px);
+            top:5px;
+            left:5px;
+            background-color: ${prop_backgroundColor_tools};
+         }
+     </style>
+     
+     
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_layoutContent(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-layout-content-${this._COMPONENT_RANDOM_ID}"
+         class="" 
+         >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-layout-content-${this._COMPONENT_RANDOM_ID}{
+             width:1000px;
+             height: 1000px;
+         }
+     </style>
+     
+     HELLO WORLD
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_getElementScroller(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-layout-scroll-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_getElementContent(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-layout-content-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+    fn_scrollerModusDown(event){
+        const scroller = this.fn_getElementScroller();
+        this._IS_DOWN = true;
+        this._START_X = event.pageX - scroller.offsetLeft;
+        this._START_Y = event.pageY - scroller.offsetTop;
+        this._SCROLL_LEFT = scroller.scrollLeft;
+        this._SCROLL_TOP = scroller.scrollTop;
+
+        event.preventDefault();
+    }
+
+    fn_scrollerModusMove(event){
+        const scroller = this.fn_getElementScroller();
+
+        if (! this._IS_DOWN) return;
+        event.preventDefault();  // جلوگیری از رفتار پیش‌فرض مرورگر
+        const x = event.pageX - scroller.offsetLeft;
+        const y = event.pageY - scroller.offsetTop;
+        const walkX = (x - this._START_X) * -1;
+        const walkY = (y - this._START_Y) * -1;
+        scroller.scrollLeft = this._SCROLL_LEFT + walkX;
+        scroller.scrollTop  = this._SCROLL_TOP + walkY;
+    }
+
+    fn_scrollerWheel(event){
+        const scroller = this.fn_getElementScroller();
+
+        event.preventDefault();
+
+        const rect = scroller.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        const zoomSpeed = 0.001;
+        const newScale = Math.min(Math.max(this._SCALE - event.deltaY * zoomSpeed, this._MIN_SCALE), this._MAX_SCALE);
+        const scaleRatio = newScale / this._SCALE;
+
+        scroller.scrollLeft = (scroller.scrollLeft + mouseX) * scaleRatio - mouseX;
+        scroller.scrollTop  = (scroller.scrollTop + mouseY)  * scaleRatio - mouseY;
+
+        this._SCALE = newScale;
+        this.fn_applyZoom();
+    }
+
+    fn_applyZoom(event){
+        const sectionScrollerBody = this.fn_getElementContent();
+        sectionScrollerBody.style.transform = `scale(${this._SCALE})`;
+        sectionScrollerBody.style.transformOrigin = "0 0";
+    }
+
+    fn_scrollerMouseLeave(event){
+        this._SCALE = false
+    }
+
+    fn_scrollerMouseUp(event){
+        this._SCALE = false
+    }
+
+}
