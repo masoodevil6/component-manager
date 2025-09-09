@@ -825,3 +825,212 @@ tools_stepper = {
         return node;
     }
 }
+
+
+
+
+
+
+tools_svg = {
+
+    addDefsForMarker(svg){
+        let svgDefs = svg.getElementsByTagName("defs");
+        if (svgDefs == null){
+            svg.innerText = svg.innerText + "<defs></defs>";
+        }
+        return svg.getElementsByTagName("defs")[0];
+    } ,
+
+    addMarker(svg , markerName, bgColor){
+        let svgDefs = tools_svg.addDefsForMarker(svg);
+        let markerHtml = null;
+        let markerId = `${markerName}_${Math.random()*1000}`;
+        switch (markerName){
+            case "arrow":
+                markerHtml = `
+        <marker id="${markerId}" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L3,3 L0,6 L9,3 z" fill="${bgColor}" />
+        </marker>
+        `;
+                break;
+            case "circle":
+                markerHtml = `
+        <marker id="${markerId}" markerWidth="20" markerHeight="20" refX="10" refY="10" orient="auto" markerUnits="strokeWidth" >
+          <circle cx="10" cy="10" r="3" fill="white" stroke="${bgColor}" stroke-width="1"  style="pointer-events:none; cursor:pointer;" />
+        </marker>
+        `;
+                break;
+        }
+
+        if (markerHtml != null){
+            svgDefs.innerHTML = svgDefs.innerHTML + markerHtml;
+            return markerId;
+        }
+
+        return null;
+    } ,
+
+
+
+
+
+
+
+
+    getPointInLinWithPercent(pointA , pointB , isStart=true , percent=0.1){
+        return {
+            x: (isStart ? percent : (1-percent)) * (pointB.x - pointA.x) + pointA.x ,
+            y: (isStart ? percent : (1-percent)) * (pointB.y - pointA.y) + pointA.y ,
+        }
+    } ,
+
+    getPointInLinWithLength(pointA , pointB , isStart=true , length=10){
+        const d = Math.sqrt(Math.pow(pointB.x - pointA.x, 2) + Math.pow(pointB.y - pointA.y, 2));
+        const p = length/d;
+        return tools_svg.getPointInLinWithPercent(pointA , pointB , isStart , p);
+    } ,
+
+
+
+
+
+
+
+
+
+    connectDirectionPoint(svg , points , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"){
+        const pointsProgressed = [];
+        if (points != null && Array.isArray(points)){
+            for (let i = 0; i < points.length ; i++) {
+                const pointSelected = points[i];
+
+                let isJoin = true;
+                if (i == 0 || i == points.length -1){
+                    isJoin = false;
+                }
+
+                if (isJoin){
+                    const pointAB = tools_svg.getPointInLinWithLength(points[i-1] , points[i]  , false);
+                    pointSelected.isJoin = true;
+                    const pointBC = tools_svg.getPointInLinWithLength(points[i]  , points[i+1] , true);
+                    pointsProgressed.push(...[pointAB , pointSelected , pointBC])
+                }
+                else {
+                    pointsProgressed.push(pointSelected)
+                }
+            }
+        }
+
+        let animTimer = 0;
+        for (let i = 0; i < pointsProgressed.length-1 ; i++) {
+            const pointPrevious = pointsProgressed[i-1];
+            const pointSelected = pointsProgressed[i];
+            const pointNext = pointsProgressed[i+1];
+
+            if (!pointNext.hasOwnProperty("isJoin") || !pointNext.isJoin){
+                if (pointSelected.hasOwnProperty("isJoin") && pointSelected.isJoin){
+                    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    const d = `M ${pointPrevious.x},${pointPrevious.y}
+             Q ${pointSelected.x},${pointSelected.y}
+               ${pointNext.x},${pointNext.y}`;
+                    path.setAttribute("d", d);
+                    path.setAttribute("stroke", bgColor);
+                    path.setAttribute("stroke-width", lineWidth);
+                    path.setAttribute("fill", "none");
+                    svg.appendChild(path);
+
+                    const length = path.getTotalLength();
+                    path.setAttribute("stroke-dasharray", length);
+                    path.setAttribute("stroke-dashoffset", length);
+
+                    const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                    animate.setAttribute("attributeName", "stroke-dashoffset");
+                    animate.setAttribute("from", length);
+                    animate.setAttribute("to", 0);
+                    animate.setAttribute("dur", animDuration/2+"ms");
+                    animate.setAttribute("fill", "freeze");
+                    animate.setAttribute("begin", "indefinite"); // ❌
+                   // animate.setAttribute("begin", animTimer+"ms");
+                    requestAnimationFrame(() => {
+                        path.getBoundingClientRect(); // force reflow
+                        path.style.transition = `stroke-dashoffset ${animDuration}ms linear`;
+                        path.style.strokeDashoffset = '0';
+                    });
+                    path.appendChild(animate);
+
+                    animTimer +=animDuration/2
+                }
+                else {
+                    const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                    polyline.setAttribute("points", `${pointSelected.x},${pointSelected.y}  ${pointNext.x},${pointNext.y}`);
+                    polyline.setAttribute("stroke", bgColor);
+                    polyline.setAttribute("stroke-width", lineWidth);
+                    polyline.setAttribute("fill", "none");
+
+                    svg.appendChild(polyline);
+
+                    const length = polyline.getTotalLength();
+                    polyline.setAttribute("stroke-dasharray", length);
+                    polyline.setAttribute("stroke-dashoffset", length);
+
+                    const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                    animate.setAttribute("attributeName", "stroke-dashoffset");
+                    animate.setAttribute("from", length);
+                    animate.setAttribute("to", 0);
+                    animate.setAttribute("dur", animDuration+"ms");
+                    animate.setAttribute("fill", "freeze");
+                    animate.setAttribute("begin", animTimer+"ms");
+                    animate.setAttribute("begin", "indefinite"); // ❌
+                    //polyline.appendChild(animate);
+
+                    requestAnimationFrame(() => {
+                        polyline.getBoundingClientRect(); // force reflow
+                        polyline.style.transition = `stroke-dashoffset ${animDuration}ms linear`;
+                        polyline.style.strokeDashoffset = '0';
+                    });
+
+                    animTimer +=animDuration;
+                    if (pointSelected.hasOwnProperty("markerStart") && pointSelected.markerStart != null){
+                        const markerId = tools_svg.addMarker(svg , pointSelected.markerStart , bgColor)
+                        if (markerId != null ){
+                            polyline.setAttribute("marker-start", `url(#${markerId})`);
+                        }
+                    }
+                    if (pointNext.hasOwnProperty("markerEnd") && pointNext.markerEnd != null){
+
+                        setTimeout(()=>{
+                            const markerId = tools_svg.addMarker(svg , pointNext.markerEnd , bgColor)
+
+                            if (markerId != null ){
+                                polyline.setAttribute("marker-end", `url(#${markerId})`);
+                            }
+                        } , animTimer-animDuration*3)
+                    }
+                }
+            }
+        }
+    } ,
+
+    createHtmlOnPoint(svg , html , point , animDuration=100 ){
+        const foreign = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+        foreign.setAttribute("x", point.x);   // مختصات X
+        foreign.setAttribute("y", point.y);   // مختصات Y
+        foreign.setAttribute("width", point.width);
+        foreign.setAttribute("height", point.height);
+        foreign.style.position = "relative";
+        foreign.style.zIndex = 2;
+
+        foreign.insertAdjacentHTML('beforeend', html);
+        svg.appendChild(foreign);
+
+        const animY = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+        animY.setAttribute("attributeName", "y");
+        animY.setAttribute("from", point.y - 60);
+        animY.setAttribute("to", point.y);
+        animY.setAttribute("dur", animDuration + "ms");
+        animY.setAttribute("fill", "freeze");
+
+        foreign.appendChild(animY);
+    }
+
+}

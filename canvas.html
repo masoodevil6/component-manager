@@ -561,7 +561,16 @@
     foreign.appendChild(animY);
   }
 
-  function connectTwoPointWithTreeHierarchy(svgId , objectA , objectB , LYmin=20 , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"  , markers={ start:"" , end:"arrow"}   ){
+
+
+
+
+
+
+
+
+
+  function chartTreeY_connectTwoPointWithTreeHierarchy(svgId , objectA , objectB , LYmin=20 , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"  , markers={ start:"" , end:"arrow"}   ){
 
     let points = null
     if (objectA.x  != objectB.x){
@@ -596,10 +605,6 @@
 
     connectDirectionPoint(svgId , points , lineWidth ,animDuration , bgColor);
   }
-
-
-
-
 
   function chartTreeY_buildTree(data, parentId = 0) {
     return data
@@ -731,7 +736,6 @@
     return objectsCopy;
   }
 
-
   function chartTreeY_drawShape(svgId , objects , templateOptions) {
     const Width = templateOptions.hasOwnProperty("W") ? templateOptions.W : 100;
     const Height = templateOptions.hasOwnProperty("H") ? templateOptions.H : 100;
@@ -795,7 +799,7 @@
               const positionX2 = itemChild.x + marginX;
               const positionY2 = itemChild.y - 10 + marginY;
 
-              connectTwoPointWithTreeHierarchy(
+              chartTreeY_connectTwoPointWithTreeHierarchy(
                       svgId ,
                       {x: positionX1 , y:positionY1} ,
                       {x: positionX2 , y:positionY2} ,

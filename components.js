@@ -5,7 +5,16 @@ Version: 0.2
 */
 
 
-
+if (typeof listLayoutZIndex === 'undefined') {
+    var listLayoutZIndex = {
+        basic: 0 ,
+        menu_main: 1 ,
+        tools: 2 ,
+        tools_btn: 3 ,
+        blur_popup:4 ,
+        popup: 5
+    }
+}
 
 
 
@@ -69,6 +78,7 @@ if (typeof listComponent === 'undefined') {
 
         // [20] Charts
         ComponentChart:                      "component-chart" ,                          //20-01
+        ComponentChartTreeY:                 "component-chart-tree-y" ,                   //20-02
 
         // [21] QR CODE
         ComponentQrCode:                     "component-qr-code" ,                        //21-01
@@ -148,7 +158,8 @@ if (typeof listComponentCategory === 'undefined') {
         { id: 15001  , name: " [15-01] " + listComponent["ComponentBreadcrumb"]                     , parent_id:15 } ,
 
         { id: 20     , name: " [20] Charts "                                                        , parent_id:0 } ,
-        { id: 20001  , name: " [20-01] " +  listComponent["ComponentChart"]                        , parent_id:20 } ,
+        { id: 20001  , name: " [20-01] " +  listComponent["ComponentChart"]                         , parent_id:20 } ,
+        { id: 20002  , name: " [20-02] " +  listComponent["ComponentChartTreeY"]                    , parent_id:20 } ,
 
         { id: 21     , name: " [21] QR CODE "                                                       , parent_id:0 } ,
         { id: 21001  , name: " [21-01] " + listComponent["ComponentQrCode"]                         , parent_id:20 } ,
@@ -2612,12 +2623,12 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
       #${this._COMPONENT_ID} .form-loading-${this._COMPONENT_RANDOM_ID}{
            left: 0;
            top: 0;
-           z-index: 5000;
+           z-index: ${listLayoutZIndex.hasOwnProperty("popup") ? listLayoutZIndex.popup: 5000};
            background-color: ${prop_background_loading};
       }
 
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} {
-          z-index: 12;
+          z-index: ${listLayoutZIndex.hasOwnProperty("blur_popup") ? listLayoutZIndex.blur_popup: 10};
           color: ${prop_background_shadow};
           left: 50%;
           top: 50%;
@@ -4076,7 +4087,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
       
      <style>
          #${this._COMPONENT_ID} #component-select-option-form-position-element-${ this._COMPONENT_RANDOM_ID}{
-             z-index:11;
+             z-index: ${listLayoutZIndex.hasOwnProperty("tools") ? listLayoutZIndex.tools: 10};
              position:relative;
          }
      </style>
@@ -4316,7 +4327,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
 
             let styles = {
-                "z-index" : "10",
+                "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                 "margin" : "0 5px",
                 "width" : "30px",
                 "line-height" :   "30px",
@@ -4419,7 +4430,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
                 const prop_btnAddClass          =  data.hasOwnProperty("prop_btnAddClass")                ?  data.prop_btnAddClass                   : [];
 
                 let styles =  {
-                    "z-index" : "10" ,
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
                     "height" : "30px" ,
@@ -5340,7 +5351,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
                 const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
 
                 let styles = {
-                    "z-index" : "10",
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                     "width" :   "35px",
                     "line-height" : "30px",
                     "cursor" : "pointer",
@@ -5397,7 +5408,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
 
             let styles = {
-                "z-index" : "10",
+                "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10  ,
                 "margin" : "0 5px",
                 "width" : "30px",
                 "line-height" :   "30px",
@@ -5446,7 +5457,7 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
                 const prop_btnAddClass          =  data.hasOwnProperty("prop_btnAddClass")                ?  data.prop_btnAddClass                   : [];
 
                 let styles =  {
-                    "z-index" : "10" ,
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10  ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
                     "height" : "30px" ,
@@ -5801,7 +5812,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                 const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
 
                 let styles = {
-                    "z-index" : "10",
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                     "width" :   "35px",
                     "line-height" : "30px",
                     "cursor" : "pointer",
@@ -5860,7 +5871,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
 
             let styles = {
-                "z-index" : "10",
+                "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                 "margin" : "0 5px",
                 "width" : "30px",
                 "line-height" :   "30px",
@@ -5910,7 +5921,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                 const prop_btnAddClass          =  data.hasOwnProperty("prop_btnAddClass")                ?  data.prop_btnAddClass                   : [];
 
                 let styles =  {
-                    "z-index" : "10" ,
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
 
@@ -5989,7 +6000,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
                     prop_content: infoHtml ,
                     prop_elementClass: [" border" , "shadow-sm" , "bg-white" , "px-2" , "py-1"] ,
                     prop_elementStyles: {
-                        'z-index' : "11" ,
+                        'z-index' : listLayoutZIndex.hasOwnProperty("tools") ? listLayoutZIndex.tools: 11 ,
                     } ,
 
                 }
@@ -6971,7 +6982,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             const directionRtl =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl : false;
 
             const styles = {
-                "z-index" : "10",
+                "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10,
                 "width" :   "30px",
                 "line-height" : "30px",
                 "cursor" : "pointer",
@@ -7013,7 +7024,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             const directionRtl =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl : false;
 
             const styles = {
-                "z-index" : "10",
+                "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10,
                 "width" :   "30px",
                 "line-height" : "30px",
                 "cursor" : "pointer",
@@ -8878,7 +8889,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
              top: 35px;
              left: -20px;
              font-size: 10pt;
-             z-index: 11;
+             z-index: ${listLayoutZIndex.hasOwnProperty("menu_main") ? listLayoutZIndex.menu_main: 11};
          }
          #${this._COMPONENT_ID} #component-tooltip-description-description-${this._COMPONENT_RANDOM_ID}:after{
              content: "";
@@ -10409,7 +10420,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
             background-color: ${prop_blurBackgroundColor};
             top: 0;
             left: 0;
-            z-index: 11;
+            z-index: ${listLayoutZIndex.hasOwnProperty("blur_popup") ? listLayoutZIndex.blur_popup: 11} ;
        }
     </style>
     
@@ -11414,7 +11425,7 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
             bottom: 0%;
             left: 50%;
             transform: translate(-50% , -50%);
-            z-index: 2;
+            z-index: ${listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 2};
        }
        #${this._COMPONENT_ID} #component-slider-show-overlapping-bottom-selector-${this._COMPONENT_RANDOM_ID} .item-for-selected{
             width:10px;
@@ -11473,7 +11484,7 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
             margin: auto;
             display: block;
             max-width: ${prop_imageMaxWidth != null ? prop_imageMaxWidth+"px" : "100%"} !important;
-            z-index: 1;
+            z-index:   ${listLayoutZIndex.hasOwnProperty("menu_main") ? listLayoutZIndex.menu_main: 1}  ;
        }
        
        @media (max-width: ${prop_imageMaxWidth != null ? prop_imageMaxWidth + 100 + "px" : ""}) {
@@ -11537,7 +11548,7 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
                 "line-height" : "40px" ,
                 "top" : "50%" ,
                 "transform" : "translate(-50%, -50%)" ,
-                "z-index" : "2" ,
+                "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 2 ,
             }
             if (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl){
                 styles[ "left"] = "0";
@@ -11581,7 +11592,7 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
                 "top" : "50%" ,
                 "right" : "0%" ,
                 "transform" : "translate(-50%, -50%)" ,
-                "z-index" : "2" ,
+                "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 2  ,
             }
             if (this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl){
                 styles[ "right"] = "-45px";
@@ -11829,7 +11840,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
              width: 30px;
              height: 30px;
              
-             z-index: 10;
+             z-index: ${listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10}
              cursor: pointer;
              font-size: 20pt;
              line-height: 30px;
@@ -12284,6 +12295,530 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
 
         }
 
+    }
+
+}
+
+
+
+/*-------------------------------------
+ 20-02) Component Chart Tree Y
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_formScrollerHeight
+
+@prop_svgWGap
+@prop_svgHGap
+
+@prop_objects
+@prop_objectsLevelClose
+
+@prop_template
+@prop_templateWidth
+@prop_templateHeight
+@prop_templateHeightPoint
+@prop_templateHeightGap
+
+@prop_lineHeightMin
+@prop_lineWidth
+@prop_lineDurationAnim
+@prop_lineColor
+@prop_lineMarkerStart
+@prop_lineMarkerEnd
+-------------------------------------*/
+window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentBase{
+
+    _ZOOM_CENTER = true;
+    _OBJECTS = null;
+
+    _COMPONENT_MOUSE_SCROLLER = null;
+
+    /* ---------------------------------------------
+     PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_layout_mouse_scroller: [
+            {prop : "prop_formScrollerHeight"          , default: "100%"} ,
+        ] ,
+        part_layout_svg: [
+            {prop : "prop_svgWGap"                     , default: 1000} ,
+            {prop : "prop_svgHGap"                     , default: 1000} ,
+
+            {prop : "prop_objects"                     , default: []} ,
+            {prop : "prop_objectsLevelClose"           , default: null} ,
+
+            {prop : "prop_template"                    , default: ""} ,
+            {prop : "prop_templateWidth"               , default: 100} ,
+            {prop : "prop_templateHeight"              , default: 100} ,
+            {prop : "prop_templateHeightPoint"         , default: 30} ,
+            {prop : "prop_templateHeightGap"           , default: 30} ,
+
+            {prop : "prop_lineHeightMin"               , default: 20} ,
+            {prop : "prop_lineWidth"                   , default: 3} ,
+            {prop : "prop_lineDurationAnim"            , default: 250} ,
+            {prop : "prop_lineColor"                   , default: "#c2c2c2"} ,
+            {prop : "prop_lineMarkerStart"             , default: "circle"} ,
+            {prop : "prop_lineMarkerEnd"               , default: "arrow"} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_layout_mouse_scroller: {
+                part_layout_svg: {}
+            }
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentChartTreeY.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+    /* ---------------------------------------------
+    TEMPLATEs
+   --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_layout_mouse_scroller");
+        setTimeout(()=>{
+            this.fn_chartInit();
+        } , 0)
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_layout_svg":
+                return this.template_render_layoutSvg(partName);
+            case "part_layout_mouse_scroller":
+                return this.componentFn_render_layoutMouseScroller(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+                  <component-mouse-scroller id="component-chart-tree-y-layout-mouse-scroller-${this._COMPONENT_RANDOM_ID}">
+                      <component-body>
+                            ${this.templateFn("part_layout_svg") ?? ""}
+                      </component-body>
+                  </component-mouse-scroller>
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    componentFn_render_layoutMouseScroller(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_formScrollerHeight     =  data.hasOwnProperty("prop_formScrollerHeight")      ?  data.prop_formScrollerHeight     : "";
+
+            this._COMPONENT_MOUSE_SCROLLER = new window.ComponentMouseScroller(
+                `component-chart-tree-y-layout-mouse-scroller-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_scrollerHeight: prop_formScrollerHeight ,
+                }
+            )
+        }
+
+    }
+
+    template_render_layoutSvg(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            return `
+<div data-part-name="${partName}" 
+         id="component-chart-tree-y-layout-svg-${this._COMPONENT_RANDOM_ID}"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-chart-tree-y-layout-svg-${this._COMPONENT_RANDOM_ID}{
+            
+         }
+     </style>
+     
+     <svg id="component-chart-tree-y-svg-${this._COMPONENT_RANDOM_ID}" width="1000" height="1000" >
+      <defs></defs>
+    </svg>
+      
+</div>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    /* ---------------------------------------------
+        FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getElementSvg(){
+        return document.querySelector(`#component-chart-tree-y-svg-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+    fn_readyElementSvg(){
+        const svg = this.fn_getElementSvg();
+        svg.innerHTML = "<defs></defs>"
+        svg.style.border = "none";
+    }
+
+    fn_buildTree(data, parentId = 0) {
+        return data
+            .filter(item => item.parent === parentId)
+            .map(item => ({
+                ...item,
+                children: this.fn_buildTree(data, item.id)
+            }));
+    }
+
+    fn_assignPositions(node, depth = 0, colCounter = { value: 1 }) {
+        node.row = depth;
+
+        if (node.children.length === 0) {
+            node.col = colCounter.value;
+            colCounter.value += 2;
+        } else {
+            node.children.forEach(child => this.fn_assignPositions(child, depth + 1, colCounter));
+            const minCol = node.children[0].col;
+            const maxCol = node.children[node.children.length - 1].col;
+            node.col = Math.floor((minCol + maxCol) / 2);
+        }
+    }
+
+    fn_flatten(tree, out = []) {
+        tree.forEach(node => {
+            out.push(node);
+            this.fn_flatten(node.children, out);
+        });
+        return out;
+    }
+
+    fn_closeLevelDefault(objects){
+        const data = this._COMPONENT_CONFIG;
+        const prop_objectsLevelClose = data.hasOwnProperty("prop_objectsLevelClose") ? data.prop_objectsLevelClose : null;
+        if (prop_objectsLevelClose != null){
+            for (let i = 0; i < objects.length; i++) {
+                const item = objects[i];
+
+                if (item !=null && item.hasOwnProperty("row") && item.row == prop_objectsLevelClose-1 && item.hasOwnProperty("children") && item.children.length >0){
+                    objects[i].isOpen = false;
+                }
+            }
+        }
+        return objects;
+    }
+
+    fn_getPosition(objects) {
+        const data = this._COMPONENT_CONFIG;
+        const Width =   data.hasOwnProperty("W")  ? data.W  : 100;
+        const Height =  data.hasOwnProperty("H")  ? data.H  : 100;
+        const h =       data.hasOwnProperty("h")  ? data.h  : 30;
+        const dHeight = data.hasOwnProperty("dH") ? data.dH : 50;
+
+        for (let i = 0; i < objects.length ; i++) {
+            const itemObject = objects[i];
+            if (itemObject.hasOwnProperty("row") && itemObject.hasOwnProperty("col")){
+                objects[i].x = itemObject.col*(Width) + ((Width)/2);
+                objects[i].y = (itemObject.row)*(Height+2*dHeight) + (dHeight + h);
+            }
+        }
+        return objects;
+    }
+
+    fn_getTemplate(objects) {
+        const data = this._COMPONENT_CONFIG;
+        const template =   data.hasOwnProperty("prop_template")  ? data.prop_template  : "";
+
+        for (let i = 0; i < objects.length ; i++) {
+            const itemObject = objects[i];
+            const tags = itemObject.hasOwnProperty("tags") ? itemObject.tags : {};
+            tags["id"] = itemObject.id
+            tags["parent"] = itemObject.parent
+
+            objects[i].template = template.replace(/{{(.*?)}}/g, (match, key) => {
+                return tags[key.trim()] ?? "";
+            });
+
+        }
+        return objects;
+    }
+
+    fn_drawShape(objects) {
+        const data = this._COMPONENT_CONFIG;
+        const svg = this.fn_getElementSvg();
+        const scroller = this._COMPONENT_MOUSE_SCROLLER.fn_getElementScroller();
+
+        const Width = data.hasOwnProperty("prop_templateWidth") ? data.prop_templateWidth : 100;
+        const Height = data.hasOwnProperty("prop_templateHeight") ? data.prop_templateHeight : 100;
+        const marginX =  data.hasOwnProperty("prop_svgWGap") ? data.prop_svgWGap : 100;
+        const marginY =  data.hasOwnProperty("prop_svgHGap") ? data.prop_svgHGap : 100;
+
+        let objectStatus = this.fn_drawStatus(objects);
+        for (let i = 0; i < objectStatus.length ; i++) {
+            const itemObject = objectStatus[i];
+
+            if (itemObject != null && ((itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || !itemObject.hasOwnProperty("isOpen"))){
+
+                if (itemObject.hasOwnProperty("template") && itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y")){
+                    const template = itemObject.template;
+                    const x = itemObject.x + marginX;
+                    const y = itemObject.y + marginY;
+
+                    tools_svg.createHtmlOnPoint(
+                        svg,
+                        template ,
+                        { x: x-(Width/2) , y: y  , width:Width+5 , height:Height+5}
+                    )
+
+                    if (this._ZOOM_CENTER && i==0){
+                        this._COMPONENT_MOUSE_SCROLLER._SCROLL_CENTER_X = x - scroller.clientWidth  / 2 ;
+                        this._COMPONENT_MOUSE_SCROLLER._SCROLL_CENTER_Y = y - scroller.clientHeight / 2 + 200 ;
+                        this._COMPONENT_MOUSE_SCROLLER.call_applyScroll() ;
+                        this._ZOOM_CENTER = false;
+                    }
+                }
+
+            }
+
+        }
+        return objects;
+    }
+
+    fn_drawLine(objects) {
+        const data = this._COMPONENT_CONFIG;
+
+        const Height =        data.hasOwnProperty("prop_templateHeight")            ? data.prop_templateHeight               : 100;
+        const marginX =       data.hasOwnProperty("prop_svgWGap")                   ? data.prop_svgWGap                      : 100;
+        const marginY =       data.hasOwnProperty("prop_svgHGap")                   ? data.prop_svgHGap                      : 100;
+        const lYMin =         data.hasOwnProperty("prop_lineHeightMin")             ? data.prop_lineHeightMin                : 20;
+        const lineWidth =     data.hasOwnProperty("prop_lineWidth")                 ? data.prop_lineWidth                    : 2;
+        const animDuration =  data.hasOwnProperty("prop_lineDurationAnim")          ? data.prop_lineDurationAnim             : 250;
+        const bgColor =       data.hasOwnProperty("prop_lineColor")                 ? data.prop_lineColor                    : "#9b9b9b";
+        const markerEnd =     data.hasOwnProperty("prop_lineMarkerEnd")             ? data.prop_lineMarkerEnd                : "arrow";
+        const markerStat =    data.hasOwnProperty("prop_lineMarkerStart")           ? data.prop_lineMarkerStart              : "circle";
+
+        let objectStatus = this.fn_drawStatus(objects , true);
+        for (let i = 0; i < objectStatus.length ; i++) {
+            const itemObject = objectStatus[i];
+
+            if (itemObject != null && ((itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || !itemObject.hasOwnProperty("isOpen"))){
+                if (itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y") && itemObject.hasOwnProperty("children")){
+                    const children = itemObject.children;
+                    const positionX1 = itemObject.x + marginX;
+                    const positionY1 = itemObject.y + Height + marginY;
+
+                    for (let j = 0; j < children.length; j++) {
+                        const itemChild = children[j];
+                        if (itemChild.hasOwnProperty("x") && itemChild.hasOwnProperty("y")){
+                            const positionX2 = itemChild.x + marginX;
+                            const positionY2 = itemChild.y - 10 + marginY;
+
+                            this.fn_connectTwoPointWithTreeHierarchy(
+                                {x: positionX1 , y:positionY1} ,
+                                {x: positionX2 , y:positionY2} ,
+                                lYMin , lineWidth , animDuration , bgColor ,
+                                {
+                                    start: markerStat , end:markerEnd
+                                }
+                            );
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+        return objects;
+    }
+
+    fn_connectTwoPointWithTreeHierarchy(objectA , objectB , LYmin=20 , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"  , markers={ start:"" , end:"arrow"}   ){
+        const svg = this.fn_getElementSvg();
+
+        let points = null
+        if (objectA.x  != objectB.x){
+
+            if (objectB.y >= objectA.y + LYmin){
+                const mid = ((objectB.y - objectA.y)/2);
+                points = [
+                    { x: objectA.x , y: objectA.y                   , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+                    { x: objectA.x , y: objectA.y + mid                } ,
+                    { x: objectB.x , y: objectB.y - mid                } ,
+                    { x: objectB.x , y: objectB.y                   , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
+                ]
+            }
+            else{
+                const mid = ((objectB.x - objectA.x)/2);
+                points = [
+                    {x: objectA.x         , y: objectA.y            , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+                    { x: objectA.x        , y: objectA.y + LYmin                 },
+                    { x: objectA.x + mid  , y: objectA.y + LYmin                 },
+                    { x: objectB.x - mid  , y: objectB.y - LYmin                 },
+                    { x: objectB.x        , y: objectB.y - LYmin                 },
+                    { x: objectB.x        , y: objectB.y            , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
+                ]
+            }
+        }
+        else {
+            points = [
+                { x: objectA.x , y: objectA.y                    , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+                { x: objectB.x , y: objectB.y                    , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
+            ]
+        }
+
+        tools_svg.connectDirectionPoint(svg , points , lineWidth ,animDuration , bgColor);
+    }
+
+    fn_drawStatus(objects, topDoClose = false) {
+        // کپی سطحی از آبجکت‌ها (اگر نیاز به کپی عمیق‌تری داری،
+        // از JSON.parse(JSON.stringify(objects)) یا روش دلخواه استفاده کن)
+        const objectsCopy = objects.map(item => ({ ...item, tags: { ...item.tags } }));
+
+        // نقشه id -> node برای دسترسی سریع
+        const map = {};
+        objectsCopy.forEach(item => map[item.id] = item);
+
+        // نقشه parent -> [children]
+        const childrenMap = {};
+        objectsCopy.forEach(item => {
+            if (!childrenMap[item.parent]) childrenMap[item.parent] = [];
+            childrenMap[item.parent].push(item);
+        });
+
+        // تابعی برای بستن تمام فرزندان (بازگشتی)
+        function closeChildren(node) {
+            const children = childrenMap[node.id] || [];
+            children.forEach(child => {
+                child.isOpen = false;
+                closeChildren(child);
+            });
+        }
+
+        // همه نودهایی که فعلاً isOpen === false هستند
+        const closedNodes = objectsCopy.filter(n => n.isOpen === false);
+
+        // فیلتر کردن: فقط نودهایی که بالاترین نود بسته در شاخهٔ خود هستند
+        // (یعنی هیچ یک از والدهایشان isOpen === false نباشد)
+        const topClosedNodes = closedNodes.filter(node => {
+            let p = map[node.parent];
+            while (p) {
+                if (p.isOpen === false) {
+                    // اگر یک والد بسته پیدا شد، این node دیگر top-most نیست
+                    return false;
+                }
+                p = map[p.parent];
+            }
+            return true; // هیچ والد بسته‌ای نبود => این top-most است
+        });
+
+        // حالا فقط همین top-most ها را پردازش کن
+        topClosedNodes.forEach(topClosed => {
+            // اگر بخواهیم بالاترین را باز/بسته کنیم:
+            topClosed.isOpen = !topDoClose; // اگر topDoClose=false → باز شود (true)
+            // و سپس همهٔ فرزندان آن را ببندیم
+            closeChildren(topClosed);
+        });
+
+        return objectsCopy;
+    }
+
+    fn_setSizeChart(objects) {
+        const data = this._COMPONENT_CONFIG;
+        const svg = this.fn_getElementSvg();
+
+        const Width =    data.hasOwnProperty("prop_templateWidth")       ? data.prop_templateWidth       : 100;
+        const Height =   data.hasOwnProperty("prop_templateHeight")      ? data.prop_templateHeight      : 100;
+        const dHeight =  data.hasOwnProperty("prop_templateHeightGap")   ? data.prop_templateHeightGap   : 50;
+        const marginX =  data.hasOwnProperty("prop_svgWGap")             ? data.prop_svgWGap             : 100;
+        const marginY =  data.hasOwnProperty("prop_svgHGap")             ? data.prop_svgHGap             : 100;
+
+        let width = 0;
+        let height = 0;
+        for (let i = 0; i < objects.length ; i++) {
+            const itemObject = objects[i];
+            if (itemObject.hasOwnProperty("row") && itemObject.hasOwnProperty("col")){
+                const itemWidth  = itemObject.col*(Width) + Width;
+                const itemHeight = (itemObject.row)*(Height+2*dHeight) + (Height+2*dHeight);
+                if (itemWidth > width ){
+                    width = itemWidth
+                }
+                if (itemHeight > height ){
+                    height = itemHeight
+                }
+            }
+        }
+
+        svg.setAttribute("width", width + 2*marginX);
+        svg.setAttribute("height", height + 2*marginY);
+    }
+
+    fn_chartInit(isFirstRendder=true){
+        console.log(isFirstRendder , this._OBJECTS)
+
+        const data = this._COMPONENT_CONFIG;
+        if (isFirstRendder && data.hasOwnProperty("prop_objects")) this._OBJECTS = data.prop_objects;
+
+        if (this._OBJECTS != null){
+            this.fn_readyElementSvg();
+
+            const tree = this.fn_buildTree(this._OBJECTS);
+            this.fn_assignPositions(tree[0]);
+            this._OBJECTS = this.fn_flatten(tree);
+            this.fn_setSizeChart(this._OBJECTS);
+            this._OBJECTS = this.fn_closeLevelDefault(this._OBJECTS);
+            this._OBJECTS = this.fn_getPosition(this._OBJECTS);
+            this._OBJECTS = this.fn_getTemplate(this._OBJECTS);
+            this._OBJECTS = this.fn_drawShape(this._OBJECTS);
+            this._OBJECTS = this.fn_drawLine( this._OBJECTS);
+        }
+    }
+
+    call_showOrHideChild(id){
+        for (let i = 0; i <this._OBJECTS.length ; i++) {
+            const item = this._OBJECTS[i];
+            if (item.hasOwnProperty("id") && item.id == id && item.hasOwnProperty("children") && item.children.length > 0){
+                this._OBJECTS[i].isOpen = item.hasOwnProperty("isOpen")? !item.isOpen : false;
+                const keysToKeep = ["id", "parent", "tags" , "isOpen"];
+
+                this._OBJECTS = this._OBJECTS.map(obj =>
+                    Object.fromEntries(
+                        keysToKeep
+                            .filter(key => key in obj) // ✅ شرط وجود کلید
+                            .map(key => [key, obj[key]])
+                    )
+                );
+
+                this.fn_chartInit(false);
+                break;
+            }
+        }
     }
 
 }
@@ -13468,6 +14003,8 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentBase
 @prop_structureClass
 @prop_structureStyles
 
+@prop_title
+
 @prop_icon
 @prop_isItalik
 
@@ -13489,6 +14026,7 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
         ] ,
         part_icon: [
             {prop : "prop_icon"        , default: ""} ,
+            {prop : "prop_title"       , default: ""} ,
             {prop : "prop_isItalik"    , default: false} ,
             {prop : "prop_iconClass"   , default: []} ,
             {prop : "prop_iconStyles"  , default: {}} ,
@@ -13551,11 +14089,13 @@ ${this.templateFn_render_icon("part_icon")}
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_icon                =  data.hasOwnProperty("prop_icon")                       ?  data.prop_icon                                            :  "";
-            const prop_isItalik            =  data.hasOwnProperty("prop_isItalik")                   ?  data.prop_isItalik                                        :  false;
+            const prop_title                =  data.hasOwnProperty("prop_title")         ?  data.prop_title            : "" ;
 
-            const prop_iconClass           =   data.hasOwnProperty("prop_iconClass")                 ?  data.prop_iconClass                                       :  [];
-            const prop_iconStyles          =   data.hasOwnProperty("prop_iconStyles")                ?  data.prop_iconStyles                                      :  {};
+            const prop_icon                =  data.hasOwnProperty("prop_icon")           ?  data.prop_icon             :  "";
+            const prop_isItalik            =  data.hasOwnProperty("prop_isItalik")       ?  data.prop_isItalik         :  false;
+
+            const prop_iconClass           =   data.hasOwnProperty("prop_iconClass")     ?  data.prop_iconClass        :  [];
+            const prop_iconStyles          =   data.hasOwnProperty("prop_iconStyles")    ?  data.prop_iconStyles       :  {};
 
             return `
 <${prop_isItalik ? "i" : "span"} 
@@ -13564,6 +14104,7 @@ ${this.templateFn_render_icon("part_icon")}
        onclick="${this.getFn('fn_onCLickIcon' , "event")}"
        onmouseenter="${this.getFn('fn_onHoverIcon' , "event")}"
        onmouseleave="${this.getFn('fn_onBlurIcon' , "event")}"
+       title="${prop_title}"
        >
     
       <style>
@@ -13732,7 +14273,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
             const prop_height             =  data.hasOwnProperty("prop_height")                                                        ?  data.prop_height               :   "200px";
 
             //---------------
-            prop_elementStyles["z-index"] = "9";
+            prop_elementStyles["z-index"] =  listComponent.hasOwnProperty("tools") ? listComponent.tools: 9 ;
             if (prop_positionType != null){
                 prop_elementStyles["position"] = prop_positionType;
             }
@@ -13957,7 +14498,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
                             "background-color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_backgroundColor")  ? tools_const.styles.elementBorder.btnMore_backgroundColor : "" ,
                             "color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_color")  ? tools_const.styles.elementBorder.btnMore_color : "" ,
                             "cursor" : "pointer" ,
-                            "z-index" : "9" ,
+                            "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 9 ,
                         } ,
 
                         fn_callback: (event)=>{
@@ -14286,9 +14827,30 @@ window.ComponentLayout = class ComponentLayout extends ComponentBase{
 @prop_structureClass
 @prop_structureStyles
 
+@prop_borderClass
+@prop_borderStyles
+
+@prop_backgroundColor_type
+@prop_backgroundColor_dark
+@prop_backgroundColor_light
+@prop_scollerClass
+@prop_scrollerStyles
+@prop_scrollerWidth
+@prop_scrollerHeight
+
+@prop_backgroundColor_tools
+@prop_moreIcons
+@prop_iconRefresh
+@prop_iconZoomIn
+@prop_iconZoomOut
+@prop_iconBgDark
+@prop_iconBgLight
+@prop_layoutContent
 -------------------------------------*/
 window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBase{
 
+    _SCROLL_CENTER_X = 0 ;
+    _SCROLL_CENTER_Y = 0;
 
     _BACKGROUND_TYPE_DARK = "dark";
     _BACKGROUND_TYPE_LIGHT = "light";
@@ -14300,7 +14862,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
     _SCROLL_LEFT=null;
     _SCALE=1;
     _MIN_SCALE = 0.2;
-    _MAX_SCALE = 5;
+    _MAX_SCALE = 3;
 
     /* ---------------------------------------------
      PROPERTYs
@@ -14310,31 +14872,61 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
             {prop : "prop_structureClass"            , default: []} ,
             {prop : "prop_structureStyles"           , default: {}} ,
         ] ,
+        part_layout_border: [
+            {prop : "prop_borderClass"                , default: ["border" , "border-secondry"]} ,
+            {prop : "prop_borderStyles"               , default: {}} ,
+        ] ,
         part_layout_scroll: [
             {prop : "prop_backgroundColor_type"      , default: null } ,
             {prop : "prop_backgroundColor_dark"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_dark")    ? tools_const.styles.mosuseScroller.backgroundColor_dark : ""} ,
             {prop : "prop_backgroundColor_light"     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_light")   ? tools_const.styles.mosuseScroller.backgroundColor_light : ""} ,
-
-            {prop : "prop_scollerClass"              , default: ["border" , "border-secondry"]} ,
+            {prop : "prop_scollerClass"              , default: []} ,
             {prop : "prop_scrollerStyles"            , default: {}} ,
             {prop : "prop_scrollerWidth"             , default: "100%"} ,
-            {prop : "prop_scrollerHeight"            , default: "1000px"} ,
+            {prop : "prop_scrollerHeight"            , default: "250px"} ,
         ] ,
         part_layout_tools: [
             {prop : "prop_backgroundColor_tools"     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_tools")   ? tools_const.styles.mosuseScroller.backgroundColor_tools : ""} ,
-
+            {prop : "prop_moreIcons"                 , default: ""} ,
+        ] ,
+        part_layout_tools_btn_refresh: [
+            {prop : "prop_iconRefresh"              , default: "&#x21bb;"} ,
+        ] ,
+        part_layout_tools_btn_zoom_in: [
+            {prop : "prop_iconZoomIn"               , default: "&#x2795;"} ,
+        ] ,
+        part_layout_tools_btn_zoom_out: [
+            {prop : "prop_iconZoomOut"              , default: "&#x2796;"} ,
+        ] ,
+        part_layout_tools_btn_zoom_standard: [
+            {prop : "prop_iconZoomStandard"         , default: "&#x1F50D;"} ,
+        ] ,
+        part_layout_tools_btn_bg_dark: [
+            {prop : "prop_iconBgDark"               , default: "&#9790"} ,
+        ] ,
+        part_layout_tools_btn_bg_light: [
+            {prop : "prop_iconBgLight"              , default: "&#9728;"} ,
         ] ,
         part_layout_content: [
-
+            {prop : "prop_layoutContent"            , default: null} ,
         ] ,
     }
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-            part_layout_scroll: {
-                part_layout_tools: {} ,
-                part_layout_content: {}
-            } ,
+            part_layout_border: {
+                part_layout_scroll: {
+                    part_layout_tools: {
+                        part_layout_tools_btn_refresh: {} ,
+                        part_layout_tools_btn_zoom_in: {} ,
+                        part_layout_tools_btn_zoom_standard: {} ,
+                        part_layout_tools_btn_zoom_out: {} ,
+                        part_layout_tools_btn_bg_dark: {} ,
+                        part_layout_tools_btn_bg_light: {} ,
+                    } ,
+                    part_layout_content: {}
+                } ,
+            }
         } ,
     }
 
@@ -14362,7 +14954,15 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
      TEMPLATEs
     --------------------------------------------- */
     componentFn(){
+        this.templateFn("part_layout_border");
+        this.templateFn("part_layout_tools_btn_refresh");
+        this.templateFn("part_layout_tools_btn_zoom_in");
+        this.templateFn("part_layout_tools_btn_zoom_standard");
+        this.templateFn("part_layout_tools_btn_zoom_out");
+        this.templateFn("part_layout_tools_btn_bg_dark");
+        this.templateFn("part_layout_tools_btn_bg_light");
 
+        this.fn_applyTheme()
     }
     templateFn(partName = null){
         switch (partName){
@@ -14374,6 +14974,20 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
                 return this.template_render_layoutTools(partName);
             case "part_layout_content":
                 return this.template_render_layoutContent(partName);
+            case "part_layout_border":
+                return this.componentFn_render_layoutBorder(partName);
+            case "part_layout_tools_btn_refresh":
+                return this.componentFn_render_layoutTools_btnRefresh(partName);
+            case "part_layout_tools_btn_zoom_in":
+                return this.componentFn_render_layoutTools_btnZoomIn(partName);
+            case "part_layout_tools_btn_zoom_standard":
+                return this.componentFn_render_layoutTools_btnZoomStandard(partName);
+            case "part_layout_tools_btn_zoom_out":
+                return this.componentFn_render_layoutTools_btnZoomOut(partName);
+            case "part_layout_tools_btn_bg_dark":
+                return this.componentFn_render_layoutTools_btnBgDark(partName);
+            case "part_layout_tools_btn_bg_light":
+                return this.componentFn_render_layoutTools_btnBgLight(partName);
             default:
                 return this.templateBasic_render();
         }
@@ -14381,9 +14995,17 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
 
     template_render_structure() {
         const content = `
- ${this.templateFn("part_layout_scroll") ?? ""}
+        
+          <component-border id="component-layout-scroll-border-${this._COMPONENT_RANDOM_ID}">
+              <component-body>
+                 ${this.templateFn("part_layout_tools") ?? ""}
+          
+                 ${this.templateFn("part_layout_scroll") ?? ""} 
+              </component-body>
+          </component-border>
+          
                 `;
-        return this.templateBasic_render_structure(content );
+        return this.templateBasic_render_structure(content , "position-relative p-0");
     }
 
     template_render_layoutScroll(partName) {
@@ -14394,30 +15016,14 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
             const prop_scrollerStyles  =  data.hasOwnProperty("prop_scrollerStyles")         ?  data.prop_scrollerStyles     : {};
             const prop_scrollerWidth  =   data.hasOwnProperty("prop_scrollerWidth")          ?  data.prop_scrollerWidth      : "";
             const prop_scrollerHeight  =  data.hasOwnProperty("prop_scrollerHeight")         ?  data.prop_scrollerHeight     : "";
-            const prop_backgroundColor_light  = data.hasOwnProperty("prop_backgroundColor_light")   ?  data.prop_backgroundColor_light    : "";
-            const prop_backgroundColor_dark  =  data.hasOwnProperty("prop_backgroundColor_dark")    ?  data.prop_backgroundColor_dark     : "";
-            const prop_backgroundColor_type  =  data.hasOwnProperty("prop_backgroundColor_type")    ?  data.prop_backgroundColor_type     : null;
-
-            let backgroundSelected="";
-            switch (prop_backgroundColor_type){
-                case this._BACKGROUND_TYPE_LIGHT:
-                    backgroundSelected = prop_backgroundColor_light;
-                    break;
-                case this._BACKGROUND_TYPE_DARK:
-                    backgroundSelected = prop_backgroundColor_dark;
-                    break;
-                default:
-                    backgroundSelected = prop_backgroundColor_light;
-                    break;
-            }
 
             return `
 <section data-part-name="${partName}" 
          id="component-layout-scroll-${this._COMPONENT_RANDOM_ID}"
-         class="${tools_public.renderListClass(prop_scollerClass)} position-relative p-2"
+         class="${tools_public.renderListClass(prop_scollerClass)}"
          onmousedown="${this.getFn("fn_scrollerModusDown" , "event")}"
          onmousemove="${this.getFn("fn_scrollerModusMove" , "event")}"
-         onmousemove="${this.getFn("fn_scrollerWheel" , "event")}"
+         onwheel="${this.getFn("fn_scrollerWheel" , "event")}"
          onmouseleave="${this.getFn("fn_scrollerMouseLeave" , "event")}"
          onmouseup="${this.getFn("fn_scrollerMouseUp" , "event")}"
          >
@@ -14427,13 +15033,14 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
               overflow: auto;
               cursor: all-scroll;
               user-select: none;    
-              -webkit-user-select: none;
-              -moz-user-select: none;  
-              -ms-user-select: none; 
-              background-color: ${backgroundSelected}; 
               width: ${prop_scrollerWidth}; 
               height: ${prop_scrollerHeight}; 
               ${tools_public.renderListStyle(prop_scrollerStyles)}
+              -webkit-user-select: none;
+              -moz-user-select: none;  
+              -ms-user-select: none; 
+              -ms-overflow-style: none;
+              scrollbar-width: none;
          }
          #${this._COMPONENT_ID} #component-layout-scroll-${this._COMPONENT_RANDOM_ID}::-webkit-scrollbar {
                display: none;
@@ -14441,14 +15048,11 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
 
      </style>
    
-  
-   
    ${this.templateFn("part_layout_content") ?? ""}
     
 </section>
         `;
         }
-        /*${this.templateFn("part_layout_tools") ?? ""}*/
         return `
 <section data-part-name="${partName}"></section>
         `;
@@ -14459,31 +15063,58 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
 
         if (data != null){
             const prop_backgroundColor_tools  =  data.hasOwnProperty("prop_backgroundColor_tools")    ?  data.prop_backgroundColor_tools     : "";
+            const prop_moreIcons              =  data.hasOwnProperty("prop_moreIcons")                ?  data.prop_moreIcons                 : "";
+            const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
 
             return `
 <section data-part-name="${partName}" 
-         id="component-layout-tools-${this._COMPONENT_RANDOM_ID}"
+         id="component-layout-scroll-tools-${this._COMPONENT_RANDOM_ID}"
          class=" position-absolute  border rounded"
          >
          
      <style>
-         #${this._COMPONENT_ID} #component-layout-scroll-${this._COMPONENT_RANDOM_ID}:hover  #component-layout-tools-${this._COMPONENT_RANDOM_ID}{
-               opacity: 1;
+         #${this._COMPONENT_ID}:hover  #component-layout-scroll-tools-${this._COMPONENT_RANDOM_ID}{
+               opacity: 0.75;
                  transition: opacity 500ms ease;
          }
          
-         #${this._COMPONENT_ID} #component-layout-tools-${this._COMPONENT_RANDOM_ID}{
-          
-            opacity: 0;
-            height: 35px;
-            width: calc(100% - 10px);
+         #${this._COMPONENT_ID} #component-layout-scroll-tools-${this._COMPONENT_RANDOM_ID}{
+            opacity: 0.25;
+            width: 35px;
+            height: calc(100% - 10px);
             top:5px;
-            left:5px;
+            overflow:auto;
+            user-select: none;       /* متن قابل انتخاب نباشد */
+            -webkit-user-select: none; /* Chrome/Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;     /* IE/Edge */
+            ${directionRtl ? "left" : "right"} : 5px;
             background-color: ${prop_backgroundColor_tools};
+            z-index: ${listLayoutZIndex.hasOwnProperty("tools") ? listLayoutZIndex.tools: 1}
          }
+         
+         #${this._COMPONENT_ID} #component-layout-scroll-tools-${this._COMPONENT_RANDOM_ID}::-webkit-scrollbar{
+             display: none;        /* Chrome, Safari, Edge */
+         }
+
+         @media (max-width: 768px) {
+            #${this._COMPONENT_ID} #component-layout-scroll-tools-${this._COMPONENT_RANDOM_ID}{
+               opacity: 0.75;
+            }
+         }
+         
      </style>
      
+     <div id="component-layout-scroll-tools-icons-${this._COMPONENT_RANDOM_ID}">
+        <component-icon id="component-layout-scroll-tools-icon-refresh-${this._COMPONENT_RANDOM_ID}"></component-icon>
+        <component-icon id="component-layout-scroll-tools-icon-zoom-in-${this._COMPONENT_RANDOM_ID}"></component-icon>
+        <component-icon id="component-layout-scroll-tools-icon-zoom-standard-${this._COMPONENT_RANDOM_ID}"></component-icon>
+        <component-icon id="component-layout-scroll-tools-icon-zoom-out-${this._COMPONENT_RANDOM_ID}"></component-icon>
+        <component-icon id="component-layout-scroll-tools-icon-bg-dark-${this._COMPONENT_RANDOM_ID}"></component-icon>
+        <component-icon id="component-layout-scroll-tools-icon-bg-light-${this._COMPONENT_RANDOM_ID}"></component-icon>
      
+        ${prop_moreIcons}
+     </div>
     
 </section>
         `;
@@ -14498,22 +15129,21 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
         const data = this.getPartProps(partName)
 
         if (data != null){
-
+            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
 
             return `
 <section data-part-name="${partName}" 
          id="component-layout-content-${this._COMPONENT_RANDOM_ID}"
-         class="" 
+         class="w-100 h-100 d-table" 
          >
          
      <style>
          #${this._COMPONENT_ID} #component-layout-content-${this._COMPONENT_RANDOM_ID}{
-             width:1000px;
-             height: 1000px;
+             
          }
      </style>
      
-     HELLO WORLD
+     ${prop_layoutContent}
      
 </section>
         `;
@@ -14522,6 +15152,223 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
         return `
 <section data-part-name="${partName}"></section>
         `;
+    }
+
+    componentFn_render_layoutTools_btnRefresh(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_iconRefresh  =  data.hasOwnProperty("prop_iconRefresh")    ?  data.prop_iconRefresh  : null;
+            if (prop_iconRefresh != null){
+                new window.ComponentIcon(
+                    `component-layout-scroll-tools-icon-refresh-${this._COMPONENT_RANDOM_ID}`  ,
+                    {
+                        classList: [ ] ,
+                        prop_icon: prop_iconRefresh  ,
+                        prop_title: "refresh"  ,
+
+                        prop_iconClass : [  ] ,
+                        prop_iconStyles : {
+                            "text-align": "center",
+                            "cursor": "pointer",
+                            "width": "30px",
+                            "height": "30px",
+                            "color": "white",
+                            "display": "block",
+                            "font-size": "14pt",
+                        } ,
+
+                        fn_callback: () =>{
+                            this.runFn('fn_onCLickRefresh' , "event");
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    componentFn_render_layoutBorder(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_borderClass    =  data.hasOwnProperty("prop_borderClass")    ?  data.prop_borderClass     : [];
+            const prop_borderStyles   =  data.hasOwnProperty("prop_borderStyles")   ?  data.prop_borderStyles    : {};
+
+            console.log(prop_borderClass)
+
+            new window.ComponentBorder(
+                `component-layout-scroll-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  prop_borderClass ,
+                    prop_structureStyles: prop_borderStyles ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_layoutTools_btnZoomIn(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_iconZoomIn  =  data.hasOwnProperty("prop_iconZoomIn")    ?  data.prop_iconZoomIn     : null;
+            if (prop_iconZoomIn != null){
+                new window.ComponentIcon(
+                    `component-layout-scroll-tools-icon-zoom-in-${this._COMPONENT_RANDOM_ID}`  ,
+                    {
+                        classList: [ ] ,
+                        prop_icon: prop_iconZoomIn  ,
+                        prop_title: "zoom-in"  ,
+
+                        prop_iconClass : [  ] ,
+                        prop_iconStyles : {
+                            "text-align": "center",
+                            "cursor": "pointer",
+                            "width": "30px",
+                            "height": "30px",
+                            "color": "white",
+                            "display": "block",
+                            "font-size": "14pt",
+                        } ,
+
+                        fn_callback: () =>{
+                            this.runFn('fn_onCLickZoomIn' , "event");
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    componentFn_render_layoutTools_btnZoomStandard(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_iconZoomStandard  =  data.hasOwnProperty("prop_iconZoomStandard")    ?  data.prop_iconZoomStandard     : null;
+            if (prop_iconZoomStandard != null){
+                new window.ComponentIcon(
+                    `component-layout-scroll-tools-icon-zoom-standard-${this._COMPONENT_RANDOM_ID}`  ,
+                    {
+                        classList: [ ] ,
+                        prop_icon: prop_iconZoomStandard  ,
+                        prop_title: "zoom-standard"  ,
+
+                        prop_iconClass : [  ] ,
+                        prop_iconStyles : {
+                            "text-align": "center",
+                            "cursor": "pointer",
+                            "width": "30px",
+                            "height": "30px",
+                            "color": "white",
+                            "display": "block",
+                            "font-size": "14pt",
+                        } ,
+
+                        fn_callback: () =>{
+                            this.runFn('fn_onCLickZoomStandard' , "event");
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    componentFn_render_layoutTools_btnZoomOut(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_iconZoomOut  =  data.hasOwnProperty("prop_iconZoomOut")    ?  data.prop_iconZoomOut   : null;
+            if (prop_iconZoomOut != null){
+                new window.ComponentIcon(
+                    `component-layout-scroll-tools-icon-zoom-out-${this._COMPONENT_RANDOM_ID}`  ,
+                    {
+                        classList: [ ] ,
+                        prop_icon: prop_iconZoomOut  ,
+                        prop_title: "zoom-out"  ,
+
+                        prop_iconClass : [  ] ,
+                        prop_iconStyles : {
+                            "text-align": "center",
+                            "cursor": "pointer",
+                            "width": "30px",
+                            "height": "30px",
+                            "color": "white",
+                            "display": "block",
+                            "font-size": "14pt",
+                        } ,
+
+                        fn_callback: () =>{
+                            this.runFn('fn_onCLickZoomOut' , "event");
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    componentFn_render_layoutTools_btnBgDark(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_iconBgDark  =  data.hasOwnProperty("prop_iconBgDark")    ?  data.prop_iconBgDark   : null;
+            if (prop_iconBgDark != null){
+                new window.ComponentIcon(
+                    `component-layout-scroll-tools-icon-bg-dark-${this._COMPONENT_RANDOM_ID}`  ,
+                    {
+                        classList: [ ] ,
+                        prop_icon: prop_iconBgDark  ,
+                        prop_title: "Dark"  ,
+
+                        prop_iconClass : [  ] ,
+                        prop_iconStyles : {
+                            "text-align": "center",
+                            "cursor": "pointer",
+                            "width": "30px",
+                            "height": "30px",
+                            "color": "white",
+                            "display": "block",
+                            "font-size": "14pt",
+                        } ,
+
+                        fn_callback: () =>{
+                            this.runFn('fn_onSetBgDark' , "event");
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    componentFn_render_layoutTools_btnBgLight(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_iconBgLight  =  data.hasOwnProperty("prop_iconBgLight")    ?  data.prop_iconBgLight   : null;
+            if (prop_iconBgLight != null){
+                new window.ComponentIcon(
+                    `component-layout-scroll-tools-icon-bg-light-${this._COMPONENT_RANDOM_ID}`  ,
+                    {
+                        classList: [ ] ,
+                        prop_icon: prop_iconBgLight  ,
+                        prop_title: "Light"  ,
+
+                        prop_iconClass : [  ] ,
+                        prop_iconStyles : {
+                            "text-align": "center",
+                            "cursor": "pointer",
+                            "width": "30px",
+                            "height": "30px",
+                            "color": "white",
+                            "display": "block",
+                            "font-size": "14pt",
+                        } ,
+
+                        fn_callback: () =>{
+                            this.runFn('fn_onSetBgLight' , "event");
+                        }
+                    }
+                )
+            }
+        }
     }
 
 
@@ -14552,7 +15399,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
         const scroller = this.fn_getElementScroller();
 
         if (! this._IS_DOWN) return;
-        event.preventDefault();  // جلوگیری از رفتار پیش‌فرض مرورگر
+        event.preventDefault();
         const x = event.pageX - scroller.offsetLeft;
         const y = event.pageY - scroller.offsetTop;
         const walkX = (x - this._START_X) * -1;
@@ -14562,9 +15409,9 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
     }
 
     fn_scrollerWheel(event){
-        const scroller = this.fn_getElementScroller();
-
         event.preventDefault();
+
+        const scroller = this.fn_getElementScroller();
 
         const rect = scroller.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
@@ -14574,25 +15421,126 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
         const newScale = Math.min(Math.max(this._SCALE - event.deltaY * zoomSpeed, this._MIN_SCALE), this._MAX_SCALE);
         const scaleRatio = newScale / this._SCALE;
 
-        scroller.scrollLeft = (scroller.scrollLeft + mouseX) * scaleRatio - mouseX;
-        scroller.scrollTop  = (scroller.scrollTop + mouseY)  * scaleRatio - mouseY;
+        this.call_applyScroll(
+            (scroller.scrollLeft + mouseX) * scaleRatio - mouseX ,
+            (scroller.scrollTop + mouseY)  * scaleRatio - mouseY
+        );
 
         this._SCALE = newScale;
         this.fn_applyZoom();
     }
-
-    fn_applyZoom(event){
-        const sectionScrollerBody = this.fn_getElementContent();
-        sectionScrollerBody.style.transform = `scale(${this._SCALE})`;
-        sectionScrollerBody.style.transformOrigin = "0 0";
-    }
-
     fn_scrollerMouseLeave(event){
-        this._SCALE = false
+        this._IS_DOWN = false
     }
 
     fn_scrollerMouseUp(event){
-        this._SCALE = false
+        this._IS_DOWN = false
     }
+
+
+    fn_onCLickRefresh(event){
+        this._SCALE = 1;
+        this.fn_applyZoom(this.getScaleOrigin())
+    }
+
+
+
+
+
+    fn_onCLickZoomIn(event){
+        this._SCALE *= 1.2;
+        this.fn_applyZoom(this.getScaleOrigin())
+    }
+    fn_onCLickZoomStandard(event){
+        this._SCALE = 1;
+        this.fn_applyZoom(this.getScaleOrigin())
+    }
+    fn_onCLickZoomOut(event){
+        this._SCALE /= 1.2;
+        this.fn_applyZoom(this.getScaleOrigin())
+    }
+
+    fn_onSetBgDark(event){
+        this.fn_applyTheme( this._BACKGROUND_TYPE_DARK);
+    }
+    fn_onSetBgLight(event){
+        this.fn_applyTheme( this._BACKGROUND_TYPE_LIGHT);
+    }
+
+
+
+    getScaleOrigin() {
+        const container = this.fn_getElementScroller();
+        const content = this.fn_getElementContent();
+
+        const containerRect = container.getBoundingClientRect();
+        const contentRect   = content.getBoundingClientRect();
+
+        return `
+        ${containerRect.left  - (contentRect.left)  - (containerRect.width / 2)} ,
+        ${containerRect.top  - (contentRect.top) - (containerRect.height / 2)},
+        `;
+    }
+
+    getScaleLimits() {
+        const container = this.fn_getElementScroller();
+        const content = this.fn_getElementContent();
+
+        const containerRect = container.getBoundingClientRect();
+        const contentRect   = content.getBoundingClientRect();
+
+        return Math.min(
+            containerRect.width / contentRect.width,
+            containerRect.height / contentRect.height
+        );
+    }
+
+    fn_applyZoom(origin="0 0"){
+        const contentRect = this.fn_getElementContent();
+        const minScale = this.getScaleLimits();
+        this._SCALE  = minScale < this._SCALE ? this._SCALE : minScale;
+        console.log(origin)
+        contentRect.style.transformOrigin = origin;
+        contentRect.style.transform = `scale(${ this._SCALE })`;
+        contentRect.style.transformOrigin = "0 0";
+    }
+
+
+    fn_applyTheme(prop_backgroundColor_type = null){
+        const data = this._COMPONENT_CONFIG;
+        const prop_backgroundColor_light  = data.hasOwnProperty("prop_backgroundColor_light")   ?  data.prop_backgroundColor_light    : "";
+        const prop_backgroundColor_dark  =  data.hasOwnProperty("prop_backgroundColor_dark")    ?  data.prop_backgroundColor_dark     : "";
+
+        if (prop_backgroundColor_type == null){
+            prop_backgroundColor_type  =  data.hasOwnProperty("prop_backgroundColor_type")    ?  data.prop_backgroundColor_type     : null;
+        }
+
+        let backgroundSelected=null;
+        switch (prop_backgroundColor_type){
+            case this._BACKGROUND_TYPE_LIGHT:
+                backgroundSelected = prop_backgroundColor_light;
+                break;
+            case this._BACKGROUND_TYPE_DARK:
+                backgroundSelected = prop_backgroundColor_dark;
+                break;
+            default:
+                backgroundSelected = prop_backgroundColor_light;
+                break;
+        }
+
+        if (backgroundSelected != null){
+            const el = this.fn_getElementContent();
+            el.style.backgroundColor = backgroundSelected;
+        }
+    }
+
+
+
+    call_applyScroll(positionX=null , positionY=null){
+        const scroller = this.fn_getElementScroller();
+        scroller.scrollLeft = positionX != null ? positionX : this._SCROLL_CENTER_X;
+        scroller.scrollTop  = positionY != null ? positionY : this._SCROLL_CENTER_Y;
+    }
+
 
 }

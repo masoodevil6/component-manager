@@ -53,10 +53,9 @@
         ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //14-01
 
 
-
-
         // [20] Charts
         ComponentChart:                      "component-chart" ,                          //20-01
+        ComponentChartTreeY:                 "component-chart-tree-y" ,                   //20-02
 
         // [21] QR CODE
         ComponentQrCode:                     "component-qr-code" ,                        //21-01
@@ -72,6 +71,7 @@
         ComponentBorder:                     "component-border" ,                         //99-03
         ComponentImage:                      "component-image" ,                          //99-04
         ComponentLayout:                     "component-layout" ,                         //99-05
+        ComponentMouseScroller:              "component-mouse-scroller" ,                 //99-06
 
     }
 ```
@@ -1064,6 +1064,46 @@ new window.ComponentTooltipDescription(
 
 
 
+**20-02) Component Chart Tree Y:**
+```
+/*-------------------------------------
+ 20-02) Component Chart Tree Y
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_formScrollerHeight
+
+@prop_svgWGap
+@prop_svgHGap
+
+@prop_objects
+@prop_objectsLevelClose
+
+@prop_template
+@prop_templateWidth
+@prop_templateHeight
+@prop_templateHeightPoint
+@prop_templateHeightGap
+
+@prop_lineHeightMin
+@prop_lineWidth
+@prop_lineDurationAnim
+@prop_lineColor
+@prop_lineMarkerStart
+@prop_lineMarkerEnd
+-------------------------------------*/
+    new window.ComponentChartTreeY(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
 
 
 /* ====================
@@ -1315,6 +1355,45 @@ new window.ComponentTooltipDescription(
 @fn_callback
 -------------------------------------*/
     new window.ComponentImage(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+**99-05) Component Mouse Scroller:**
+```
+/*-------------------------------------
+ 99-04) Component Mouse Scroller
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_borderClass
+@prop_borderStyles
+
+@prop_backgroundColor_type
+@prop_backgroundColor_dark
+@prop_backgroundColor_light
+@prop_scollerClass
+@prop_scrollerStyles
+@prop_scrollerWidth
+@prop_scrollerHeight
+@prop_positionXDefault
+@prop_positionYDefault
+
+@prop_backgroundColor_tools
+@prop_moreIcons
+@prop_iconRefresh
+@prop_iconZoomIn
+@prop_iconZoomOut
+@prop_iconBgDark
+@prop_iconBgLight
+@prop_layoutContent
+-------------------------------------*/
+    new window.ComponentMouseScroller(
         "element_id" ,
         {
             

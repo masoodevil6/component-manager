@@ -200,6 +200,17 @@
 
                 <component-chart  id="chart"></component-chart>
 
+                <style>
+                    #form_chartTreeY{
+                        height: 500px;
+                    }
+                </style>
+                <div id="form_chartTreeY" class="col-md-6 col-12 mt-2">
+                    <component-chart-tree-y  id="chartTreeY"></component-chart-tree-y>
+                </div>
+
+
+
             </section>
         </component-body>
     </component-collapse>
@@ -245,7 +256,21 @@
 
                 <component-layout     id="layout"></component-layout>
 
-                <component-mouse-scroller     id="mouseScroller"></component-mouse-scroller>
+                <component-mouse-scroller     id="mouseScroller">
+                    <component-body>
+                        <style>
+                            #content-mouse-scroller{
+                                display: block;
+                                width:1000px;
+                                height: 1000px;
+                            }
+                        </style>
+                        <div id="content-mouse-scroller">
+                            Hello World Element Scroller
+                        </div>
+
+                    </component-body>
+                </component-mouse-scroller>
 
             </section>
 
@@ -1130,6 +1155,38 @@
 
         }
     );
+    /*-------------------------------------
+      20-01) Component chart tree Y
+    -------------------------------------*/
+    const chartTreeY = new window.ComponentChartTreeY(
+        "chartTreeY" ,
+        {
+            classList: ""  ,
+
+            prop_objects: [ {id:1, parent:0, tags:{charName:"A"}},
+                {id:2, parent:1, tags:{charName:"B"}},
+                {id:11, parent:1, tags:{charName:"C"}},
+                {id:3, parent:1, tags:{charName:"D"}},
+                {id:4, parent:2, tags:{charName:"E"}},
+                {id:5, parent:2, tags:{charName:"F"}},
+                {id:6, parent:2, tags:{charName:"G"}},
+                {id:7, parent:2, tags:{charName:"H"}},
+                {id:8, parent:3, tags:{charName:"K"}},
+                {id:9, parent:3, tags:{charName:"L"}},
+                {id:10, parent:9, tags:{charName:"M"}},
+                {id:12, parent:9, tags:{charName:"N"}},
+                {id:13, parent:11, tags:{charName:"T"}}
+            ] ,
+
+            prop_template:  `
+<div style="border: 3px solid black; width:100px;border-radius: 100%; line-height: 100px; height:100px;text-align: center;cursor: pointer; background-color: whitesmoke" onclick="showOrHideChildChartTree({{id}})">{{charName}}</div>
+` ,
+        }
+    );
+
+    function showOrHideChildChartTree(id) {
+        chartTreeY.call_showOrHideChild(id)
+    }
 
 
 
@@ -1296,7 +1353,7 @@
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_layoutContent: "content"
+            //prop_layoutContent: "content"
         }
     )
 
@@ -1424,7 +1481,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [20] Charts " ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -1443,7 +1500,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [99] Others" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
 
