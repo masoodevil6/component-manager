@@ -1164,29 +1164,57 @@
             classList: ""  ,
 
             prop_objects: [ {id:1, parent:0, tags:{charName:"A"}},
-                {id:2, parent:1, tags:{charName:"B"}},
-                {id:11, parent:1, tags:{charName:"C"}},
-                {id:3, parent:1, tags:{charName:"D"}},
-                {id:4, parent:2, tags:{charName:"E"}},
-                {id:5, parent:2, tags:{charName:"F"}},
-                {id:6, parent:2, tags:{charName:"G"}},
-                {id:7, parent:2, tags:{charName:"H"}},
-                {id:8, parent:3, tags:{charName:"K"}},
-                {id:9, parent:3, tags:{charName:"L"}},
-                {id:10, parent:9, tags:{charName:"M"}},
-                {id:12, parent:9, tags:{charName:"N"}},
+                {id:2,  parent:1,  tags:{charName:"B"}},
+                {id:11, parent:1,  tags:{charName:"C"}},
+                {id:3,  parent:1,  tags:{charName:"D"}},
+                {id:4,  parent:2,  tags:{charName:"E"}},
+                {id:5,  parent:2,  tags:{charName:"F"}},
+                {id:6,  parent:2,  tags:{charName:"G"}},
+                {id:7,  parent:2,  tags:{charName:"H"}},
+                {id:8,  parent:3,  tags:{charName:"K"}},
+                {id:9,  parent:3,  tags:{charName:"L"}},
+                {id:10, parent:9,  tags:{charName:"M"}},
+                {id:12, parent:9,  tags:{charName:"N"}},
                 {id:13, parent:11, tags:{charName:"T"}}
             ] ,
 
-            prop_template:  `
+           /* prop_template:  `
 <div style="border: 3px solid black; width:100px;border-radius: 100%; line-height: 100px; height:100px;text-align: center;cursor: pointer; background-color: whitesmoke" onclick="showOrHideChildChartTree({{id}})">{{charName}}</div>
-` ,
+` ,*/
+            prop_scrollerHeight: "400px" ,
+            prop_templateWidth: 350 ,
+            prop_templateHeight: 160 ,
+            prop_lineMarkerStart: null ,
+            prop_template:  `
+<style>
+   .item-arrow-chart-tree{
+      opacity: 0.5;
+   }
+   .item-chart-tree:hover  .item-arrow-chart-tree{
+      transition: opacity ease 350ms;
+      opacity: 1;
+   }
+</style>
+              <div  class=" item-chart-tree col-md-3 col-12 mt-2">
+                    <div class="border rounded shadow bg-white p-2 position-relative" style="width: 350px;">
+                        <div class="row">
+                            <div class="col-4 p-0" >
+                                <div style="border-radius: 100%; width: 100px; height: 100px" class="border shadow-sm my-2 mx-auto"></div>
+                            </div>
+                            <div class="col-8">
+                                <p class="pt-0 border-bottom pb-0 m-0"> <b>Mehdi Marefiyan</b> </p>
+                                <p class="pt-3 pb-0 m-0">
+                                    تاریخ ایجاد:
+                                    <b>1404/01/01</b>
+                                </p>
+                            </div>
+                        </div>
+                        {{elementShow}}
+                    </div>
+                </div>
+            ` ,
         }
     );
-
-    function showOrHideChildChartTree(id) {
-        chartTreeY.call_showOrHideChild(id)
-    }
 
 
 

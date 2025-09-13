@@ -12344,7 +12344,7 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentBase{
 
         ] ,
         part_layout_mouse_scroller: [
-            {prop : "prop_formScrollerHeight"          , default: "100%"} ,
+            {prop : "prop_formScrollerHeight"          , default: "450px"} ,
         ] ,
         part_layout_svg: [
             {prop : "prop_svgWGap"                     , default: 1000} ,
@@ -12537,10 +12537,10 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentBase{
 
     fn_getPosition(objects) {
         const data = this._COMPONENT_CONFIG;
-        const Width =   data.hasOwnProperty("W")  ? data.W  : 100;
-        const Height =  data.hasOwnProperty("H")  ? data.H  : 100;
-        const h =       data.hasOwnProperty("h")  ? data.h  : 30;
-        const dHeight = data.hasOwnProperty("dH") ? data.dH : 50;
+        const Width =   data.hasOwnProperty("prop_templateWidth")  ? data.prop_templateWidth  : 100;
+        const Height =  data.hasOwnProperty("prop_templateHeight")  ? data.prop_templateHeight  : 100;
+        const h =       data.hasOwnProperty("prop_templateHeightPoint")  ? data.prop_templateHeightPoint  : 30;
+        const dHeight = data.hasOwnProperty("prop_templateHeightGap") ? data.prop_templateHeightGap : 50;
 
         for (let i = 0; i < objects.length ; i++) {
             const itemObject = objects[i];
@@ -12560,7 +12560,15 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentBase{
             const itemObject = objects[i];
             const tags = itemObject.hasOwnProperty("tags") ? itemObject.tags : {};
             tags["id"] = itemObject.id
-            tags["parent"] = itemObject.parent
+            tags["parent"] = itemObject.parent;
+            tags["elementShow"]= `
+            <div style="border-radius: 100%; width:40px; height:40px; cursor: pointer; transform: translate(-50%, 0); bottom: -20px; left: 50%; line-height: 40px"
+                 class="${itemObject.hasOwnProperty("children") && Array.isArray(itemObject.children) && itemObject.children.length > 0 ? "" : "d-none"}
+                        item-arrow-chart-tree border border-2 border-dark  position-absolute p-0 text-center d-block bg-white"
+                 onclick="${this.getFn("call_showOrHideChild" , itemObject.id)}">
+                    ${(itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || (!itemObject.hasOwnProperty("isOpen"))  ? "&#x25BC;" : "&#x25B2;"}
+           </div>
+            `;
 
             objects[i].template = template.replace(/{{(.*?)}}/g, (match, key) => {
                 return tags[key.trim()] ?? "";
@@ -12819,6 +12827,10 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentBase{
                 break;
             }
         }
+    }
+
+    call_hasChild(id){
+        console.log(is)
     }
 
 }
@@ -14861,7 +14873,8 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
     _SCROLL_TOP=null;
     _SCROLL_LEFT=null;
     _SCALE=1;
-    _MIN_SCALE = 0.2;
+    _STEP_SCALE = 0.5;
+    _MIN_SCALE = 0.4;
     _MAX_SCALE = 3;
 
     /* ---------------------------------------------
@@ -14910,6 +14923,10 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
         part_layout_content: [
             {prop : "prop_layoutContent"            , default: null} ,
         ] ,
+        part_layout_zoom_text: [
+            {prop : "prop_backgroundColor_tools"     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_tools")   ? tools_const.styles.mosuseScroller.backgroundColor_tools : ""} ,
+            {prop : "var_scrollerScaleText"          , default: this._SCALE*100} ,
+        ] ,
     }
 
     _COMPONENT_SCHEMA = {
@@ -14926,7 +14943,8 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
                     } ,
                     part_layout_content: {}
                 } ,
-            }
+            },
+            part_layout_zoom_text: {}
         } ,
     }
 
@@ -14968,6 +14986,8 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
         switch (partName){
             case "part_structure":
                 return this.template_render_structure(partName);
+            case "part_layout_zoom_text":
+                return this.template_render_structure_zoomText(partName);
             case "part_layout_scroll":
                 return this.template_render_layoutScroll(partName);
             case "part_layout_tools":
@@ -15001,11 +15021,55 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
                  ${this.templateFn("part_layout_tools") ?? ""}
           
                  ${this.templateFn("part_layout_scroll") ?? ""} 
+
+                 ${this.templateFn("part_layout_zoom_text") ?? ""}
               </component-body>
           </component-border>
           
                 `;
         return this.templateBasic_render_structure(content , "position-relative p-0");
+    }
+
+    template_render_structure_zoomText(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+            const prop_backgroundColor_tools  =  data.hasOwnProperty("prop_backgroundColor_tools")    ?  data.prop_backgroundColor_tools     : "";
+            const var_scrollerScaleText  =    data.hasOwnProperty("var_scrollerScaleText")           ?  data.var_scrollerScaleText       : [];
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-layout-zoom-text-${this._COMPONENT_RANDOM_ID}"
+         class="position-absolute rounded shadow text-white text-center border-white border" 
+         >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-layout-zoom-text-${this._COMPONENT_RANDOM_ID}{
+            opacity: 0.25;
+            top: 10px;
+            ${directionRtl ? "left" : "right"}: 45px; 
+            width: 60px;
+            background-color: ${prop_backgroundColor_tools};
+         }
+         
+         
+         #${this._COMPONENT_ID}:hover  #component-layout-zoom-text-${this._COMPONENT_RANDOM_ID}{
+               opacity: 0.75;
+               transition: opacity 500ms ease;
+         }
+     </style>
+     
+     ${var_scrollerScaleText} %
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
     }
 
     template_render_layoutScroll(partName) {
@@ -15030,6 +15094,8 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
          
      <style>
          #${this._COMPONENT_ID} #component-layout-scroll-${this._COMPONENT_RANDOM_ID}{
+         float:left;
+         direction: ltr;
               overflow: auto;
               cursor: all-scroll;
               user-select: none;    
@@ -15062,6 +15128,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const prop_scrollerHeight         =  data.hasOwnProperty("prop_scrollerHeight")           ?  data.prop_scrollerHeight            : "";
             const prop_backgroundColor_tools  =  data.hasOwnProperty("prop_backgroundColor_tools")    ?  data.prop_backgroundColor_tools     : "";
             const prop_moreIcons              =  data.hasOwnProperty("prop_moreIcons")                ?  data.prop_moreIcons                 : "";
             const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
@@ -15081,7 +15148,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
          #${this._COMPONENT_ID} #component-layout-scroll-tools-${this._COMPONENT_RANDOM_ID}{
             opacity: 0.25;
             width: 35px;
-            height: calc(100% - 10px);
+           
             top:5px;
             overflow:auto;
             user-select: none;       /* متن قابل انتخاب نباشد */
@@ -15380,6 +15447,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
     fn_getElementScroller(){
         return document.querySelector(`#${this._COMPONENT_ID} #component-layout-scroll-${this._COMPONENT_RANDOM_ID}`);
     }
+
     fn_getElementContent(){
         return document.querySelector(`#${this._COMPONENT_ID} #component-layout-content-${this._COMPONENT_RANDOM_ID}`);
     }
@@ -15387,48 +15455,116 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
     fn_scrollerModusDown(event){
         const scroller = this.fn_getElementScroller();
         this._IS_DOWN = true;
-        this._START_X = event.pageX - scroller.offsetLeft;
-        this._START_Y = event.pageY - scroller.offsetTop;
+
+        // مختصات شروع client
+        this._START_CLIENT_X = event.clientX;
+        this._START_CLIENT_Y = event.clientY;
+
         this._SCROLL_LEFT = scroller.scrollLeft;
-        this._SCROLL_TOP = scroller.scrollTop;
+        this._SCROLL_TOP  = scroller.scrollTop;
+
+        // pointer capture (برای درگ حتی خارج از المنت)
+        if (typeof scroller.setPointerCapture === 'function' && event.pointerId != null) {
+            try { scroller.setPointerCapture(event.pointerId); } catch(e){/* ignore */ }
+        }
+
+        // listener های document برای move و up
+        this._bound_scrollerMove = this.fn_scrollerModusMove.bind(this);
+        this._bound_scrollerUp   = this.fn_scrollerModusUp.bind(this);
+
+        document.addEventListener('pointermove', this._bound_scrollerMove, {passive:false});
+        document.addEventListener('pointerup', this._bound_scrollerUp);
+
+        document.body.style.cursor = 'grabbing';
 
         event.preventDefault();
     }
 
     fn_scrollerModusMove(event){
+        if (!this._IS_DOWN) return;
+        event.preventDefault();
+
+        const scroller = this.fn_getElementScroller();
+        const content  = this.fn_getElementContent();
+
+        // فاصله موس از شروع
+        const dx = event.clientX - this._START_CLIENT_X;
+        const dy = event.clientY - this._START_CLIENT_Y;
+
+        let newLeft = this._SCROLL_LEFT - dx;
+        let newTop  = this._SCROLL_TOP  - dy;
+
+        // محاسبه max scroll با در نظر گرفتن scale
+        const scale = this._SCALE;
+        const contentWidth  = content.offsetWidth * scale;
+        const contentHeight = content.offsetHeight * scale;
+
+        const maxLeft = Math.max(0, contentWidth - scroller.clientWidth);
+        const maxTop  = Math.max(0, contentHeight - scroller.clientHeight);
+
+        console.log(maxLeft , maxTop)
+
+        // clamp
+        newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+        newTop  = Math.max(0, Math.min(maxTop,  newTop));
+
+        scroller.scrollLeft = newLeft ;
+        scroller.scrollTop  = newTop  ;
+    }
+
+    fn_scrollerModusUp(event){
+        if (!this._IS_DOWN) return;
+        this._IS_DOWN = false;
+
         const scroller = this.fn_getElementScroller();
 
-        if (! this._IS_DOWN) return;
-        event.preventDefault();
-        const x = event.pageX - scroller.offsetLeft;
-        const y = event.pageY - scroller.offsetTop;
-        const walkX = (x - this._START_X) * -1;
-        const walkY = (y - this._START_Y) * -1;
-        scroller.scrollLeft = this._SCROLL_LEFT + walkX;
-        scroller.scrollTop  = this._SCROLL_TOP + walkY;
+        if (typeof scroller.releasePointerCapture === 'function' && event.pointerId != null) {
+            try { scroller.releasePointerCapture(event.pointerId); } catch(e){/* ignore */ }
+        }
+
+        if (this._bound_scrollerMove) {
+            document.removeEventListener('pointermove', this._bound_scrollerMove, {passive:false});
+            this._bound_scrollerMove = null;
+        }
+        if (this._bound_scrollerUp) {
+            document.removeEventListener('pointerup', this._bound_scrollerUp);
+            this._bound_scrollerUp = null;
+        }
+
+        document.body.style.cursor = '';
     }
+
 
     fn_scrollerWheel(event){
         event.preventDefault();
-
+        event.stopPropagation();
+        this.fn_scrollerScaleProgress(event.clientX , event.clientY , event.deltaY);
+    }
+    fn_scrollerScaleProgress(x , y , zoomStep=null){
         const scroller = this.fn_getElementScroller();
 
         const rect = scroller.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
+        const mouseX = x - rect.left;
+        const mouseY = y - rect.top;
 
         const zoomSpeed = 0.001;
-        const newScale = Math.min(Math.max(this._SCALE - event.deltaY * zoomSpeed, this._MIN_SCALE), this._MAX_SCALE);
+        let newScale = 1;
+        if (zoomStep != null){
+            newScale = Math.min(Math.max(this._SCALE - zoomStep * zoomSpeed, this._MIN_SCALE), this._MAX_SCALE);
+            newScale = newScale > this._MIN_SCALE ? newScale : this._MIN_SCALE;
+        }
         const scaleRatio = newScale / this._SCALE;
+
+        this._SCALE = newScale;
+        this.fn_applyZoom();
 
         this.call_applyScroll(
             (scroller.scrollLeft + mouseX) * scaleRatio - mouseX ,
             (scroller.scrollTop + mouseY)  * scaleRatio - mouseY
         );
-
-        this._SCALE = newScale;
-        this.fn_applyZoom();
     }
+
+
     fn_scrollerMouseLeave(event){
         this._IS_DOWN = false
     }
@@ -15440,7 +15576,8 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
 
     fn_onCLickRefresh(event){
         this._SCALE = 1;
-        this.fn_applyZoom(this.getScaleOrigin())
+        this.fn_applyZoom()
+        this.call_applyScroll();
     }
 
 
@@ -15448,16 +15585,19 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
 
 
     fn_onCLickZoomIn(event){
-        this._SCALE *= 1.2;
-        this.fn_applyZoom(this.getScaleOrigin())
+        const scroller = this.fn_getElementScroller();
+        const rect = scroller.getBoundingClientRect();
+        this.fn_scrollerScaleProgress(rect.left , rect.top , -this._STEP_SCALE*100)
     }
     fn_onCLickZoomStandard(event){
-        this._SCALE = 1;
-        this.fn_applyZoom(this.getScaleOrigin())
+        const scroller = this.fn_getElementScroller();
+        const rect = scroller.getBoundingClientRect();
+        this.fn_scrollerScaleProgress(rect.left , rect.top)
     }
     fn_onCLickZoomOut(event){
-        this._SCALE /= 1.2;
-        this.fn_applyZoom(this.getScaleOrigin())
+        const scroller = this.fn_getElementScroller();
+        const rect = scroller.getBoundingClientRect();
+        this.fn_scrollerScaleProgress(rect.left , rect.top , this._STEP_SCALE*100)
     }
 
     fn_onSetBgDark(event){
@@ -15469,40 +15609,12 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
 
 
 
-    getScaleOrigin() {
-        const container = this.fn_getElementScroller();
-        const content = this.fn_getElementContent();
-
-        const containerRect = container.getBoundingClientRect();
-        const contentRect   = content.getBoundingClientRect();
-
-        return `
-        ${containerRect.left  - (contentRect.left)  - (containerRect.width / 2)} ,
-        ${containerRect.top  - (contentRect.top) - (containerRect.height / 2)},
-        `;
-    }
-
-    getScaleLimits() {
-        const container = this.fn_getElementScroller();
-        const content = this.fn_getElementContent();
-
-        const containerRect = container.getBoundingClientRect();
-        const contentRect   = content.getBoundingClientRect();
-
-        return Math.min(
-            containerRect.width / contentRect.width,
-            containerRect.height / contentRect.height
-        );
-    }
-
-    fn_applyZoom(origin="0 0"){
+    fn_applyZoom(){
         const contentRect = this.fn_getElementContent();
-        const minScale = this.getScaleLimits();
-        this._SCALE  = minScale < this._SCALE ? this._SCALE : minScale;
-        console.log(origin)
-        contentRect.style.transformOrigin = origin;
-        contentRect.style.transform = `scale(${ this._SCALE })`;
+        this._SCALE  = this._MIN_SCALE < this._SCALE ? this._SCALE : this._MIN_SCALE;
         contentRect.style.transformOrigin = "0 0";
+        contentRect.style.transform = `scale(${ this._SCALE })`;
+        this.set("var_scrollerScaleText" , Math.floor(this._SCALE*100))
     }
 
 
@@ -15541,6 +15653,5 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
         scroller.scrollLeft = positionX != null ? positionX : this._SCROLL_CENTER_X;
         scroller.scrollTop  = positionY != null ? positionY : this._SCROLL_CENTER_Y;
     }
-
 
 }

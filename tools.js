@@ -930,7 +930,8 @@ tools_svg = {
             if (!pointNext.hasOwnProperty("isJoin") || !pointNext.isJoin){
                 if (pointSelected.hasOwnProperty("isJoin") && pointSelected.isJoin){
                     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                    const d = `M ${pointPrevious.x},${pointPrevious.y}
+                    const d = `
+             M ${pointPrevious.x},${pointPrevious.y}
              Q ${pointSelected.x},${pointSelected.y}
                ${pointNext.x},${pointNext.y}`;
                     path.setAttribute("d", d);
