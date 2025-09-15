@@ -106,79 +106,6 @@ if (typeof components === 'undefined') {
 
 
 
-if (typeof listComponentCategory === 'undefined') {
-    var listComponentCategory = [
-        { id: 1     , name: " [01] text"                                                          , parent_id:0 } ,
-        { id: 1001  , name: " [01-01] " +  listComponent["ComponentMessages"]                     , parent_id:1 } ,
-        { id: 1002  , name: " [01-02] " +  listComponent["ComponentIsEmpty"]                      , parent_id:1 } ,
-        { id: 1003  , name: " [01-03] " +  listComponent["ComponentHeader"]                       , parent_id:1 } ,
-        { id: 1004  , name: " [01-04] " +  listComponent["ComponentLabel"]                        , parent_id:1 } ,
-        { id: 1005  , name: " [01-05] " +  listComponent["ComponentDescription"]                  , parent_id:1 } ,
-        { id: 1006  , name: " [01-06] " +  listComponent["ComponentLink"]                         , parent_id:1 } ,
-        { id: 1007  , name: " [01-07] " +  listComponent["ComponentInfo"]                         , parent_id:1 } ,
-        { id: 1008  , name: " [01-08] " +  listComponent["ComponentCard"]                         , parent_id:1 } ,
-
-        { id: 2     , name: " [02] Fetch"                                                         , parent_id:0 } ,
-        { id: 2001  , name: " [02-01] " +  listComponent["ComponentLoading"]                      , parent_id:2 } ,
-        { id: 2002  , name: " [02-02] " +  listComponent["Component404"]                          , parent_id:2 } ,
-        { id: 2003  , name: " [02-03] " +  listComponent["ComponentForm"]                         , parent_id:2 } ,
-        { id: 2004  , name: " [02-04] " +  listComponent["ComponentWidget"]                       , parent_id:2 } ,
-        { id: 2005  , name: " [02-05] " +  listComponent["ComponentIframe"]                       , parent_id:2 } ,
-
-        { id: 3     , name: " [03] Button and Inputs"                                              , parent_id:0 } ,
-        { id: 3001  , name: " [03-01] " +  listComponent["ComponentButton"]                        , parent_id:3 } ,
-        { id: 3002  , name: " [03-02] " +  listComponent["ComponentSelectOption"]                  , parent_id:3 } ,
-        { id: 3003  , name: " [03-03] " +  listComponent["ComponentOtp"]                           , parent_id:3 } ,
-        { id: 3004  , name: " [03-04] " +  listComponent["ComponentInput"]                         , parent_id:3 } ,
-        { id: 3005  , name: " [03-05] " +  listComponent["ComponentInputPrice"]                    , parent_id:3 } ,
-        { id: 3006  , name: " [03-06] " +  listComponent["ComponentDate"]                          , parent_id:3 } ,
-        { id: 3007  , name: " [03-07] " +  listComponent["ComponentInputFile"]                     , parent_id:3 } ,
-
-        { id: 4     , name: " [04] tooltips "                                                      , parent_id:0 } ,
-        { id: 4001  , name: " [04-01] " + listComponent["ComponentTooltipDescription"]             , parent_id:4 } ,
-
-        { id: 10     , name: " [10] Tables "                                                       , parent_id:0 } ,
-        { id: 10001  , name: " [10-01] " + listComponent["ComponentTable"]                         , parent_id:10 } ,
-
-        { id: 11     , name: " [11] Tabs "                                                          , parent_id:0 } ,
-        { id: 11001  , name: " [11-01] " +  listComponent["ComponentTabs"]                          , parent_id:11 } ,
-        { id: 11002  , name: " [11-02] " +  listComponent["ComponentTree"]                          , parent_id:11 } ,
-
-        { id: 12     , name: " [12] Collapse "                                                      , parent_id:0 } ,
-        { id: 12002  , name: " [12-01] " +  listComponent["ComponentCollapse"]                      , parent_id:12} ,
-
-        { id: 13     , name: " [13] Window "                                                        , parent_id:0 } ,
-        { id: 13001  , name: " [13-01] " +  listComponent["ComponentWindow"]                        , parent_id:13 } ,
-        { id: 13002  , name: " [13-02] " +  listComponent["ComponentWindowConfirm"]                 , parent_id:13 } ,
-
-        { id: 14     , name: " [14] Slider Shows "                                                  , parent_id:0 } ,
-        { id: 14001  , name: " [14-01] " +  listComponent["ComponentSliderShowOverlapping"]         , parent_id:14 } ,
-
-        { id: 15     , name: " [15] Breadcrumb "                                                    , parent_id:0 } ,
-        { id: 15001  , name: " [15-01] " + listComponent["ComponentBreadcrumb"]                     , parent_id:15 } ,
-
-        { id: 20     , name: " [20] Charts "                                                        , parent_id:0 } ,
-        { id: 20001  , name: " [20-01] " +  listComponent["ComponentChart"]                         , parent_id:20 } ,
-        { id: 20002  , name: " [20-02] " +  listComponent["ComponentChartTreeY"]                    , parent_id:20 } ,
-
-        { id: 21     , name: " [21] QR CODE "                                                       , parent_id:0 } ,
-        { id: 21001  , name: " [21-01] " + listComponent["ComponentQrCode"]                         , parent_id:20 } ,
-        { id: 21002  , name: " [21-02] " + listComponent["ComponentCameraQrCodeReader"]             , parent_id:20 } ,
-        { id: 21003  , name: " [21-03] " + listComponent["ComponentUploadQrCodeReader"]             , parent_id:20 } ,
-        { id: 21004  , name: " [21-04] " + listComponent["ComponentQrCodeReader"]                   , parent_id:20 } ,
-
-        { id: 99     , name: " [99] Others "                                                        , parent_id:0 } ,
-        { id: 99001  , name: " [99-01] " +  listComponent["ComponentIcon"]                          , parent_id:99 } ,
-        { id: 99002  , name: " [99-02] " +  listComponent["ComponentPositionElement"]               , parent_id:99 } ,
-        { id: 99003  , name: " [99-03] " +  listComponent["ComponentBorder"]                        , parent_id:99 } ,
-        { id: 99004  , name: " [99-04] " +  listComponent["ComponentImage"]                         , parent_id:99 } ,
-        { id: 99005  , name: " [99-05] " +  listComponent["ComponentLayout"]                        , parent_id:99 } ,
-        { id: 99006  , name: " [99-05] " +  listComponent["ComponentMouseScroller"]                 , parent_id:99 } ,
-
-    ]
-}
-
-
 
     /* -------------------------------------
      Component Base:
@@ -1720,7 +1647,7 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
             const prop_titleStyles      =  data.hasOwnProperty("prop_titleStyles")         ?  data.prop_titleStyles      : {};
 
             return `
-<section data-part-name="${partName}" 
+<b data-part-name="${partName}" 
          id="component-link-title-${this._COMPONENT_RANDOM_ID}"
          class="${tools_public.renderListClass(prop_titleClass)} col-8">
          
@@ -1730,11 +1657,9 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
          }
      </style>
      
-     <b class="d-block text-center" style="font-size: 12pt">
-${prop_title}
-     </b>
+     ${prop_title}
      
-</section>
+</b>
         `;
         }
 
@@ -1899,7 +1824,8 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
 
         ] ,
         part_border: [
-
+            {prop : "prop_borderClass"      , default: []} ,
+            {prop : "prop_borderStyles"     , default: {}} ,
         ] ,
         part_border_content: [
             {prop : "prop_height"                , default: 250} ,
@@ -2091,11 +2017,15 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
         const data = this.getPartProps(partName);
 
         if (data != null){
+            const prop_borderClass    =  data.hasOwnProperty("prop_borderClass")                ?  data.prop_borderClass        : [];
+            const prop_borderStyles   =  data.hasOwnProperty("prop_borderStyles")               ?  data.prop_borderStyles       : {};
+
 
             new window.ComponentBorder(
                 `component-description-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
-
+                    prop_borderClass ,
+                    prop_borderStyles
                 }
             )
         }
@@ -4088,7 +4018,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
      <style>
          #${this._COMPONENT_ID} #component-select-option-form-position-element-${ this._COMPONENT_RANDOM_ID}{
              z-index: ${listLayoutZIndex.hasOwnProperty("tools") ? listLayoutZIndex.tools: 10};
-             position:relative;
+             position:relative; 
          }
      </style>
      
@@ -9645,7 +9575,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 
             }
             else if (prop_type == 1){
-                tabClass = "border rounded p-1";
+                tabClass = " p-1";
                 tabStyle = "display: flow-root; maargin-bottom: 3px;";
                 if (prop_tabs != null){
                     let tabClassCol = "float-start";
@@ -9862,10 +9792,11 @@ window.ComponentTree = class ComponentTree extends ComponentBase{
                         treehtml += `
                         <div class="item-tree row p-0 mx-0 my-1 " onclick="${this.getFn("fn_onSelectItem" , "event" , itemTree.id ,`'${componentTreeChildId}'` )}">
                             <span class=" ${selected ? 'icon-arrow-item-tree-active' : ''} icon-arrow-item-tree col-1"> ${selected ?  (directionRtl ? '&#x2BC7;' : '&#x2BC8;' )   :  (directionRtl ? '&#x2BC8;' : '&#x2BC7;' ) }  </span>
-                            <span class=" ${selected ? 'title-item-tree-active' : ''} title-item-tree col-7  rounded">  ${itemTree.name} </span>
-                            <span class=" ${selected ? 'line-item-tree-active' : ''} line-item-tree col-4"></span>
+                            <span class=" ${selected ? 'title-item-tree-active' : ''} title-item-tree col-10  rounded">  ${itemTree.name} </span>
                             <div class=" ${directionRtl ? 'me-3 ms-0' : 'ms-3 me-0'}  p-0 my-0 ">
-                                <component-tree id="${componentTreeChildId}"></component-tree>
+                                <div class="row px-2 py-0 ms-2 me-1 my-1 ">
+                                     <component-tree id="${componentTreeChildId}"></component-tree>
+                                </div>
                             </div>
                         </div>
                         `
@@ -13043,6 +12974,11 @@ TEMPLATEs
      <style>
          #${this._COMPONENT_ID} #component-qr-code-bottom-text-${this._COMPONENT_RANDOM_ID}{
              font-size: 10pt;
+             padding-left: 35px;
+             padding-right: 35px;
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
          }
      </style>
      

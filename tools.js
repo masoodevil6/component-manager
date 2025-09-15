@@ -763,6 +763,14 @@ tools_public = {
         }
 
         return  null;
+    } ,
+
+    getCopyText(txt){
+        navigator.clipboard.writeText(txt).then(() => {
+            console.log('متن کپی شد: ' , txt);
+        }).catch(err => {
+            console.error('خطا در کپی کردن متن: ', err);
+        });
     }
 
 }
