@@ -20,20 +20,23 @@
         Component404:                        "component-404" ,                            //02-02
         ComponentForm:                       "component-form" ,                           //02-03
         ComponentWidget:                     "component-widget" ,                         //02-04
+        ComponentIframe:                     "component-iframe" ,                         //02-05
 
 
         // [03] Button and Inputs
         ComponentButton:                     "component-button" ,                         //03-01
-        ComponentSelectOption:               "component-select-option" ,                  //03-02
-        ComponentOtp:                        "component-otp" ,                            //03-03
-        ComponentInput:                      "component-input" ,                          //03-04
-        ComponentInputPrice:                 "component-input-price" ,                    //03-05
-        ComponentDate:                       "component-date" ,                           //03-06
-        ComponentInputFile:                  "component-input-file" ,                     //03-07
+        ComponentOtp:                        "component-otp" ,                            //03-02
+        ComponentInput:                      "component-input" ,                          //03-03
+        ComponentInputPrice:                 "component-input-price" ,                    //03-04
+        ComponentInputPassword:              "component-input-password" ,                 //03-05
+        ComponentInputFile:                  "component-input-file" ,                     //03-06
+        ComponentDate:                       "component-date" ,                           //03-07
+        ComponentSelectOption:               "component-select-option" ,                  //03-08
+        ComponentValidate:                   "component-validate" ,                       //03-09
+        
 
         // [04] tooltips
         ComponentTooltipDescription:         "component-tooltip-description" ,            //04-01
-
 
 
         // [10] Tables
@@ -41,6 +44,7 @@
 
         // [11] Tabs
         ComponentTabs:                       "component-tabs" ,                           //11-01
+        ComponentTree:                       "component-tree" ,                           //11-02
 
         // [12] Collapse
         ComponentCollapse:                   "component-collapse" ,                       //12-01
@@ -51,6 +55,11 @@
 
         // [14] Slider Shows
         ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //14-01
+
+        // [15] Breadcrumb
+        ComponentBreadcrumb :                "component-breadcrumb" ,                     //15-01
+
+
 
 
         // [20] Charts
@@ -64,7 +73,7 @@
         ComponentQrCodeReader:               "component-qr-code-reader" ,                 //21-04
 
 
-        
+
         // [99] Others
         ComponentIcon:                       "component-icon" ,                           //99-01
         ComponentPositionElement:            "component-position-element" ,               //99-02
@@ -455,64 +464,6 @@
     )
 ```
 
-
-**03-02 Component Select Option:**
-```
-/*-------------------------------------
- 03-02) Component Select Option
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_name
-@prop_itemSelected
-
-@prop_title
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_titleClass
-@prop_titleStyles
-
-@prop_icon
-
-@prop_options
-@prop_placeholder
-
-@prop_btnAddStatus
-@prop_btnAddIcon
-@prop_btnAddClass
-@prop_btnAddTitle
-
-@prop_optionHeight
-@prop_optionWidth
-@prop_optionStyles
-@prop_positionTop
-@prop_positionLeft
-@prop_positionBottom
-@prop_positionRight
-
-@prop_options
-@prop_optionStyles
-@prop_optionWidth
-@prop_optionItemNotSelectedBackground
-@prop_optionItemHoverBackground
-@prop_optionItemSelectedBackground
-
-@fn_callback
-@fn_clickBtnTools
--------------------------------------*/
-    new window.ComponentSelectOption(
-        "element_id" ,
-        {
-            
-        }
-    )
-```
-
-
 **03-03) Component OTP:**
 ```
 /*-------------------------------------
@@ -541,10 +492,11 @@
 ```
 
 
-**03-04) Component Input:**
+
+**03-03) Component Input:**
 ```
 /*-------------------------------------
- 03-04) Component Input
+ 03-03) Component Input
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -580,10 +532,10 @@
 ```
 
 
-**03-05) Component Input Price:**
+**03-04) Component Input Price:**
 ```
 /*-------------------------------------
- 03-05) Component Input
+ 03-04) Component Input
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -621,10 +573,95 @@
 ```   
 
 
-**03-06) Component Date:**
+**03-05) Component Input Password:**
 ```
 /*-------------------------------------
- 03-06) Component Date
+ 03-05) Component Input Password
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_placeholder
+@prop_isDisable
+
+@prop_icon
+
+@prop_hasRules
+@prop_listRules
+-------------------------------------*/
+    new window.ComponentInputPassword(
+        "element_id" ,
+        {
+
+        }
+    )
+```   
+
+
+
+**03-06) Component Input File:**
+```
+/*-------------------------------------
+ 03-06) Component Input File
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_accept
+@prop_maxCount
+@prop_maxSize
+@prop_textValidateSize
+@prop_textValidateAccept
+@prop_labelTooltipDescription
+
+@prop_title
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderColor
+@prop_borderColorHover
+@prop_borderHeight
+
+@prop_textColor
+@prop_text
+
+@prop_showListFiles
+
+@prop_deleteBody
+@prop_deleteBtnCancel
+@prop_deleteBtnAccept
+
+-------------------------------------*/
+new window.ComponentInputFile(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
+**03-07) Component Date:**
+```
+/*-------------------------------------
+ 03-07) Component Date
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -687,50 +724,90 @@
 ```
 
 
-**03-07) Component Input File:**
+
+**03-08 Component Select Option:**
 ```
 /*-------------------------------------
- 03-07) Component Input File
+ 03-08) Component Select Option
 -------------------------------------
 @prop_show
 @prop_structureClass
 @prop_structureStyles
 
 @prop_name
-@prop_accept
-@prop_maxCount
-@prop_maxSize
-@prop_textValidateSize
-@prop_textValidateAccept
-@prop_labelTooltipDescription
+@prop_itemSelected
 
 @prop_title
-@prop_labelShow
 @prop_labelClass
 @prop_labelStyles
 @prop_labelHoverStyles
 
-@prop_borderColor
-@prop_borderColorHover
-@prop_borderHeight
+@prop_titleClass
+@prop_titleStyles
 
-@prop_textColor
-@prop_text
+@prop_icon
 
-@prop_showListFiles
+@prop_options
+@prop_placeholder
 
-@prop_deleteBody
-@prop_deleteBtnCancel
-@prop_deleteBtnAccept
+@prop_btnAddStatus
+@prop_btnAddIcon
+@prop_btnAddClass
+@prop_btnAddTitle
 
+@prop_optionHeight
+@prop_optionWidth
+@prop_optionStyles
+@prop_positionTop
+@prop_positionLeft
+@prop_positionBottom
+@prop_positionRight
+
+@prop_options
+@prop_optionStyles
+@prop_optionWidth
+@prop_optionItemNotSelectedBackground
+@prop_optionItemHoverBackground
+@prop_optionItemSelectedBackground
+
+@fn_callback
+@fn_clickBtnTools
 -------------------------------------*/
-new window.ComponentInputFile(
+    new window.ComponentSelectOption(
         "element_id" ,
         {
             
         }
     )
 ```
+
+
+**03-08 Component Validate:**
+```
+/*-------------------------------------
+ 03-09) Component Validate
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_isAbsolute
+@prop_reference
+@prop_listRules
+@prop_title
+
+-------------------------------------*/
+    new window.ComponentValidate(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
 
 
 

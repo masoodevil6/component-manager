@@ -41,16 +41,18 @@ if (typeof listComponent === 'undefined') {
 
         // [03] Button and Inputs
         ComponentButton:                     "component-button" ,                         //03-01
-        ComponentSelectOption:               "component-select-option" ,                  //03-02
-        ComponentOtp:                        "component-otp" ,                            //03-03
-        ComponentInput:                      "component-input" ,                          //03-04
-        ComponentInputPrice:                 "component-input-price" ,                    //03-05
-        ComponentDate:                       "component-date" ,                           //03-06
-        ComponentInputFile:                  "component-input-file" ,                     //03-07
+        ComponentOtp:                        "component-otp" ,                            //03-02
+        ComponentInput:                      "component-input" ,                          //03-03
+        ComponentInputPrice:                 "component-input-price" ,                    //03-04
+        ComponentInputPassword:              "component-input-password" ,                 //03-05
+        ComponentInputFile:                  "component-input-file" ,                     //03-06
+        ComponentDate:                       "component-date" ,                           //03-07
+        ComponentSelectOption:               "component-select-option" ,                  //03-08
+        ComponentValidate:                   "component-validate" ,                       //03-09
+
 
         // [04] tooltips
         ComponentTooltipDescription:         "component-tooltip-description" ,            //04-01
-
 
 
         // [10] Tables
@@ -3081,7 +3083,7 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
          
                     ${this.templateFn("part_form") ?? ""}
          
-                    <section class="d-block border-top pt-2 px-1">
+                    <section class="" style="display: flow-root">
                         <component-button id="component-form-button-submit-${this._COMPONENT_RANDOM_ID}"></component-button>
                     </section>
          
@@ -3813,793 +3815,9 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 }
 
 
-/*-------------------------------------
- 03-02) Component Select Option
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_name
-@prop_itemSelected
-
-@prop_title
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_titleClass
-@prop_titleStyles
-
-@prop_icon
-
-@prop_options
-@prop_placeholder
-
-@prop_btnAddStatus
-@prop_btnAddIcon
-@prop_btnAddClass
-@prop_btnAddTitle
-
-@prop_optionHeight
-@prop_optionWidth
-@prop_optionStyles
-@prop_positionTop
-@prop_positionLeft
-@prop_positionBottom
-@prop_positionRight
-
-@prop_listIcons      [{icon ,name ,  method} , ...]
-@prop_options
-@prop_optionStyles
-@prop_optionWidth
-@prop_optionItemNotSelectedBackground
-@prop_optionItemHoverBackground
-@prop_optionItemSelectedBackground
-
-@prop_firstCallback
-@fn_callback
-@fn_clickBtnTools
--------------------------------------*/
-window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase {
-
-    var_showFormSelectOption = false;
-
-    /* ---------------------------------------------
-    PROPERTYs
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
-        part_value: [
-            {prop : "prop_name"                              , default:  ""} ,
-            {prop : "prop_itemSelected"                      , default:  null} ,
-        ] ,
-        part_label: [
-            {prop : "prop_title"                             , default:  "title"} ,
-            {prop : "prop_labelClass"                        , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                       , default:  {}} ,
-            {prop : "prop_labelHoverStyles"                  , default:  {}} ,
-        ] ,
-        part_header: [
-            {prop : "prop_titleClass"                        , default:  ["form-control" , " px-2"]} ,
-            {prop : "prop_titleStyles"                       , default:  {"line-height" : "24px" , "height": "30px"}} ,
-        ] ,
-        part_header_icon: [
-            {prop : "prop_icon"                              , default: null} ,
-        ] ,
-        part_header_title: [
-            {prop : "prop_icon"                              , default: null} ,
-            {prop : "prop_options"                           , default:  []} ,
-            {prop : "prop_itemSelected"                      , default:  null} ,
-            {prop : "prop_btnAddStatus"                      , default:  false} ,
-            {prop : "prop_placeholder"                       , default:  null} ,
-        ] ,
-        part_header_button: [
-            {prop : "prop_btnAddStatus"                       , default: false} ,
-            {prop : "prop_btnAddIcon"                         , default: "&plus;"} ,
-            {prop : "prop_btnAddTitle"                        , default: "add item"} ,
-            {prop : "prop_btnAddClass"                        , default: []} ,
-        ] ,
-        part_header_arrow_icon: [
-            {prop : "prop_btnAddStatus"                       , default:  false} ,
-            {prop : "var_showFormSelectOption"                , default:  false} ,
-        ] ,
-        part_body: [
-            {prop : "prop_optionHeight"                       , default:  200} ,
-            {prop : "prop_optionWidth"                        , default:  "100%"} ,
-            {prop : "prop_optionStyles"                       , default:  {}} ,
-            {prop : "prop_positionTop"                        , default: ""} ,
-            {prop : "prop_positionLeft"                       , default: ""} ,
-            {prop : "prop_positionBottom"                     , default: ""} ,
-            {prop : "prop_positionRight"                      , default: ""} ,
-        ] ,
-        part_body_searcher: [
-
-        ] ,
-        part_body_options: [
-            {prop : "prop_listIcons"                          , default:  null} ,
-            {prop : "prop_firstCallback"                      , default:  false} ,
-            {prop : "prop_itemSelected"                       , default:  null} ,
-            {prop : "prop_options"                            , default:  []} ,
-            {prop : "prop_optionItemNotSelectedBackground"    , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemNotSelected")  ? tools_const.styles.selectOption.backgroundColor_itemNotSelected : "" } ,
-            {prop : "prop_optionItemHoverBackground"          , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemHover")  ? tools_const.styles.selectOption.backgroundColor_itemHover : "" } ,
-            {prop : "prop_optionItemSelectedBackground"       , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemSelected")  ? tools_const.styles.selectOption.backgroundColor_itemSelected : "" } ,
-            {prop : "var_searcherSelectOption"                , default:  ""} ,
-        ]
-    }
-
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_value: {} ,
-            part_label: {} ,
-            part_header: {
-                part_header_icon: {} ,
-                part_header_title: {} ,
-                part_header_arrow_icon: {} ,
-                part_header_button: {} ,
-            } ,
-            part_body: {
-                part_body_searcher:{} ,
-                part_body_options:{} ,
-            }
-        } ,
-    }
-
-
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentSelectOption.name] ,
-            elId
-        );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-    }
-
-
-
-
-    /* ---------------------------------------------
-      TEMPLATEs
-    --------------------------------------------- */
-    componentFn(screanWidthType){
-        this.templateFn("part_label");
-        this.templateFn("part_header_icon" );
-        this.templateFn("part_header_arrow_icon" );
-        this.templateFn("part_header_button" );
-        this.templateFn("part_body" );
-        this.templateFn("part_body_searcher" );
-
-        this.fn_firstCallback();
-    }
-    templateFn(partName = null){
-
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_value":
-                return this.template_render_value(partName);
-            case "part_label":
-                return this.componentFn_render_label(partName);
-            case "part_header":
-                return this.template_render_header(partName);
-            case "part_header_icon":
-                return this.componentFn_render_headerIcon(partName);
-            case "part_header_arrow_icon":
-                return this.componentFn_render_headerArrowIcon(partName);
-            case "part_header_button":
-                return this.componentFn_render_headerButton(partName);
-            case "part_header_title":
-                return this.template_render_headerTitle(partName);
-            case "part_body":
-                return this.componentFn_render_body(partName);
-            case "part_body_searcher":
-                return this.componentFn_render_bodySearcher(partName);
-            case "part_body_options":
-                return this.template_render_bodyOptions(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName ) {
-        const content = `
-      
-     <style>
-         #${this._COMPONENT_ID} #component-select-option-form-position-element-${ this._COMPONENT_RANDOM_ID}{
-             z-index: ${listLayoutZIndex.hasOwnProperty("tools") ? listLayoutZIndex.tools: 10};
-             position:relative; 
-         }
-     </style>
-     
-      <component-label id="component-select-option-label-${ this._COMPONENT_RANDOM_ID}"></component-label>
-     
-      ${this.templateFn("part_value") ?? ""}
-      
-      ${this.templateFn("part_header") ?? ""}
-      
-      <div id="component-select-option-form-position-element-${ this._COMPONENT_RANDOM_ID}">
-          <component-position-element id="component-select-option-position-element-${ this._COMPONENT_RANDOM_ID}">
-                <component-body>
-                
-                    <component-input id="component-select-option-body-searcher-${ this._COMPONENT_RANDOM_ID}"></component-input>    
-                    
-                    ${this.templateFn("part_body_options") ?? ""}
-                    
-                 </component-body>
-          </component-position-element>
-      </div>
-                `;
-        return this.templateBasic_render_structure(content);
-    }
-
-    template_render_value(partName ) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_name               =   data.hasOwnProperty("prop_name")                ?  data.prop_name                 :  "";
-            const prop_itemSelected       =   data.hasOwnProperty("prop_itemSelected")        ?  data.prop_itemSelected         : null;
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-select-option-value-${ this._COMPONENT_RANDOM_ID}" 
-         class="" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-select-option-value-${ this._COMPONENT_RANDOM_ID}{
-             
-         }
-     </style>
-     
-      <input name="${prop_name}"  value="${prop_itemSelected != null ? prop_itemSelected : '' }" type="hidden"/>
-       
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_header(partName ) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_titleClass           =  data.hasOwnProperty("prop_titleClass")                ?  data.prop_titleClass                    :  ["  form-control " , " px-2" ];
-            const prop_titleStyles          =  data.hasOwnProperty("prop_titleStyles")               ?  data.prop_titleStyles                   :  {"line-height" : "24px" , "height": "30px"};
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-select-option-header-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_titleClass)} position-relative p-0"  
-         onclick="${this.getFn('fn_showListOptions' , 'event')}">
-     <style>
-         #${this._COMPONENT_ID} #component-select-option-header-${ this._COMPONENT_RANDOM_ID}{
-               ${tools_public.renderListStyle(prop_titleStyles)}
-               cursor: pointer;
-         }
-         
-         @media (max-width: 768px) {
-               #${this._COMPONENT_ID} #component-select-option-header-button-text-${ this._COMPONENT_RANDOM_ID}{
-                    display: none;
-               }
-               #${this._COMPONENT_ID} #component-select-option-header-button-icon-${ this._COMPONENT_RANDOM_ID}{
-                 
-               }
-         }
-     </style>
-     
-           ${this.templateFn("part_header_title") ?? ""}
-           
-           <component-icon id="component-select-option-header-icon-arrow-${ this._COMPONENT_RANDOM_ID}"></component-icon>
-           
-           <component-icon id="component-select-option-header-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-           
-           <component-button id="component-select-option-header-button-${ this._COMPONENT_RANDOM_ID}"></component-button>
-     
-</section>
-            `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_headerTitle(partName ) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const screanWidthType = this.getScreenWidth();
-
-            const prop_options              =  data.hasOwnProperty("prop_options")                   ?  data.prop_options                       : [];
-            const prop_itemSelected         =  data.hasOwnProperty("prop_itemSelected")              ?  data.prop_itemSelected                  : [];
-            const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
-            const prop_placeholder          =  data.hasOwnProperty("prop_placeholder")               ?  data.prop_placeholder                   : null;
-            const prop_icon                 =  data.hasOwnProperty("prop_icon")                      ?  data.prop_icon                          : null;
-            const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-            const var_itemSelectedTitle =this.fn_getItemSelectedTitle(prop_options , prop_itemSelected , prop_placeholder)
-
-
-            let padding = "180px"
-            if (screanWidthType == "xs"){
-                padding = "35px";
-            }
-
-            return `
-<section data-part-name="${partName}"
-         id="component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}"
-         class=" d-block" >
-     <style>
-         #${this._COMPONENT_ID} #component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}{
-            ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? padding : "20"};
-            ${directionRtl ? "padding-right" : "padding-left"} : ${prop_icon != null ? "30px" : "0"} ;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            height: 28px;
-            line-height: 30px;
-         }
-     </style>
-
-     <b class="select-title-${ this._COMPONENT_RANDOM_ID}  w-100 d-block position-relative text-center ">
-
-        ${var_itemSelectedTitle}
-
-     </b>
-
-</section>
-            `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_bodyOptions(partName ) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const directionRtl                           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")            ? this._COMPONENT_CONFIG.directionRtl             : false;
-
-            const prop_listIcons                         =  data.hasOwnProperty("prop_listIcons")                            ?  data.prop_listIcons                            :  null;
-            const prop_options                           =  data.hasOwnProperty("prop_options")                              ?  data.prop_options                              :  [];
-            const prop_itemSelected                      =  data.hasOwnProperty("prop_itemSelected")                         ?  data.prop_itemSelected                         :   null;
-            const prop_optionItemNotSelectedBackground   =  data.hasOwnProperty("prop_optionItemNotSelectedBackground")      ?  data.prop_optionItemNotSelectedBackground      :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemNotSelected")  ? tools_const.styles.selectOption.backgroundColor_itemNotSelected : "";
-            const prop_optionItemHoverBackground         =  data.hasOwnProperty("prop_optionItemHoverBackground")            ?  data.prop_optionItemHoverBackground            :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemHover")  ? tools_const.styles.selectOption.backgroundColor_itemHover : "";
-            const prop_optionItemSelectedBackground      =  data.hasOwnProperty("prop_optionItemSelectedBackground")         ?  data.prop_optionItemSelectedBackground         :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemSelected")  ? tools_const.styles.selectOption.backgroundColor_itemSelected : "";
-            const var_searcherSelectOption               =  data.hasOwnProperty("var_searcherSelectOption")                  ?  data.var_searcherSelectOption                  :   "";
-
-            const optionHtml = this.fn_onGetBodyOptions(prop_options , prop_itemSelected , var_searcherSelectOption , prop_listIcons);
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-select-option-body-options-${ this._COMPONENT_RANDOM_ID}" 
-         class=" d-block" >
-     <style>
-         #${this._COMPONENT_ID} #component-select-option-body-options-${ this._COMPONENT_RANDOM_ID}{
-              
-         }
-         #${this._COMPONENT_ID} #component-select-option-body-options-element-${ this._COMPONENT_RANDOM_ID}{
-              height: calc(100% - 45px);
-         }
-         #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}{
-             background-color: ${prop_optionItemNotSelectedBackground};
-             padding: 3px 10px !important;
-         }
-         #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}:hover{
-             background-color: ${prop_optionItemHoverBackground};
-             color: white;
-             cursor: pointer;
-         }
-         #${this._COMPONENT_ID} .component-select-option-body-options-item-selected-${this._COMPONENT_RANDOM_ID}{
-             background-color: ${prop_optionItemSelectedBackground};
-         }
-         
-         #${this._COMPONENT_ID} .component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID}{
-             cursor: pointer;
-             margin: 0 5px;
-             font-size: 18pt;
-             line-height: 15pt;
-             float:  ${directionRtl? 'left' : 'right'};
-         }
-     </style>
-       
-     <div id="component-select-option-body-options-element-${ this._COMPONENT_RANDOM_ID}"
-          class="overflow-auto">
-         ${optionHtml}
-     </div>
-       
-</section>
-            `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_label(partName ) {
-        this.componentFneBasic_render_structure(
-            `component-select-option-label-${ this._COMPONENT_RANDOM_ID}` ,
-            {
-                prop_for: `component-select-option-header-${ this._COMPONENT_RANDOM_ID}` ,
-                fn_callback: ()=>{
-                    this.runFn("fn_showListOptions" , "event" )
-                }
-            }
-        );
-    }
-
-    componentFn_render_headerIcon(partName ) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
-
-            let styles = {
-                "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
-                "margin" : "0 5px",
-                "width" : "30px",
-                "line-height" :   "30px",
-                "cursor" : "pointer",
-                "font-size" : "20pt;",
-                "top" : "0" ,
-            }
-            if (directionRtl){
-                styles["right"]= "0"
-            }
-            else {
-                styles["left"]= "0"
-            }
-
-            if (prop_icon != null){
-                new window.ComponentIcon(
-                    `component-select-option-header-icon-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_icon: prop_icon ,
-
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-                    }
-                )
-            }
-
-        }
-    }
-
-    componentFn_render_headerArrowIcon(partName ) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const screanWidthType = this.getScreenWidth();
-
-            const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
-            const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
-            const var_showFormSelectOption  =  data.hasOwnProperty("var_showFormSelectOption")           ?  data.var_showFormSelectOption        : false;
-
-            let styles = {
-                "font-size" : "20pt",
-                "height" : "30px",
-                "margin" : "0 10px",
-                "top" : "0px",
-            }
-            if (directionRtl){
-                if (screanWidthType == "xs"){
-                    styles["left"]= prop_btnAddStatus ? "30px" : "0px";
-                }
-                else{
-                    styles["left"]= prop_btnAddStatus ? "165px" : "0px";
-                }
-            }
-            else {
-                if (screanWidthType == "xs"){
-                    styles["right"]= prop_btnAddStatus ? "30px" : "0px";
-                }
-                else{
-                    styles["right"]= prop_btnAddStatus ? "165px" : "0px";
-                }
-            }
-
-            if (var_showFormSelectOption){
-                styles["line-height"]= "5pt";
-            }
-            else{
-                styles["line-height"]= "35pt";
-            }
-
-
-
-
-            new window.ComponentIcon(
-                `component-select-option-header-icon-arrow-${ this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_icon: var_showFormSelectOption ? "&#129169" : "&#129171" ,
-
-                    prop_iconClass : ["position-absolute"] ,
-                    prop_iconStyles : styles ,
-                }
-            )
-
-        }
-    }
-
-    componentFn_render_headerButton(partName ) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const screanWidthType = this.getScreenWidth();
-
-            const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
-
-            if (prop_btnAddStatus){
-                const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
-                const prop_btnAddIcon           =  data.hasOwnProperty("prop_btnAddIcon")                 ?  data.prop_btnAddIcon                    : "&plus;";
-                const prop_btnAddTitle          =  data.hasOwnProperty("prop_btnAddTitle")                ?  data.prop_btnAddTitle                   : "add item";
-                const prop_btnAddClass          =  data.hasOwnProperty("prop_btnAddClass")                ?  data.prop_btnAddClass                   : [];
-
-                let styles =  {
-                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
-                    "top" : "0" ,
-                    "cursor" : "pointer" ,
-                    "height" : "30px" ,
-                    "line-height" : "20px" ,
-                };
-                if (directionRtl){
-                    styles["left"] = "0";
-                }
-                else {
-                    styles["right"] = "0";
-                }
-
-                if (screanWidthType == "xs"){
-                    styles["width"] = "30px";
-                }
-                else{
-                    styles["width"] = "160px";
-                }
-
-                new window.ComponentButton(
-                    `component-select-option-header-button-${ this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_btnClass: "border shadow-sm position-absolute p-0 m-0   " + prop_btnAddClass.join(" ") ,
-                        prop_btnStyles: styles ,
-                        prop_title: `
-<span id="component-select-option-header-button-icon-${ this._COMPONENT_RANDOM_ID}" class="mx-3">
-    ${prop_btnAddIcon}
-</span>
-<span id="component-select-option-header-button-text-${ this._COMPONENT_RANDOM_ID}" class="d-md-inline">
-    ${prop_btnAddTitle}
-</span>
-                    `,
-
-
-                        fn_callback: (event)=>{
-                            this.runFn("fn_clickBtnTools" , "event")
-                        }
-                    }
-                )
-            }
-
-        }
-    }
-
-    componentFn_render_body(partName ) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_optionStyles         =  data.hasOwnProperty("prop_optionStyles")             ?  data.prop_optionStyles           :  {};
-            const prop_optionHeight         =  data.hasOwnProperty("prop_optionHeight")             ?  data.prop_optionHeight           :  130;
-            const prop_optionWidth          =  data.hasOwnProperty("prop_optionWidth")              ?  data.prop_optionWidth            :  "100%";
-            const prop_positionTop          =  data.hasOwnProperty("prop_positionTop")              ?  data.prop_positionTop            :  "";
-            const prop_positionLeft         =  data.hasOwnProperty("prop_positionLeft")             ?  data.prop_positionLeft           :  "";
-            const prop_positionBottom       =  data.hasOwnProperty("prop_positionBottom")           ?  data.prop_positionBottom         :  "";
-            const prop_positionRight        =  data.hasOwnProperty("prop_positionRight")            ?  data.prop_positionRight          :  "";
-
-            new window.ComponentPositionElement(
-                `component-select-option-position-element-${ this._COMPONENT_RANDOM_ID}` ,
-                {
-                    classList: "d-none" ,
-
-                    prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2"] ,
-                    prop_elementStyles: prop_optionStyles ,
-                    prop_width: prop_optionWidth,
-                    prop_height: prop_optionHeight,
-
-                    prop_positionTop: prop_positionTop,
-                    prop_positionLeft: prop_positionLeft,
-                    prop_positionBottom: prop_positionBottom,
-                    prop_positionRight: prop_positionRight,
-                }
-            )
-        }
-    }
-
-    componentFn_render_bodySearcher(partName ) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            new window.ComponentInput(
-                `component-select-option-body-searcher-${ this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_show_label: false ,
-                    prop_icon: "&#x2315;" ,
-
-                    fn_oninput: (event , value) => {
-                        this.set("var_searcherSelectOption" , value)
-                    } ,
-                }
-            )
-        }
-    }
-
-
-
-    /* ---------------------------------------------
-      FUNCTIONs
-     --------------------------------------------- */
-    fn_firstCallback(){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("prop_firstCallback") && data.prop_firstCallback){
-            this.fn_onSelectItemSelectOption(null ,  data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null );
-        }
-    }
-
-    fn_clickBtnTools(event){
-        event.stopPropagation();
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_clickBtnTools") && typeof data.fn_clickBtnTools != null){
-            data.fn_clickBtnTools(event , data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null);
-        }
-        this.fn_showListOptions(event , false);
-    }
-
-    fn_onSelectItemSelectOption(event , itemIdSelected){
-        const data = this._COMPONENT_CONFIG;
-        const prop_options      = data != null && data.hasOwnProperty("prop_options")      ? data.prop_options      : [];
-
-        let itemSelectedId = null;
-        let itemSelectedData = null;
-        if (prop_options != null && Array.isArray(prop_options)){
-            for (const itemOption of prop_options) {
-                if (itemOption.hasOwnProperty("id") && itemOption.hasOwnProperty("name") && itemOption.id == itemIdSelected){
-                    itemSelectedId = itemOption.id;
-                    itemSelectedData = itemOption;
-                    this.set("prop_itemSelected" , itemSelectedId)
-                    break;
-                }
-            }
-        }
-        this.fn_showListOptions(event , false);
-
-        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(event , itemSelectedId , itemSelectedData);
-        }
-    }
-
-    fn_getItemSelectedTitle(prop_options , prop_itemSelected , prop_placeholder){
-        let resultExp = prop_placeholder != null ? prop_placeholder : "---";
-
-        if (prop_itemSelected != null && prop_options != null && Array.isArray(prop_options)){
-            for (const itemOption of prop_options) {
-                if (itemOption.hasOwnProperty("id") && itemOption.hasOwnProperty("name") && itemOption.id == prop_itemSelected){
-                    resultExp = itemOption.name;
-                    break;
-                }
-            }
-        }
-
-        return resultExp;
-    }
-
-    fn_showListOptions(event , status=null){
-        const var_showFormSelectOption =  status == null ? !this.get("var_showFormSelectOption") : status;
-        this.set("var_showFormSelectOption" ,  var_showFormSelectOption);
-
-        const body = document.querySelector(`#component-select-option-position-element-${ this._COMPONENT_RANDOM_ID}`);
-        if (var_showFormSelectOption){
-            body.classList.remove("d-none")
-        }
-        else {
-            body.classList.add("d-none")
-        }
-    }
-
-    fn_onGetBodyOptions(prop_options  , prop_itemSelected , var_searcherSelectOption , prop_listIcons=null){
-
-        let optionsStr = "";
-
-        if (prop_options != null && Array.isArray(prop_options)){
-            for (let i=0; i < prop_options.length; i++){
-                const item = prop_options[i];
-
-                if (item.hasOwnProperty("name")){
-                    let value = item.hasOwnProperty('id') ? item.id : 0;
-
-                    let iconsHtml = "";
-                    if (prop_listIcons != null && Array.isArray(prop_listIcons) && item.hasOwnProperty('id') && item.id != null){
-                        for (let j = 0; j < prop_listIcons.length; j++) {
-                            const itemIcon = prop_listIcons[j];
-                            if (itemIcon.hasOwnProperty("icon") && itemIcon.hasOwnProperty("name") && itemIcon.hasOwnProperty("method") && typeof itemIcon.method != "undefined"){
-                                const itemIconHtml = itemIcon["icon"];
-                                const itemIconMethod = itemIcon.method;
-                                const itemIconName = itemIcon.name;
-
-                                iconsHtml += `
-                                <i class="component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID} "
-                                    onclick="${this.getFn("fn_onClickIconOption" , "event" , `'${itemIconName}'` , value)}">
-                                      ${itemIconHtml} 
-                                </i>
-                                `;
-
-                            }
-                        }
-                    }
-
-                    if (typeof item.name.includes == "undefined" || item.name.includes(var_searcherSelectOption)){
-
-                        optionsStr += `
-<div class="component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID} rounded my-1 ${prop_itemSelected != null && value == prop_itemSelected ? `component-select-option-body-options-item-selected-${this._COMPONENT_RANDOM_ID}` : ''}"
-   onclick="${this.getFn("fn_onSelectItemSelectOption" , "event" , item.id)}"> 
-   ${item.name} 
-   
-   ${iconsHtml}
-</div>
-                `;
-                    }
-                }
-            }
-        }
-
-        return optionsStr;
-    }
-
-    fn_onClickIconOption(event , name , id){
-        event.stopPropagation()
-
-        const data = this._COMPONENT_CONFIG;
-        const prop_listIcons      = data != null && data.hasOwnProperty("prop_listIcons")      ? data.prop_listIcons      : [];
-        if (prop_listIcons != null && Array.isArray(prop_listIcons)){
-            for (let j = 0; j < prop_listIcons.length; j++) {
-                const itemIcon = prop_listIcons[j];
-                if (itemIcon.hasOwnProperty("name") && itemIcon.hasOwnProperty("method") && typeof itemIcon.method != "undefined" && name == itemIcon.name) {
-                    const itemIconMethod = itemIcon.method;
-                    itemIconMethod(event , id);
-                }
-            }
-        }
-    }
-
-}
-
 
 /*-------------------------------------
- 03-03) Component OTP
+ 03-02) Component OTP
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -5033,8 +4251,10 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 }
 
 
+
+
 /*-------------------------------------
- 03-04) Component Input
+ 03-03) Component Input
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -5483,8 +4703,9 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 }
 
 
+
 /*-------------------------------------
- 03-05) Component Input Price
+ 03-04) Component Input Price
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -6030,8 +5251,1507 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 }
 
 
+
 /*-------------------------------------
- 03-06) Component Date
+ 03-05) Component Input Password
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_placeholder
+@prop_isDisable
+
+@prop_icon
+
+@prop_hasRules
+@prop_listRules
+-------------------------------------*/
+window.ComponentInputPassword = class ComponentInputPassword extends ComponentBase{
+
+    _STATUS_IS_SHOW = false;
+
+    /* ---------------------------------------------
+   PROPERTYs
+   --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_label: [
+            {prop : "prop_title"                        , default: "TITLE"} ,
+            {prop : "prop_labelShow"                    , default: true} ,
+            {prop : "prop_labelTooltipDescription"      , default: null} ,
+            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"                  , default: null} ,
+            {prop : "prop_labelHoverStyles"             , default: null} ,
+        ] ,
+        part_body: [
+
+        ] ,
+        part_body_password: [
+            {prop : "prop_inputClass"            , default: [" form-control"]} ,
+            {prop : "prop_inputStyles"           , default: {}} ,
+            {prop : "prop_name"                  , default: null} ,
+            {prop : "prop_value"                 , default: null} ,
+            {prop : "prop_placeholder"           , default: null} ,
+            {prop : "prop_icon"                  , default: null} ,
+            {prop : "prop_isDisable"             , default: false} ,
+        ] ,
+        part_body_icon: [
+            {prop : "prop_icon"                  , default: null} ,
+        ] ,
+        part_body_icon_clear: [
+            {prop : "prop_isDisable"             , default: false} ,
+        ] ,
+        part_body_icon_visit: [
+            {prop : "prop_isDisable"             , default: false} ,
+        ] ,
+        part_body_validate: [
+            {prop : "prop_hasRules"              , default: true} ,
+            {prop : "prop_isAbsolute"            , default: true} ,
+            {prop : "prop_listRules"             , default: true} ,
+            {prop : "prop_isDisable"             , default: false} ,
+            {prop : "prop_title"                        , default: "TITLE"} ,
+        ] ,
+        /*part_body_form_rules: [
+            {prop : "prop_hasRules"              , default: true} ,
+            {prop : "prop_isDisable"             , default: false} ,
+        ] ,
+        part_body_list_rules: [
+            {prop : "prop_listRules"             , default: []} ,
+            {prop : "var_htmlRules"              , default: ""} ,
+        ] ,*/
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure:{
+            part_label : {} ,
+            part_body : {
+                part_body_password:{},
+                part_body_icon:{},
+                part_body_icon_clear:{},
+                part_body_icon_wisit:{},
+                part_body_validate:{},
+               /* part_body_form_rules:{
+                    part_body_list_rules:{}
+                },*/
+            },
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentInputPassword.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+
+    }
+
+
+
+    /* ---------------------------------------------
+   TEMPLATEs
+ --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_body_icon");
+        this.templateFn("part_body_icon_clear");
+        this.templateFn("part_body_icon_visit");
+        //this.templateFn("part_body_form_rules");
+        this.templateFn("part_body_validate");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+
+            case "part_body":
+                return this.template_render_body(partName);
+
+            case "part_body_password":
+                return this.template_render_bodyPassword(partName);
+
+            /*case "part_body_list_rules":
+                return this.template_render_bodyListRules(partName);*/
+
+            case "part_label":
+                return this.componentFn_render_label(partName);
+
+            case "part_body_icon":
+                return this.componentFn_render_bodyIcon(partName);
+
+            case "part_body_icon_clear":
+                return this.componentFn_render_bodyIconClear(partName);
+
+            case "part_body_icon_visit":
+                return this.componentFn_render_bodyIconVisit(partName);
+                  
+            case "part_body_validate":
+                return this.componentFn_render_bodyIconVisit(partName);
+
+            /*case "part_body_form_rules":
+                return this.componentFn_render_bodyFormRules(partName);*/
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+
+    template_render_structure(partName) {
+
+        const content = `
+  
+     <component-label id="component-input-password-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
+
+     ${this.templateFn("part_body") ?? ""}
+      `;
+
+        return this.templateBasic_render_structure(content , []);
+    }
+
+    template_render_body(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-password-body-${this._COMPONENT_RANDOM_ID}"  
+          class="position-relative bg-secondary rounded d-block" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-password-body-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+         
+     </style>
+     
+     ${this.templateFn("part_body_password") ?? ""}
+     
+     <component-icon id="component-input-password-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-password-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-password-icon-visit-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-position-element id="component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}" >
+        <component-body>
+           ${this.templateFn("part_body_list_rules") ?? ""}
+        </component-body>
+     </component-position-element>
+        
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyPassword(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
+            const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
+            const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
+            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
+            const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
+            const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                                    : false;
+
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
+
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
+            }
+
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-password-element-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-password-element-${this._COMPONENT_RANDOM_ID}{
+              ${directionRtl ? "margin-left" : "margin-right"} : 35px;
+         }
+         #${this._COMPONENT_ID} #component-input-password-${this._COMPONENT_RANDOM_ID}{
+              height: 30px;
+
+              ${directionRtl ? "padding-left" : "padding-right"} : 20px;
+     
+              ${directionRtl ? "padding-right" : "padding-left"}: ${(prop_icon != null && prop_icon != "") ?  "30px"  : "10px"}!important;
+              ${tools_public.renderListStyle(prop_inputStyles)}
+         }
+     </style>
+
+     <input id="component-input-password-${this._COMPONENT_RANDOM_ID}"   
+            class=" ${tools_public.renderListClass(prop_inputClass)} border-2"
+            name="${prop_name || "" }"  
+            type="password"  
+            value="${prop_value || ""}"
+            placeholder="${prop_placeholder || ""}"
+            ${prop_isDisable ? 'disabled' : ''}
+            onInput="${this.getFn("fn_onHandleInput" , "event")};   ${this.getFn("fn_onInputCallBack" , "event")}"
+            onblur=" ${this.getFn("fn_onFormatValue" , "event")};   ${this.getFn("fn_onBlurCallBack" , "event")}"
+            onfocus="${this.getFn("fn_onUnFormatValue" , "event")}; ${this.getFn("fn_onFocusCallBack" , "event")}"
+            />
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    /*template_render_bodyListRules(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_listRules    =   data.hasOwnProperty("prop_listRules")   ?  data.prop_listRules           :  [];
+            const var_htmlRules     =   data.hasOwnProperty("var_htmlRules")    ?  data.var_htmlRules            :  [];
+
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-password-form-list-rules-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-password-form-list-rules-${this._COMPONENT_RANDOM_ID}{
+          
+         }
+     </style>
+
+     ${var_htmlRules}
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }*/
+
+    componentFn_render_bodyIcon(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+
+            let styles = {
+                "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
+                "cursor" : "pointer",
+                "font-size" : "20pt;",
+                "top" : "50%" ,
+                "transform" : "translate(0, -50%)" ,
+            }
+            if (directionRtl){
+                styles["right"]= "5px"
+            }
+            else {
+                styles["left"]= "5px"
+            }
+
+            if (prop_icon != null){
+                new window.ComponentIcon(
+                    `component-input-password-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_icon ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onFocusInput" , "event")
+                        }
+                    }
+                )
+            }
+
+        }
+    }
+
+    componentFn_render_bodyIconClear(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                let styles = {
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
+                    "width" :   "35px",
+                    "line-height" : "30px",
+                    "cursor" : "pointer",
+                    "height" : "30px" ,
+                    "top" : "0" ,
+                    "text-align" : "center" ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "35px";
+                }
+                else {
+                    styles["right"]= "35px";
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-password-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        styles: {
+                            "height" : "38px"
+                        }  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : "&#10540;" ,
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onClearInput" , "event")
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_bodyIconVisit(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                let styles = {
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
+                    "width" :   "35px",
+                    "cursor" : "pointer",
+                    "height" : "25px" ,
+                    "top" : "50%" ,
+                    "text-align" : "center" ,
+                    "transform" : "translate(0, -50%)" ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "2.5px";
+                }
+                else {
+                    styles["right"]= "2.5px";
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-password-icon-visit-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList: ["text-white"]  ,
+                        styles: {
+                            "height" : "38px"
+                        }  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit() : tools_icons.icon_un_visit(),
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onVisitInput" , "event")
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_label(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            this.componentFneBasic_render_structure(
+                `component-input-password-label-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_for:  `component-input-password-${this._COMPONENT_RANDOM_ID}`,
+                    fn_callback: () => {
+
+                    } ,
+                }
+            );
+        }
+    }
+
+   /* componentFn_render_bodyFormRules(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const data = this.getPartProps(partName)
+
+            if (data != null){
+                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+                const prop_hasRules      =  data.hasOwnProperty("prop_hasRules")           ?  data.prop_hasRules               : true;
+
+                if (!prop_isDisable && prop_hasRules){
+
+                    const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                    new window.ComponentPositionElement(
+                        `component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}` ,
+                        {
+                            classList : ["d-none"] ,
+                            prop_positionTop : "35px" ,
+                            prop_width : "100%" ,
+                            prop_height : "200px" ,
+                        }
+                    )
+                }
+
+            }
+
+        }
+    }*/
+
+    componentFn_render_bodyFormRules(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const data = this.getPartProps(partName)
+
+            if (data != null){
+                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+                const prop_hasRules      =  data.hasOwnProperty("prop_hasRules")           ?  data.prop_hasRules               : true;
+
+                if (!prop_isDisable && prop_hasRules){
+
+                    const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                    new window.ComponentPositionElement(
+                        `component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}` ,
+                        {
+                            classList : ["d-none"] ,
+                            prop_positionTop : "35px" ,
+                            prop_width : "100%" ,
+                            prop_height : "200px" ,
+                        }
+                    )
+                }
+
+            }
+
+        }
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+
+
+    fn_getInputElement(){
+        return   document.querySelector(`input#component-input-password-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_getFormRulesElement(){
+        return   document.querySelector(`#component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+
+    fn_getInputValue(event){
+        const input = this.fn_getInputElement();
+        return input != null ? input.value : "";
+    }
+
+
+
+
+    fn_onHandleInput(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
+        }
+    }
+
+    fn_onFormatValue(event){
+        this.fn_getFormRulesElement().classList.add("d-none");
+
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
+        }
+    }
+
+    fn_onUnFormatValue(event){
+        this.fn_getFormRulesElement().classList.remove("d-none");
+
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
+        }
+    }
+
+    fn_onInputCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_oninput") && typeof data.fn_oninput != null){
+            data.fn_oninput(event , this.fn_getValueInput());
+        }
+    }
+
+    fn_onFocusCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onfocus") && typeof data.fn_onfocus != null){
+            data.fn_onfocus(event , this.fn_getValueInput());
+        }
+    }
+
+    fn_onBlurCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onblur") && typeof data.fn_onblur != null){
+            data.fn_onblur(event , this.fn_getValueInput());
+        }
+    }
+
+
+
+
+    fn_onClearInput(event){
+        this.fn_getInputElement().value="";
+        this.fn_onInputCallBack(event);
+        this.fn_onFocusInput(event);
+    }
+
+    fn_onVisitInput(event){
+        this._STATUS_IS_SHOW = !this._STATUS_IS_SHOW;
+        this.templateFn("part_body_icon_visit");
+        this.fn_getInputElement().setAttribute("type" , this._STATUS_IS_SHOW ? "" : "password")
+    }
+
+
+
+
+    fn_readyListRules(prop_listRules) {
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_hasRules") && data.prop_hasRules) {
+            let rulesHtml = "";
+            let isPasswordCurrect = true;
+            const password = this.fn_getInputValue();
+            for (let i = 0; i < prop_listRules.length; i++) {
+                const itemRule = prop_listRules[i];
+                if (itemRule.hasOwnProperty("description") && itemRule.hasOwnProperty("params") && itemRule.hasOwnProperty("rule")) {
+                    const description = itemRule.description;
+                    const rule = itemRule.rule;
+                    const params = itemRule.params;
+
+                    let isTrue = false;
+                    switch (rule) {
+                        case "_char_length" :
+                            isTrue = this.fn_readyListRules_checkPasswordChar(password, params)
+                            break;
+                        case "_num_length" :
+                            isTrue = this.fn_readyListRules_checkPasswordNum(password, params)
+                            break;
+                        case "_text_length" :
+                            isTrue = this.fn_readyListRules_checkPasswordText(password, params)
+                            break;
+                        case "_text_forbidden" :
+                            isTrue = this.fn_readyListRules_checkPasswordForbidden(password, params)
+                            break;
+                        case "_text_char_upper" :
+                            isTrue = this.fn_readyListRules_checkExistChartUpper(password, params)
+                            break;
+                    }
+
+                    if (!isTrue) {
+                        isPasswordCurrect = false;
+                    }
+
+                    const icon = isTrue ? tools_icons.icon_is_true() : tools_icons.icon_is_false();
+                    const color = isTrue ? "text-success" : "text-danger";
+
+                    rulesHtml +=
+                        `
+                    <div class="item_country_code border-bottom mx-1 line-height-30px font-12pt ${color}" >
+                        <span class="icon-rule float-start  ms-1">${icon}</span>
+                        <span class="ms-3">${description}</span>
+                    </div>
+                    `;
+
+                }
+            }
+
+            this.set("var_htmlRules", rulesHtml);
+
+            const input = this.fn_getInputElement();
+            input.classList.remove("border-danger", "border-success");
+            input.classList.add(isPasswordCurrect ? "border-success" : "border-danger");
+
+        }
+    }
+
+
+    fn_readyListRules_checkPasswordChar(textPassword , params) {
+        let min = 4;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const nonDigitChars = textPassword.split('').filter(char => !/\d/.test(char));
+        return nonDigitChars.length >= min;
+    }
+
+    fn_readyListRules_checkPasswordNum(textPassword , params) {
+        let min = 1;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const digitChars = textPassword.split('').filter(char => /\d/.test(char));
+        return digitChars.length >= min;
+    }
+
+    fn_readyListRules_checkPasswordText(textPassword , params) {
+        let min = 8;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        return textPassword.length >= min;
+    }
+
+    fn_readyListRules_checkPasswordForbidden(textPassword , params) {
+        let validPattern = /^[a-zA-Z0-9]*$/;
+        if (params != null && params.hasOwnProperty("chars")){
+            const escapedParams = params.chars.map(c => '\\' + c).join('');
+            validPattern = new RegExp(`^[a-zA-Z0-9${escapedParams}]*$`);
+        }
+        return validPattern.test(textPassword);
+    }
+
+    fn_readyListRules_checkExistChartUpper(textPassword , params) {
+        let min = 1;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const regex = new RegExp(`(?:.*[A-Z]){${min},}`);
+        return regex.test(textPassword);
+    }
+
+}
+
+
+
+
+/*-------------------------------------
+ 03-06) Component Input File
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_accept
+@prop_maxCount
+@prop_maxSize
+@prop_textValidateSize
+@prop_textValidateAccept
+@prop_labelTooltipDescription
+
+@prop_title
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderColor
+@prop_borderColorHover
+@prop_borderHeight
+
+@prop_textColor
+@prop_text
+
+@prop_showListFiles
+
+@prop_deleteBody
+@prop_deleteBtnCancel
+@prop_deleteBtnAccept
+
+@fn_callback
+-------------------------------------*/
+window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
+
+    _COMPONENT_WINDOW_DELETE = null;
+
+    /* ---------------------------------------------
+   PROPERTYs
+   --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_value: [
+            {prop : "prop_name"                  , default: "NAME"} ,
+            {prop : "prop_accept"                , default: "*"} ,
+            {prop : "prop_maxCount"              , default: null} ,
+            {prop : "prop_maxSize"               , default: null} ,
+            {prop : "prop_textValidateSize"      , default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"} ,
+            {prop : "prop_textValidateAccept"    , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
+        ] ,
+        part_label: [
+            {prop : "prop_title"                        , default: "TITLE"} ,
+            {prop : "prop_labelShow"                    , default: true} ,
+            {prop : "prop_labelTooltipDescription"      , default: null} ,
+            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"                  , default: null} ,
+            {prop : "prop_labelHoverStyles"             , default: null} ,
+            {prop : "prop_maxCount"                     , default: null} ,
+            {prop : "prop_maxSize"                      , default: null} ,
+            {prop : "prop_textValidateSize"             , default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"} ,
+            {prop : "prop_textValidateAccept"           , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
+        ] ,
+        part_body: [
+            {prop : "prop_borderColor"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor")   ? tools_const.styles.inputFile.boderColor : "red"} ,
+            {prop : "prop_borderColorHover"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColorHover")   ? tools_const.styles.inputFile.boderColorHover : "red"} ,
+            {prop : "prop_borderHeight"          , default: "150px"} ,
+        ] ,
+        part_body_text: [
+            {prop : "prop_textColor"             , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("textColor")   ? tools_const.styles.inputFile.textColor : "red"} ,
+            {prop : "prop_text"                  , default: "لطفا فایل خود را بکشید و رها کنید یا برای انتخاب کلیک کنید "} ,
+        ] ,
+        part_footer: [
+
+        ] ,
+        part_footer_files: [
+            {prop : "prop_showListFiles"        , default: true} ,
+            {prop : "var_fileIsValid"           , default: null} ,
+            {prop : "var_fileIsNotValid"        , default: null} ,
+        ] ,
+        part_footer_files_tooltips: [
+            {prop : "prop_showListFiles"        , default: true} ,
+            {prop : "var_fileIsNotValid"        , default: null} ,
+        ] ,
+        part_window_confirm: [
+            {prop : "prop_deleteBody"            , default: "آیا از حذف قایل مطمئن هستید"} ,
+            {prop : "prop_deleteBtnCancel"       , default: "لغو"} ,
+            {prop : "prop_deleteBtnAccept"       , default: "تایید"} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure:{
+            part_label : {} ,
+            part_value : {} ,
+            part_body : {
+                part_body_text:{}
+            },
+            part_footer: {
+                part_footer_files:{}
+            },
+            part_window_confirm: {}
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentInputFile.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+
+    }
+
+
+
+    /* ---------------------------------------------
+   TEMPLATEs
+ --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_window_confirm");
+        this.templateFn("part_footer_files_tooltips");
+
+        document.addEventListener("dragover", e => e.preventDefault());
+        document.addEventListener("drop", e => e.preventDefault());
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+
+            case "part_label":
+                return this.componentFn_render_label(partName);
+
+            case "part_value":
+                return this.template_render_value(partName);
+
+            case "part_body":
+                return this.template_render_body(partName);
+            case "part_body_text":
+                return this.template_render_bodyText(partName);
+
+            case "part_footer":
+                return this.template_render_bodyFooter(partName);
+            case "part_footer_files":
+                return this.template_render_bodyFooterFiles(partName);
+            case "part_footer_files_tooltips":
+                return this.template_render_bodyFooterFilesTooltips(partName);
+
+            case "part_window_confirm":
+                return this.componentFn_render_windowConfirmDelete(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+
+        const content = `
+  
+     <component-label id="component-input-file-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
+     
+     ${this.templateFn("part_value") ?? ""}
+     
+     ${this.templateFn("part_body") ?? ""}
+
+     ${this.templateFn("part_footer") ?? ""}
+     
+      <component-window-confirm id="component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}" ></component-window-confirm>
+        
+                `;
+        return this.templateBasic_render_structure(content , ["position-relative"]);
+    }
+
+    template_render_value(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name      =   data.hasOwnProperty("prop_name")               ?  data.prop_name                    :  "";
+            const prop_accept    =   data.hasOwnProperty("prop_accept")             ?  data.prop_accept                  :  "";
+            const prop_maxCount  =   data.hasOwnProperty("prop_maxCount")           ?  data.prop_maxCount                :  null;
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-value-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-date-value-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+     </style>
+
+     <input id="component-input-file-value-input-${this._COMPONENT_RANDOM_ID}" name="${prop_name}" 
+            type="file" 
+            class="d-none" 
+            onchange=" ${this.getFn("fn_onChangeFiles" , "event")};"
+            ${prop_maxCount != null && prop_maxCount > 1 ? "multiple" : ''}
+            accept="${prop_accept}"/>
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_body(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_borderColor         =   data.hasOwnProperty("prop_borderColor")               ?  data.prop_borderColor                    :  "";
+            const prop_borderColorHover    =   data.hasOwnProperty("prop_borderColorHover")          ?  data.prop_borderColorHover               :  "";
+            const prop_borderHeight        =   data.hasOwnProperty("prop_borderHeight")              ?  data.prop_borderHeight                   :  "";
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-body-${this._COMPONENT_RANDOM_ID}"  
+          draggable="true"
+          onclick="${this.getFn("fn_clickToFileInput")}"
+          ondragover="${this.getFn("fn_onDragStart" , "event")}"
+          ondragenter="${this.getFn("fn_onDragStart" , "event")}"
+          ondragleave="${this.getFn("fn_onDragEnd" , "event")}"
+          ondrop=" ${this.getFn("fn_onDrap" , "event")};"
+          class="p-2 rounded position-relative" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}{
+             cursor: pointer;
+             border-style: dashed;
+             border-width: 2px;
+             border-color: ${prop_borderColor};
+             height: ${prop_borderHeight}
+         }
+         
+         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}:hover{
+             border-color: ${prop_borderColorHover} !important;
+         }
+     
+         #${this._COMPONENT_ID} .component-input-file-body-${this._COMPONENT_RANDOM_ID}-active{
+             border-color: ${prop_borderColorHover} !important;
+         }
+     </style>
+     
+     ${this.templateFn("part_body_text") ?? ""}
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyText(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_textColor    =   data.hasOwnProperty("prop_textColor")               ?  data.prop_textColor                    :  "";
+            const prop_text         =   data.hasOwnProperty("prop_text")                    ?  data.prop_text                         :  "";
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-body-text-${this._COMPONENT_RANDOM_ID}"  
+          class="position-absolute text-center" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-body-text-${this._COMPONENT_RANDOM_ID}{
+             color: ${prop_textColor};
+             font-size: 11pt;
+             transform: translate(-50% , -50%);
+             left: 50%;
+             top: 50%;
+         }
+     </style>
+
+     <b> ${prop_text} </b>
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyFooter(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-footer-${this._COMPONENT_RANDOM_ID}"  
+          class="row" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-footer-${this._COMPONENT_RANDOM_ID}{
+             
+         }
+     </style>
+
+     ${this.templateFn("part_footer_files") ?? ""}
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+    template_render_bodyFooterFiles(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
+            const var_fileIsValid        =   data.hasOwnProperty("var_fileIsValid")         ?  data.var_fileIsValid             :  null;
+            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
+
+            if (prop_showListFiles){
+
+                let counter = 1;
+
+                let htmlAcceptFiles = "";
+                if (var_fileIsValid != null){
+                    for (let i = 0; i < var_fileIsValid.length; i++) {
+                        const itemFile = var_fileIsValid[i];
+
+                        const formatted = (itemFile.size / 10000).toFixed(3);
+
+                        htmlAcceptFiles += `
+<div class="  shadow-sm bg-info rounded row px-1 py-1 mx-0 my-1">
+
+   <span class="counter col-1 bg-white rounded ">${counter}</span>
+   
+   <span class="fileName col-7 text-start ">  ${itemFile.name}</span>
+   
+   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
+      <span class="col-8">
+         ${formatted}
+      </span>
+      <span class="col-4">
+          KB
+      </span>
+   </span>
+   
+   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("fn_showWindowDelete" , "event" , `'${itemFile.name}'`)}"> &#x1F5D1; </span>
+  
+</div>
+                    `;
+
+                        counter ++;
+                    }
+                }
+
+
+                let htmlUnAcceptFiles = "";
+                if (var_fileIsNotValid != null){
+                    for (let i = 0; i < var_fileIsNotValid.length; i++) {
+                        const itemFile = var_fileIsNotValid[i];
+
+                        const formatted = (itemFile.size / 10000).toFixed(3);
+
+                        htmlUnAcceptFiles += `
+<div class="  shadow-sm bg-danger rounded row px-1 py-1 mx-0 my-1">
+
+   <span class="counter col-1 bg-white rounded ">${counter}</span>
+   
+   <span class="fileName col-7 text-start text-white  ">  ${itemFile.name}</span>
+   
+   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
+      <span class="col-8">
+         ${formatted}
+      </span>
+      <span class="col-4">
+          KB
+      </span>
+   </span>
+   
+    <component-tooltip-description  id="component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}"> </component-tooltip-description>
+  
+  
+</div>
+                    `;
+
+                        counter ++;
+                    }
+                }
+
+                return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}"  
+          class=" " >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}{
+        
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .counter{
+         
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileName{
+              font-size: 10pt;
+              white-space: nowrap;        /* فقط یک خط */
+              overflow: hidden;           /* جلوگیری از overflow */
+              text-overflow: ellipsis;    /* نمایش سه نقطه ... */
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileSize{
+              font-size: 10pt;
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileDelete{
+              cursor: pointer;
+         }
+     </style>
+
+     ${htmlAcceptFiles}
+     ${htmlUnAcceptFiles}
+
+</section>
+        `;
+
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+    componentFn_render_label(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            let   prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")    ? data.prop_labelTooltipDescription     : null;
+
+            if (prop_labelTooltipDescription == null){
+
+                let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
+                let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
+                const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
+                let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
+
+                prop_maxSize = (prop_maxSize / 10000).toFixed(3);
+
+                prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
+                prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
+
+                prop_labelTooltipDescription = `
+     <div> - ${prop_textValidateSize} </div>
+     <div> - ${prop_textValidateAccept} </div>
+                `;
+
+            }
+
+
+            this.componentFneBasic_render_structure(
+                `component-input-file-label-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_for:  `component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`,
+                    prop_labelTooltipDescription: prop_labelTooltipDescription ,
+                    fn_callback: () => {
+                        this.fn_selectDate(event)
+                    } ,
+                }
+            );
+        }
+    }
+
+    componentFn_render_windowConfirmDelete(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_deleteBtnCancel            = data.hasOwnProperty("prop_deleteBtnCancel")            ? data.prop_deleteBtnCancel            : "";
+            const prop_deleteBtnAccept            = data.hasOwnProperty("prop_deleteBtnAccept")            ? data.prop_deleteBtnAccept            : "";
+            const prop_deleteBody                 = data.hasOwnProperty("prop_deleteBody")                 ? data.prop_deleteBody                 : "";
+
+            this._COMPONENT_WINDOW_DELETE = new window.ComponentWindowConfirm(
+                `component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_titleBtnCancel:  prop_deleteBtnCancel ,
+                    prop_titleBtnAccept  :  prop_deleteBtnAccept,
+                    prop_body  :  prop_deleteBody,
+                    prop_showBtnResize : false ,
+                    fn_callback: (event , data) => {
+                        this.fn_deleteFileSelected(event , data);
+                    } ,
+                }
+            )
+
+
+        }
+    }
+
+    template_render_bodyFooterFilesTooltips(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
+
+            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
+
+            if (prop_showListFiles && var_fileIsNotValid != null) {
+                for (let i = 0; i < var_fileIsNotValid.length; i++) {
+                    const itemFile = var_fileIsNotValid[i];
+
+                    let htmlError = "";
+                    if (itemFile.hasOwnProperty("errors")){
+                        for (const itemError of itemFile.errors) {
+                            htmlError += `<div> - ${itemError}</div>`
+                        }
+                    }
+
+                    new window.ComponentTooltipDescription(
+                        `component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}` ,
+                        {
+                            classList: "fileDelete col-1"  ,
+
+                            prop_icon: "?" ,
+                            prop_description: htmlError,
+                        }
+                    )
+                }
+            }
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_getInput(){
+        return document.querySelector(`input#component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_getDragArea(){
+        return document.querySelector(`section#component-input-file-body-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_clickToFileInput(){
+        const elInput = this.fn_getInput();
+        if (elInput != null){
+            elInput.click();
+        }
+    }
+    fn_onDragStart(event){
+        event.preventDefault();
+        const elDrag = this.fn_getDragArea();
+        if (elDrag != null){
+            elDrag.classList.add(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
+        }
+    }
+    fn_onDragEnd(event){
+        event.preventDefault();
+        const elDrag = this.fn_getDragArea();
+        if (elDrag != null){
+            elDrag.classList.remove(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
+        }
+    }
+    fn_onDrap(event){
+        this.fn_onDragEnd(event);
+
+        const files = event.dataTransfer.files;
+        if (files) {
+            this.fn_onValidateCountFiles(files)
+        }
+    }
+
+
+    fn_onChangeFiles(event){
+        this.fn_onValidateCountFiles(event.target.files)
+    }
+    fn_onValidateCountFiles(files){
+        const data = this._COMPONENT_CONFIG;
+
+        const dataTransfer = new DataTransfer();
+        const filesAccepts = [];
+        const filesUnAccepts = [];
+
+        const elInput = this.fn_getInput();
+        if (elInput != null){
+
+            let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
+            let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
+            const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
+            let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
+
+            prop_maxSize = (prop_maxSize / 10000).toFixed(3);
+
+            prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
+            prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
+
+            let limit = files.length;
+            if (data.hasOwnProperty("prop_maxCount") && data.prop_maxCount != null){
+                limit = Math.min(files.length, data.prop_maxCount);
+            }
+
+            let numberAceppted = 0;
+            for (let i = 0; i < files.length; i++) {
+                const fileSelected = files[i];
+                fileSelected.errors = [];
+
+                const validateSize = this.fn_onValidateSizeFiles(fileSelected);
+                const validateAccept = this.fn_onIsAccepted(fileSelected);
+                console.log(validateSize , validateAccept)
+
+                let isValid = false;
+                if (validateSize && validateAccept){
+                    isValid = true;
+                }
+
+                if (!validateSize){
+                    fileSelected.errors.push(prop_textValidateSize);
+                    isValid = false;
+                }
+                if (!validateAccept){
+                    fileSelected.errors.push(prop_textValidateAccept);
+                    isValid = false;
+                }
+
+                if (isValid){
+                    dataTransfer.items.add(fileSelected);
+                    filesAccepts.push(fileSelected);
+                    numberAceppted++;
+                }
+                else{
+                    filesUnAccepts.push(fileSelected);
+                }
+
+                if(limit <= numberAceppted){
+                    break;
+                }
+            }
+
+            elInput.files = dataTransfer.files;
+
+            this.fn_callback(dataTransfer.files);
+        }
+
+        console.log(filesUnAccepts)
+
+        this.set("var_fileIsValid" , filesAccepts);
+        this.set("var_fileIsNotValid" , filesUnAccepts);
+    }
+    fn_onValidateSizeFiles(file){
+        const data = this._COMPONENT_CONFIG;
+
+        if (file != null){
+            if (data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null){
+                const sizeValidate =  data.prop_maxSize*1000;
+
+                if (file.size <= sizeValidate){
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    fn_onIsAccepted(file) {
+        const data = this._COMPONENT_CONFIG;
+        let accept = "";
+        if (data.hasOwnProperty("prop_accept") && data.prop_accept != null){
+            accept = data.prop_accept;
+        }
+
+        if (!accept) return true;
+
+        const mime = file.type;
+        const name = file.name;
+
+        return accept.split(',').some(type => {
+            type = type.trim();
+            if (type.endsWith('/*')) {
+                return mime.startsWith(type.replace('/*', ''));
+            } else if (type.startsWith('.')) {
+                return name.toLowerCase().endsWith(type.toLowerCase());
+            } else {
+                return mime === type;
+            }
+        });
+    }
+
+
+    fn_showWindowDelete(event , filename){
+        this._COMPONENT_WINDOW_DELETE.call_open(event , filename)
+    }
+    fn_deleteFileSelected(event , filename){
+
+        const elInput = this.fn_getInput();
+        if (elInput != null){
+            const dt = new DataTransfer();
+            const files = elInput.files;
+
+            Array.from(files).forEach((file, index) => {
+                console.log(file , filename , file.name !== filename)
+                if (file.name !== filename) {
+                    dt.items.add(file);
+                }
+            });
+
+            this.fn_onValidateCountFiles(dt.files);
+        }
+    }
+
+
+    fn_callback(files){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , files);
+        }
+    }
+
+}
+
+
+
+/*-------------------------------------
+ 03-07) Component Date
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -7923,112 +8643,138 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 }
 
 
+
 /*-------------------------------------
- 03-07) Component Input File
+ 03-08) Component Select Option
 -------------------------------------
 @prop_show
 @prop_structureClass
 @prop_structureStyles
 
 @prop_name
-@prop_accept
-@prop_maxCount
-@prop_maxSize
-@prop_textValidateSize
-@prop_textValidateAccept
-@prop_labelTooltipDescription
+@prop_itemSelected
 
 @prop_title
-@prop_labelShow
 @prop_labelClass
 @prop_labelStyles
 @prop_labelHoverStyles
 
-@prop_borderColor
-@prop_borderColorHover
-@prop_borderHeight
+@prop_titleClass
+@prop_titleStyles
 
-@prop_textColor
-@prop_text
+@prop_icon
 
-@prop_showListFiles
+@prop_options
+@prop_placeholder
 
-@prop_deleteBody
-@prop_deleteBtnCancel
-@prop_deleteBtnAccept
+@prop_btnAddStatus
+@prop_btnAddIcon
+@prop_btnAddClass
+@prop_btnAddTitle
 
+@prop_optionHeight
+@prop_optionWidth
+@prop_optionStyles
+@prop_positionTop
+@prop_positionLeft
+@prop_positionBottom
+@prop_positionRight
+
+@prop_listIcons      [{icon ,name ,  method} , ...]
+@prop_options
+@prop_optionStyles
+@prop_optionWidth
+@prop_optionItemNotSelectedBackground
+@prop_optionItemHoverBackground
+@prop_optionItemSelectedBackground
+
+@prop_firstCallback
 @fn_callback
+@fn_clickBtnTools
 -------------------------------------*/
-window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
+window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase {
 
-    _COMPONENT_WINDOW_DELETE = null;
+    var_showFormSelectOption = false;
 
     /* ---------------------------------------------
-   PROPERTYs
-   --------------------------------------------- */
+    PROPERTYs
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
         ] ,
         part_value: [
-            {prop : "prop_name"                  , default: "NAME"} ,
-            {prop : "prop_accept"                , default: "*"} ,
-            {prop : "prop_maxCount"              , default: null} ,
-            {prop : "prop_maxSize"               , default: null} ,
-            {prop : "prop_textValidateSize"      , default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"} ,
-            {prop : "prop_textValidateAccept"    , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
+            {prop : "prop_name"                              , default:  ""} ,
+            {prop : "prop_itemSelected"                      , default:  null} ,
         ] ,
         part_label: [
-            {prop : "prop_title"                        , default: "TITLE"} ,
-            {prop : "prop_labelShow"                    , default: true} ,
-            {prop : "prop_labelTooltipDescription"      , default: null} ,
-            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                  , default: null} ,
-            {prop : "prop_labelHoverStyles"             , default: null} ,
-            {prop : "prop_maxCount"                     , default: null} ,
-            {prop : "prop_maxSize"                      , default: null} ,
-            {prop : "prop_textValidateSize"             , default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"} ,
-            {prop : "prop_textValidateAccept"           , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
+            {prop : "prop_title"                             , default:  "title"} ,
+            {prop : "prop_labelClass"                        , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"                       , default:  {}} ,
+            {prop : "prop_labelHoverStyles"                  , default:  {}} ,
+        ] ,
+        part_header: [
+            {prop : "prop_titleClass"                        , default:  ["form-control" , " px-2"]} ,
+            {prop : "prop_titleStyles"                       , default:  {"line-height" : "24px" , "height": "30px"}} ,
+        ] ,
+        part_header_icon: [
+            {prop : "prop_icon"                              , default: null} ,
+        ] ,
+        part_header_title: [
+            {prop : "prop_icon"                              , default: null} ,
+            {prop : "prop_options"                           , default:  []} ,
+            {prop : "prop_itemSelected"                      , default:  null} ,
+            {prop : "prop_btnAddStatus"                      , default:  false} ,
+            {prop : "prop_placeholder"                       , default:  null} ,
+        ] ,
+        part_header_button: [
+            {prop : "prop_btnAddStatus"                       , default: false} ,
+            {prop : "prop_btnAddIcon"                         , default: "&plus;"} ,
+            {prop : "prop_btnAddTitle"                        , default: "add item"} ,
+            {prop : "prop_btnAddClass"                        , default: []} ,
+        ] ,
+        part_header_arrow_icon: [
+            {prop : "prop_btnAddStatus"                       , default:  false} ,
+            {prop : "var_showFormSelectOption"                , default:  false} ,
         ] ,
         part_body: [
-            {prop : "prop_borderColor"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor")   ? tools_const.styles.inputFile.boderColor : "red"} ,
-            {prop : "prop_borderColorHover"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColorHover")   ? tools_const.styles.inputFile.boderColorHover : "red"} ,
-            {prop : "prop_borderHeight"          , default: "150px"} ,
+            {prop : "prop_optionHeight"                       , default:  200} ,
+            {prop : "prop_optionWidth"                        , default:  "100%"} ,
+            {prop : "prop_optionStyles"                       , default:  {}} ,
+            {prop : "prop_positionTop"                        , default: ""} ,
+            {prop : "prop_positionLeft"                       , default: ""} ,
+            {prop : "prop_positionBottom"                     , default: ""} ,
+            {prop : "prop_positionRight"                      , default: ""} ,
         ] ,
-        part_body_text: [
-            {prop : "prop_textColor"             , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("textColor")   ? tools_const.styles.inputFile.textColor : "red"} ,
-            {prop : "prop_text"                  , default: "لطفا فایل خود را بکشید و رها کنید یا برای انتخاب کلیک کنید "} ,
-        ] ,
-        part_footer: [
+        part_body_searcher: [
 
         ] ,
-        part_footer_files: [
-            {prop : "prop_showListFiles"        , default: true} ,
-            {prop : "var_fileIsValid"           , default: null} ,
-            {prop : "var_fileIsNotValid"        , default: null} ,
-        ] ,
-        part_footer_files_tooltips: [
-            {prop : "prop_showListFiles"        , default: true} ,
-            {prop : "var_fileIsNotValid"        , default: null} ,
-        ] ,
-        part_window_confirm: [
-            {prop : "prop_deleteBody"            , default: "آیا از حذف قایل مطمئن هستید"} ,
-            {prop : "prop_deleteBtnCancel"       , default: "لغو"} ,
-            {prop : "prop_deleteBtnAccept"       , default: "تایید"} ,
-        ] ,
+        part_body_options: [
+            {prop : "prop_listIcons"                          , default:  null} ,
+            {prop : "prop_firstCallback"                      , default:  false} ,
+            {prop : "prop_itemSelected"                       , default:  null} ,
+            {prop : "prop_options"                            , default:  []} ,
+            {prop : "prop_optionItemNotSelectedBackground"    , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemNotSelected")  ? tools_const.styles.selectOption.backgroundColor_itemNotSelected : "" } ,
+            {prop : "prop_optionItemHoverBackground"          , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemHover")  ? tools_const.styles.selectOption.backgroundColor_itemHover : "" } ,
+            {prop : "prop_optionItemSelectedBackground"       , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemSelected")  ? tools_const.styles.selectOption.backgroundColor_itemSelected : "" } ,
+            {prop : "var_searcherSelectOption"                , default:  ""} ,
+        ]
     }
 
     _COMPONENT_SCHEMA = {
-        part_structure:{
-            part_label : {} ,
-            part_value : {} ,
-            part_body : {
-                part_body_text:{}
-            },
-            part_footer: {
-                part_footer_files:{}
-            },
-            part_window_confirm: {}
+        part_structure: {
+            part_value: {} ,
+            part_label: {} ,
+            part_header: {
+                part_header_icon: {} ,
+                part_header_title: {} ,
+                part_header_arrow_icon: {} ,
+                part_header_button: {} ,
+            } ,
+            part_body: {
+                part_body_searcher:{} ,
+                part_body_options:{} ,
+            }
         } ,
     }
 
@@ -8039,7 +8785,7 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInputFile.name] ,
+            listComponent[ComponentSelectOption.name] ,
             elId
         );
         this.onCreate(
@@ -8049,98 +8795,105 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         )
         this.onTemplateComplete();
         this.onRegister();
-
     }
+
 
 
 
     /* ---------------------------------------------
-   TEMPLATEs
- --------------------------------------------- */
-    componentFn(){
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(screanWidthType){
         this.templateFn("part_label");
-        this.templateFn("part_window_confirm");
-        this.templateFn("part_footer_files_tooltips");
+        this.templateFn("part_header_icon" );
+        this.templateFn("part_header_arrow_icon" );
+        this.templateFn("part_header_button" );
+        this.templateFn("part_body" );
+        this.templateFn("part_body_searcher" );
 
-        document.addEventListener("dragover", e => e.preventDefault());
-        document.addEventListener("drop", e => e.preventDefault());
+        this.fn_firstCallback();
     }
     templateFn(partName = null){
+
         switch (partName){
             case "part_structure":
                 return this.template_render_structure(partName);
-
-            case "part_label":
-                return this.componentFn_render_label(partName);
-
             case "part_value":
                 return this.template_render_value(partName);
-
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_header":
+                return this.template_render_header(partName);
+            case "part_header_icon":
+                return this.componentFn_render_headerIcon(partName);
+            case "part_header_arrow_icon":
+                return this.componentFn_render_headerArrowIcon(partName);
+            case "part_header_button":
+                return this.componentFn_render_headerButton(partName);
+            case "part_header_title":
+                return this.template_render_headerTitle(partName);
             case "part_body":
-                return this.template_render_body(partName);
-            case "part_body_text":
-                return this.template_render_bodyText(partName);
-
-            case "part_footer":
-                return this.template_render_bodyFooter(partName);
-            case "part_footer_files":
-                return this.template_render_bodyFooterFiles(partName);
-            case "part_footer_files_tooltips":
-                return this.template_render_bodyFooterFilesTooltips(partName);
-
-            case "part_window_confirm":
-                return this.componentFn_render_windowConfirmDelete(partName);
-
+                return this.componentFn_render_body(partName);
+            case "part_body_searcher":
+                return this.componentFn_render_bodySearcher(partName);
+            case "part_body_options":
+                return this.template_render_bodyOptions(partName);
             default:
                 return this.templateBasic_render();
         }
     }
 
-    template_render_structure(partName) {
-
+    template_render_structure(partName ) {
         const content = `
-  
-     <component-label id="component-input-file-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
+      
+     <style>
+         #${this._COMPONENT_ID} #component-select-option-form-position-element-${ this._COMPONENT_RANDOM_ID}{
+             z-index: ${listLayoutZIndex.hasOwnProperty("tools") ? listLayoutZIndex.tools: 10};
+             position:relative; 
+         }
+     </style>
      
-     ${this.templateFn("part_value") ?? ""}
+      <component-label id="component-select-option-label-${ this._COMPONENT_RANDOM_ID}"></component-label>
      
-     ${this.templateFn("part_body") ?? ""}
-
-     ${this.templateFn("part_footer") ?? ""}
-     
-      <component-window-confirm id="component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}" ></component-window-confirm>
-        
+      ${this.templateFn("part_value") ?? ""}
+      
+      ${this.templateFn("part_header") ?? ""}
+      
+      <div id="component-select-option-form-position-element-${ this._COMPONENT_RANDOM_ID}">
+          <component-position-element id="component-select-option-position-element-${ this._COMPONENT_RANDOM_ID}">
+                <component-body>
+                
+                    <component-input id="component-select-option-body-searcher-${ this._COMPONENT_RANDOM_ID}"></component-input>    
+                    
+                    ${this.templateFn("part_body_options") ?? ""}
+                    
+                 </component-body>
+          </component-position-element>
+      </div>
                 `;
-        return this.templateBasic_render_structure(content , ["position-relative"]);
+        return this.templateBasic_render_structure(content);
     }
 
-    template_render_value(partName) {
+    template_render_value(partName ) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const prop_name               =   data.hasOwnProperty("prop_name")                ?  data.prop_name                 :  "";
+            const prop_itemSelected       =   data.hasOwnProperty("prop_itemSelected")        ?  data.prop_itemSelected         : null;
 
-            const prop_name      =   data.hasOwnProperty("prop_name")               ?  data.prop_name                    :  "";
-            const prop_accept    =   data.hasOwnProperty("prop_accept")             ?  data.prop_accept                  :  "";
-            const prop_maxCount  =   data.hasOwnProperty("prop_maxCount")           ?  data.prop_maxCount                :  null;
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-value-${this._COMPONENT_RANDOM_ID}"  
-          class="" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-date-value-${this._COMPONENT_RANDOM_ID}{
+            return `
+<section data-part-name="${partName}" 
+         id="component-select-option-value-${ this._COMPONENT_RANDOM_ID}" 
+         class="" >
          
+     <style>
+         #${this._COMPONENT_ID} #component-select-option-value-${ this._COMPONENT_RANDOM_ID}{
+             
          }
      </style>
-
-     <input id="component-input-file-value-input-${this._COMPONENT_RANDOM_ID}" name="${prop_name}" 
-            type="file" 
-            class="d-none" 
-            onchange=" ${this.getFn("fn_onChangeFiles" , "event")};"
-            ${prop_maxCount != null && prop_maxCount > 1 ? "multiple" : ''}
-            accept="${prop_accept}"/>
+     
+      <input name="${prop_name}"  value="${prop_itemSelected != null ? prop_itemSelected : '' }" type="hidden"/>
        
 </section>
         `;
@@ -8151,49 +8904,162 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         `;
     }
 
-    template_render_body(partName) {
+    template_render_header(partName ) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_titleClass           =  data.hasOwnProperty("prop_titleClass")                ?  data.prop_titleClass                    :  ["  form-control " , " px-2" ];
+            const prop_titleStyles          =  data.hasOwnProperty("prop_titleStyles")               ?  data.prop_titleStyles                   :  {"line-height" : "24px" , "height": "30px"};
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-select-option-header-${ this._COMPONENT_RANDOM_ID}" 
+         class="${tools_public.renderListClass(prop_titleClass)} position-relative p-0"  
+         onclick="${this.getFn('fn_showListOptions' , 'event')}">
+     <style>
+         #${this._COMPONENT_ID} #component-select-option-header-${ this._COMPONENT_RANDOM_ID}{
+               ${tools_public.renderListStyle(prop_titleStyles)}
+               cursor: pointer;
+         }
+         
+         @media (max-width: 768px) {
+               #${this._COMPONENT_ID} #component-select-option-header-button-text-${ this._COMPONENT_RANDOM_ID}{
+                    display: none;
+               }
+               #${this._COMPONENT_ID} #component-select-option-header-button-icon-${ this._COMPONENT_RANDOM_ID}{
+                 
+               }
+         }
+     </style>
+     
+           ${this.templateFn("part_header_title") ?? ""}
+           
+           <component-icon id="component-select-option-header-icon-arrow-${ this._COMPONENT_RANDOM_ID}"></component-icon>
+           
+           <component-icon id="component-select-option-header-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+           
+           <component-button id="component-select-option-header-button-${ this._COMPONENT_RANDOM_ID}"></component-button>
+     
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_headerTitle(partName ) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
+            const prop_options              =  data.hasOwnProperty("prop_options")                   ?  data.prop_options                       : [];
+            const prop_itemSelected         =  data.hasOwnProperty("prop_itemSelected")              ?  data.prop_itemSelected                  : [];
+            const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
+            const prop_placeholder          =  data.hasOwnProperty("prop_placeholder")               ?  data.prop_placeholder                   : null;
+            const prop_icon                 =  data.hasOwnProperty("prop_icon")                      ?  data.prop_icon                          : null;
+            const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            const var_itemSelectedTitle =this.fn_getItemSelectedTitle(prop_options , prop_itemSelected , prop_placeholder)
+
+
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
+            }
+
+            return `
+<section data-part-name="${partName}"
+         id="component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}"
+         class=" d-block" >
+     <style>
+         #${this._COMPONENT_ID} #component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}{
+            ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? padding : "20"};
+            ${directionRtl ? "padding-right" : "padding-left"} : ${prop_icon != null ? "30px" : "0"} ;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 28px;
+            line-height: 30px;
+         }
+     </style>
+
+     <b class="select-title-${ this._COMPONENT_RANDOM_ID}  w-100 d-block position-relative text-center ">
+
+        ${var_itemSelectedTitle}
+
+     </b>
+
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyOptions(partName ) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
 
-            const prop_borderColor         =   data.hasOwnProperty("prop_borderColor")               ?  data.prop_borderColor                    :  "";
-            const prop_borderColorHover    =   data.hasOwnProperty("prop_borderColorHover")          ?  data.prop_borderColorHover               :  "";
-            const prop_borderHeight        =   data.hasOwnProperty("prop_borderHeight")              ?  data.prop_borderHeight                   :  "";
+            const directionRtl                           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")            ? this._COMPONENT_CONFIG.directionRtl             : false;
 
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-body-${this._COMPONENT_RANDOM_ID}"  
-          draggable="true"
-          onclick="${this.getFn("fn_clickToFileInput")}"
-          ondragover="${this.getFn("fn_onDragStart" , "event")}"
-          ondragenter="${this.getFn("fn_onDragStart" , "event")}"
-          ondragleave="${this.getFn("fn_onDragEnd" , "event")}"
-          ondrop=" ${this.getFn("fn_onDrap" , "event")};"
-          class="p-2 rounded position-relative" >
-          
+            const prop_listIcons                         =  data.hasOwnProperty("prop_listIcons")                            ?  data.prop_listIcons                            :  null;
+            const prop_options                           =  data.hasOwnProperty("prop_options")                              ?  data.prop_options                              :  [];
+            const prop_itemSelected                      =  data.hasOwnProperty("prop_itemSelected")                         ?  data.prop_itemSelected                         :   null;
+            const prop_optionItemNotSelectedBackground   =  data.hasOwnProperty("prop_optionItemNotSelectedBackground")      ?  data.prop_optionItemNotSelectedBackground      :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemNotSelected")  ? tools_const.styles.selectOption.backgroundColor_itemNotSelected : "";
+            const prop_optionItemHoverBackground         =  data.hasOwnProperty("prop_optionItemHoverBackground")            ?  data.prop_optionItemHoverBackground            :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemHover")  ? tools_const.styles.selectOption.backgroundColor_itemHover : "";
+            const prop_optionItemSelectedBackground      =  data.hasOwnProperty("prop_optionItemSelectedBackground")         ?  data.prop_optionItemSelectedBackground         :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemSelected")  ? tools_const.styles.selectOption.backgroundColor_itemSelected : "";
+            const var_searcherSelectOption               =  data.hasOwnProperty("var_searcherSelectOption")                  ?  data.var_searcherSelectOption                  :   "";
+
+            const optionHtml = this.fn_onGetBodyOptions(prop_options , prop_itemSelected , var_searcherSelectOption , prop_listIcons);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-select-option-body-options-${ this._COMPONENT_RANDOM_ID}" 
+         class=" d-block" >
      <style>
-         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}{
+         #${this._COMPONENT_ID} #component-select-option-body-options-${ this._COMPONENT_RANDOM_ID}{
+              
+         }
+         #${this._COMPONENT_ID} #component-select-option-body-options-element-${ this._COMPONENT_RANDOM_ID}{
+              height: calc(100% - 45px);
+         }
+         #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}{
+             background-color: ${prop_optionItemNotSelectedBackground};
+             padding: 3px 10px !important;
+         }
+         #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}:hover{
+             background-color: ${prop_optionItemHoverBackground};
+             color: white;
              cursor: pointer;
-             border-style: dashed;
-             border-width: 2px;
-             border-color: ${prop_borderColor};
-             height: ${prop_borderHeight}
+         }
+         #${this._COMPONENT_ID} .component-select-option-body-options-item-selected-${this._COMPONENT_RANDOM_ID}{
+             background-color: ${prop_optionItemSelectedBackground};
          }
          
-         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}:hover{
-             border-color: ${prop_borderColorHover} !important;
-         }
-     
-         #${this._COMPONENT_ID} .component-input-file-body-${this._COMPONENT_RANDOM_ID}-active{
-             border-color: ${prop_borderColorHover} !important;
+         #${this._COMPONENT_ID} .component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID}{
+             cursor: pointer;
+             margin: 0 5px;
+             font-size: 18pt;
+             line-height: 15pt;
+             float:  ${directionRtl? 'left' : 'right'};
          }
      </style>
-     
-     ${this.templateFn("part_body_text") ?? ""}
-     
+       
+     <div id="component-select-option-body-options-element-${ this._COMPONENT_RANDOM_ID}"
+          class="overflow-auto">
+         ${optionHtml}
+     </div>
+       
 </section>
-        `;
+            `;
         }
 
         return `
@@ -8201,484 +9067,708 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         `;
     }
 
-    template_render_bodyText(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_textColor    =   data.hasOwnProperty("prop_textColor")               ?  data.prop_textColor                    :  "";
-            const prop_text         =   data.hasOwnProperty("prop_text")                    ?  data.prop_text                         :  "";
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-body-text-${this._COMPONENT_RANDOM_ID}"  
-          class="position-absolute text-center" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-file-body-text-${this._COMPONENT_RANDOM_ID}{
-             color: ${prop_textColor};
-             font-size: 11pt;
-             transform: translate(-50% , -50%);
-             left: 50%;
-             top: 50%;
-         }
-     </style>
-
-     <b> ${prop_text} </b>
-
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_bodyFooter(partName){
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-footer-${this._COMPONENT_RANDOM_ID}"  
-          class="row" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-file-footer-${this._COMPONENT_RANDOM_ID}{
-             
-         }
-     </style>
-
-     ${this.templateFn("part_footer_files") ?? ""}
-
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-
-    }
-
-    template_render_bodyFooterFiles(partName){
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
-            const var_fileIsValid        =   data.hasOwnProperty("var_fileIsValid")         ?  data.var_fileIsValid             :  null;
-            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
-
-            if (prop_showListFiles){
-
-                let counter = 1;
-
-                let htmlAcceptFiles = "";
-                if (var_fileIsValid != null){
-                    for (let i = 0; i < var_fileIsValid.length; i++) {
-                        const itemFile = var_fileIsValid[i];
-
-                        const formatted = (itemFile.size / 10000).toFixed(3);
-
-                        htmlAcceptFiles += `
-<div class="  shadow-sm bg-info rounded row px-1 py-1 mx-0 my-1">
-
-   <span class="counter col-1 bg-white rounded ">${counter}</span>
-   
-   <span class="fileName col-7 text-start ">  ${itemFile.name}</span>
-   
-   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
-      <span class="col-8">
-         ${formatted}
-      </span>
-      <span class="col-4">
-          KB
-      </span>
-   </span>
-   
-   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("fn_showWindowDelete" , "event" , `'${itemFile.name}'`)}"> &#x1F5D1; </span>
-  
-</div>
-                    `;
-
-                        counter ++;
-                    }
+    componentFn_render_label(partName ) {
+        this.componentFneBasic_render_structure(
+            `component-select-option-label-${ this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for: `component-select-option-header-${ this._COMPONENT_RANDOM_ID}` ,
+                fn_callback: ()=>{
+                    this.runFn("fn_showListOptions" , "event" )
                 }
+            }
+        );
+    }
 
+    componentFn_render_headerIcon(partName ) {
 
-                let htmlUnAcceptFiles = "";
-                if (var_fileIsNotValid != null){
-                    for (let i = 0; i < var_fileIsNotValid.length; i++) {
-                        const itemFile = var_fileIsNotValid[i];
+        const data = this.getPartProps(partName)
 
-                        const formatted = (itemFile.size / 10000).toFixed(3);
+        if (data != null){
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
 
-                        htmlUnAcceptFiles += `
-<div class="  shadow-sm bg-danger rounded row px-1 py-1 mx-0 my-1">
+            let styles = {
+                "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
+                "margin" : "0 5px",
+                "width" : "30px",
+                "line-height" :   "30px",
+                "cursor" : "pointer",
+                "font-size" : "20pt;",
+                "top" : "0" ,
+            }
+            if (directionRtl){
+                styles["right"]= "0"
+            }
+            else {
+                styles["left"]= "0"
+            }
 
-   <span class="counter col-1 bg-white rounded ">${counter}</span>
-   
-   <span class="fileName col-7 text-start text-white  ">  ${itemFile.name}</span>
-   
-   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
-      <span class="col-8">
-         ${formatted}
-      </span>
-      <span class="col-4">
-          KB
-      </span>
-   </span>
-   
-    <component-tooltip-description  id="component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}"> </component-tooltip-description>
-  
-  
-</div>
-                    `;
+            if (prop_icon != null){
+                new window.ComponentIcon(
+                    `component-select-option-header-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_icon ,
 
-                        counter ++;
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
                     }
-                }
-
-                return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}"  
-          class=" " >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}{
-        
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .counter{
-         
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileName{
-              font-size: 10pt;
-              white-space: nowrap;        /* فقط یک خط */
-              overflow: hidden;           /* جلوگیری از overflow */
-              text-overflow: ellipsis;    /* نمایش سه نقطه ... */
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileSize{
-              font-size: 10pt;
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileDelete{
-              cursor: pointer;
-         }
-     </style>
-
-     ${htmlAcceptFiles}
-     ${htmlUnAcceptFiles}
-
-</section>
-        `;
-
+                )
             }
 
         }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-
     }
 
-    componentFn_render_label(partName) {
+    componentFn_render_headerArrowIcon(partName ) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const screanWidthType = this.getScreenWidth();
 
-            let   prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")    ? data.prop_labelTooltipDescription     : null;
+            const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
+            const var_showFormSelectOption  =  data.hasOwnProperty("var_showFormSelectOption")           ?  data.var_showFormSelectOption        : false;
 
-            if (prop_labelTooltipDescription == null){
+            let styles = {
+                "font-size" : "20pt",
+                "height" : "30px",
+                "margin" : "0 10px",
+                "top" : "0px",
+            }
+            if (directionRtl){
+                if (screanWidthType == "xs"){
+                    styles["left"]= prop_btnAddStatus ? "30px" : "0px";
+                }
+                else{
+                    styles["left"]= prop_btnAddStatus ? "165px" : "0px";
+                }
+            }
+            else {
+                if (screanWidthType == "xs"){
+                    styles["right"]= prop_btnAddStatus ? "30px" : "0px";
+                }
+                else{
+                    styles["right"]= prop_btnAddStatus ? "165px" : "0px";
+                }
+            }
 
-                let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
-                let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
-                const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
-                let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
-
-                prop_maxSize = (prop_maxSize / 10000).toFixed(3);
-
-                prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
-                prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
-
-                prop_labelTooltipDescription = `
-     <div> - ${prop_textValidateSize} </div>
-     <div> - ${prop_textValidateAccept} </div>
-                `;
-
+            if (var_showFormSelectOption){
+                styles["line-height"]= "5pt";
+            }
+            else{
+                styles["line-height"]= "35pt";
             }
 
 
-            this.componentFneBasic_render_structure(
-                `component-input-file-label-${this._COMPONENT_RANDOM_ID}` ,
+
+
+            new window.ComponentIcon(
+                `component-select-option-header-icon-arrow-${ this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_for:  `component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`,
-                    prop_labelTooltipDescription: prop_labelTooltipDescription ,
-                    fn_callback: () => {
-                        this.fn_selectDate(event)
-                    } ,
-                }
-            );
-        }
-    }
+                    prop_icon: var_showFormSelectOption ? "&#129169" : "&#129171" ,
 
-    componentFn_render_windowConfirmDelete(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_deleteBtnCancel            = data.hasOwnProperty("prop_deleteBtnCancel")            ? data.prop_deleteBtnCancel            : "";
-            const prop_deleteBtnAccept            = data.hasOwnProperty("prop_deleteBtnAccept")            ? data.prop_deleteBtnAccept            : "";
-            const prop_deleteBody                 = data.hasOwnProperty("prop_deleteBody")                 ? data.prop_deleteBody                 : "";
-
-            this._COMPONENT_WINDOW_DELETE = new window.ComponentWindowConfirm(
-                `component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_titleBtnCancel:  prop_deleteBtnCancel ,
-                    prop_titleBtnAccept  :  prop_deleteBtnAccept,
-                    prop_body  :  prop_deleteBody,
-                    prop_showBtnResize : false ,
-                    fn_callback: (event , data) => {
-                        this.fn_deleteFileSelected(event , data);
-                    } ,
+                    prop_iconClass : ["position-absolute"] ,
+                    prop_iconStyles : styles ,
                 }
             )
 
+        }
+    }
+
+    componentFn_render_headerButton(partName ) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
+            const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
+
+            if (prop_btnAddStatus){
+                const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const prop_btnAddIcon           =  data.hasOwnProperty("prop_btnAddIcon")                 ?  data.prop_btnAddIcon                    : "&plus;";
+                const prop_btnAddTitle          =  data.hasOwnProperty("prop_btnAddTitle")                ?  data.prop_btnAddTitle                   : "add item";
+                const prop_btnAddClass          =  data.hasOwnProperty("prop_btnAddClass")                ?  data.prop_btnAddClass                   : [];
+
+                let styles =  {
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
+                    "top" : "0" ,
+                    "cursor" : "pointer" ,
+                    "height" : "30px" ,
+                    "line-height" : "20px" ,
+                };
+                if (directionRtl){
+                    styles["left"] = "0";
+                }
+                else {
+                    styles["right"] = "0";
+                }
+
+                if (screanWidthType == "xs"){
+                    styles["width"] = "30px";
+                }
+                else{
+                    styles["width"] = "160px";
+                }
+
+                new window.ComponentButton(
+                    `component-select-option-header-button-${ this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_btnClass: "border shadow-sm position-absolute p-0 m-0   " + prop_btnAddClass.join(" ") ,
+                        prop_btnStyles: styles ,
+                        prop_title: `
+<span id="component-select-option-header-button-icon-${ this._COMPONENT_RANDOM_ID}" class="mx-3">
+    ${prop_btnAddIcon}
+</span>
+<span id="component-select-option-header-button-text-${ this._COMPONENT_RANDOM_ID}" class="d-md-inline">
+    ${prop_btnAddTitle}
+</span>
+                    `,
+
+
+                        fn_callback: (event)=>{
+                            this.runFn("fn_clickBtnTools" , "event")
+                        }
+                    }
+                )
+            }
 
         }
     }
 
-    template_render_bodyFooterFilesTooltips(partName) {
+    componentFn_render_body(partName ) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
 
-            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
+            const prop_optionStyles         =  data.hasOwnProperty("prop_optionStyles")             ?  data.prop_optionStyles           :  {};
+            const prop_optionHeight         =  data.hasOwnProperty("prop_optionHeight")             ?  data.prop_optionHeight           :  130;
+            const prop_optionWidth          =  data.hasOwnProperty("prop_optionWidth")              ?  data.prop_optionWidth            :  "100%";
+            const prop_positionTop          =  data.hasOwnProperty("prop_positionTop")              ?  data.prop_positionTop            :  "";
+            const prop_positionLeft         =  data.hasOwnProperty("prop_positionLeft")             ?  data.prop_positionLeft           :  "";
+            const prop_positionBottom       =  data.hasOwnProperty("prop_positionBottom")           ?  data.prop_positionBottom         :  "";
+            const prop_positionRight        =  data.hasOwnProperty("prop_positionRight")            ?  data.prop_positionRight          :  "";
 
-            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
+            new window.ComponentPositionElement(
+                `component-select-option-position-element-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: "d-none" ,
 
-            if (prop_showListFiles && var_fileIsNotValid != null) {
-                for (let i = 0; i < var_fileIsNotValid.length; i++) {
-                    const itemFile = var_fileIsNotValid[i];
+                    prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2"] ,
+                    prop_elementStyles: prop_optionStyles ,
+                    prop_width: prop_optionWidth,
+                    prop_height: prop_optionHeight,
 
-                    let htmlError = "";
-                    if (itemFile.hasOwnProperty("errors")){
-                        for (const itemError of itemFile.errors) {
-                            htmlError += `<div> - ${itemError}</div>`
-                        }
-                    }
-
-                    new window.ComponentTooltipDescription(
-                        `component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}` ,
-                        {
-                            classList: "fileDelete col-1"  ,
-
-                            prop_icon: "?" ,
-                            prop_description: htmlError,
-                        }
-                    )
+                    prop_positionTop: prop_positionTop,
+                    prop_positionLeft: prop_positionLeft,
+                    prop_positionBottom: prop_positionBottom,
+                    prop_positionRight: prop_positionRight,
                 }
-            }
+            )
+        }
+    }
 
+    componentFn_render_bodySearcher(partName ) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            new window.ComponentInput(
+                `component-select-option-body-searcher-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_show_label: false ,
+                    prop_icon: "&#x2315;" ,
+
+                    fn_oninput: (event , value) => {
+                        this.set("var_searcherSelectOption" , value)
+                    } ,
+                }
+            )
         }
     }
 
 
 
     /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-    fn_getInput(){
-        return document.querySelector(`input#component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`);
-    }
-    fn_getDragArea(){
-        return document.querySelector(`section#component-input-file-body-${this._COMPONENT_RANDOM_ID}`);
-    }
-    fn_clickToFileInput(){
-        const elInput = this.fn_getInput();
-        if (elInput != null){
-            elInput.click();
-        }
-    }
-    fn_onDragStart(event){
-        event.preventDefault();
-        const elDrag = this.fn_getDragArea();
-        if (elDrag != null){
-            elDrag.classList.add(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
-        }
-    }
-    fn_onDragEnd(event){
-        event.preventDefault();
-        const elDrag = this.fn_getDragArea();
-        if (elDrag != null){
-            elDrag.classList.remove(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
-        }
-    }
-    fn_onDrap(event){
-        this.fn_onDragEnd(event);
-
-        const files = event.dataTransfer.files;
-        if (files) {
-            this.fn_onValidateCountFiles(files)
-        }
-    }
-
-
-    fn_onChangeFiles(event){
-        this.fn_onValidateCountFiles(event.target.files)
-    }
-    fn_onValidateCountFiles(files){
+      FUNCTIONs
+     --------------------------------------------- */
+    fn_firstCallback(){
         const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_firstCallback") && data.prop_firstCallback){
+            this.fn_onSelectItemSelectOption(null ,  data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null );
+        }
+    }
 
-        const dataTransfer = new DataTransfer();
-        const filesAccepts = [];
-        const filesUnAccepts = [];
+    fn_clickBtnTools(event){
+        event.stopPropagation();
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_clickBtnTools") && typeof data.fn_clickBtnTools != null){
+            data.fn_clickBtnTools(event , data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null);
+        }
+        this.fn_showListOptions(event , false);
+    }
 
-        const elInput = this.fn_getInput();
-        if (elInput != null){
+    fn_onSelectItemSelectOption(event , itemIdSelected){
+        const data = this._COMPONENT_CONFIG;
+        const prop_options      = data != null && data.hasOwnProperty("prop_options")      ? data.prop_options      : [];
 
-            let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
-            let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
-            const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
-            let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
-
-            prop_maxSize = (prop_maxSize / 10000).toFixed(3);
-
-            prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
-            prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
-
-            let limit = files.length;
-            if (data.hasOwnProperty("prop_maxCount") && data.prop_maxCount != null){
-                limit = Math.min(files.length, data.prop_maxCount);
-            }
-
-            let numberAceppted = 0;
-            for (let i = 0; i < files.length; i++) {
-                const fileSelected = files[i];
-                fileSelected.errors = [];
-
-                const validateSize = this.fn_onValidateSizeFiles(fileSelected);
-                const validateAccept = this.fn_onIsAccepted(fileSelected);
-                console.log(validateSize , validateAccept)
-
-                let isValid = false;
-                if (validateSize && validateAccept){
-                    isValid = true;
-                }
-
-                if (!validateSize){
-                    fileSelected.errors.push(prop_textValidateSize);
-                    isValid = false;
-                }
-                if (!validateAccept){
-                    fileSelected.errors.push(prop_textValidateAccept);
-                    isValid = false;
-                }
-
-                if (isValid){
-                    dataTransfer.items.add(fileSelected);
-                    filesAccepts.push(fileSelected);
-                    numberAceppted++;
-                }
-                else{
-                    filesUnAccepts.push(fileSelected);
-                }
-
-                if(limit <= numberAceppted){
+        let itemSelectedId = null;
+        let itemSelectedData = null;
+        if (prop_options != null && Array.isArray(prop_options)){
+            for (const itemOption of prop_options) {
+                if (itemOption.hasOwnProperty("id") && itemOption.hasOwnProperty("name") && itemOption.id == itemIdSelected){
+                    itemSelectedId = itemOption.id;
+                    itemSelectedData = itemOption;
+                    this.set("prop_itemSelected" , itemSelectedId)
                     break;
                 }
             }
-
-            elInput.files = dataTransfer.files;
-
-            this.fn_callback(dataTransfer.files);
         }
+        this.fn_showListOptions(event , false);
 
-        console.log(filesUnAccepts)
-
-        this.set("var_fileIsValid" , filesAccepts);
-        this.set("var_fileIsNotValid" , filesUnAccepts);
-    }
-    fn_onValidateSizeFiles(file){
-        const data = this._COMPONENT_CONFIG;
-
-        if (file != null){
-            if (data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null){
-                const sizeValidate =  data.prop_maxSize*1000;
-
-                if (file.size <= sizeValidate){
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-    fn_onIsAccepted(file) {
-        const data = this._COMPONENT_CONFIG;
-        let accept = "";
-        if (data.hasOwnProperty("prop_accept") && data.prop_accept != null){
-            accept = data.prop_accept;
-        }
-
-        if (!accept) return true;
-
-        const mime = file.type;
-        const name = file.name;
-
-        return accept.split(',').some(type => {
-            type = type.trim();
-            if (type.endsWith('/*')) {
-                return mime.startsWith(type.replace('/*', ''));
-            } else if (type.startsWith('.')) {
-                return name.toLowerCase().endsWith(type.toLowerCase());
-            } else {
-                return mime === type;
-            }
-        });
-    }
-
-
-    fn_showWindowDelete(event , filename){
-        this._COMPONENT_WINDOW_DELETE.call_open(event , filename)
-    }
-    fn_deleteFileSelected(event , filename){
-
-        const elInput = this.fn_getInput();
-        if (elInput != null){
-            const dt = new DataTransfer();
-            const files = elInput.files;
-
-            Array.from(files).forEach((file, index) => {
-                console.log(file , filename , file.name !== filename)
-                if (file.name !== filename) {
-                    dt.items.add(file);
-                }
-            });
-
-            this.fn_onValidateCountFiles(dt.files);
-        }
-    }
-
-
-    fn_callback(files){
-        const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(event , files);
+            data.fn_callback(event , itemSelectedId , itemSelectedData);
         }
+    }
+
+    fn_getItemSelectedTitle(prop_options , prop_itemSelected , prop_placeholder){
+        let resultExp = prop_placeholder != null ? prop_placeholder : "---";
+
+        if (prop_itemSelected != null && prop_options != null && Array.isArray(prop_options)){
+            for (const itemOption of prop_options) {
+                if (itemOption.hasOwnProperty("id") && itemOption.hasOwnProperty("name") && itemOption.id == prop_itemSelected){
+                    resultExp = itemOption.name;
+                    break;
+                }
+            }
+        }
+
+        return resultExp;
+    }
+
+    fn_showListOptions(event , status=null){
+        const var_showFormSelectOption =  status == null ? !this.get("var_showFormSelectOption") : status;
+        this.set("var_showFormSelectOption" ,  var_showFormSelectOption);
+
+        const body = document.querySelector(`#component-select-option-position-element-${ this._COMPONENT_RANDOM_ID}`);
+        if (var_showFormSelectOption){
+            body.classList.remove("d-none")
+        }
+        else {
+            body.classList.add("d-none")
+        }
+    }
+
+    fn_onGetBodyOptions(prop_options  , prop_itemSelected , var_searcherSelectOption , prop_listIcons=null){
+
+        let optionsStr = "";
+
+        if (prop_options != null && Array.isArray(prop_options)){
+            for (let i=0; i < prop_options.length; i++){
+                const item = prop_options[i];
+
+                if (item.hasOwnProperty("name")){
+                    let value = item.hasOwnProperty('id') ? item.id : 0;
+
+                    let iconsHtml = "";
+                    if (prop_listIcons != null && Array.isArray(prop_listIcons) && item.hasOwnProperty('id') && item.id != null){
+                        for (let j = 0; j < prop_listIcons.length; j++) {
+                            const itemIcon = prop_listIcons[j];
+                            if (itemIcon.hasOwnProperty("icon") && itemIcon.hasOwnProperty("name") && itemIcon.hasOwnProperty("method") && typeof itemIcon.method != "undefined"){
+                                const itemIconHtml = itemIcon["icon"];
+                                const itemIconMethod = itemIcon.method;
+                                const itemIconName = itemIcon.name;
+
+                                iconsHtml += `
+                                <i class="component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID} "
+                                    onclick="${this.getFn("fn_onClickIconOption" , "event" , `'${itemIconName}'` , value)}">
+                                      ${itemIconHtml} 
+                                </i>
+                                `;
+
+                            }
+                        }
+                    }
+
+                    if (typeof item.name.includes == "undefined" || item.name.includes(var_searcherSelectOption)){
+
+                        optionsStr += `
+<div class="component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID} rounded my-1 ${prop_itemSelected != null && value == prop_itemSelected ? `component-select-option-body-options-item-selected-${this._COMPONENT_RANDOM_ID}` : ''}"
+   onclick="${this.getFn("fn_onSelectItemSelectOption" , "event" , item.id)}"> 
+   ${item.name} 
+   
+   ${iconsHtml}
+</div>
+                `;
+                    }
+                }
+            }
+        }
+
+        return optionsStr;
+    }
+
+    fn_onClickIconOption(event , name , id){
+        event.stopPropagation()
+
+        const data = this._COMPONENT_CONFIG;
+        const prop_listIcons      = data != null && data.hasOwnProperty("prop_listIcons")      ? data.prop_listIcons      : [];
+        if (prop_listIcons != null && Array.isArray(prop_listIcons)){
+            for (let j = 0; j < prop_listIcons.length; j++) {
+                const itemIcon = prop_listIcons[j];
+                if (itemIcon.hasOwnProperty("name") && itemIcon.hasOwnProperty("method") && typeof itemIcon.method != "undefined" && name == itemIcon.name) {
+                    const itemIconMethod = itemIcon.method;
+                    itemIconMethod(event , id);
+                }
+            }
+        }
+    }
+
+}
+
+
+/*-------------------------------------
+ 03-09) Component Validate
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_isAbsolute
+@prop_reference
+@prop_listRules
+@prop_title
+
+-------------------------------------*/
+window.ComponentValidate = class ComponentValidate extends ComponentBase {
+
+    var_showFormSelectOption = false;
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_form: [
+            {prop : "prop_isAbsolute"             , default: false} ,
+        ] ,
+        part_form_html: [
+            {prop : "prop_reference"             , default: ""} ,
+            {prop : "prop_listRules"             , default: []} ,
+            {prop : "var_htmlRules"              , default: ""} ,
+        ] ,
+        part_form_validates: [
+            {prop : "prop_title"                 , default: "---"} ,
+            {prop : "prop_reference"             , default: ""} ,
+            {prop : "var_validation_msg"         , default: {}} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form:{
+                part_form_html:{} ,
+                part_form_validates:{}
+            }
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentValidate.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(screanWidthType){
+        this.templateFn("part_form");
+        this.fn_connectToInputReference();
+    }
+    templateFn(partName = null){
+
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_form_html":
+                return this.template_render_formHtml(partName);
+            case "part_form_validates":
+                return this.template_render_formValidates(partName);
+            case "part_form":
+                return this.componentFn_render_from(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName ) {
+        const content = `
+            <cpmpoent-position-element id="component-validate-form-${this._COMPONENT_RANDOM_ID}">
+               <compoent-body>
+                    ${this.templateFn("part_form_html") ?? ""}
+                    ${this.templateFn("part_form_validates") ?? ""}
+               </compoent-body>
+            </cpmpoent-position-element>
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_formHtml(partName ) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_listRules      =   data.hasOwnProperty("prop_listRules")       ?  data.prop_listRules      :  [];
+            const var_htmlRules       =   data.hasOwnProperty("var_htmlRules")        ?  data.var_htmlRules       :  "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-validate-list-${ this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-validate-list-${ this._COMPONENT_RANDOM_ID}{
+             
+         }
+     </style>
+     
+     ${var_htmlRules}
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_formValidates(partName ) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_title          =   data.hasOwnProperty("prop_title")           ?  data.prop_title          :  "";
+            const var_validation_msg  =   data.hasOwnProperty("var_validation_msg")   ?  data.var_validation_msg  : [];
+
+            const componentValidate = {
+                title: prop_title ,
+                validates: var_validation_msg
+            };
+
+            return `
+<section data-part-name="${partName}" >
+      <script type="application/json" class="component-validate">
+           ${JSON.stringify(componentValidate)}
+      </script>
+</section>
+
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    componentFn_render_from(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isAbsolute      =   data.hasOwnProperty("prop_isAbsolute")       ?  data.prop_isAbsolute      :  false;
+
+            if (prop_isAbsolute){
+                new window.ComponentPositionElement(
+                    `component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList : ["d-none"] ,
+                        prop_positionTop : "35px" ,
+                        prop_width : "100%" ,
+                        prop_height : "200px" ,
+                    }
+                )
+            }
+        }
+    }
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+     --------------------------------------------- */
+
+    fn_getInputElementReference(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_reference") ) {
+            return document.querySelector("#"+data.prop_reference);
+        }
+        return null;
+    }
+    fn_getInputValueReference(){
+        const inputEl = this.fn_getInputElementReference();
+        if (inputEl != null ) {
+            return inputEl.value;
+        }
+        return null;
+    }
+
+    fn_connectToInputReference(){
+        const inputEl = this.fn_getInputElementReference();
+        if (inputEl != null){
+            inputEl.addEventListener("input", this.fn_connectToInputReference_onHandleInput.bind(this));
+            inputEl.addEventListener("blur", this.fn_connectToInputReference_onFormatValue.bind(this));
+            inputEl.addEventListener("focus", this.fn_connectToInputReference_onUnFormatValue.bind(this));
+        }
+    }
+
+    fn_connectToInputReference_onHandleInput(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
+        }
+    }
+
+    fn_connectToInputReference_onFormatValue(event){
+        this.fn_getFormRulesElement().classList.add("d-none");
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
+        }
+    }
+
+    fn_connectToInputReference_onUnFormatValue(event){
+        this.fn_getFormRulesElement().classList.remove("d-none");
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
+        }
+    }
+
+
+    fn_readyListRules(prop_listRules) {
+        const data = this._COMPONENT_CONFIG;
+        let messages = [];
+        let rulesHtml = "";
+        let isInputCurrect = true;
+        const input = this.fn_getInputValueReference();
+
+        for (let i = 0; i < prop_listRules.length; i++) {
+            const itemRule = prop_listRules[i];
+            if (itemRule.hasOwnProperty("description") && itemRule.hasOwnProperty("params") && itemRule.hasOwnProperty("rule")) {
+                const description = itemRule.description;
+                const rule = itemRule.rule;
+                const params = itemRule.params;
+
+                let isTrue = false;
+                switch (rule) {
+                    case "_char_length" :
+                        isTrue = this.fn_readyListRules_checkInputChar(input, params)
+                        break;
+                    case "_num_length" :
+                        isTrue = this.fn_readyListRules_checkInputNum(input, params)
+                        break;
+                    case "_text_length" :
+                        isTrue = this.fn_readyListRules_checkInputText(input, params)
+                        break;
+                    case "_text_forbidden" :
+                        isTrue = this.fn_readyListRules_checkInputForbidden(input, params)
+                        break;
+                    case "_text_char_upper" :
+                        isTrue = this.fn_readyListRules_checkExistChartUpper(input, params)
+                        break;
+                }
+
+                if (!isTrue) {
+                    messages.push(description)
+                    isInputCurrect = false;
+                }
+
+                const icon = isTrue ? tools_icons.icon_is_true() : tools_icons.icon_is_false();
+                const color = isTrue ? "text-success" : "text-danger";
+
+                rulesHtml +=
+                    `
+                    <div class="item_country_code border-bottom mx-1 line-height-30px font-12pt ${color}" >
+                        <span class="icon-rule float-start  ms-1">${icon}</span>
+                        <span class="ms-3">${description}</span>
+                    </div>
+                    `;
+
+            }
+        }
+
+        this.set("var_htmlRules", rulesHtml);
+        this.set("var_validation_msg", messages);
+
+        const inputEl = this.fn_getInputElementReference();
+        inputEl.classList.remove("border-danger", "border-success");
+        inputEl.classList.add(isInputCurrect ? "border-success" : "border-danger");
+    }
+
+
+    fn_readyListRules_checkInputChar(input , params) {
+        let min = 4;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const nonDigitChars = input.split('').filter(char => !/\d/.test(char));
+        return nonDigitChars.length >= min;
+    }
+
+    fn_readyListRules_checkInputNum(input , params) {
+        let min = 1;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const digitChars = input.split('').filter(char => /\d/.test(char));
+        return digitChars.length >= min;
+    }
+
+    fn_readyListRules_checkInputText(input , params) {
+        let min = 8;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        return input.length >= min;
+    }
+
+    fn_readyListRules_checkInputForbidden(input , params) {
+        let validPattern = /^[a-zA-Z0-9]*$/;
+        if (params != null && params.hasOwnProperty("chars")){
+            const escapedParams = params.chars.map(c => '\\' + c).join('');
+            validPattern = new RegExp(`^[a-zA-Z0-9${escapedParams}]*$`);
+        }
+        return validPattern.test(input);
+    }
+
+    fn_readyListRules_checkExistChartUpper(input , params) {
+        let min = 1;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const regex = new RegExp(`(?:.*[A-Z]){${min},}`);
+        return regex.test(input);
     }
 
 }
@@ -8819,7 +9909,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
              top: 35px;
              left: -20px;
              font-size: 10pt;
-             z-index: ${listLayoutZIndex.hasOwnProperty("menu_main") ? listLayoutZIndex.menu_main: 11};
+             z-index: ${listLayoutZIndex.hasOwnProperty("blur_popup") ? listLayoutZIndex.blur_popup: 11};
          }
          #${this._COMPONENT_ID} #component-tooltip-description-description-${this._COMPONENT_RANDOM_ID}:after{
              content: "";
@@ -8856,6 +9946,8 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
             const prop_icon          =   data.hasOwnProperty("prop_icon")                ?  data.prop_icon               :  null;
             const prop_iconClass     =   data.hasOwnProperty("prop_iconClass")           ?  data.prop_iconClass          :  [];
             const prop_iconStyles    =   data.hasOwnProperty("prop_iconStyles")          ?  data.prop_iconStyles         :  {};
+
+
 
             if (prop_icon != null){
                 new window.ComponentIcon(
