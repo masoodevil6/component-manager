@@ -31,12 +31,15 @@ if (typeof listComponentCategory === 'undefined') {
             category: "Button and Inputs" ,
             components: [
                 listComponent["ComponentButton"] ,
-                listComponent["ComponentSelectOption"] ,
                 listComponent["ComponentOtp"] ,
                 listComponent["ComponentInput"] ,
                 listComponent["ComponentInputPrice"] ,
-                listComponent["ComponentDate"] ,
+                listComponent["ComponentInputPassword"] ,
+                listComponent["ComponentInputEmail"] ,
                 listComponent["ComponentInputFile"] ,
+                listComponent["ComponentDate"] ,
+                listComponent["ComponentSelectOption"] ,
+                listComponent["ComponentValidate"] ,
             ]
         },
         {
@@ -129,5 +132,93 @@ if (typeof listComponentCategory === 'undefined') {
 
 
     ]
+}
+
+
+
+
+
+
+/*-------------------------------------
+ 01-01) Component Messages
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_type                            // success[default] | error | warning | null
+@prop_background
+@prop_color
+@prop_messages
+-------------------------------------*/
+window.ComponentRender = class ComponentRender extends ComponentBase{
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentRender.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+
+
+    template_render_structure(partName) {
+        const content = `
+                  iiii
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
 }
 

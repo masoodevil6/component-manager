@@ -45,10 +45,11 @@ if (typeof listComponent === 'undefined') {
         ComponentInput:                      "component-input" ,                          //03-03
         ComponentInputPrice:                 "component-input-price" ,                    //03-04
         ComponentInputPassword:              "component-input-password" ,                 //03-05
-        ComponentInputFile:                  "component-input-file" ,                     //03-06
-        ComponentDate:                       "component-date" ,                           //03-07
-        ComponentSelectOption:               "component-select-option" ,                  //03-08
-        ComponentValidate:                   "component-validate" ,                       //03-09
+        ComponentInputEmail:                 "component-input-email" ,                    //03-06
+        ComponentInputFile:                  "component-input-file" ,                     //03-07
+        ComponentDate:                       "component-date" ,                           //03-08
+        ComponentSelectOption:               "component-select-option" ,                  //03-09
+        ComponentValidate:                   "component-validate" ,                       //03-010
 
 
         // [04] tooltips
@@ -98,6 +99,11 @@ if (typeof listComponent === 'undefined') {
         ComponentLayout:                     "component-layout" ,                         //99-05
         ComponentMouseScroller:              "component-mouse-scroller" ,                 //99-06
 
+
+
+        ComponentRender:                     "component-render" ,                         //A-01
+
+
     }
 }
 if (typeof components === 'undefined') {
@@ -133,6 +139,7 @@ class ComponentBase{
         this._COMPONENT_ID = elId;
         this._COMPONENT_SELECTOR = this._COMPONENT_NAME+"#"+this._COMPONENT_ID;
     }
+
 
 
     onCreate( config , props, schema){
@@ -798,11 +805,24 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 
             if (data.hasOwnProperty("prop_messages")  ) {
 
+                let styles = {
+                    "top" : "20px"
+                }
+                if (directionRtl){
+                    styles["left"] = "20px"
+                }
+                else{
+                    styles["right"] = "20px"
+                }
+
+
                 for (const indexMessage in data.prop_messages) {
                     new window.ComponentIcon(
                         `component-messages-icon-close-${this._COMPONENT_RANDOM_ID}-${indexMessage}`  ,
                         {
-                            classList:     [ directionRtl ? "float-start" :  "float-end" ] ,
+                            classList:     [ "position-absolute"] ,
+                            styles : styles,
+
                             prop_icon:     "&#10005"  ,
 
                             prop_iconClass : ["mx-2" ] ,
@@ -3079,7 +3099,7 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
            <component-border id="component-form-border-${this._COMPONENT_RANDOM_ID}">
                <component-body>
                
-                    <section id="component-form-messages-${this._COMPONENT_RANDOM_ID}"></section>
+                    <component-messages id="component-form-messages-${this._COMPONENT_RANDOM_ID}"></component-messages>
          
                     ${this.templateFn("part_form") ?? ""}
          
@@ -3184,29 +3204,87 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
     /* ---------------------------------------------
            FUNCTIONs
         --------------------------------------------- */
+
+    fn_getFormElement(){
+        return document.querySelector(`#component-form-forms-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+    fn_getListValidators(){
+
+        const elForms = this.fn_getFormElement();
+        const listValidatores = elForms.querySelectorAll(".component-validate");
+
+        let isValidateComplate = true;
+        let listValidateErrors = [];
+        if (listValidatores != null && listValidatores.length > 0){
+            for (let i = 0; i < listValidatores.length; i++) {
+                const itemValidate = listValidatores[i];
+                const validateText = itemValidate.innerHTML;
+
+                const validator = tools_public.parseJson(validateText);
+                if (validator != null){
+                    const validator = JSON.parse(validateText);
+                    let messageError = `<b class="border-bottom">${validator.title}</b>`;
+                    let hasError = validator.validates.length > 0;
+                    if (validator != null && validator.hasOwnProperty("title") && validator.hasOwnProperty("validates") && validator.validates != null && hasError ){
+                        isValidateComplate = !hasError;
+                        for (let j = 0; j < validator.validates.length; j++) {
+                            const itemError = validator.validates[j];
+                            messageError += `<p class="mb-1"> - ${itemError}</p>`
+                        }
+                    }
+
+                    if (hasError){
+                        listValidateErrors.push(messageError);
+                    }
+                }
+            }
+        }
+        return [isValidateComplate , listValidateErrors]
+    }
+
     fn_onCLickBtnSubmit(event){
         const data = this._COMPONENT_CONFIG;
 
         if (data.hasOwnProperty("prop_url")){
+            const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
 
-            const formData =  this.getComponentElement().querySelector("#component-form-forms-" + this._COMPONENT_RANDOM_ID);
+            const formData =  this.fn_getFormElement();
 
-            tools_submit.fetcth(
-                data.prop_url,
-                {
-                    data: {
-                        formData: formData,
-                        data: data.hasOwnProperty("prop_data") ? data.prop_data : []
-                    },
-                    componentMessagesData: {elId: `component-form-messages-${this._COMPONENT_RANDOM_ID}`},
-                    componentLoadingData:  {elId: `component-form-loading-${this._COMPONENT_RANDOM_ID}`},
-                    component404Data: {
-                        elId: `component-form-404-${this._COMPONENT_RANDOM_ID}`,
-                        fn_callback: () => {
-                            this.runFn('fn_onCLickBtnSubmit' , "event")
-                        }
-                    },
+
+            const [isValidateComplate = true , listValidateErrors = []] = this.fn_getListValidators();
+
+            if (isValidateComplate){
+                tools_component.control("ComponentMessages" , {
+                    elId: `component-form-messages-${this._COMPONENT_RANDOM_ID}` ,
+                    prop_messages: []
                 });
+
+                tools_submit.fetcth(
+                    data.prop_url,
+                    {
+                        data: {
+                            formData: formData,
+                            data: data.hasOwnProperty("prop_data") ? data.prop_data : []
+                        },
+                        componentMessagesData: {elId: `component-form-messages-${this._COMPONENT_RANDOM_ID}`},
+                        componentLoadingData:  {elId: `component-form-loading-${this._COMPONENT_RANDOM_ID}`},
+                        component404Data: {
+                            elId: `component-form-404-${this._COMPONENT_RANDOM_ID}`,
+                            fn_callback: () => {
+                                this.runFn('fn_onCLickBtnSubmit' , "event")
+                            }
+                        },
+                    });
+            }
+            else{
+                tools_component.control("ComponentMessages" , {
+                    elId: `component-form-messages-${this._COMPONENT_RANDOM_ID}` ,
+                    prop_type: "error" ,
+                    prop_messages: listValidateErrors
+                });
+            }
+
 
         }
     }
@@ -3497,7 +3575,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
 
 /*-------------------------------------
- 02-04) Component Widget
+ 02-04) Component Iframe
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -5276,6 +5354,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 
 @prop_hasRules
 @prop_listRules
+@prop_isAbsoluteRule
 -------------------------------------*/
 window.ComponentInputPassword = class ComponentInputPassword extends ComponentBase{
 
@@ -5305,7 +5384,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
             {prop : "prop_name"                  , default: null} ,
             {prop : "prop_value"                 , default: null} ,
             {prop : "prop_placeholder"           , default: null} ,
-            {prop : "prop_icon"                  , default: null} ,
+            {prop : "prop_icon"                  , default:  tools_icons.icon_password()} ,
             {prop : "prop_isDisable"             , default: false} ,
         ] ,
         part_body_icon: [
@@ -5319,19 +5398,11 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
         ] ,
         part_body_validate: [
             {prop : "prop_hasRules"              , default: true} ,
-            {prop : "prop_isAbsolute"            , default: true} ,
-            {prop : "prop_listRules"             , default: true} ,
-            {prop : "prop_isDisable"             , default: false} ,
-            {prop : "prop_title"                        , default: "TITLE"} ,
-        ] ,
-        /*part_body_form_rules: [
-            {prop : "prop_hasRules"              , default: true} ,
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
-        part_body_list_rules: [
+            {prop : "prop_isAbsoluteRule"        , default: true} ,
             {prop : "prop_listRules"             , default: []} ,
-            {prop : "var_htmlRules"              , default: ""} ,
-        ] ,*/
+            {prop : "prop_isDisable"             , default: false} ,
+            {prop : "prop_title"                 , default: "TITLE"} ,
+        ] ,
     }
 
     _COMPONENT_SCHEMA = {
@@ -5341,11 +5412,8 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
                 part_body_password:{},
                 part_body_icon:{},
                 part_body_icon_clear:{},
-                part_body_icon_wisit:{},
+                part_body_icon_visit:{},
                 part_body_validate:{},
-               /* part_body_form_rules:{
-                    part_body_list_rules:{}
-                },*/
             },
         } ,
     }
@@ -5380,7 +5448,6 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
         this.templateFn("part_body_icon");
         this.templateFn("part_body_icon_clear");
         this.templateFn("part_body_icon_visit");
-        //this.templateFn("part_body_form_rules");
         this.templateFn("part_body_validate");
     }
     templateFn(partName = null){
@@ -5393,9 +5460,6 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
 
             case "part_body_password":
                 return this.template_render_bodyPassword(partName);
-
-            /*case "part_body_list_rules":
-                return this.template_render_bodyListRules(partName);*/
 
             case "part_label":
                 return this.componentFn_render_label(partName);
@@ -5410,10 +5474,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
                 return this.componentFn_render_bodyIconVisit(partName);
                   
             case "part_body_validate":
-                return this.componentFn_render_bodyIconVisit(partName);
-
-            /*case "part_body_form_rules":
-                return this.componentFn_render_bodyFormRules(partName);*/
+                return this.componentFn_render_bodyValidate(partName);
 
             default:
                 return this.templateBasic_render();
@@ -5428,6 +5489,8 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
      <component-label id="component-input-password-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
 
      ${this.templateFn("part_body") ?? ""}
+     
+      <component-validate id="component-input-password-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
       `;
 
         return this.templateBasic_render_structure(content , []);
@@ -5456,11 +5519,6 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
      <component-icon id="component-input-password-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
      <component-icon id="component-input-password-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
      <component-icon id="component-input-password-icon-visit-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-     <component-position-element id="component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}" >
-        <component-body>
-           ${this.templateFn("part_body_list_rules") ?? ""}
-        </component-body>
-     </component-position-element>
         
 </section>
         `;
@@ -5500,14 +5558,13 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
           
      <style>
          #${this._COMPONENT_ID} #component-input-password-element-${this._COMPONENT_RANDOM_ID}{
+              ${prop_icon ? (directionRtl ? "margin-right: 35px;" : "margin-left: 35px;") : ""}
               ${directionRtl ? "margin-left" : "margin-right"} : 35px;
          }
          #${this._COMPONENT_ID} #component-input-password-${this._COMPONENT_RANDOM_ID}{
               height: 30px;
 
               ${directionRtl ? "padding-left" : "padding-right"} : 20px;
-     
-              ${directionRtl ? "padding-right" : "padding-left"}: ${(prop_icon != null && prop_icon != "") ?  "30px"  : "10px"}!important;
               ${tools_public.renderListStyle(prop_inputStyles)}
          }
      </style>
@@ -5519,9 +5576,9 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
             value="${prop_value || ""}"
             placeholder="${prop_placeholder || ""}"
             ${prop_isDisable ? 'disabled' : ''}
-            onInput="${this.getFn("fn_onHandleInput" , "event")};   ${this.getFn("fn_onInputCallBack" , "event")}"
-            onblur=" ${this.getFn("fn_onFormatValue" , "event")};   ${this.getFn("fn_onBlurCallBack" , "event")}"
-            onfocus="${this.getFn("fn_onUnFormatValue" , "event")}; ${this.getFn("fn_onFocusCallBack" , "event")}"
+            onInput="${this.getFn("fn_onInputCallBack" , "event")}"
+            onblur=" ${this.getFn("fn_onBlurCallBack" , "event")}"
+            onfocus="${this.getFn("fn_onFocusCallBack" , "event")}"
             />
        
 </section>
@@ -5532,37 +5589,6 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
 <section data-part-name="${partName}"></section>
         `;
     }
-
-    /*template_render_bodyListRules(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_listRules    =   data.hasOwnProperty("prop_listRules")   ?  data.prop_listRules           :  [];
-            const var_htmlRules     =   data.hasOwnProperty("var_htmlRules")    ?  data.var_htmlRules            :  [];
-
-            return `
-<section  data-part-name="${partName}"
-          id="component-input-password-form-list-rules-${this._COMPONENT_RANDOM_ID}"  
-          class="" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-password-form-list-rules-${this._COMPONENT_RANDOM_ID}{
-          
-         }
-     </style>
-
-     ${var_htmlRules}
-       
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }*/
 
     componentFn_render_bodyIcon(partName) {
 
@@ -5725,7 +5751,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
         }
     }
 
-   /* componentFn_render_bodyFormRules(partName) {
+    componentFn_render_bodyValidate(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -5739,49 +5765,20 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
 
                 if (!prop_isDisable && prop_hasRules){
 
-                    const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                    const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
+                    const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
+                    const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
+                    const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
 
-                    new window.ComponentPositionElement(
-                        `component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}` ,
+                    new window.ComponentValidate(
+                        `component-input-password-validate-${this._COMPONENT_RANDOM_ID}` ,
                         {
-                            classList : ["d-none"] ,
-                            prop_positionTop : "35px" ,
-                            prop_width : "100%" ,
-                            prop_height : "200px" ,
+                            prop_reference: `component-input-password-${this._COMPONENT_RANDOM_ID}` ,
+                            prop_isAbsolute: prop_isAbsoluteRule ,
+                            prop_listRules ,
+                            prop_title
                         }
-                    )
-                }
-
-            }
-
-        }
-    }*/
-
-    componentFn_render_bodyFormRules(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const data = this.getPartProps(partName)
-
-            if (data != null){
-                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
-                const prop_hasRules      =  data.hasOwnProperty("prop_hasRules")           ?  data.prop_hasRules               : true;
-
-                if (!prop_isDisable && prop_hasRules){
-
-                    const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-                    new window.ComponentPositionElement(
-                        `component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}` ,
-                        {
-                            classList : ["d-none"] ,
-                            prop_positionTop : "35px" ,
-                            prop_width : "100%" ,
-                            prop_height : "200px" ,
-                        }
-                    )
+                    );
                 }
 
             }
@@ -5802,9 +5799,6 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
     fn_getInputElement(){
         return   document.querySelector(`input#component-input-password-${this._COMPONENT_RANDOM_ID}`);
     }
-    fn_getFormRulesElement(){
-        return   document.querySelector(`#component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}`);
-    }
 
 
     fn_getInputValue(event){
@@ -5822,23 +5816,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
         }
     }
 
-    fn_onFormatValue(event){
-        this.fn_getFormRulesElement().classList.add("d-none");
 
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
-            this.fn_readyListRules(data.prop_listRules)
-        }
-    }
-
-    fn_onUnFormatValue(event){
-        this.fn_getFormRulesElement().classList.remove("d-none");
-
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
-            this.fn_readyListRules(data.prop_listRules)
-        }
-    }
 
     fn_onInputCallBack(event){
         const data = this._COMPONENT_CONFIG;
@@ -5877,111 +5855,418 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
     }
 
 
+}
 
 
-    fn_readyListRules(prop_listRules) {
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("prop_hasRules") && data.prop_hasRules) {
-            let rulesHtml = "";
-            let isPasswordCurrect = true;
-            const password = this.fn_getInputValue();
-            for (let i = 0; i < prop_listRules.length; i++) {
-                const itemRule = prop_listRules[i];
-                if (itemRule.hasOwnProperty("description") && itemRule.hasOwnProperty("params") && itemRule.hasOwnProperty("rule")) {
-                    const description = itemRule.description;
-                    const rule = itemRule.rule;
-                    const params = itemRule.params;
 
-                    let isTrue = false;
-                    switch (rule) {
-                        case "_char_length" :
-                            isTrue = this.fn_readyListRules_checkPasswordChar(password, params)
-                            break;
-                        case "_num_length" :
-                            isTrue = this.fn_readyListRules_checkPasswordNum(password, params)
-                            break;
-                        case "_text_length" :
-                            isTrue = this.fn_readyListRules_checkPasswordText(password, params)
-                            break;
-                        case "_text_forbidden" :
-                            isTrue = this.fn_readyListRules_checkPasswordForbidden(password, params)
-                            break;
-                        case "_text_char_upper" :
-                            isTrue = this.fn_readyListRules_checkExistChartUpper(password, params)
-                            break;
-                    }
+/*-------------------------------------
+ 03-06) Component Input email
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
 
-                    if (!isTrue) {
-                        isPasswordCurrect = false;
-                    }
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
 
-                    const icon = isTrue ? tools_icons.icon_is_true() : tools_icons.icon_is_false();
-                    const color = isTrue ? "text-success" : "text-danger";
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_placeholder
+@prop_isDisable
 
-                    rulesHtml +=
-                        `
-                    <div class="item_country_code border-bottom mx-1 line-height-30px font-12pt ${color}" >
-                        <span class="icon-rule float-start  ms-1">${icon}</span>
-                        <span class="ms-3">${description}</span>
-                    </div>
-                    `;
+@prop_icon
 
-                }
+@prop_listRules
+@prop_isAbsoluteRule
+-------------------------------------*/
+window.ComponentInputEmail = class ComponentInputEmail extends ComponentBase{
+
+    _STATUS_IS_SHOW = false;
+
+    /* ---------------------------------------------
+   PROPERTYs
+   --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_label: [
+            {prop : "prop_title"                        , default: "TITLE"} ,
+            {prop : "prop_labelShow"                    , default: true} ,
+            {prop : "prop_labelTooltipDescription"      , default: null} ,
+            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"                  , default: null} ,
+            {prop : "prop_labelHoverStyles"             , default: null} ,
+        ] ,
+        part_body: [
+
+        ] ,
+        part_body_email: [
+            {prop : "prop_inputClass"            , default: [" form-control"]} ,
+            {prop : "prop_inputStyles"           , default: {}} ,
+            {prop : "prop_name"                  , default: null} ,
+            {prop : "prop_value"                 , default: null} ,
+            {prop : "prop_placeholder"           , default: null} ,
+            {prop : "prop_icon"                  , default:  tools_icons.icon_email()} ,
+            {prop : "prop_isDisable"             , default: false} ,
+        ] ,
+        part_body_icon: [
+            {prop : "prop_icon"                  , default: null} ,
+        ] ,
+        part_body_icon_clear: [
+            {prop : "prop_isDisable"             , default: false} ,
+        ] ,
+        part_body_validate: [
+            {prop : "prop_isAbsoluteRule"        , default: true} ,
+            {prop : "prop_listRules"             , default: []} ,
+            {prop : "prop_isDisable"             , default: false} ,
+            {prop : "prop_title"                 , default: "TITLE"} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure:{
+            part_label : {} ,
+            part_body : {
+                part_body_email:{},
+                part_body_icon:{},
+                part_body_icon_clear:{},
+                part_body_validate:{},
+            },
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentInputEmail.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+
+    }
+
+
+
+    /* ---------------------------------------------
+   TEMPLATEs
+ --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_body_icon");
+        this.templateFn("part_body_icon_clear");
+        this.templateFn("part_body_icon_visit");
+        this.templateFn("part_body_validate");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+
+            case "part_body":
+                return this.template_render_body(partName);
+
+            case "part_body_email":
+                return this.template_render_bodyEmail(partName);
+
+            case "part_label":
+                return this.componentFn_render_label(partName);
+
+            case "part_body_icon":
+                return this.componentFn_render_bodyIcon(partName);
+
+            case "part_body_icon_clear":
+                return this.componentFn_render_bodyIconClear(partName);
+
+            case "part_body_validate":
+                return this.componentFn_render_bodyValidate(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+
+    template_render_structure(partName) {
+
+        const content = `
+  
+     <component-label id="component-input-email-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
+
+     ${this.templateFn("part_body") ?? ""}
+     
+      <component-validate id="component-input-email-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
+      `;
+
+        return this.templateBasic_render_structure(content , []);
+    }
+
+    template_render_body(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-email-body-${this._COMPONENT_RANDOM_ID}"  
+          class="position-relative bg-secondary rounded d-block" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-email-body-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+         
+     </style>
+     
+     ${this.templateFn("part_body_email") ?? ""}
+     
+     <component-icon id="component-input-email-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-email-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+        
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyEmail(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
+            const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
+            const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
+            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
+            const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
+            const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                                    : false;
+
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
+
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
             }
 
-            this.set("var_htmlRules", rulesHtml);
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-email-element-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-email-element-${this._COMPONENT_RANDOM_ID}{
+              ${prop_icon ? (directionRtl ? "margin-right: 35px;" : "margin-left: 35px;") : ""}
+         }
+         #${this._COMPONENT_ID} #component-input-email-${this._COMPONENT_RANDOM_ID}{
+              height: 30px;
 
-            const input = this.fn_getInputElement();
-            input.classList.remove("border-danger", "border-success");
-            input.classList.add(isPasswordCurrect ? "border-success" : "border-danger");
+              ${directionRtl ? "padding-left" : "padding-right"} : 20px;
+     
+              ${tools_public.renderListStyle(prop_inputStyles)}
+         }
+     </style>
+
+     <input id="component-input-email-${this._COMPONENT_RANDOM_ID}"   
+            class=" ${tools_public.renderListClass(prop_inputClass)} border-2"
+            name="${prop_name || "" }"  
+            type="email"  
+            value="${prop_value || ""}"
+            placeholder="${prop_placeholder || ""}"
+            ${prop_isDisable ? 'disabled' : ''}
+            onInput="${this.getFn("fn_onInputCallBack" , "event")}"
+            onblur=" ${this.getFn("fn_onBlurCallBack" , "event")}"
+            onfocus="${this.getFn("fn_onFocusCallBack" , "event")}"
+            />
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_bodyIcon(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+
+            let styles = {
+                "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
+                "cursor" : "pointer",
+                "font-size" : "20pt;",
+                "top" : "50%" ,
+                "transform" : "translate(0, -50%)" ,
+            }
+            if (directionRtl){
+                styles["right"]= "5px"
+            }
+            else {
+                styles["left"]= "5px"
+            }
+
+            if (prop_icon != null){
+                new window.ComponentIcon(
+                    `component-input-email-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_icon ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onFocusInput" , "event")
+                        }
+                    }
+                )
+            }
+
+        }
+    }
+
+    componentFn_render_bodyIconClear(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                let styles = {
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
+                    "width" :   "35px",
+                    "line-height" : "30px",
+                    "cursor" : "pointer",
+                    "height" : "30px" ,
+                    "top" : "0" ,
+                    "text-align" : "center" ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "5px";
+                }
+                else {
+                    styles["right"]= "5px";
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-email-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        styles: {
+                            "height" : "38px"
+                        }  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : "&#10540;" ,
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onClearInput" , "event")
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_label(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            this.componentFneBasic_render_structure(
+                `component-input-email-label-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_for:  `component-input-email-${this._COMPONENT_RANDOM_ID}`,
+                    fn_callback: () => {
+
+                    } ,
+                }
+            );
+        }
+    }
+
+    componentFn_render_bodyValidate(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const data = this.getPartProps(partName)
+
+            if (data != null){
+                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+
+                if (!prop_isDisable){
+
+                    const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
+                    const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
+                    const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
+                    const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+
+                    prop_listRules.push({
+                        description: "Must have email format",
+                        rule : "_is_email" ,
+                        params: {}
+                    })
+
+                    new window.ComponentValidate(
+                        `component-input-email-validate-${this._COMPONENT_RANDOM_ID}` ,
+                        {
+                            prop_reference: `component-input-email-${this._COMPONENT_RANDOM_ID}` ,
+                            prop_isAbsolute: prop_isAbsoluteRule ,
+                            prop_listRules ,
+                            prop_title
+                        }
+                    );
+                }
+
+            }
 
         }
     }
 
 
-    fn_readyListRules_checkPasswordChar(textPassword , params) {
-        let min = 4;
-        if (params != null && params.hasOwnProperty("min")){
-            min = params.min
-        }
-        const nonDigitChars = textPassword.split('').filter(char => !/\d/.test(char));
-        return nonDigitChars.length >= min;
-    }
 
-    fn_readyListRules_checkPasswordNum(textPassword , params) {
-        let min = 1;
-        if (params != null && params.hasOwnProperty("min")){
-            min = params.min
-        }
-        const digitChars = textPassword.split('').filter(char => /\d/.test(char));
-        return digitChars.length >= min;
-    }
 
-    fn_readyListRules_checkPasswordText(textPassword , params) {
-        let min = 8;
-        if (params != null && params.hasOwnProperty("min")){
-            min = params.min
-        }
-        return textPassword.length >= min;
-    }
 
-    fn_readyListRules_checkPasswordForbidden(textPassword , params) {
-        let validPattern = /^[a-zA-Z0-9]*$/;
-        if (params != null && params.hasOwnProperty("chars")){
-            const escapedParams = params.chars.map(c => '\\' + c).join('');
-            validPattern = new RegExp(`^[a-zA-Z0-9${escapedParams}]*$`);
-        }
-        return validPattern.test(textPassword);
-    }
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
 
-    fn_readyListRules_checkExistChartUpper(textPassword , params) {
-        let min = 1;
-        if (params != null && params.hasOwnProperty("min")){
-            min = params.min
-        }
-        const regex = new RegExp(`(?:.*[A-Z]){${min},}`);
-        return regex.test(textPassword);
-    }
 
 }
 
@@ -9504,7 +9789,10 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
     --------------------------------------------- */
     componentFn(screanWidthType){
         this.templateFn("part_form");
-        this.fn_connectToInputReference();
+
+        requestAnimationFrame(() => {
+            this.fn_connectToInputReference();
+        });
     }
     templateFn(partName = null){
 
@@ -9524,14 +9812,16 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
 
     template_render_structure(partName ) {
         const content = `
-            <cpmpoent-position-element id="component-validate-form-${this._COMPONENT_RANDOM_ID}">
-               <compoent-body>
+<div id="component-input-validate-position-form-rules-${this._COMPONENT_RANDOM_ID}" class="position-relative">
+            <component-position-element id="component-input-validate-form-rules-${this._COMPONENT_RANDOM_ID}">
+               <component-body>
                     ${this.templateFn("part_form_html") ?? ""}
                     ${this.templateFn("part_form_validates") ?? ""}
-               </compoent-body>
-            </cpmpoent-position-element>
+               </component-body>
+            </component-position-element>
+</div>
                 `;
-        return this.templateBasic_render_structure(content);
+        return this.templateBasic_render_structure(content , ["position-relative"]);
     }
 
     template_render_formHtml(partName ) {
@@ -9591,7 +9881,6 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
         `;
     }
 
-
     componentFn_render_from(partName) {
 
         const data = this.getPartProps(partName)
@@ -9601,10 +9890,10 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
 
             if (prop_isAbsolute){
                 new window.ComponentPositionElement(
-                    `component-input-password-form-rules-${this._COMPONENT_RANDOM_ID}` ,
+                    `component-input-validate-form-rules-${this._COMPONENT_RANDOM_ID}` ,
                     {
                         classList : ["d-none"] ,
-                        prop_positionTop : "35px" ,
+                        prop_positionTop : "0" ,
                         prop_width : "100%" ,
                         prop_height : "200px" ,
                     }
@@ -9618,10 +9907,39 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
       FUNCTIONs
      --------------------------------------------- */
 
+    fn_getFormRulesElement(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_isAbsolute") && data.prop_isAbsolute ) {
+            return document.querySelector(`#component-input-validate-form-rules-${this._COMPONENT_RANDOM_ID}`);
+        }
+        return null;
+    }
+    fn_setStatusVisibleFormRulesElement(status=true){
+        const el = this.fn_getFormRulesElement();
+
+        if (el != null){
+            if (status){
+                this.fn_getFormRulesElement().classList.remove("d-none");
+            }
+            else{
+                this.fn_getFormRulesElement().classList.add("d-none");
+            }
+        }
+    }
+
+
+
+    fn_getInputElementReferenceId(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_reference") ) {
+            return data.prop_reference;
+        }
+        return null;
+    }
     fn_getInputElementReference(){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("prop_reference") ) {
-            return document.querySelector("#"+data.prop_reference);
+            return document.querySelector("#" +this.fn_getInputElementReferenceId());
         }
         return null;
     }
@@ -9633,12 +9951,38 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
         return null;
     }
 
+
+
+    fn_connectToInputReference_handle(refId){
+        const inputId = this.fn_getInputElementReferenceId();
+
+        if (refId === inputId) {
+            const inputEl = this.fn_getInputElementReference();
+            if (inputEl != null){
+                inputEl.removeEventListener("input", this.fn_connectToInputReference_onHandleInput.bind(this));
+                inputEl.removeEventListener("blur", this.fn_connectToInputReference_onFormatValue.bind(this));
+                inputEl.removeEventListener("focus", this.fn_connectToInputReference_onUnFormatValue.bind(this));
+
+                inputEl.addEventListener("input", this.fn_connectToInputReference_onHandleInput.bind(this));
+                inputEl.addEventListener("blur", this.fn_connectToInputReference_onFormatValue.bind(this));
+                inputEl.addEventListener("focus", this.fn_connectToInputReference_onUnFormatValue.bind(this));
+            }
+        }
+    }
+
+
     fn_connectToInputReference(){
-        const inputEl = this.fn_getInputElementReference();
-        if (inputEl != null){
-            inputEl.addEventListener("input", this.fn_connectToInputReference_onHandleInput.bind(this));
-            inputEl.addEventListener("blur", this.fn_connectToInputReference_onFormatValue.bind(this));
-            inputEl.addEventListener("focus", this.fn_connectToInputReference_onUnFormatValue.bind(this));
+
+        const inputId = this.fn_getInputElementReferenceId();
+        document.addEventListener("input" , this.fn_connectToInputReference_handle.bind(this, inputId));
+        document.addEventListener("blur"  , this.fn_connectToInputReference_handle.bind(this, inputId));
+        document.addEventListener("focus" , this.fn_connectToInputReference_handle.bind(this, inputId));
+
+        this.fn_connectToInputReference_handle(inputId);
+
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
         }
     }
 
@@ -9650,7 +9994,8 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
     }
 
     fn_connectToInputReference_onFormatValue(event){
-        this.fn_getFormRulesElement().classList.add("d-none");
+        this.fn_setStatusVisibleFormRulesElement(false);
+
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
             this.fn_readyListRules(data.prop_listRules)
@@ -9658,7 +10003,8 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
     }
 
     fn_connectToInputReference_onUnFormatValue(event){
-        this.fn_getFormRulesElement().classList.remove("d-none");
+        this.fn_setStatusVisibleFormRulesElement(true);
+
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
             this.fn_readyListRules(data.prop_listRules)
@@ -9668,55 +10014,9 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
 
     fn_readyListRules(prop_listRules) {
         const data = this._COMPONENT_CONFIG;
-        let messages = [];
-        let rulesHtml = "";
-        let isInputCurrect = true;
         const input = this.fn_getInputValueReference();
 
-        for (let i = 0; i < prop_listRules.length; i++) {
-            const itemRule = prop_listRules[i];
-            if (itemRule.hasOwnProperty("description") && itemRule.hasOwnProperty("params") && itemRule.hasOwnProperty("rule")) {
-                const description = itemRule.description;
-                const rule = itemRule.rule;
-                const params = itemRule.params;
-
-                let isTrue = false;
-                switch (rule) {
-                    case "_char_length" :
-                        isTrue = this.fn_readyListRules_checkInputChar(input, params)
-                        break;
-                    case "_num_length" :
-                        isTrue = this.fn_readyListRules_checkInputNum(input, params)
-                        break;
-                    case "_text_length" :
-                        isTrue = this.fn_readyListRules_checkInputText(input, params)
-                        break;
-                    case "_text_forbidden" :
-                        isTrue = this.fn_readyListRules_checkInputForbidden(input, params)
-                        break;
-                    case "_text_char_upper" :
-                        isTrue = this.fn_readyListRules_checkExistChartUpper(input, params)
-                        break;
-                }
-
-                if (!isTrue) {
-                    messages.push(description)
-                    isInputCurrect = false;
-                }
-
-                const icon = isTrue ? tools_icons.icon_is_true() : tools_icons.icon_is_false();
-                const color = isTrue ? "text-success" : "text-danger";
-
-                rulesHtml +=
-                    `
-                    <div class="item_country_code border-bottom mx-1 line-height-30px font-12pt ${color}" >
-                        <span class="icon-rule float-start  ms-1">${icon}</span>
-                        <span class="ms-3">${description}</span>
-                    </div>
-                    `;
-
-            }
-        }
+        let [messages=[] , rulesHtml="" , isInputCurrect=true] = tools_validtor.validtor_checkList(input , prop_listRules);
 
         this.set("var_htmlRules", rulesHtml);
         this.set("var_validation_msg", messages);
@@ -9727,49 +10027,6 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
     }
 
 
-    fn_readyListRules_checkInputChar(input , params) {
-        let min = 4;
-        if (params != null && params.hasOwnProperty("min")){
-            min = params.min
-        }
-        const nonDigitChars = input.split('').filter(char => !/\d/.test(char));
-        return nonDigitChars.length >= min;
-    }
-
-    fn_readyListRules_checkInputNum(input , params) {
-        let min = 1;
-        if (params != null && params.hasOwnProperty("min")){
-            min = params.min
-        }
-        const digitChars = input.split('').filter(char => /\d/.test(char));
-        return digitChars.length >= min;
-    }
-
-    fn_readyListRules_checkInputText(input , params) {
-        let min = 8;
-        if (params != null && params.hasOwnProperty("min")){
-            min = params.min
-        }
-        return input.length >= min;
-    }
-
-    fn_readyListRules_checkInputForbidden(input , params) {
-        let validPattern = /^[a-zA-Z0-9]*$/;
-        if (params != null && params.hasOwnProperty("chars")){
-            const escapedParams = params.chars.map(c => '\\' + c).join('');
-            validPattern = new RegExp(`^[a-zA-Z0-9${escapedParams}]*$`);
-        }
-        return validPattern.test(input);
-    }
-
-    fn_readyListRules_checkExistChartUpper(input , params) {
-        let min = 1;
-        if (params != null && params.hasOwnProperty("min")){
-            min = params.min
-        }
-        const regex = new RegExp(`(?:.*[A-Z]){${min},}`);
-        return regex.test(input);
-    }
 
 }
 

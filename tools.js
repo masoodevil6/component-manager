@@ -765,11 +765,27 @@ tools_public = {
         return  null;
     } ,
 
+    parseJson(jsonStr){
+        try {
+            return JSON.parse(jsonStr);
+        }
+        catch (e){
+            console.error("json pareser error" , jsonStr  , e)
+        }
+        return  null;
+    } ,
+
     getCopyText(txt){
         navigator.clipboard.writeText(txt).then(() => {
             console.log('متن کپی شد: ' , txt);
         }).catch(err => {
             console.error('خطا در کپی کردن متن: ', err);
+        });
+    } ,
+
+    replaceInTextWithPatternParams(template, params) {
+        return template.replace(/{{(.*?)}}/g, (match, key) => {
+            return params[key.trim()] ?? match;
         });
     }
 
@@ -833,9 +849,6 @@ tools_stepper = {
         return node;
     }
 }
-
-
-
 
 
 
@@ -1046,6 +1059,149 @@ tools_svg = {
 
 
 
+
+
+tools_validtor = {
+
+    validtor_checkList(input , listRules , directionRtl) {
+        let messages = [];
+        let rulesHtml = "";
+        let isInputCurrect = true;
+
+        for (let i = 0; i < listRules.length; i++) {
+            const itemRule = listRules[i];
+            if (itemRule.hasOwnProperty("description") && itemRule.hasOwnProperty("params") && itemRule.hasOwnProperty("rule")) {
+                let description = itemRule.description;
+                const rule = itemRule.rule;
+                const params = itemRule.params;
+
+                let isTrue = false;
+                switch (rule) {
+                    case "_is_email" :
+                        [isTrue , description] = tools_validtor.validtor_checkIsEmail(input, params , description)
+                        break;
+                    case "_not_empty" :
+                        [isTrue , description] = tools_validtor.validtor_checkNotEmpty(input, params , description)
+                        break;
+                    case "_char_length" :
+                        [isTrue , description] = tools_validtor.validtor_checkInputChar(input, params , description)
+                        break;
+                    case "_num_length" :
+                        [isTrue , description] = tools_validtor.validtor_checkInputNum(input, params , description)
+                        break;
+                    case "_text_length" :
+                        [isTrue , description] = tools_validtor.validtor_checkInputText(input, params , description)
+                        break;
+                    case "_text_forbidden" :
+                        [isTrue , description] = tools_validtor.validtor_checkInputForbidden(input, params , description)
+                        break;
+                    case "_text_char_upper" :
+                        [isTrue , description] = tools_validtor.validtor_checkExistChartUpper(input, params , description)
+                        break;
+                }
+
+                if (!isTrue) {
+                    messages.push(description)
+                    isInputCurrect = false;
+                }
+
+                const icon = isTrue ? tools_icons.icon_is_true() : tools_icons.icon_is_false();
+                const color = isTrue ? "text-success" : "text-danger";
+
+                rulesHtml +=
+                    `
+                    <div style="display: flow-root"  class="item_country_code pt-1 border-bottom mx-1 line-height-30px font-12pt ${color}" >
+                        <span class="icon-rule  ${directionRtl ? "float-end" : "float-start"}"   ms-1">${icon}</span>
+                        <span class="ms-3 ${directionRtl ? "float-end" : "float-start"}"> - ${description}</span>
+                    </div>
+                    `;
+
+            }
+        }
+
+        return [messages , rulesHtml , isInputCurrect]
+    } ,
+
+    validtor_checkIsEmail(input , params , description) {
+        let isValid = true;
+
+        if (!input) {
+            isValid = false;
+        } else {
+            const value = input.trim();
+
+            // regex ساده برای فرمت ایمیل
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            isValid = emailRegex.test(value);
+        }
+
+        return [isValid, tools_public.replaceInTextWithPatternParams(description, params)];
+    } ,
+
+    validtor_checkNotEmpty(input , params , description) {
+        let isNotEmpty = true;
+        if (!input) isNotEmpty = false;
+        else{
+            const value = input.trim(); // حذف فاصله‌های ابتدا/انتها
+            isNotEmpty = value.length > 0;
+        }
+        return [isNotEmpty , tools_public.replaceInTextWithPatternParams(description , params) ];
+    } ,
+
+    validtor_checkInputChar(input , params , description) {
+        let min = 4;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const nonDigitChars = input.split('').filter(char => !/\d/.test(char));
+        return [nonDigitChars.length >= min , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+    validtor_checkInputNum(input , params , description) {
+        let min = 1;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const digitChars = input.split('').filter(char => /\d/.test(char));
+        return [digitChars.length >= min , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+    validtor_checkInputText(input , params , description) {
+        let min = 8;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        return [input.length >= min , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+    validtor_checkInputForbidden(input , params , description) {
+        let validPattern = /^[a-zA-Z0-9]*$/;
+        if (params != null && params.hasOwnProperty("chars")){
+            const escapedParams = params.chars.map(c => '\\' + c).join('');
+            validPattern = new RegExp(`^[a-zA-Z0-9${escapedParams}]*$`);
+        }
+        return [validPattern.test(input) , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+    validtor_checkExistChartUpper(input , params , description) {
+        let min = 1;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const regex = new RegExp(`(?:.*[A-Z]){${min},}`);
+        return [regex.test(input) , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+
+
+}
+
+
+
+
+
+
 tools_icons = {
 
     icon_visit(){
@@ -1090,6 +1246,27 @@ tools_icons = {
   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
         d="M6 18L18 6M6 6l12 12" />
 </svg>
+`;
+    } ,
+
+    icon_email(bg_color="#e7e7e7"){
+        return `
+<svg class="icon-email outline" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="false">
+  <title>ایمیل</title>
+  <rect x="2" y="5" width="20" height="14" rx="2" stroke="${bg_color}" stroke-width="1.5" fill="none"/>
+  <path d="M3 7.5L12 13L21 7.5" stroke="${bg_color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+    } ,
+
+    icon_password(bg_color="#e7e7e7"){
+        return `
+<svg class="icon-password lock" width="24" height="24" viewBox="0 0 24 24" fill="none"
+     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="5" y="10" width="14" height="10" rx="2" stroke="${bg_color}" stroke-width="1.5"/>
+  <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="${bg_color}" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+
 `;
     } ,
 

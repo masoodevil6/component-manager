@@ -57,7 +57,10 @@
 
                 <component-form       id="form">
                     <component-body>
-                        form data
+
+                        <component-input-email  id="input_email"></component-input-email>
+
+                        <component-input-password  id="input_password"></component-input-password>
                     </component-body>
                 </component-form>
 
@@ -88,10 +91,14 @@
                 <component-date  id="input_date"></component-date>
 
                 <component-input-file  id="input_file"></component-input-file>
-                <component-input-password  id="input_password"></component-input-password>
 
 
 
+
+                <div class="col-md-3 col-12 mt-2">
+                    <input  id="input_component_validate"/>
+                    <component-validate  id="component_validate"></component-validate>
+                </div>
 
             </section>
 
@@ -282,10 +289,6 @@
     </component-collapse>
 
 
-    <div class="col-md-3 col-12 mt-2">
-        <input  id="input_component_validate"/>
-        <component-validate  id="component_validate"></component-validate>
-    </div>
 
 </section>
 
@@ -559,58 +562,9 @@
         }
     )
 
-    /*-------------------------------------
-      03-02)  Component Select Option
-    -------------------------------------*/
-
-    new window.ComponentSelectOption(
-        "select-option-1" ,
-        {
-            classList: "col-md-3 col-12 mt-2"  ,
-
-            prop_name:"select_option" ,
-            prop_title:"select options" ,
-            prop_itemSelected: 1 ,
-            prop_icon: "&#10124;" ,
-            prop_options: [
-                {name: "default"} ,
-                {id:1 , name: "test 1"} ,
-                {id:2 , name: "test 2"} ,
-                {id:3 , name: "test 3"} ,
-                {id:4 , name: "test 4"} ,
-                {id:5 , name: "test 5"} ,
-                {id:6 , name: "test 6"} ,
-            ] ,
-            prop_listIcons: [
-                {
-                    icon: "&#10124;" ,
-                    name: "methodOne" ,
-                    method: (event , id) => {
-                        alert(`item selected [1]: ${id}`)
-                    } ,
-                } ,
-                {
-                    icon: "&#10125;" ,
-                    name: "methodTwo" ,
-                    method: (event , id) => {
-                        alert(`item selected [2]: ${id}`)
-                    }
-                }
-            ],
-
-            prop_btnAddStatus: true ,
-
-            fn_callback:  (event , index)=>{
-                alert(index)
-            } ,
-            fn_clickBtnTools: (event , index)=>{
-                alert(index)
-            }
-        }
-    )
 
     /*-------------------------------------
-    03-03)  Component otp
+    03-02)  Component otp
     -------------------------------------*/
     const otp = new window.ComponentOtp(
         "otp" ,
@@ -637,7 +591,7 @@
 
 
     /*-------------------------------------
-     03-04)   Component Input
+     03-03)   Component Input
     -------------------------------------*/
     new window.ComponentInput(
         "input" ,
@@ -671,7 +625,7 @@
 
 
     /*-------------------------------------
-       03-05) Component Input Price
+       03-04) Component Input Price
     -------------------------------------*/
     const cImputPrice = new window.ComponentInputPrice(
         "input_price" ,
@@ -718,20 +672,55 @@
     )
 
     /*-------------------------------------
-      03-06) Component Date
+      03-05) Component Input Password
     -------------------------------------*/
-    new window.ComponentDate(
-        "input_date" ,
+    new window.ComponentInputPassword(
+        "input_password" ,
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_title: "input date" ,
-            prop_type: 0,
+            prop_name: "password" ,
+            prop_title: "input password" ,
+           // prop_isAbsoluteRule: false ,
+            prop_listRules : [
+                {
+                    description: "تعداد کاراکترها باید {{min}} باشد",
+                    rule : "_char_length" ,
+                    params: {
+                        min:4
+                    }
+                } ,
+                {
+                    description: "تعداد عددها باید {{min}} باشد",
+                    rule : "_num_length" ,
+                    params: {
+                        min:4
+                    }
+                }
+            ]
         }
     )
 
     /*-------------------------------------
-      03-06) Component Input File
+      03-05) Component Input Email
+    -------------------------------------*/
+    new window.ComponentInputEmail(
+        "input_email" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name: "email" ,
+            prop_title: "input email" ,
+            prop_listRules :[]
+        }
+    )
+
+
+
+
+
+    /*-------------------------------------
+      03-07) Component Input File
     -------------------------------------*/
     new window.ComponentInputFile(
         "input_file" ,
@@ -746,35 +735,71 @@
     )
 
     /*-------------------------------------
-      03-07) Component Input Password
+      03-08) Component Date
     -------------------------------------*/
-    new window.ComponentInputPassword(
-        "input_password" ,
+    new window.ComponentDate(
+        "input_date" ,
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_title: "input password" ,
-            prop_icon: "&#10124;" ,
-            prop_listRules : [
-                {
-                    description: "test 1",
-                    rule : "_char_length" ,
-                    params: {
-                        min:4
-                    }
-                } ,
-                {
-                    description: "test 2",
-                    rule : "_num_length" ,
-                    params: {
-                        min:4
-                    }
-                }
-            ]
+            prop_title: "input date" ,
+            prop_type: 0,
         }
     )
+
+
     /*-------------------------------------
-      03-07) Component validate
+      03-09)  Component Select Option
+    -------------------------------------*/
+    new window.ComponentSelectOption(
+        "select-option-1" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"select_option" ,
+            prop_title:"select options" ,
+            prop_itemSelected: 1 ,
+            prop_icon: "&#10124;" ,
+            prop_options: [
+                {name: "default"} ,
+                {id:1 , name: "test 1"} ,
+                {id:2 , name: "test 2"} ,
+                {id:3 , name: "test 3"} ,
+                {id:4 , name: "test 4"} ,
+                {id:5 , name: "test 5"} ,
+                {id:6 , name: "test 6"} ,
+            ] ,
+            prop_listIcons: [
+                {
+                    icon: "&#10124;" ,
+                    name: "methodOne" ,
+                    method: (event , id) => {
+                        alert(`item selected [1]: ${id}`)
+                    } ,
+                } ,
+                {
+                    icon: "&#10125;" ,
+                    name: "methodTwo" ,
+                    method: (event , id) => {
+                        alert(`item selected [2]: ${id}`)
+                    }
+                }
+            ],
+
+            prop_btnAddStatus: true ,
+
+            fn_callback:  (event , index)=>{
+                alert(index)
+            } ,
+            fn_clickBtnTools: (event , index)=>{
+                alert(index)
+            }
+        }
+    )
+
+
+    /*-------------------------------------
+      03-010) Component validate
     -------------------------------------*/
     new window.ComponentValidate(
         "component_validate" ,
@@ -785,14 +810,14 @@
             prop_reference: "input_component_validate" ,
             prop_listRules : [
                 {
-                    description: "test 1",
+                    description: "تعداد کاراکترها باید {{min}} باشد",
                     rule : "_char_length" ,
                     params: {
                         min:4
                     }
                 } ,
                 {
-                    description: "test 2",
+                    description: "تعداد عددها باید {{min}} باشد",
                     rule : "_num_length" ,
                     params: {
                         min:4
@@ -1489,7 +1514,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [02] Fetch " ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -1596,5 +1621,11 @@
             prop_bodyShow: false
         }
     )
+
+
+
+
+    const c = new window.ComponentMessages("" , {});
+    console.log(c._COMPONENT_PROPS)
 
 </script>

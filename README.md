@@ -599,6 +599,7 @@
 
 @prop_hasRules
 @prop_listRules
+@prop_isAbsoluteRule
 -------------------------------------*/
     new window.ComponentInputPassword(
         "element_id" ,
