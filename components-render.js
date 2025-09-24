@@ -139,17 +139,15 @@ if (typeof listComponentCategory === 'undefined') {
 
 
 
+
+
 /*-------------------------------------
- 01-01) Component Messages
+A-01) Component Render
 -------------------------------------
 @prop_show
 @prop_structureClass
 @prop_structureStyles
 
-@prop_type                            // success[default] | error | warning | null
-@prop_background
-@prop_color
-@prop_messages
 -------------------------------------*/
 window.ComponentRender = class ComponentRender extends ComponentBase{
 
@@ -165,7 +163,7 @@ window.ComponentRender = class ComponentRender extends ComponentBase{
 
     _COMPONENT_SCHEMA = {
         part_structure: {
-            
+
         }
     }
 

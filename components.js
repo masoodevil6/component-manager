@@ -656,11 +656,11 @@ class ComponentBase{
 @prop_color
 @prop_messages
 -------------------------------------*/
-window.ComponentMessages = class ComponentMessages extends ComponentBase{
+class ComponentMessagesBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
-    --------------------------------------------- */
+   PROPERTYs
+   --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -684,6 +684,8 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
     }
 
 
+}
+window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase{
 
     /* ---------------------------------------------
        SETUP
@@ -853,6 +855,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 }
 
 
+
 /*-------------------------------------
  01-02) Component Is Empty
 -------------------------------------
@@ -873,7 +876,8 @@ window.ComponentMessages = class ComponentMessages extends ComponentBase{
 
 @fn_callback
 -------------------------------------*/
-window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
+class ComponentIsEmptyBase extends ComponentBase{
+
 
     /* ---------------------------------------------
     PROPERTYs
@@ -914,7 +918,8 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
         }
     }
 
-
+}
+window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
 
     /* ---------------------------------------------
        SETUP
@@ -1127,7 +1132,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentBase{
 @prop_size
 @prop_title
 -------------------------------------*/
-window.ComponentHeader = class ComponentHeader extends ComponentBase{
+class ComponentHeaderBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs
@@ -1158,7 +1163,8 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
         }
     }
 
-
+}
+window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
 
     /* ---------------------------------------------
        SETUP
@@ -1306,8 +1312,7 @@ window.ComponentHeader = class ComponentHeader extends ComponentBase{
 
 @fn_callback
 -------------------------------------*/
-window.ComponentLabel  = class ComponentLabel extends ComponentBase{
-
+class ComponentLabelBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs
@@ -1341,9 +1346,8 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
         } ,
     }
 
-
-
-
+}
+window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
 
     /* ---------------------------------------------
        SETUP
@@ -1540,7 +1544,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentBase{
 @prop_titleClass
 @prop_titleStyles
 -------------------------------------*/
-window.ComponentLink = class ComponentLink extends ComponentBase{
+class ComponentLinkBase extends ComponentBase{
 
 
     /* ---------------------------------------------
@@ -1596,7 +1600,8 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
         } ,
     }
 
-
+}
+window.ComponentLink = class ComponentLink extends ComponentLinkBase{
 
     /* ---------------------------------------------
        SETUP
@@ -1836,11 +1841,11 @@ window.ComponentLink = class ComponentLink extends ComponentBase{
 @prop_height
 @prop_button   title_more|title_less|prop_show
 -------------------------------------*/
-window.ComponentDescription = class ComponentDescription extends ComponentBase{
+class ComponentDescriptionBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
-    --------------------------------------------- */
+       PROPERTYs
+      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -1884,7 +1889,8 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
         } ,
     }
 
-
+}
+window.ComponentDescription = class ComponentDescription extends ComponentDescriptionBase{
 
     /* ---------------------------------------------
        SETUP
@@ -2147,11 +2153,11 @@ window.ComponentDescription = class ComponentDescription extends ComponentBase{
 @prop_infoClass
 @prop_infoStyles
 -------------------------------------*/
-window.ComponentInfo = class ComponentInfo extends ComponentBase{
+class ComponentInfoBase extends ComponentBase{
 
     /* ---------------------------------------------
-  PROPERTYs
- --------------------------------------------- */
+    PROPERTYs
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -2174,6 +2180,9 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
             part_content: {} ,
         } ,
     }
+
+}
+window.ComponentInfo = class ComponentInfo extends ComponentInfoBase{
 
 
     /* ---------------------------------------------
@@ -2309,11 +2318,11 @@ window.ComponentInfo = class ComponentInfo extends ComponentBase{
 @prop_cardBodyClassBackground
 @prop_cardBodyClassColor
 -------------------------------------*/
-window.ComponentCard = class ComponentCard extends ComponentBase {
+class ComponentCardBase extends ComponentBase{
 
     /* ---------------------------------------------
-  PROPERTYs
- --------------------------------------------- */
+    PROPERTYs
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -2341,6 +2350,8 @@ window.ComponentCard = class ComponentCard extends ComponentBase {
         },
     }
 
+}
+window.ComponentCard = class ComponentCard extends ComponentCardBase {
 
     /* ---------------------------------------------
        SETUP
@@ -2490,7 +2501,7 @@ window.ComponentCard = class ComponentCard extends ComponentBase {
 @prop_background_loading
 @prop_background_shadow
 -------------------------------------*/
-window.ComponentLoading = class ComponentLoading extends ComponentBase{
+class ComponentLoadingBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs
@@ -2512,8 +2523,8 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
         },
     }
 
-
-
+}
+window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
 
     /* ---------------------------------------------
        SETUP
@@ -2667,11 +2678,11 @@ window.ComponentLoading = class ComponentLoading extends ComponentBase{
 
 @fn_callback
 -------------------------------------*/
-window.Component404 = class Component404 extends ComponentBase{
+class Component404Base extends ComponentBase{
 
     /* ---------------------------------------------
-  PROPERTYs
-  --------------------------------------------- */
+     PROPERTYs
+     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -2693,6 +2704,8 @@ window.Component404 = class Component404 extends ComponentBase{
         }
     }
 
+}
+window.Component404 = class Component404 extends Component404Base{
 
 
     /* ---------------------------------------------
@@ -3009,7 +3022,7 @@ window.Component404 = class Component404 extends ComponentBase{
 @prop_url
 @prop_data
 -------------------------------------*/
-window.ComponentForm = class ComponentForm extends ComponentBase{
+class ComponentFormBase extends ComponentBase{
 
     /* ---------------------------------------------
       PROPERTYs
@@ -3049,8 +3062,8 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
         }
     }
 
-
-
+}
+window.ComponentForm = class ComponentForm extends ComponentFormBase{
 
     /* ---------------------------------------------
        SETUP
@@ -3312,10 +3325,7 @@ window.ComponentForm = class ComponentForm extends ComponentBase{
 //call_fetchWidget
 //call_getComponentLayout
 -------------------------------------*/
-window.ComponentWidget = class ComponentWidget extends ComponentBase{
-
-    _COMPONENT_LAYOUT = null;
-
+class ComponentWidgetBase extends ComponentBase{
 
     /* ---------------------------------------------
       PROPERTYs
@@ -3340,6 +3350,10 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
         } ,
     }
 
+}
+window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
+
+    _COMPONENT_LAYOUT = null;
 
     /* ---------------------------------------------
        SETUP
@@ -3589,7 +3603,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentBase{
 
 //call_getIframe
 -------------------------------------*/
-window.ComponentIframe = class ComponentIframe extends ComponentBase{
+class ComponentIframeBase extends ComponentBase{
 
     /* ---------------------------------------------
       PROPERTYs
@@ -3612,6 +3626,9 @@ window.ComponentIframe = class ComponentIframe extends ComponentBase{
             part_iframe:{}
         } ,
     }
+
+}
+window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
 
 
     /* ---------------------------------------------
@@ -3738,12 +3755,11 @@ window.ComponentIframe = class ComponentIframe extends ComponentBase{
 
 @fn_callback
 -------------------------------------*/
-window.ComponentButton = class ComponentButton extends ComponentBase{
-
+class ComponentButtonBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
-    --------------------------------------------- */
+     PROPERTYs
+     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -3767,8 +3783,8 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
         }
     }
 
-
-
+}
+window.ComponentButton = class ComponentButton extends ComponentButtonBase{
 
     /* ---------------------------------------------
         SETUP
@@ -3911,14 +3927,11 @@ window.ComponentButton = class ComponentButton extends ComponentBase{
 //call_startCountdown
 //call_getValue
 -------------------------------------*/
-window.ComponentOtp = class ComponentOtp extends ComponentBase{
-
-    _TIME_CURRENT = null;
-    _TIME_INTRVAl = null;
+class ComponentOtpBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
-    --------------------------------------------- */
+     PROPERTYs
+   --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -3967,6 +3980,11 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
         } ,
     }
 
+}
+window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
+
+    _TIME_CURRENT = null;
+    _TIME_INTRVAl = null;
 
     /* ---------------------------------------------
        SETUP
@@ -4361,7 +4379,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentBase{
 @fn_clickBtnTools
 //call_setValue
 -------------------------------------*/
-window.ComponentInput = class ComponentInput extends ComponentBase{
+class ComponentInputBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs
@@ -4414,8 +4432,8 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
         } ,
     }
 
-
-
+}
+window.ComponentInput = class ComponentInput extends ComponentInputBase{
 
     /* ---------------------------------------------
        SETUP
@@ -4811,7 +4829,8 @@ window.ComponentInput = class ComponentInput extends ComponentBase{
 
 @fn_clickBtnTools
 -------------------------------------*/
-window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
+class ComponentInputPriceBase extends ComponentBase{
+
 
     /* ---------------------------------------------
     PROPERTYs
@@ -4867,8 +4886,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
         } ,
     }
 
-
-
+}
+window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPriceBase{
 
     /* ---------------------------------------------
        SETUP
@@ -5356,13 +5375,11 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentBase{
 @prop_listRules
 @prop_isAbsoluteRule
 -------------------------------------*/
-window.ComponentInputPassword = class ComponentInputPassword extends ComponentBase{
-
-    _STATUS_IS_SHOW = false;
+class ComponentInputPasswordBase extends ComponentBase{
 
     /* ---------------------------------------------
-   PROPERTYs
-   --------------------------------------------- */
+      PROPERTYs
+      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -5418,7 +5435,10 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
         } ,
     }
 
+}
+window.ComponentInputPassword = class ComponentInputPassword extends ComponentInputPasswordBase{
 
+    _STATUS_IS_SHOW = false;
 
     /* ---------------------------------------------
        SETUP
@@ -5884,13 +5904,11 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentBa
 @prop_listRules
 @prop_isAbsoluteRule
 -------------------------------------*/
-window.ComponentInputEmail = class ComponentInputEmail extends ComponentBase{
-
-    _STATUS_IS_SHOW = false;
+class ComponentInputEmailBase extends ComponentBase{
 
     /* ---------------------------------------------
-   PROPERTYs
-   --------------------------------------------- */
+  PROPERTYs
+  --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -5941,7 +5959,10 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentBase{
         } ,
     }
 
+}
+window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEmailBase{
 
+    _STATUS_IS_SHOW = false;
 
     /* ---------------------------------------------
        SETUP
@@ -6309,13 +6330,11 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentBase{
 
 @fn_callback
 -------------------------------------*/
-window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
-
-    _COMPONENT_WINDOW_DELETE = null;
+class ComponentInputFileBase extends ComponentBase{
 
     /* ---------------------------------------------
-   PROPERTYs
-   --------------------------------------------- */
+      PROPERTYs
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -6382,7 +6401,10 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
         } ,
     }
 
+}
+window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileBase{
 
+    _COMPONENT_WINDOW_DELETE = null;
 
     /* ---------------------------------------------
        SETUP
@@ -7090,24 +7112,11 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentBase{
 @prop_titleDay5
 @prop_titleDay6
 -------------------------------------*/
-window.ComponentDate = class ComponentDate extends ComponentBase{
-
-    SHOW_DATE_BODY = false;
-    TIMEINTERVAL_INPUTS = null;
-    TIMEINTERVAL_INPUTS_DURATION = 250;
-
-    TYPE_YAER = "YEAR";
-    TYPE_MONTH = "MONTH";
-    TYPE_DAY = "DAY";
-
-    TYPE_INPUT_ONE_DIGIT = 0;
-    TYPE_INPUT_PART_DIGIT = 1;
-    TYPE_INPUT_FULL_DIGIT = 2;
-    TYPE_INPUT_FRIZE_DIGIT = 3;
+class ComponentDateBase extends ComponentBase{
 
     /* ---------------------------------------------
-   PROPERTYs
-   --------------------------------------------- */
+     PROPERTYs
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
             {prop : "prop_backgroundMain"      ,  default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("backgroundColor_main")   ? tools_const.styles.inputDate.backgroundColor_main : ""} ,
@@ -7247,6 +7256,23 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
             } ,
         } ,
     }
+
+
+}
+window.ComponentDate = class ComponentDate extends ComponentDateBase{
+
+    SHOW_DATE_BODY = false;
+    TIMEINTERVAL_INPUTS = null;
+    TIMEINTERVAL_INPUTS_DURATION = 250;
+
+    TYPE_YAER = "YEAR";
+    TYPE_MONTH = "MONTH";
+    TYPE_DAY = "DAY";
+
+    TYPE_INPUT_ONE_DIGIT = 0;
+    TYPE_INPUT_PART_DIGIT = 1;
+    TYPE_INPUT_FULL_DIGIT = 2;
+    TYPE_INPUT_FRIZE_DIGIT = 3;
 
 
 
@@ -8929,6 +8955,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 
 
 
+
 /*-------------------------------------
  03-08) Component Select Option
 -------------------------------------
@@ -8977,9 +9004,7 @@ window.ComponentDate = class ComponentDate extends ComponentBase{
 @fn_callback
 @fn_clickBtnTools
 -------------------------------------*/
-window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase {
-
-    var_showFormSelectOption = false;
+class ComponentSelectOptionBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs
@@ -9064,6 +9089,10 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
     }
 
 
+}
+window.ComponentSelectOption = class ComponentSelectOption extends ComponentSelectOptionBase {
+
+    var_showFormSelectOption = false;
 
     /* ---------------------------------------------
        SETUP
@@ -9714,6 +9743,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 }
 
 
+
 /*-------------------------------------
  03-09) Component Validate
 -------------------------------------
@@ -9727,13 +9757,11 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentBase
 @prop_title
 
 -------------------------------------*/
-window.ComponentValidate = class ComponentValidate extends ComponentBase {
-
-    var_showFormSelectOption = false;
+class ComponentValidateBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
-    --------------------------------------------- */
+     PROPERTYs
+     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -9762,7 +9790,10 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
         } ,
     }
 
+}
+window.ComponentValidate = class ComponentValidate extends ComponentValidateBase {
 
+    var_showFormSelectOption = false;
 
     /* ---------------------------------------------
        SETUP
@@ -10054,9 +10085,7 @@ window.ComponentValidate = class ComponentValidate extends ComponentBase {
 @prop_description
 @prop_descriptionWidth
 -------------------------------------*/
-window.ComponentTooltipDescription = class ComponentTooltipDescription extends ComponentBase {
-
-    _COMPONENT_WINDOW_DELETE = null;
+class ComponentTooltipDescriptionBase extends ComponentBase{
 
     /* ---------------------------------------------
    PROPERTYs
@@ -10084,6 +10113,11 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
             part_description:{},
         },
     }
+
+}
+window.ComponentTooltipDescription = class ComponentTooltipDescription extends ComponentTooltipDescriptionBase {
+
+    _COMPONENT_WINDOW_DELETE = null;
 
 
     /* ---------------------------------------------
@@ -10295,12 +10329,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
 @prop_valueRow
 @prop_valueCol
 -------------------------------------*/
-window.ComponentTable = class ComponentTable extends ComponentBase{
-
-    TYPE_SELECTED_NONE = 0;
-    TYPE_SELECTED_ROW  = 1;
-    TYPE_SELECTED_COL  = 2;
-    TYPE_SELECTED_BOTH = 3;
+class ComponentTableBase extends ComponentBase{
 
 
     /* ---------------------------------------------
@@ -10366,7 +10395,13 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
         }
     }
 
+}
+window.ComponentTable = class ComponentTable extends ComponentTableBase{
 
+    TYPE_SELECTED_NONE = 0;
+    TYPE_SELECTED_ROW  = 1;
+    TYPE_SELECTED_COL  = 2;
+    TYPE_SELECTED_BOTH = 3;
 
     /* ---------------------------------------------
        SETUP
@@ -10790,12 +10825,11 @@ window.ComponentTable = class ComponentTable extends ComponentBase{
 
 @fn_callback
 -------------------------------------*/
-window.ComponentTabs = class ComponentTabs extends ComponentBase{
-
+class ComponentTabsBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
-    --------------------------------------------- */
+        PROPERTYs
+        --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -10814,7 +10848,8 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
         } ,
     }
 
-
+}
+window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
 
     /* ---------------------------------------------
        SETUP
@@ -11034,8 +11069,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentBase{
 @prop_itemSelected
 
 -------------------------------------*/
-window.ComponentTree = class ComponentTree extends ComponentBase{
-
+class ComponentTreeBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs
@@ -11058,6 +11092,8 @@ window.ComponentTree = class ComponentTree extends ComponentBase{
         } ,
     }
 
+}
+window.ComponentTree = class ComponentTree extends ComponentTreeBase{
 
 
     /* ---------------------------------------------
@@ -11304,11 +11340,11 @@ window.ComponentTree = class ComponentTree extends ComponentBase{
 @prop_body
 @prop_bodyShow
 -------------------------------------*/
-window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
+class ComponentCollapseBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
-    --------------------------------------------- */
+         PROPERTYs
+       --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -11339,6 +11375,8 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
         }
     }
 
+}
+window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase{
 
     /* ---------------------------------------------
        SETUP
@@ -11556,9 +11594,8 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentBase{
 // call_resize
 // call_minimize
 -------------------------------------*/
-window.ComponentWindow = class ComponentWindow extends ComponentBase {
+class ComponentWindowBase extends ComponentBase{
 
-    _IS_FULL_SIZE = false;
 
     /* ---------------------------------------------
       PROPERTYs
@@ -11618,6 +11655,10 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
         }
     }
 
+}
+window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
+
+    _IS_FULL_SIZE = false;
 
     /* ---------------------------------------------
        SETUP
@@ -12210,10 +12251,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentBase {
 // call_resize
 // call_minimize
 -------------------------------------*/
-window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBase {
-
-    _COMPONENT_WINDOW = null;
-    _COMPONENT_DATA_CALLBACK = null;
+class ComponentWindowConfirmBase extends ComponentBase{
 
     /* ---------------------------------------------
       PROPERTYs
@@ -12255,6 +12293,11 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
         }
     }
 
+}
+window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWindowConfirmBase {
+
+    _COMPONENT_WINDOW = null;
+    _COMPONENT_DATA_CALLBACK = null;
 
     /* ---------------------------------------------
        SETUP
@@ -12537,9 +12580,8 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentBa
 @prop_imageSelected
 @prop_images
 -------------------------------------*/
-window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping extends ComponentBase {
+class ComponentSliderShowOverlappingBase extends ComponentBase{
 
-    _TILE_INTERVAL = null;
 
     /* ---------------------------------------------
       PROPERTYs
@@ -12586,6 +12628,10 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
         }
     }
 
+}
+window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping extends ComponentSliderShowOverlappingBase {
+
+    _TILE_INTERVAL = null;
 
     /* ---------------------------------------------
        SETUP
@@ -12978,9 +13024,7 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
 @fn_callback
 @fn_onBackClick
 -------------------------------------*/
-window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
-
-    _TILE_INTERVAL = null;
+class ComponentBreadcrumbBase extends ComponentBase{
 
     /* ---------------------------------------------
       PROPERTYs
@@ -13014,6 +13058,10 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
         }
     }
 
+}
+window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcrumbBase {
+
+    _TILE_INTERVAL = null;
 
     /* ---------------------------------------------
        SETUP
@@ -13382,8 +13430,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBase {
 @prop_tooltip_header
 @prop_tooltip_format
 -------------------------------------*/
-window.ComponentChart = class ComponentChart extends ComponentBase{
-
+class ComponentChartBase extends ComponentBase{
 
     /* ---------------------------------------------
      PROPERTYs
@@ -13418,7 +13465,8 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
         } ,
     }
 
-
+}
+window.ComponentChart = class ComponentChart extends ComponentChartBase{
 
     /* ---------------------------------------------
        SETUP
@@ -13609,12 +13657,7 @@ window.ComponentChart = class ComponentChart extends ComponentBase{
 @prop_lineMarkerStart
 @prop_lineMarkerEnd
 -------------------------------------*/
-window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentBase{
-
-    _ZOOM_CENTER = true;
-    _OBJECTS = null;
-
-    _COMPONENT_MOUSE_SCROLLER = null;
+class ComponentChartTreeYBase extends ComponentBase{
 
     /* ---------------------------------------------
      PROPERTYs
@@ -13655,6 +13698,14 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentBase{
             }
         } ,
     }
+
+}
+window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentChartTreeYBase{
+
+    _ZOOM_CENTER = true;
+    _OBJECTS = null;
+
+    _COMPONENT_MOUSE_SCROLLER = null;
 
 
 
@@ -14144,11 +14195,11 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentBase{
 @prop_size
 @prop_version
 -------------------------------------*/
-window.ComponentQrCode = class ComponentQrCode extends ComponentBase{
+class ComponentQrCodeBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
-    --------------------------------------------- */
+    PROPERTYs
+   --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -14189,6 +14240,8 @@ window.ComponentQrCode = class ComponentQrCode extends ComponentBase{
         } ,
     }
 
+}
+window.ComponentQrCode = class ComponentQrCode extends ComponentQrCodeBase{
 
     /* ---------------------------------------------
        SETUP
@@ -14444,12 +14497,8 @@ TEMPLATEs
 
 @fn_callback
 -------------------------------------*/
-window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends ComponentBase{
+class ComponentCameraQrCodeReaderBase extends ComponentBase{
 
-    _COMPONENT_CAMERA = null;
-    _COMPONENT_ERROR_EXIST_CAMERA = null;
-    _COMPONENT_ERROR_PERMISION_CAMERA = null;
-    _COMPONENT_INPUT = null;
 
     /* ---------------------------------------------
     PROPERTYs
@@ -14494,7 +14543,13 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
         }
     }
 
+}
+window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends ComponentCameraQrCodeReaderBase{
 
+    _COMPONENT_CAMERA = null;
+    _COMPONENT_ERROR_EXIST_CAMERA = null;
+    _COMPONENT_ERROR_PERMISION_CAMERA = null;
+    _COMPONENT_INPUT = null;
 
     /* ---------------------------------------------
        SETUP
@@ -14779,12 +14834,7 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
 
 @fn_callback
 -------------------------------------*/
-window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends ComponentBase {
-
-    _COMPONENT_INPUT_FILE = null;
-    _COMPONENT_ERROR_EXIST_CAMERA = null;
-    _COMPONENT_ERROR_PERMISION_CAMERA = null;
-    _COMPONENT_INPUT = null;
+class ComponentUploadQrCodeReaderBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs
@@ -14808,6 +14858,14 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
             part_input: {}
         }
     }
+
+}
+window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends ComponentUploadQrCodeReaderBase {
+
+    _COMPONENT_INPUT_FILE = null;
+    _COMPONENT_ERROR_EXIST_CAMERA = null;
+    _COMPONENT_ERROR_PERMISION_CAMERA = null;
+    _COMPONENT_INPUT = null;
 
 
     /* ---------------------------------------------
@@ -14983,13 +15041,7 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
 
 @fn_callback
 -------------------------------------*/
-window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentBase {
-
-    _COMPONENT_LABEL = null;
-    _COMPONENT_TABS = null;
-    _COMPONENT_INPUT = null;
-    _COMPONENT_QR_CODE_CAMERA = null;
-    _COMPONENT_QR_CODE_UPLOAD = null;
+class ComponentQrCodeReaderBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs
@@ -15033,6 +15085,15 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentBase
             part_input: {}
         }
     }
+
+}
+window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCodeReaderBase {
+
+    _COMPONENT_LABEL = null;
+    _COMPONENT_TABS = null;
+    _COMPONENT_INPUT = null;
+    _COMPONENT_QR_CODE_CAMERA = null;
+    _COMPONENT_QR_CODE_UPLOAD = null;
 
 
     /* ---------------------------------------------
@@ -15312,11 +15373,11 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentBase
 @fn_onHoverIcon
 @fn_onBlurIcon
 -------------------------------------*/
-window.ComponentIcon  = class ComponentIcon extends ComponentBase{
+class ComponentIconBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
-    --------------------------------------------- */
+     PROPERTYs
+     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -15337,6 +15398,8 @@ window.ComponentIcon  = class ComponentIcon extends ComponentBase{
         }
     }
 
+}
+window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
 
     /* ---------------------------------------------
        SETUP
@@ -15468,11 +15531,11 @@ ${this.templateFn_render_icon("part_icon")}
 
 @prop_content
 -------------------------------------*/
-window.ComponentPositionElement  = class ComponentPositionElement extends ComponentBase{
+class ComponentPositionElementBase extends ComponentBase{
 
     /* ---------------------------------------------
-       PROPERTYs
-     --------------------------------------------- */
+     PROPERTYs
+   --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
@@ -15501,8 +15564,8 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
         } ,
     }
 
-
-
+}
+window.ComponentPositionElement  = class ComponentPositionElement extends ComponentPositionElementBase{
 
     /* ---------------------------------------------
        SETUP
@@ -15653,7 +15716,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 
 @fn_callback
 -------------------------------------*/
-window.ComponentBorder = class ComponentBorder extends ComponentBase{
+class ComponentBorderBase extends ComponentBase{
 
     /* ---------------------------------------------
      PROPERTYs
@@ -15682,7 +15745,8 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
         } ,
     }
 
-
+}
+window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
 
     /* ---------------------------------------------
        SETUP
@@ -15845,12 +15909,11 @@ window.ComponentBorder = class ComponentBorder extends ComponentBase{
 
 @fn_callback
 -------------------------------------*/
-window.ComponentImage = class ComponentImage extends ComponentBase{
-
+class ComponentImageBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
-    --------------------------------------------- */
+    PROPERTYs
+   --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
             {prop : "prop_structureClass"            , default: ["border" , "shadow-sm" , "rounded" , "px-1" , "px-2" , "mx-auto"]} ,
@@ -15871,6 +15934,8 @@ window.ComponentImage = class ComponentImage extends ComponentBase{
         } ,
     }
 
+}
+window.ComponentImage = class ComponentImage extends ComponentImageBase{
 
 
     /* ---------------------------------------------
@@ -15980,8 +16045,7 @@ window.ComponentImage = class ComponentImage extends ComponentBase{
 @prop_layoutStyles
 @prop_layoutContent
 -------------------------------------*/
-window.ComponentLayout = class ComponentLayout extends ComponentBase{
-
+class ComponentLayoutBase extends ComponentBase{
 
     /* ---------------------------------------------
      PROPERTYs
@@ -16004,7 +16068,8 @@ window.ComponentLayout = class ComponentLayout extends ComponentBase{
         } ,
     }
 
-
+}
+window.ComponentLayout = class ComponentLayout extends ComponentLayoutBase{
 
     /* ---------------------------------------------
        SETUP
@@ -16144,23 +16209,8 @@ window.ComponentLayout = class ComponentLayout extends ComponentBase{
 @prop_iconBgLight
 @prop_layoutContent
 -------------------------------------*/
-window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBase{
+class ComponentMouseScrollerBase extends ComponentBase{
 
-    _SCROLL_CENTER_X = 0 ;
-    _SCROLL_CENTER_Y = 0;
-
-    _BACKGROUND_TYPE_DARK = "dark";
-    _BACKGROUND_TYPE_LIGHT = "light";
-
-    _IS_DOWN=false;
-    _START_X=null;
-    _START_Y=null;
-    _SCROLL_TOP=null;
-    _SCROLL_LEFT=null;
-    _SCALE=1;
-    _STEP_SCALE = 0.5;
-    _MIN_SCALE = 0.4;
-    _MAX_SCALE = 3;
 
     /* ---------------------------------------------
      PROPERTYs
@@ -16232,6 +16282,26 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentBa
             part_layout_zoom_text: {}
         } ,
     }
+
+}
+window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMouseScrollerBase{
+
+    _SCROLL_CENTER_X = 0 ;
+    _SCROLL_CENTER_Y = 0;
+
+    _BACKGROUND_TYPE_DARK = "dark";
+    _BACKGROUND_TYPE_LIGHT = "light";
+
+    _IS_DOWN=false;
+    _START_X=null;
+    _START_Y=null;
+    _SCROLL_TOP=null;
+    _SCROLL_LEFT=null;
+    _SCALE=1;
+    _STEP_SCALE = 0.5;
+    _MIN_SCALE = 0.4;
+    _MAX_SCALE = 3;
+
 
 
 
