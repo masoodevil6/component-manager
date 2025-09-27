@@ -29,10 +29,12 @@
         ComponentInput:                      "component-input" ,                          //03-03
         ComponentInputPrice:                 "component-input-price" ,                    //03-04
         ComponentInputPassword:              "component-input-password" ,                 //03-05
-        ComponentInputFile:                  "component-input-file" ,                     //03-06
-        ComponentDate:                       "component-date" ,                           //03-07
-        ComponentSelectOption:               "component-select-option" ,                  //03-08
-        ComponentValidate:                   "component-validate" ,                       //03-09
+        ComponentInputEmail:                 "component-input-email" ,                    //03-06
+        ComponentInputFile:                  "component-input-file" ,                     //03-07
+        ComponentDate:                       "component-date" ,                           //03-08
+        ComponentSelectOption:               "component-select-option" ,                  //03-09
+        ComponentCheckBox:                   "component-check-box" ,                      //03-010
+        ComponentValidate:                   "component-validate" ,                       //03-011
         
 
         // [04] tooltips
@@ -611,10 +613,47 @@
 
 
 
-**03-06) Component Input File:**
+**03-06) Component Input Email:**
 ```
 /*-------------------------------------
- 03-06) Component Input File
+ 03-06) Component Input email
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_placeholder
+@prop_isDisable
+
+@prop_icon
+
+@prop_listRules
+@prop_isAbsoluteRule
+-------------------------------------*/
+    new window.ComponentInputEmail(
+        "element_id" ,
+        {
+
+        }
+    )
+```   
+
+
+
+**03-07) Component Input File:**
+```
+/*-------------------------------------
+ 03-07) Component Input File
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -658,11 +697,10 @@ new window.ComponentInputFile(
 
 
 
-
-**03-07) Component Date:**
+**03-08) Component Date:**
 ```
 /*-------------------------------------
- 03-07) Component Date
+ 03-08) Component Date
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -726,10 +764,10 @@ new window.ComponentInputFile(
 
 
 
-**03-08 Component Select Option:**
+**03-09 Component Select Option:**
 ```
 /*-------------------------------------
- 03-08) Component Select Option
+ 03-09) Component Select Option
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -783,10 +821,52 @@ new window.ComponentInputFile(
 ```
 
 
-**03-08 Component Validate:**
+
+**03-010 Component check box:**
 ```
 /*-------------------------------------
- 03-09) Component Validate
+ 03-010) Component check box
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_isSelected
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderColor
+@prop_backgroundColor_unSelected
+@prop_backgroundColor_selected
+@prop_backgroundColor_disable
+@prop_formClass
+@prop_formStyles
+@prop_isDisable
+
+@prop_icon
+
+@prop_isAbsoluteRule
+@prop_listRules
+
+-------------------------------------*/
+    new window.ComponentCheckBox(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+**03-011 Component Validate:**
+```
+/*-------------------------------------
+ 03-011) Component Validate
 -------------------------------------
 @prop_show
 @prop_structureClass

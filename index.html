@@ -92,13 +92,14 @@
 
                 <component-input-file  id="input_file"></component-input-file>
 
-
-
-
                 <div class="col-md-3 col-12 mt-2">
                     <input  id="input_component_validate"/>
                     <component-validate  id="component_validate"></component-validate>
                 </div>
+
+                <component-check-box  id="check_box"></component-check-box>
+
+                <component-input-color  id="input-color"></component-input-color>
 
             </section>
 
@@ -671,6 +672,25 @@
         }
     )
 
+
+
+    /*-------------------------------------
+      03-04) Component check box
+    -------------------------------------*/
+    new window.ComponentInputColor(
+        "input-color" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"input color" ,
+            prop_title:"color picker" ,
+
+
+        }
+    )
+
+
+
     /*-------------------------------------
       03-05) Component Input Password
     -------------------------------------*/
@@ -799,7 +819,25 @@
 
 
     /*-------------------------------------
-      03-010) Component validate
+      03-010) Component check box
+    -------------------------------------*/
+    new window.ComponentCheckBox(
+        "check_box" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"check_box" ,
+            prop_title:"check box" ,
+            //prop_isDisable:true ,
+            prop_isSelected:true ,
+
+
+        }
+    )
+
+
+    /*-------------------------------------
+      03-011) Component validate
     -------------------------------------*/
     new window.ComponentValidate(
         "component_validate" ,
@@ -826,6 +864,7 @@
             ]
         }
     )
+
 
 
 
@@ -1514,7 +1553,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [02] Fetch " ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(

@@ -174,6 +174,19 @@ tools_init = {
                 textColor : component_props.primaryColor1 ,
             } ,
 
+            inputCheckBox: {
+                boderColor :                    component_props.darkColor2 ,
+                backgroundColor_unSelected :    component_props.shanColor1 ,
+                backgroundColor_selected :      component_props.primaryColor1 ,
+                backgroundColor_disable :       component_props.darkColor2 ,
+            } ,
+
+            inputColor: {
+                boderColor :                    component_props.darkColor2 ,
+                backgroundColor_body :          component_props.shanColor1 ,
+                color_body :                    component_props.darkColor1 ,
+            } ,
+
             window: {
                 backgroundColor_blur : component_props.shadowColor1 ,
                 backgroundColor_window : component_props.shanColor1 ,
@@ -1193,9 +1206,9 @@ tools_validtor = {
         return [regex.test(input) , tools_public.replaceInTextWithPatternParams(description , params)];
     } ,
 
-
-
 }
+
+
 
 
 
@@ -1204,70 +1217,162 @@ tools_validtor = {
 
 tools_icons = {
 
-    icon_visit(){
+    icon_visit(color = "#ffffff", size = 24) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
-     fill="none" viewBox="0 0 24 24" stroke="currentColor" 
-     width="24" height="24">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+     fill="none" 
+     viewBox="0 0 24 24" 
+     stroke="${color}" 
+     width="${size}" height="${size}">
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
         d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 012.041-3.362M9.88 9.88a3 3 0 104.24 4.24M6.1 6.1l11.8 11.8M17.94 17.94A9.969 9.969 0 0021.542 12a9.97 9.97 0 00-4.133-5.868" />
-</svg>`;
+</svg>
+`;
     } ,
 
-    icon_un_visit(){
+
+
+
+
+    icon_un_visit(color = "#ffffff", size = 24) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
-     fill="none" viewBox="0 0 24 24" stroke="currentColor" 
-     width="24" height="24">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+     fill="none" 
+     viewBox="0 0 24 24" 
+     stroke="${color}" 
+     width="${size}" height="${size}">
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
 </svg>
 `;
     } ,
 
-    icon_is_true(){
+
+
+
+
+
+    icon_is_true(color = "#4caf50", size = 24) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
-     fill="none" viewBox="0 0 24 24" stroke="currentColor" 
-     width="24" height="24">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+     fill="none" 
+     viewBox="0 0 24 24" 
+     stroke="${color}" 
+     width="${size}" height="${size}">
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
         d="M5 13l4 4L19 7" />
 </svg>
 `;
     } ,
 
-    icon_is_false(){
+
+
+
+    icon_is_false(color = "#f44336", size = 24) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
-     fill="none" viewBox="0 0 24 24" stroke="currentColor" 
-     width="24" height="24">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+     fill="none" 
+     viewBox="0 0 24 24" 
+     stroke="${color}" 
+     width="${size}" height="${size}">
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
         d="M6 18L18 6M6 6l12 12" />
 </svg>
 `;
     } ,
 
-    icon_email(bg_color="#e7e7e7"){
+
+
+
+    icon_email(bg_color = "#e7e7e7", size = 24) {
         return `
-<svg class="icon-email outline" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="false">
+<svg class="icon-email outline" 
+     width="${size}" height="${size}" 
+     viewBox="0 0 24 24" 
+     fill="none" 
+     xmlns="http://www.w3.org/2000/svg" 
+     role="img" aria-hidden="false">
   <title>ایمیل</title>
-  <rect x="2" y="5" width="20" height="14" rx="2" stroke="${bg_color}" stroke-width="1.5" fill="none"/>
-  <path d="M3 7.5L12 13L21 7.5" stroke="${bg_color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="2" y="5" width="20" height="14" rx="2" 
+        stroke="${bg_color}" 
+        stroke-width="1.5" 
+        fill="none"/>
+  <path d="M3 7.5L12 13L21 7.5" 
+        stroke="${bg_color}" 
+        stroke-width="1.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
 </svg>
 `;
     } ,
 
-    icon_password(bg_color="#e7e7e7"){
+
+
+
+
+    icon_lock(bg_color = "#e7e7e7", size = 24) {
         return `
-<svg class="icon-password lock" width="24" height="24" viewBox="0 0 24 24" fill="none"
-     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <rect x="5" y="10" width="14" height="10" rx="2" stroke="${bg_color}" stroke-width="1.5"/>
-  <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="${bg_color}" stroke-width="1.5" stroke-linecap="round"/>
+<svg class="icon-password lock" 
+     width="${size}" height="${size}" 
+     viewBox="0 0 24 24" 
+     fill="none"
+     xmlns="http://www.w3.org/2000/svg" 
+     aria-hidden="true">
+  <rect x="5" y="10" width="14" height="10" rx="2" 
+        stroke="${bg_color}" 
+        stroke-width="1.5"/>
+  <path d="M8 10V7a4 4 0 0 1 8 0v3" 
+        stroke="${bg_color}" 
+        stroke-width="1.5" 
+        stroke-linecap="round"/>
 </svg>
-
 `;
     } ,
+
+
+
+
+
+
+    icon_tik(bg_color = "#e7e7e7", size = 20) {
+        return `
+<svg class="icon-selected-check" 
+     width="${size}" height="${size}" 
+     viewBox="0 0 24 24" 
+     fill="none" 
+     xmlns="http://www.w3.org/2000/svg" 
+     role="img" aria-hidden="false" 
+     style="padding:2px;">
+     
+  <title>selected</title>
+ 
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="-1.5" stdDeviation="1" flood-color="rgba(0,0,0,0.35)" />
+    </filter>
+  </defs>
+
+  <path d="M20 6L9 17l-5-5" 
+        stroke="${bg_color}" 
+        stroke-width="2.2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#shadow)" />
+        
+</svg>
+`;
+    }
 
 }
