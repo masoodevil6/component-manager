@@ -575,10 +575,97 @@
 ```   
 
 
-**03-05) Component Input Password:**
+
+**03-05) Component Input Color:**
 ```
 /*-------------------------------------
- 03-05) Component Input Password
+ 03-05) Component Input Color
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_colorSelected
+
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_colorSelected
+@prop_isDisable
+@prop_borderColor
+@prop_formClass
+@prop_formStyles
+
+@prop_optionHeight
+@prop_optionWidth
+@prop_optionStyles
+@prop_positionTop
+@prop_backgroundColorBody
+
+@prop_colorBody
+-------------------------------------*/
+    new window.ComponentInputColor(
+        "element_id" ,
+        {
+
+        }
+    )
+```   
+
+
+
+**03-06) Component Input size:**
+```
+/*-------------------------------------
+ 03-06) Component Input size
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_icon
+
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_value
+@prop_placeholder
+@prop_icon
+@prop_isDisable
+@prop_min
+@prop_max
+
+@prop_iconPositive
+@prop_iconNegetive
+
+@prop_isAbsoluteRule
+@prop_listRules
+-------------------------------------*/
+    new window.ComponentInputSize(
+        "element_id" ,
+        {
+
+        }
+    )
+```   
+
+
+
+
+**03-07) Component Input Password:**
+```
+/*-------------------------------------
+ 03-07) Component Input Password
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -613,10 +700,10 @@
 
 
 
-**03-06) Component Input Email:**
+**03-08) Component Input Email:**
 ```
 /*-------------------------------------
- 03-06) Component Input email
+ 03-08) Component Input email
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -650,10 +737,10 @@
 
 
 
-**03-07) Component Input File:**
+**03-09) Component Input File:**
 ```
 /*-------------------------------------
- 03-07) Component Input File
+ 03-09) Component Input File
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -697,10 +784,10 @@ new window.ComponentInputFile(
 
 
 
-**03-08) Component Date:**
+**03-010) Component Date:**
 ```
 /*-------------------------------------
- 03-08) Component Date
+ 03-010) Component Date
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -764,10 +851,10 @@ new window.ComponentInputFile(
 
 
 
-**03-09 Component Select Option:**
+**03-011 Component Select Option:**
 ```
 /*-------------------------------------
- 03-09) Component Select Option
+ 03-011) Component Select Option
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -822,10 +909,10 @@ new window.ComponentInputFile(
 
 
 
-**03-010 Component check box:**
+**03-012 Component check box:**
 ```
 /*-------------------------------------
- 03-010) Component check box
+ 03-012) Component check box
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -863,10 +950,10 @@ new window.ComponentInputFile(
 
 
 
-**03-011 Component Validate:**
+**03-013 Component Validate:**
 ```
 /*-------------------------------------
- 03-011) Component Validate
+ 03-013) Component Validate
 -------------------------------------
 @prop_show
 @prop_structureClass

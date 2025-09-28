@@ -101,6 +101,11 @@
 
                 <component-input-color  id="input-color"></component-input-color>
 
+                <component-input-size  id="input-size"></component-input-size>
+
+                <component-select-icon  id="select-icon"></component-select-icon>
+
+
             </section>
 
         </component-body>
@@ -675,7 +680,7 @@
 
 
     /*-------------------------------------
-      03-04) Component check box
+      03-05) Component input color
     -------------------------------------*/
     new window.ComponentInputColor(
         "input-color" ,
@@ -684,15 +689,33 @@
 
             prop_name:"input color" ,
             prop_title:"color picker" ,
+            prop_colorSelected:"#000" ,
+
+        }
+    )
 
 
+    /*-------------------------------------
+      03-06)  Component input size
+    -------------------------------------*/
+    new window.ComponentInputSize(
+        "input-size" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"input size" ,
+            prop_title:"input size" ,
+            prop_icon: "&#10124;" ,
+            //prop_iconSelected: "" ,
+            prop_min: 0 ,
+            prop_max: 100 ,
         }
     )
 
 
 
     /*-------------------------------------
-      03-05) Component Input Password
+      03-06) Component Input Password
     -------------------------------------*/
     new window.ComponentInputPassword(
         "input_password" ,
@@ -722,7 +745,7 @@
     )
 
     /*-------------------------------------
-      03-05) Component Input Email
+      03-07) Component Input Email
     -------------------------------------*/
     new window.ComponentInputEmail(
         "input_email" ,
@@ -740,7 +763,7 @@
 
 
     /*-------------------------------------
-      03-07) Component Input File
+      03-08) Component Input File
     -------------------------------------*/
     new window.ComponentInputFile(
         "input_file" ,
@@ -755,7 +778,7 @@
     )
 
     /*-------------------------------------
-      03-08) Component Date
+      03-09) Component Date
     -------------------------------------*/
     new window.ComponentDate(
         "input_date" ,
@@ -769,7 +792,7 @@
 
 
     /*-------------------------------------
-      03-09)  Component Select Option
+      03-010)  Component Select Option
     -------------------------------------*/
     new window.ComponentSelectOption(
         "select-option-1" ,
@@ -817,9 +840,73 @@
         }
     )
 
+    /*-------------------------------------
+      03-010)  Component Select Option
+    -------------------------------------*/
+    new window.ComponentSelectOption(
+        "select-option-1" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"select_option" ,
+            prop_title:"select options" ,
+            prop_itemSelected: 1 ,
+            prop_icon: "&#10124;" ,
+            prop_options: [
+                {name: "default"} ,
+                {id:1 , name: "test 1"} ,
+                {id:2 , name: "test 2"} ,
+                {id:3 , name: "test 3"} ,
+                {id:4 , name: "test 4"} ,
+                {id:5 , name: "test 5"} ,
+                {id:6 , name: "test 6"} ,
+            ] ,
+            prop_listIcons: [
+                {
+                    icon: "&#10124;" ,
+                    name: "methodOne" ,
+                    method: (event , id) => {
+                        alert(`item selected [1]: ${id}`)
+                    } ,
+                } ,
+                {
+                    icon: "&#10125;" ,
+                    name: "methodTwo" ,
+                    method: (event , id) => {
+                        alert(`item selected [2]: ${id}`)
+                    }
+                }
+            ],
+
+            prop_btnAddStatus: true ,
+
+            fn_callback:  (event , index)=>{
+                alert(index)
+            } ,
+            fn_clickBtnTools: (event , index)=>{
+                alert(index)
+            }
+        }
+    )
 
     /*-------------------------------------
-      03-010) Component check box
+      03-010)  Component Select Icon
+    -------------------------------------*/
+    new window.ComponentSelectIcon(
+        "select-icon" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"select_icon" ,
+            prop_title:"select icon" ,
+            //prop_iconSelected: "" ,
+
+        }
+    )
+
+
+    /*-------------------------------------
+      03-011) Component check box
     -------------------------------------*/
     new window.ComponentCheckBox(
         "check_box" ,
@@ -837,7 +924,7 @@
 
 
     /*-------------------------------------
-      03-011) Component validate
+      03-012) Component validate
     -------------------------------------*/
     new window.ComponentValidate(
         "component_validate" ,

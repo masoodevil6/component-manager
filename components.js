@@ -10,9 +10,10 @@ if (typeof listLayoutZIndex === 'undefined') {
         basic: 0 ,
         menu_main: 1 ,
         tools: 2 ,
-        tools_btn: 3 ,
-        blur_popup:4 ,
-        popup: 5
+        icon_attach: 3 ,
+        tools_btn: 4 ,
+        blur_popup:5 ,
+        popup: 6
     }
 }
 
@@ -45,13 +46,15 @@ if (typeof listComponent === 'undefined') {
         ComponentInput:                      "component-input" ,                          //03-03
         ComponentInputPrice:                 "component-input-price" ,                    //03-04
         ComponentInputColor:                 "component-input-color" ,                    //03-05
+        ComponentInputSize:                  "component-input-size" ,                     //03-06
         ComponentInputPassword:              "component-input-password" ,                 //03-06
         ComponentInputEmail:                 "component-input-email" ,                    //03-07
         ComponentInputFile:                  "component-input-file" ,                     //03-08
         ComponentDate:                       "component-date" ,                           //03-09
         ComponentSelectOption:               "component-select-option" ,                  //03-010
-        ComponentCheckBox:                   "component-check-box" ,                      //03-011
-        ComponentValidate:                   "component-validate" ,                       //03-012
+        ComponentSelectIcon:                 "component-select-icon" ,                    //03-011
+        ComponentCheckBox:                   "component-check-box" ,                      //03-012
+        ComponentValidate:                   "component-validate" ,                       //03-013
 
 
         // [04] tooltips
@@ -5352,16 +5355,40 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
 
 
 /*-------------------------------------
- 03-04) Component Input Color
+ 03-05) Component Input Color
 -------------------------------------
 @prop_show
 @prop_structureClass
 @prop_structureStyles
 
+@prop_name
+@prop_colorSelected
+
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_colorSelected
 @prop_isDisable
+@prop_borderColor
+@prop_formClass
+@prop_formStyles
+
+@prop_optionHeight
+@prop_optionWidth
+@prop_optionStyles
+@prop_positionTop
+@prop_backgroundColorBody
+
+@prop_colorBody
+
+@prop_hasRules
+@prop_isAbsoluteRule
+@prop_listRules
 -------------------------------------*/
 class ComponentInputColorBase extends ComponentBase{
-
 
     /* ---------------------------------------------
     PROPERTYs
@@ -5372,7 +5399,7 @@ class ComponentInputColorBase extends ComponentBase{
         ] ,
         part_value: [
             {prop : "prop_name"                       , default:  ""} ,
-            {prop : "prop_colorSelected"              , default:  "#000"} ,
+            {prop : "var_colorSelected"              , default:  "#ff0000"} ,
         ] ,
         part_label: [
             {prop : "prop_labelShow"                  , default: true} ,
@@ -5382,22 +5409,21 @@ class ComponentInputColorBase extends ComponentBase{
             {prop : "prop_title"                      , default: null} ,
         ] ,
         part_form_color: [
-            {prop : "prop_colorSelected"              , default:  "#000"} ,
+            {prop : "prop_colorSelected"              , default:  "#ff0000"} ,
             {prop : "prop_isDisable"                  , default:  false} ,
             {prop : "prop_borderColor"                , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputColor") &&  tools_const.styles.inputColor.hasOwnProperty("boderColor") ? tools_const.styles.inputColor.boderColor : "" } ,
             {prop : "prop_formClass"                  , default: ["rounded"]} ,
             {prop : "prop_formStyles"                 , default: {"width" : "25px" , "height" : "25px"}} ,
         ] ,
         part_form_selector: [
-            {prop : "var_showFormSelectOption"        , default:  false} ,
-            {prop : "prop_optionHeight"               , default: 350} ,
+            {prop : "prop_optionHeight"               , default: 375} ,
             {prop : "prop_optionWidth"                , default: 350} ,
             {prop : "prop_optionStyles"               , default: {}} ,
             {prop : "prop_positionTop"                , default: "0px"} ,
             {prop : "prop_backgroundColorBody"        , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputColor") &&  tools_const.styles.inputColor.hasOwnProperty("backgroundColor_body") ? tools_const.styles.inputColor.backgroundColor_body : "" } ,
         ] ,
         part_form_selector_information_code: [
-            {prop : "prop_colorSelected"              , default:  "#000"} ,
+            {prop : "prop_colorSelected"              , default:  "#ff0000"} ,
             {prop : "prop_colorBody"                  , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputColor") &&  tools_const.styles.inputColor.hasOwnProperty("color_body") ? tools_const.styles.inputColor.color_body : "" } ,
         ] ,
         part_form_selector_information_opacity: [
@@ -5411,6 +5437,13 @@ class ComponentInputColorBase extends ComponentBase{
         ] ,
         part_form_selector_opacity_slider: [
             {prop : "prop_optionWidth"                , default: 350} ,
+        ] ,
+        part_validate: [
+            {prop : "prop_hasRules"              , default: true} ,
+            {prop : "prop_isAbsoluteRule"        , default: true} ,
+            {prop : "prop_listRules"             , default: []} ,
+            {prop : "prop_isDisable"             , default: false} ,
+            {prop : "prop_title"                 , default: "TITLE"} ,
         ] ,
     }
 
@@ -5426,6 +5459,7 @@ class ComponentInputColorBase extends ComponentBase{
                 part_form_selector_saturation_lightness_square: {} ,
                 part_form_selector_opacity_slider: {} ,
             },
+            part_validate: {}
         } ,
     }
 
@@ -5434,13 +5468,14 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
     var_showFormSelectOption = false;
     var_hex = "";
+    var_hue = null;
     var_sat = 100;
     var_light = 50;
     var_opacity = 1;
 
-    draggingHue=false;
-    draggingSL=false;
-    draggingOpacity=false;
+    var_draggingHue=false;
+    var_draggingSL=false;
+    var_draggingOpacity=false;
 
     /* ---------------------------------------------
        SETUP
@@ -5467,6 +5502,12 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
     componentFn(){
         this.templateFn("part_label");
         this.templateFn("part_form_selector");
+        this.templateFn("part_validate");
+
+        requestAnimationFrame(() => {
+            this.fn_connectToElementReference();
+            this.fn_startCalcColorDefaultSelected();
+        });
     }
     templateFn(partName = null){
         switch (partName){
@@ -5490,6 +5531,8 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                 return this.componentFn_render_label(partName);
             case "part_form_selector":
                 return this.componentFn_render_formSelector(partName);
+            case "part_validate":
+                return this.componentFn_render_validate(partName);
             default:
                 return this.templateBasic_render();
         }
@@ -5507,26 +5550,29 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                    <component-position-element id="component-input-color-form-selector-${ this._COMPONENT_RANDOM_ID}">
                          <component-body>
                                 <section class="row px-0 py-2 m-0">
-                                    <div class="col-6">
-                                          ${this.templateFn("part_form_selector_information_code") ?? ""}
-                                    </div>
-                                    <div class="col-6">
-                                          ${this.templateFn("part_form_selector_information_opacity") ?? ""}
-                                    </div>
-                                    <div class="col-10">
+                                   
+                                    <div class="col-10 mt-2">
                                           ${this.templateFn("part_form_selector_saturation_lightness_square") ?? ""}
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-2 mt2">
                                           ${this.templateFn("part_form_selector_hue_slider") ?? ""}
                                     </div>
                                     <div class="col-12 mt-2">
                                           ${this.templateFn("part_form_selector_opacity_slider") ?? ""}
                                     </div>
+                                    
+                                    <div class="col-8 border-top mt-3">
+                                          ${this.templateFn("part_form_selector_information_code") ?? ""}
+                                    </div>
+                                    <div class="col-4 border-top mt-3">
+                                          ${this.templateFn("part_form_selector_information_opacity") ?? ""}
+                                    </div>
                                 </section>  
                           </component-body>
                    </component-position-element>
              </section>
-              
+             
+             <component-validate id="component-input-color-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
                 `;
         return this.templateBasic_render_structure(content);
     }
@@ -5536,8 +5582,8 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_name            =   data.hasOwnProperty("prop_name")               ?  data.prop_name             :  "";
-            const prop_colorSelected   =   data.hasOwnProperty("prop_colorSelected")      ?  data.prop_colorSelected    :  "";
+            const prop_name           =   data.hasOwnProperty("prop_name")              ?  data.prop_name            :  "";
+            const var_colorSelected   =   data.hasOwnProperty("var_colorSelected")      ?  data.var_colorSelected    :  "";
 
             return `
 <section  data-part-name="${partName}"
@@ -5550,7 +5596,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
          }
      </style>
      
-     <input id="component-input-color-value-${ this._COMPONENT_RANDOM_ID}-input-value" name="${prop_name}"  value="${prop_colorSelected}" type="hidden"/>
+     <input id="component-input-color-value-${ this._COMPONENT_RANDOM_ID}-input-value" name="${prop_name}"  value="${var_colorSelected}" type="hidden"/>
 
 </section>
         `;
@@ -5609,7 +5655,8 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
             return `
 <section data-part-name="${partName}" 
          id="component-input-color-form-selector-information-code-${ this._COMPONENT_RANDOM_ID}" 
-         class="text-center ">
+         class="text-center "
+         onclick="${this.getFn("fn_copyColorCodeSelected" , "event")}">
          
      <style>
          #${this._COMPONENT_ID} #component-input-color-form-selector-information-code-${ this._COMPONENT_RANDOM_ID}{
@@ -5618,10 +5665,10 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
          }
      </style>
      
-     <p class="p-0 m-0">
+     <p class="p-0 m-0 ">
          <b>Hex</b>
      </p>
-     <p class="p-0 m-0">
+     <p class="txt-color-code p-0 m-0">
          ${prop_colorSelected}
      </p>
     
@@ -5643,7 +5690,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
             return `
 <section data-part-name="${partName}" 
-         id="component-input-color-form-selector-information-opacity-${ this._COMPONENT_RANDOM_ID}" 
+         id="component-input-color-form-information-opacity-${ this._COMPONENT_RANDOM_ID}" 
           class="text-center">
          
      <style>
@@ -5652,10 +5699,10 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
          }
      </style>
      
-      <p class="p-0 m-0">
-         <b>Opacity</b>
+     <p class="p-0 m-0 ">
+        <b>Opacity</b>
      </p>
-     <p class="p-0 m-0">
+     <p class="txt-color-opacity p-0 m-0">
           ${this.var_opacity*100}
      </p>
     
@@ -5687,17 +5734,22 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
              position: relative;
              cursor: pointer;
          }
+         #${this._COMPONENT_ID} #component-input-color-form-selector-hue-slider-${ this._COMPONENT_RANDOM_ID} .hue-canvas{
+             border-radius: 30px;
+         }
          #${this._COMPONENT_ID} #component-input-color-form-selector-hue-slider-${ this._COMPONENT_RANDOM_ID} .hue-indicator{
              position: absolute;
-             width: 30px;
-             height: 4px;
+             width: 25px;
+             height: 25px;
              background: #fff;
-             left: 0;
+             border-radius: 100%;
+             left: 50%;
+             transform: translate(-50%, -50%);
          }
          
      </style>
     
-     <canvas class="hue-canvas" width="30" height="${prop_optionWidth*0.70}"></canvas>
+     <canvas class="hue-canvas mx-auto d-block" width="20" height="${prop_optionWidth*0.70}"></canvas>
     
      <div  class="hue-indicator"></div>
 
@@ -5719,28 +5771,39 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
             return `
 <section data-part-name="${partName}" 
-         id="component-input-color-form-selector-saturation-lightness-square-${ this._COMPONENT_RANDOM_ID}" 
+         id="component-input-color-form-selector-saturation-lightness-square-${this._COMPONENT_RANDOM_ID}" 
           class="">
          
      <style>
-         #${this._COMPONENT_ID} #component-input-color-form-selector-saturation-lightness-square-${ this._COMPONENT_RANDOM_ID}{
-             width: ${prop_optionWidth*0.70}px;
-             height: ${prop_optionWidth*0.70}px;
+         #${this._COMPONENT_ID} #component-input-color-form-selector-saturation-lightness-square-${this._COMPONENT_RANDOM_ID}{
+             width: ${prop_optionWidth * 0.70}px;
+             height: ${prop_optionWidth * 0.70}px;
              position: relative;
              cursor: pointer;
          }
-         #${this._COMPONENT_ID} #component-input-color-form-selector-saturation-lightness-square-${ this._COMPONENT_RANDOM_ID} .sl-indicator{
+         #${this._COMPONENT_ID} #component-input-color-form-selector-saturation-lightness-square-${this._COMPONENT_RANDOM_ID} .sl-indicator{
              position: absolute;
-             width: 14px;
-             height: 14px;
-             border: 2px solid #fff;
-             border-radius: 50%;
+             width: 20px;
+             height: 20px;
+             background-color: white;
+             border-radius: 100%;
              transform: translate(-50%, -50%);
              pointer-events: none;
          }
+         #${this._COMPONENT_ID} #component-input-color-form-selector-saturation-lightness-square-${this._COMPONENT_RANDOM_ID} .sl-indicator:after{
+             content: "";
+             position: absolute;
+             width: 8px;
+             height: 8px;
+             background-color: #000000;
+             border-radius: 100%;
+             left: 50%;
+             top: 50%;
+             transform: translate(-50%, -50%);
+         }
      </style>
      
-     <canvas class="sl-canvas" width="${prop_optionWidth*0.70}" height="${prop_optionWidth*0.70}"></canvas>
+     <canvas class="sl-canvas" width="${prop_optionWidth * 0.70}" height="${prop_optionWidth * 0.70}"></canvas>
       
      <div class="sl-indicator"></div>
     
@@ -5772,19 +5835,24 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
               height: 25px;
               cursor: pointer;
          }
+        #${this._COMPONENT_ID} #component-input-color-form-selector-opacity-slider-${ this._COMPONENT_RANDOM_ID} .opacity-canvas{
+             border-radius: 30px;
+             margin-top: 2.5px;
+         }
          #${this._COMPONENT_ID} #component-input-color-form-selector-opacity-slider-${ this._COMPONENT_RANDOM_ID} .opacity-indicator{
               position: absolute;
-              width: 14px;
-              height: 14px;
+              width: 25px;
+              height: 25px;
+              background: #fff;
+              border-radius: 100%;
               border: 2px solid #fff;
-              border-radius: 50%;
               top: 50%;
               transform: translate(-50%, -50%);
               pointer-events: none;
          }
      </style>
     
-     <canvas class="opacity-canvas"  width="${prop_optionWidth*0.70}" height="25"></canvas>
+     <canvas class="opacity-canvas"  width="${prop_optionWidth*0.70}" height="20"></canvas>
      <div  class="opacity-indicator"></div>
     
 </section>`
@@ -5836,18 +5904,59 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         }
     }
 
+    componentFn_render_validate(partName){
+        const data = this.getPartProps(partName)
 
+        if (data != null){
+
+            const data = this.getPartProps(partName)
+
+            if (data != null){
+                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+
+                if (!prop_isDisable){
+
+                    const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
+                    const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
+                    const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
+                    const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                    new window.ComponentValidate(
+                        `component-input-color-validate-${this._COMPONENT_RANDOM_ID}` ,
+                        {
+                            prop_reference: `component-input-color-value-${ this._COMPONENT_RANDOM_ID}-input-value` ,
+                            prop_isAbsolute: prop_isAbsoluteRule ,
+                            prop_listRules ,
+                            prop_title
+                        }
+                    );
+                }
+
+            }
+
+        }
+    }
 
 
     /* ---------------------------------------------
       FUNCTIONs
      --------------------------------------------- */
 
-    fn_getFormSelectorElement(){
-        return document.querySelector(`#component-input-color-form-selector-${ this._COMPONENT_RANDOM_ID}`);
+    // -------- get element selected--------
+    fn_getFormColorElement(){
+        return document.querySelector(` #${this._COMPONENT_ID} #component-input-color-form-color-${ this._COMPONENT_RANDOM_ID}`);
     }
 
+    fn_getFormSelectorElement(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-input-color-form-selector-${ this._COMPONENT_RANDOM_ID}`);
+    }
 
+    fn_getTextForColorCode(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-input-color-form-selector-information-code-${ this._COMPONENT_RANDOM_ID} .txt-color-code`);
+    }
+    fn_getTextForColorOpacity(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-input-color-form-information-opacity-${ this._COMPONENT_RANDOM_ID} .txt-color-opacity`);
+    }
 
     fn_getHueCanvas(){
         return document.querySelector(`#component-input-color-form-selector-hue-slider-${ this._COMPONENT_RANDOM_ID} .hue-canvas`);
@@ -5859,8 +5968,6 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         return document.querySelector(`#component-input-color-form-selector-hue-slider-${ this._COMPONENT_RANDOM_ID} .hue-indicator`);
     }
 
-
-
     fn_getSlCanvas(){
         return document.querySelector(`#component-input-color-form-selector-saturation-lightness-square-${ this._COMPONENT_RANDOM_ID} .sl-canvas`);
     }
@@ -5870,8 +5977,6 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
     fn_getSlIndicator(){
         return document.querySelector(`#component-input-color-form-selector-saturation-lightness-square-${ this._COMPONENT_RANDOM_ID} .sl-indicator`);
     }
-
-
 
     fn_getOpacityCanvas(){
         return document.querySelector(`#component-input-color-form-selector-opacity-slider-${ this._COMPONENT_RANDOM_ID} .opacity-canvas`);
@@ -5885,31 +5990,92 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
 
 
+    // -------- add Event Listtener--------
+    fn_connectToElementReference(){
+
+        const slCanvas = this.fn_getSlCanvas();
+        const hueCanvas = this.fn_getHueCanvas();
+        const opacityCanvas = this.fn_getOpacityCanvas();
+
+        hueCanvas.addEventListener('mousedown', e=>{
+            this.var_draggingHue=true;
+            this.fn_moveHue(e);
+        });
+        slCanvas.addEventListener('mousedown', e=>{
+            this.var_draggingSL=true;
+            this.fn_moveSL(e);
+        });
+        opacityCanvas.addEventListener('mousedown', e=>{
+            this.var_draggingOpacity=true;
+            this.fn_moveOpacity(e);
+        });
 
 
-    fn_onclickInputColor(event , status=null){
-        if (status != null){
-            this.var_showFormSelectOption = status;
-        }
-        else{
-            this.var_showFormSelectOption = !this.var_showFormSelectOption;
-        }
+        window.addEventListener('mousemove', e=>{
+            if(this.var_draggingHue) this.fn_moveHue(e);
+            if(this.var_draggingSL) this.fn_moveSL(e);
+            if(this.var_draggingOpacity) this.fn_moveOpacity(e);
+        });
 
-        const body = this.fn_getFormSelectorElement();
-        if (this.var_showFormSelectOption){
-            body.classList.remove("d-none")
-        }
-        else {
-            body.classList.add("d-none")
-        }
+        window.addEventListener('mouseup', ()=>{
+            this.var_draggingHue=false;
+            this.var_draggingSL=false;
+            this.var_draggingOpacity=false;
+        });
+
     }
 
+
+    fn_startCalcColorDefaultSelected(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_colorSelected")){
+            const [h, s, l] = this.fn_hexToHsl(data.prop_colorSelected);
+            this.var_hue = h;
+            this.var_sat = s;
+            this.var_light = l;
+            this.var_opacity = 1;
+        }
+
+        this.fn_drawHue();
+        this.fn_updateIndicators();
+    }
+
+
+    // -------- copy color code --------
+    fn_copyColorCodeSelected(){
+        const colorCode = this.fn_getTextForColorCode().innerHTML;
+        tools_public.getCopyText(colorCode);
+    }
+
+
+    // -------- Show Options --------
+    fn_onclickInputColor(event , status=null){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_isDisable") && !data.prop_isDisable){
+            if (status != null){
+                this.var_showFormSelectOption = status;
+            }
+            else{
+                this.var_showFormSelectOption = !this.var_showFormSelectOption;
+            }
+
+            const body = this.fn_getFormSelectorElement();
+            if (this.var_showFormSelectOption){
+                body.classList.remove("d-none")
+            }
+            else {
+                body.classList.add("d-none")
+            }
+        }
+    }
 
 
 
     // -------- Hue Slider --------
     fn_drawHue(){
         const hueCanvas = this.fn_getHueCanvas();
+        const hueCtx = this.fn_getHueCtx();
+
         const grad = hueCtx.createLinearGradient(0,0,0,hueCanvas.height);
         grad.addColorStop(0,"red");
         grad.addColorStop(0.17,"yellow");
@@ -5937,7 +6103,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
             const l = 100 - (y/height*100);
             for(let x=0;x<width;x++){
                 const s = x/width*100;
-                const rgb = hslToRgb(hue,s,l);
+                const rgb = this.fn_hslToRgb(this.var_hue,s,l);
                 const idx = (y*width + x)*4;
                 data[idx] = rgb[0];
                 data[idx+1] = rgb[1];
@@ -5958,7 +6124,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const height = opacityCanvas.height;
 
         // رنگ فعلی انتخاب شده (H, S, L)
-        const rgb = hslToRgb(hue, sat, light);
+        const rgb = this.fn_hslToRgb(this.var_hue, this.var_sat, this.var_light);
 
         // Gradient از شفاف تا رنگ کامل
         const grad = opacityCtx.createLinearGradient(0,0,width,0);
@@ -5980,6 +6146,38 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
     }
 
 
+    // -------- HEX to HSL --------
+    fn_hexToHsl(hex) {
+        hex = hex.replace(/^#/, "");
+        if(hex.length === 3){
+            hex = hex.split("").map(x=>x+x).join("");
+        }
+        const bigint = parseInt(hex, 16);
+        let r = (bigint >> 16) & 255;
+        let g = (bigint >> 8) & 255;
+        let b = bigint & 255;
+
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+
+        if(max === min){
+            h = s = 0;
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch(max){
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+
+        return [Math.round(h*360), Math.round(s*100), Math.round(l*100)];
+    }
+
+
     // -------- Update Indicators and Inputs --------
     fn_updateIndicators(){
         const slIndicator = this.fn_getSlIndicator();
@@ -5988,19 +6186,21 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const hueCanvas = this.fn_getHueCanvas();
         const opacityIndicator = this.fn_getOpacityIndicator();
         const opacityCanvas = this.fn_getOpacityCanvas();
+        const txtColorCode = this.fn_getTextForColorCode();
+        const formColor = this.fn_getFormColorElement();
 
-        slIndicator.style.left = (this.sat/100*slCanvas.width)+"px";
-        slIndicator.style.top = ((1-this.light/100)*slCanvas.height)+"px";
-        hueIndicator.style.top = (this.hue/360*hueCanvas.height)+"px";
-        opacityIndicator.style.left = (this.opacity*opacityCanvas.width)+"px";
+        slIndicator.style.left = (this.var_sat/100*slCanvas.width)+"px";
+        slIndicator.style.top = ((1-this.var_light/100)*slCanvas.height)+"px";
+        hueIndicator.style.top = (this.var_hue/360*hueCanvas.height)+"px";
+        opacityIndicator.style.left = (this.var_opacity*opacityCanvas.width)+"px";
 
-        const hslStr = `hsl(${this.hue},${this.sat}%,${this.light}%)`;
-        const hexStr = hslToHex(this.hue,this.sat,this.light);
-      //  inputColor.value = hslStr;
-      //  inputOpacity.value = opacity;
+        this.var_hsl = `hsl(${Math.round(this.var_hue)},${Math.round(this.var_sat)}%,${Math.round(this.var_light)}%)`;
+        this.var_hex = this.fn_hslToHex(this.var_hue,this.var_sat,this.var_light);
 
-       // colorCodeSpan.textContent = hexStr; // نمایش HEX
-       // colorBoxSpan.style.backgroundColor = hexStr; // نمایش HEX
+        this.set("var_colorSelected" , this.var_hsl);
+
+        txtColorCode.textContent = this.var_hex; // نمایش HEX
+        formColor.style.backgroundColor =  this.var_hsl; // نمایش HEX
 
         this.fn_drawSL();
         this.fn_drawOpacity();
@@ -6014,7 +6214,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const rect = hueCanvas.getBoundingClientRect();
         let y = e.clientY - rect.top;
         y = Math.max(0,Math.min(y,hueCanvas.height));
-        hue = y/hueCanvas.height*360;
+        this.var_hue = y/hueCanvas.height*360;
         this.fn_updateIndicators();
     }
 
@@ -6026,27 +6226,27 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         let y = e.clientY - rect.top;
         x = Math.max(0,Math.min(x,slCanvas.width));
         y = Math.max(0,Math.min(y,slCanvas.height));
-        sat = x/slCanvas.width*100;
-        light = 100 - y/slCanvas.height*100;
+        this.var_sat = x/slCanvas.width*100;
+        this.var_light = 100 - y/slCanvas.height*100;
         this.fn_updateIndicators();
     }
 
     fn_moveOpacity(e){
         const opacityCanvas = this.fn_getOpacityCanvas();
         const opacityIndicator = this.fn_getOpacityIndicator();
+        const txtColorOpacity = this.fn_getTextForColorOpacity();
+        const formColor = this.fn_getFormColorElement();
 
         const rect = opacityCanvas.getBoundingClientRect();
         let x = e.clientX - rect.left;
         x = Math.max(0, Math.min(x,opacityCanvas.width));
-        opacity = parseFloat((x/opacityCanvas.width).toFixed(2)); // 0 تا 1
+        this.var_opacity = parseFloat((x/opacityCanvas.width).toFixed(2));
         opacityIndicator.style.left = `${x}px`;
-       // inputOpacity.value = opacity;
 
-        // همچنین می‌توان HEX با opacity را بروزرسانی کرد
-        const rgb = this.fn_hslToRgb(this.hue, this.sat, this.light);
-        const rgbaHex = `rgba(${this.rgb.join(",")},${this.opacity})`;
-        //colorCodeSpan.textContent = rgbaHex; // نمایش RGBA واقعی
-        //colorBoxSpan.style.backgroundColor = rgbaHex; // نمایش HEX
+        const rgb = this.fn_hslToRgb(this.var_hue, this.var_sat, this.var_light);
+        const rgbaHex = `rgba(${rgb.join(",")},${this.var_opacity})`;
+        txtColorOpacity.textContent = Math.round(this.var_opacity *100);
+        formColor.style.backgroundColor = rgbaHex;
     }
 
     fn_hslToHex(h,s,l){
@@ -6066,7 +6266,644 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
 
 /*-------------------------------------
- 03-05) Component Input Password
+ 03-06) Component Input size
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_icon
+
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_value
+@prop_placeholder
+@prop_icon
+@prop_isDisable
+@prop_min
+@prop_max
+
+@prop_iconPositive
+@prop_iconNegetive
+
+@prop_isAbsoluteRule
+@prop_listRules
+-------------------------------------*/
+class ComponentInputSizeBase extends ComponentBase{
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_label: [
+            {prop : "prop_title"                             , default:  "title"} ,
+            {prop : "prop_labelClass"                        , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"                       , default:  {}} ,
+            {prop : "prop_labelHoverStyles"                  , default:  {}} ,
+        ] ,
+        part_body: [
+
+        ] ,
+        part_body_icon: [
+            {prop : "prop_icon"                              , default: null} ,
+        ] ,
+        part_body_icon_clear: [
+            {prop : "prop_isDisable"                         , default: false} ,
+        ] ,
+        part_body_icon_positive: [
+            {prop : "prop_isDisable"                         , default: false} ,
+            {prop : "prop_iconPositive"                      , default: tools_icons.icon_plus_badge()} ,
+        ] ,
+        part_body_icon_negetive: [
+            {prop : "prop_isDisable"                         , default: false} ,
+            {prop : "prop_iconNegetive"                      , default: tools_icons.icon_minus_badge()} ,
+        ] ,
+        part_body_input_size: [
+            {prop : "prop_inputClass"                        , default: [" form-control"]} ,
+            {prop : "prop_inputStyles"                       , default: {}} ,
+            {prop : "prop_name"                              , default: null} ,
+            {prop : "prop_value"                             , default: null} ,
+            {prop : "prop_placeholder"                       , default: null} ,
+            {prop : "prop_icon"                              , default: null} ,
+            {prop : "prop_isDisable"                         , default: false} ,
+            {prop : "prop_min"                               , default: null} ,
+            {prop : "prop_max"                               , default: null} ,
+        ] ,
+        part_validate: [
+            {prop : "prop_isAbsoluteRule"                    , default: true} ,
+            {prop : "prop_listRules"                         , default: []} ,
+            {prop : "prop_isDisable"                         , default: false} ,
+            {prop : "prop_title"                             , default: "TITLE"} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label: {} ,
+            part_body: {
+                part_body_icon: {} ,
+                part_body_icon_clear: {} ,
+                part_body_icon_positive: {} ,
+                part_body_icon_negetive: {} ,
+                part_body_input_size: {} ,
+            } ,
+            part_validate: {} ,
+        } ,
+    }
+
+}
+window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeBase {
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentInputSize.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(screanWidthType){
+        this.templateFn("part_label");
+        this.templateFn("part_body_icon");
+        this.templateFn("part_body_icon_clear");
+        this.templateFn("part_body_icon_positive");
+        this.templateFn("part_body_icon_negetive");
+        this.templateFn("part_validate");
+
+        requestAnimationFrame(() => {
+            this.fn_connectToElementReference();
+        });
+    }
+    templateFn(partName = null){
+
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_body":
+                return this.template_render_body(partName);
+            case "part_body_input_size":
+                return this.template_render_bodyInputSize(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_body_icon":
+                return this.componentFn_render_bodyIcon(partName);
+            case "part_body_icon_clear":
+                return this.componentFn_render_bodyIconClear(partName);
+            case "part_body_icon_positive":
+                return this.componentFn_render_bodyIconPositive(partName);
+            case "part_body_icon_negetive":
+                return this.componentFn_render_bodyIconNegetive(partName);
+            case "part_validate":
+                return this.componentFn_render_validate(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName ) {
+        const content = `
+      
+      <component-label id="component-input-size-label-${ this._COMPONENT_RANDOM_ID}"></component-label>
+     
+      ${this.templateFn("part_body") ?? ""}
+      
+      <component-validate id="component-input-size-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
+      
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+    template_render_body(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-password-body-${this._COMPONENT_RANDOM_ID}"  
+          class="position-relative bg-secondary rounded d-block" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-password-body-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+         
+     </style>
+     
+     ${this.templateFn("part_body_input_size") ?? ""}
+     
+     <component-icon id="component-input-size-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-size-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-size-icon-return-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-size-icon-positive-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-size-icon-negetive-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+        
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyInputSize(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const screanWidthType = this.getScreenWidth();
+
+            const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
+            const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
+            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
+            const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
+            const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
+            const prop_isDisable     =   data.hasOwnProperty("prop_isDisable")                ?  data.prop_isDisable                                    : false;
+
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
+
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
+            }
+
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-size-element-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-size-element-${this._COMPONENT_RANDOM_ID}{
+              ${prop_icon ? (directionRtl ? "margin-right: 35px;" : "margin-left: 35px;") : ""}
+              ${directionRtl ? "margin-left" : "margin-right"} : 70px;
+         }
+         #${this._COMPONENT_ID} #component-input-size-${this._COMPONENT_RANDOM_ID}{
+              height: 30px;
+
+              ${directionRtl ? "padding-left" : "padding-right"} : 20px;
+              ${tools_public.renderListStyle(prop_inputStyles)}
+         }
+     </style>
+
+     <input id="component-input-size-${this._COMPONENT_RANDOM_ID}"   
+            class=" ${tools_public.renderListClass(prop_inputClass)} border-2"
+            name="${prop_name || "" }"  
+            type="text"  
+            value="${prop_value || ""}"
+            placeholder="${prop_placeholder || ""}"
+            ${prop_isDisable ? 'disabled' : ''}
+            />
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label(partName ) {
+        this.componentFneBasic_render_structure(
+            `component-input-size-label-${ this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for: `component-input-size-${ this._COMPONENT_RANDOM_ID}` ,
+                fn_callback: ()=>{
+
+                }
+            }
+        );
+    }
+
+    componentFn_render_bodyIcon(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+
+            let styles = {
+                "z-index" : listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
+                "cursor" : "pointer",
+                "font-size" : "20pt;",
+                "top" : "50%" ,
+                "transform" : "translate(0, -50%)" ,
+            }
+            if (directionRtl){
+                styles["right"]= "5px"
+            }
+            else {
+                styles["left"]= "5px"
+            }
+
+            if (prop_icon != null){
+                new window.ComponentIcon(
+                    `component-input-size-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_icon ,
+
+                        prop_iconClass : ["position-absolute" , "text-white"] ,
+                        prop_iconStyles : styles ,
+
+                        fn_callback: ()=>{
+                            this.fn_onFocusInput();
+                        }
+                    }
+                )
+            }
+
+        }
+    }
+
+    componentFn_render_bodyIconClear(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                let styles = {
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
+                    "width" :   "35px",
+                    "line-height" : "30px",
+                    "cursor" : "pointer",
+                    "height" : "30px" ,
+                    "top" : "0" ,
+                    "text-align" : "center" ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "70px";
+                }
+                else {
+                    styles["right"]= "70px";
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-size-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        styles: {
+                            "height" : "38px"
+                        }  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : "&#10540;" ,
+
+                        fn_callback: (event)=>{
+                            this.fn_onClearInput(event);
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_bodyIconPositive(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")    ? this._COMPONENT_CONFIG.directionRtl         : false;
+                const prop_iconPositive     =  data.hasOwnProperty("prop_iconPositive")                 ?  data.prop_iconPositive                     : false;
+
+
+                let styles = {
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
+                    "width" :   "35px",
+                    "line-height" : "30px",
+                    "cursor" : "pointer",
+                    "height" : "30px" ,
+                    "top" : "0" ,
+                    "text-align" : "center" ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "0px";
+                }
+                else {
+                    styles["right"]= "0px";
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-size-icon-positive-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        styles: {
+                            "height" : "38px"
+                        }  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : prop_iconPositive ,
+
+                        fn_callback: (event)=>{
+                            this.fn_positiveInputValue(event);
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_bodyIconNegetive(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")    ? this._COMPONENT_CONFIG.directionRtl         : false;
+                const prop_iconNegetive     =  data.hasOwnProperty("prop_iconNegetive")                 ?  data.prop_iconNegetive                     : false;
+
+
+                let styles = {
+                    "z-index" :  listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
+                    "width" :   "35px",
+                    "line-height" : "30px",
+                    "cursor" : "pointer",
+                    "height" : "30px" ,
+                    "top" : "0" ,
+                    "text-align" : "center" ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "35px";
+                }
+                else {
+                    styles["right"]= "35px";
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-size-icon-negetive-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        styles: {
+                            "height" : "38px"
+                        }  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : prop_iconNegetive ,
+
+                        fn_callback: (event)=>{
+                            this.fn_negetiveInputValue(event);
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_validate(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const data = this.getPartProps(partName)
+
+            if (data != null){
+                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+
+                if (!prop_isDisable){
+
+                    const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
+                    const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
+                    const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
+                    const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                    new window.ComponentValidate(
+                        `component-input-size-validate-${this._COMPONENT_RANDOM_ID}` ,
+                        {
+                            prop_reference: `component-input-size-${this._COMPONENT_RANDOM_ID}` ,
+                            prop_isAbsolute: prop_isAbsoluteRule ,
+                            prop_listRules ,
+                            prop_title
+                        }
+                    );
+                }
+
+            }
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+     --------------------------------------------- */
+
+    // -------- get elements--------
+    fn_getInputElement(){
+        return   document.querySelector(`input#component-input-size-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+
+    // -------- add Event Listtener--------
+    fn_connectToElementReference(){
+        const inputEl = this.fn_getInputElement();
+
+        /// callBacks
+        inputEl.addEventListener("input", this.fn_onInputCallBack.bind(this));
+        inputEl.addEventListener("blur", this.fn_onBlurCallBack.bind(this));
+        inputEl.addEventListener("focus", this.fn_onFocusCallBack.bind(this));
+
+        /// validate for is number
+        inputEl.addEventListener("input", this.fn_validateInputIsNumber.bind(this));
+    }
+
+
+    // -------- positive or negetive value input --------
+    fn_positiveInputValue(event){
+        const inputEl = this.fn_getInputElement();
+        let value = parseFloat(tools_converter.convertStrToNum(inputEl.value)) ;
+
+        if (isNaN(value)) {
+            value = 0;
+        } else {
+            value = value + 1;
+        }
+
+        this.fn_setValueInput(inputEl , value);
+    }
+
+    fn_negetiveInputValue(event){
+        const inputEl = this.fn_getInputElement();
+        let value = parseFloat(tools_converter.convertStrToNum(inputEl.value)) ;
+
+        if (isNaN(value)) {
+            value = 0;
+        }
+        else {
+            value = value - 1;
+        }
+
+        this.fn_setValueInput(inputEl , value);
+    }
+
+
+
+    // -------- validate for is number input --------
+    fn_validateInputIsNumber(event) {
+        const inputEl = this.fn_getInputElement();
+        const value = parseFloat(tools_converter.convertStrToNum(event.target.value))
+        this.fn_setValueInput(inputEl , value);
+    }
+
+
+
+    // -------- set value input --------
+    fn_setValueInput(inputEl , value) {
+        const data = this._COMPONENT_CONFIG;
+        const prop_min = data.hasOwnProperty("prop_min") && data.prop_min != null ? data.prop_min : null;
+        const prop_max = data.hasOwnProperty("prop_max") && data.prop_max != null ? data.prop_max : null;
+
+        if (prop_min != null && value<prop_min  ){
+            inputEl.value = prop_min;
+        }
+        else if (prop_max != null && value>prop_max  ){
+            inputEl.value = prop_max;
+        }
+        else{
+            inputEl.value = value;
+        }
+    }
+
+
+
+
+    // -------- clear input --------
+    fn_onClearInput(event){
+        const inputEl = this.fn_getInputElement();
+        inputEl.value="";
+        this.fn_onFocusInput(event);
+        this.fn_onInputCallBack(event);
+    }
+
+
+    // -------- clear input --------
+    fn_onFocusInput(event){
+        const inputEl = this.fn_getInputElement();
+        inputEl.focus();
+    }
+
+
+    // -------- callbacks --------
+    fn_onInputCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_oninput") && typeof data.fn_oninput != null){
+            data.fn_oninput(event , this.fn_getValueInput());
+        }
+    }
+
+
+    fn_onFocusCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onfocus") && typeof data.fn_onfocus != null){
+            data.fn_onfocus(event , this.fn_getValueInput());
+        }
+    }
+
+
+    fn_onBlurCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onblur") && typeof data.fn_onblur != null){
+            data.fn_onblur(event , this.fn_getValueInput());
+        }
+    }
+
+}
+
+
+
+/*-------------------------------------
+ 03-06) Component Input Password
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -6596,7 +7433,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
 
 
 /*-------------------------------------
- 03-06) Component Input email
+ 03-07) Component Input email
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -7010,7 +7847,7 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
 
 
 /*-------------------------------------
- 03-07) Component Input File
+ 03-08) Component Input File
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -7773,7 +8610,7 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
 
 
 /*-------------------------------------
- 03-08) Component Date
+ 03-09) Component Date
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -9671,7 +10508,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
 
 
 /*-------------------------------------
- 03-09) Component Select Option
+ 03-010) Component Select Option
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -10459,7 +11296,198 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
 
 
 /*-------------------------------------
- 03-010) Component check box
+ 03-011) Component Select Icon
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+-------------------------------------*/
+class ComponentSelectIconBase extends ComponentBase{
+
+    /* ---------------------------------------------
+    PROPERTYs
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_value: [
+            {prop : "prop_name"                              , default:  ""} ,
+            {prop : "prop_iconSelected"                      , default:  null} ,
+        ] ,
+        part_label: [
+            {prop : "prop_title"                             , default:  "title"} ,
+            {prop : "prop_labelClass"                        , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
+            {prop : "prop_labelStyles"                       , default:  {}} ,
+            {prop : "prop_labelHoverStyles"                  , default:  {}} ,
+        ] ,
+
+        part_validate: [
+            {prop : "prop_isAbsoluteRule"                    , default: true} ,
+            {prop : "prop_listRules"                         , default: []} ,
+            {prop : "prop_isDisable"                         , default: false} ,
+            {prop : "prop_title"                             , default: "TITLE"} ,
+        ] ,
+    }
+
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_value: {} ,
+            part_label: {} ,
+            part_validate: {} ,
+        } ,
+    }
+
+}
+window.ComponentSelectIcon = class ComponentSelectIcon extends ComponentSelectIconBase {
+
+    var_showFormSelectIcon = false;
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentSelectIcon.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(screanWidthType){
+        this.templateFn("part_label");
+        this.templateFn("part_validate");
+
+
+    }
+    templateFn(partName = null){
+
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_value":
+                return this.template_render_value(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_validate":
+                return this.componentFn_render_validate(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName ) {
+        const content = `
+      
+      <component-label id="component-select-icon-label-${ this._COMPONENT_RANDOM_ID}"></component-label>
+     
+      ${this.templateFn("part_value") ?? ""}
+      
+      <component-validate id="component-select-icon-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
+      
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_value(partName ) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_name               =   data.hasOwnProperty("prop_name")                ?  data.prop_name                 :  "";
+            const prop_iconSelected       =   data.hasOwnProperty("prop_iconSelected")        ?  data.prop_iconSelected         : null;
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-select-icon-value-${ this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-select-icon-value-${ this._COMPONENT_RANDOM_ID}{
+             
+         }
+     </style>
+     
+      <input id="component-select-icon-value-${ this._COMPONENT_RANDOM_ID}-input-value" name="${prop_name}"  value="${prop_iconSelected != null ? prop_iconSelected : '' }" type="hidden"/>
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label(partName ) {
+        this.componentFneBasic_render_structure(
+            `component-select-icon-label-${ this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for: `component-select-icon-header-${ this._COMPONENT_RANDOM_ID}` ,
+                fn_callback: ()=>{
+
+                }
+            }
+        );
+    }
+
+    componentFn_render_validate(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const data = this.getPartProps(partName)
+
+            if (data != null){
+                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+
+                if (!prop_isDisable){
+
+                    const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
+                    const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
+                    const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
+                    const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                    new window.ComponentValidate(
+                        `component-select-icon-validate-${this._COMPONENT_RANDOM_ID}` ,
+                        {
+                            prop_reference: `component-select-icon-value-${ this._COMPONENT_RANDOM_ID}-input-value` ,
+                            prop_isAbsolute: prop_isAbsoluteRule ,
+                            prop_listRules ,
+                            prop_title
+                        }
+                    );
+                }
+
+            }
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+     --------------------------------------------- */
+
+
+}
+
+
+/*-------------------------------------
+ 03-012) Component check box
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -10598,6 +11626,7 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
                 
                 ${this.templateFn("part_form") ?? ""}
           
+                <component-validate id="component-check-box-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
                 `;
         return this.templateBasic_render_structure(content);
     }
@@ -10733,15 +11762,8 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
                     const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
                     const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
 
-
-                    prop_listRules.push({
-                        description: "Must have email format",
-                        rule : "_is_email" ,
-                        params: {}
-                    })
-
                     new window.ComponentValidate(
-                        `component-input-email-validate-${this._COMPONENT_RANDOM_ID}` ,
+                        `component-check-box-validate-${this._COMPONENT_RANDOM_ID}` ,
                         {
                             prop_reference: `component-check-box-value-${ this._COMPONENT_RANDOM_ID}-input-value` ,
                             prop_isAbsolute: prop_isAbsoluteRule ,
@@ -10772,7 +11794,7 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
 
 
 /*-------------------------------------
- 03-011) Component Validate
+ 03-013) Component Validate
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -10791,10 +11813,10 @@ class ComponentValidateBase extends ComponentBase{
      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-
+            {prop : "prop_listRules"             , default: []} ,
         ] ,
         part_form: [
-            {prop : "prop_isAbsolute"             , default: false} ,
+            {prop : "prop_isAbsolute"            , default: false} ,
         ] ,
         part_form_html: [
             {prop : "prop_reference"             , default: ""} ,
@@ -10841,7 +11863,6 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
 
 
 
-
     /* ---------------------------------------------
       TEMPLATEs
     --------------------------------------------- */
@@ -10869,6 +11890,9 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
     }
 
     template_render_structure(partName ) {
+        const data = this.getPartProps(partName)
+        const prop_listRules      =  data != null && data.hasOwnProperty("prop_listRules")       ?  data.prop_listRules      :  [];
+
         const content = `
 <div id="component-input-validate-position-form-rules-${this._COMPONENT_RANDOM_ID}" class="position-relative">
             <component-position-element id="component-input-validate-form-rules-${this._COMPONENT_RANDOM_ID}">
@@ -10879,7 +11903,13 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
             </component-position-element>
 </div>
                 `;
-        return this.templateBasic_render_structure(content , ["position-relative"]);
+
+        if (prop_listRules != null && Array.isArray(prop_listRules) && prop_listRules.length > 0){
+            return this.templateBasic_render_structure(content , ["position-relative"]);
+        }
+        else{
+            return "";
+        }
     }
 
     template_render_formHtml(partName ) {
@@ -10986,7 +12016,6 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
     }
 
 
-
     fn_getInputElementReferenceId(){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("prop_reference") ) {
@@ -11008,7 +12037,6 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
         }
         return null;
     }
-
 
 
     fn_connectToInputReference_handle(refId){
@@ -11044,12 +12072,14 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
         }
     }
 
+
     fn_connectToInputReference_onHandleInput(event){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
             this.fn_readyListRules(data.prop_listRules)
         }
     }
+
 
     fn_connectToInputReference_onFormatValue(event){
         this.fn_setStatusVisibleFormRulesElement(false);
@@ -11059,6 +12089,7 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
             this.fn_readyListRules(data.prop_listRules)
         }
     }
+
 
     fn_connectToInputReference_onUnFormatValue(event){
         this.fn_setStatusVisibleFormRulesElement(true);
@@ -11083,7 +12114,6 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
         inputEl.classList.remove("border-danger", "border-success");
         inputEl.classList.add(isInputCurrect ? "border-success" : "border-danger");
     }
-
 
 
 }

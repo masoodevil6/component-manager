@@ -182,9 +182,9 @@ tools_init = {
             } ,
 
             inputColor: {
-                boderColor :                    component_props.darkColor2 ,
-                backgroundColor_body :          component_props.shanColor1 ,
-                color_body :                    component_props.darkColor1 ,
+                boderColor :                    component_props.shanColor1 ,
+                backgroundColor_body :          component_props.darkColor1 ,
+                color_body :                    component_props.shanColor1 ,
             } ,
 
             window: {
@@ -716,6 +716,24 @@ tools_converter = {
     } ,
 
 
+    convertStrToNum: function(str){
+
+        const pattern = /^-?\d*(\.\d*)?$/;
+
+        if (!pattern.test(str)) {
+            str = str.replace(/[^0-9.-]/g, "");
+
+            str = str.replace(/(?!^)-/g, "");
+
+            const parts = str.split(".");
+            if (parts.length > 2) {
+                str = parts[0] + "." + parts.slice(1).join("");
+            }
+        }
+
+        return str;
+    }
+
 };
 
 
@@ -1234,8 +1252,6 @@ tools_icons = {
 
 
 
-
-
     icon_un_visit(color = "#ffffff", size = 24) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
@@ -1257,9 +1273,6 @@ tools_icons = {
 
 
 
-
-
-
     icon_is_true(color = "#4caf50", size = 24) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
@@ -1277,7 +1290,6 @@ tools_icons = {
 
 
 
-
     icon_is_false(color = "#f44336", size = 24) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
@@ -1292,7 +1304,6 @@ tools_icons = {
 </svg>
 `;
     } ,
-
 
 
 
@@ -1320,8 +1331,6 @@ tools_icons = {
 
 
 
-
-
     icon_lock(bg_color = "#e7e7e7", size = 24) {
         return `
 <svg class="icon-password lock" 
@@ -1340,9 +1349,6 @@ tools_icons = {
 </svg>
 `;
     } ,
-
-
-
 
 
 
@@ -1373,6 +1379,28 @@ tools_icons = {
         
 </svg>
 `;
-    }
+    } ,
+
+
+
+    icon_plus_badge(bg_color = "#fff", size = 28) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="add"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <path d="M12 8v8M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    } ,
+
+
+
+    icon_minus_badge(bg_color = "#fff" , size = 28) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="remove"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <path d="M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    } ,
 
 }
+
+
