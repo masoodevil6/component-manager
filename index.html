@@ -206,6 +206,8 @@
 
                 <component-breadcrumb id="Breadcrumb" ></component-breadcrumb>
 
+                <component-breadcrumb-with-arrow id="Breadcrumb_withArrow" ></component-breadcrumb-with-arrow>
+
             </section>
 
         </component-body>
@@ -1295,7 +1297,39 @@
     new window.ComponentBreadcrumb(
         "breadcrumb" ,
         {
-            classList: "col-md-2 col-12 mt-2"  ,
+            classList: "col-12 mt-2"  ,
+
+            prop_stepSelected : 2 ,
+            prop_breadcrumbs: [
+                {
+                    id: 1 ,
+                    title: "item 1"
+                } ,
+                {
+                    id: 2 ,
+                    title: "item 2"
+                },
+                {
+                    id: 3 ,
+                    title: "item 3"
+                }
+            ],
+
+            fn_callback: (event , itemData)=>{
+                console.log(itemData)
+            } ,
+
+            fn_onBackClick: (event)=>{
+                console.log("back")
+            }
+        }
+    )
+
+
+    new window.ComponentBreadcrumbWithArrow(
+        "Breadcrumb_withArrow" ,
+        {
+            classList: "col-12 mt-2"  ,
 
             prop_stepSelected : 2 ,
             prop_breadcrumbs: [
@@ -1576,6 +1610,8 @@
         }
     )
 
+
+
     /*-------------------------------------
      99-04) Component image
     -------------------------------------*/
@@ -1588,6 +1624,8 @@
         }
     )
     cLayout.call_addElement('Hi World')
+
+
 
     /*-------------------------------------
      99-04) Component image
@@ -1649,7 +1687,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [03] Button And Inputs" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(
@@ -1715,7 +1753,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [15] breadcrumbs " ,
-            prop_bodyShow: false
+            prop_bodyShow: tree
         }
     )
 

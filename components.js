@@ -80,6 +80,7 @@ if (typeof listComponent === 'undefined') {
 
         // [15] Breadcrumb
         ComponentBreadcrumb :                "component-breadcrumb" ,                     //15-01
+        ComponentBreadcrumbWithArrow :       "component-breadcrumb-with-arrow" ,          //15-01
 
 
 
@@ -124,6 +125,9 @@ if (typeof components === 'undefined') {
      Component Base:
     ------------------------------------- */
 class ComponentBase{
+
+    _COMPONENT_PATTERN = {};
+
 
     _COMPONENT_RANDOM_ID = 0;
     _COMPONENT_ID = null;
@@ -664,30 +668,58 @@ class ComponentBase{
 class ComponentMessagesBase extends ComponentBase{
 
     /* ---------------------------------------------
-   PROPERTYs
-   --------------------------------------------- */
+      PROPERTYs Pattern
+      --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type : {
+            prop: "prop_type" ,
+            default: "success"
+        } ,
+        prop_msgBackgroundColor: {
+            prop: "prop_msgBackgroundColor" ,
+            default: null
+        },
+        prop_msgColor: {
+            prop: "prop_msgColor" ,
+            default: null
+        } ,
+        prop_messages: {
+            prop: "prop_messages" ,
+            default: null
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
         ] ,
         part_message: [
-            {prop : "prop_type"                 , default: "success"} ,  // success  //error //warning //null
-            {prop : "prop_msgBackgroundColor"   , default: null} ,
-            {prop : "prop_msgColor"             , default: null} ,
-            {prop : "prop_messages"             , default: null} ,
+            this._COMPONENT_PATTERN.prop_type ,
+            this._COMPONENT_PATTERN.prop_msgBackgroundColor ,
+            this._COMPONENT_PATTERN.prop_msgColor ,
+            this._COMPONENT_PATTERN.prop_messages ,
         ] ,
         part_icon: [
-            {prop : "prop_messages"             , default: null} ,
+            this._COMPONENT_PATTERN.prop_messages ,
         ]
     }
 
+
+
+    /* ---------------------------------------------
+         PROPERTYs Schema
+     --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_message: {} ,
             part_icon: {}
         }
     }
-
 
 }
 window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase{
@@ -883,36 +915,89 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
 -------------------------------------*/
 class ComponentIsEmptyBase extends ComponentBase{
 
+    /* ---------------------------------------------
+       PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_borderClass : {
+            prop: "prop_borderClass" ,
+            default: ["border" , "border-danger" , "rounded" , "shadow-sm"]
+        } ,
+        prop_borderStyles: {
+            prop: "prop_borderStyles" ,
+            default: {}
+        },
+        prop_icon: {
+            prop: "prop_icon" ,
+            default: "&#9888;"
+        } ,
+        prop_iconClass: {
+            prop: "prop_iconClass" ,
+            default: ["font-30pt" , "text-danger"]
+        } ,
+        prop_iconStyles: {
+            prop: "prop_iconStyles" ,
+            default: { "font-size" : "30px" , "display" : "block" ,  "text-align" : "center" , }
+        } ,
+        prop_title: {
+            prop: "prop_title" ,
+            default: null
+        } ,
+        prop_btnAddStatus: {
+            prop: "prop_btnAddStatus" ,
+            default: false
+        } ,
+        prop_btnAddClass: {
+            prop: "prop_btnAddClass" ,
+            default:  [ "mx-auto"]
+        } ,
+        prop_btnAddStyles: {
+            prop: "prop_btnAddStyles" ,
+            default:  {"cursor" : "pointer" , "width" : "100%" , "height" : "32px" , "text-align" : "center!important" ,}
+        } ,
+        prop_btnAddIcon: {
+            prop: "prop_btnAddIcon" ,
+            default:  "&#10082;"
+        } ,
+        prop_btnAddTitle: {
+            prop: "prop_btnAddTitle" ,
+            default: "add item"
+        } ,
+    }
+
 
     /* ---------------------------------------------
-    PROPERTYs
-  --------------------------------------------- */
+      PROPERTYs Props
+      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
         ] ,
         part_border: [
-            {prop : "prop_borderClass"    , default: ["border" , "border-danger" , "rounded" , "shadow-sm"]} ,
-            {prop : "prop_borderStyles"   , default: {}} ,
+            this._COMPONENT_PATTERN.prop_borderClass ,
+            this._COMPONENT_PATTERN.prop_borderStyles ,
         ] ,
         part_icon: [
-            {prop : "prop_icon"           , default: "&#9888;"} ,
-            {prop : "prop_iconClass"      , default: ["font-30pt" , "text-danger"]} ,
-            {prop : "prop_iconStyles"     , default: { "font-size" : "30px" , "display" : "block" ,  "text-align" : "center" , }} ,
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_iconClass ,
+            this._COMPONENT_PATTERN.prop_iconStyles ,
         ] ,
         part_title: [
-            {prop : "prop_title"          , default: null} ,
-
+            this._COMPONENT_PATTERN.prop_title ,
         ] ,
         part_btn_retry: [
-            {prop : "prop_btnAddStatus"   , default: false} ,
-            {prop : "prop_btnAddClass"    , default: [ "mx-auto"]} ,
-            {prop : "prop_btnAddStyles"   , default:  {"cursor" : "pointer" , "width" : "100%" , "height" : "32px" , "text-align" : "center!important" ,}} ,
-            {prop : "prop_btnAddIcon"     , default: "&#10082;"} ,
-            {prop : "prop_btnAddTitle"    , default: "add item"} ,
+            this._COMPONENT_PATTERN.prop_btnAddStatus ,
+            this._COMPONENT_PATTERN.prop_btnAddClass ,
+            this._COMPONENT_PATTERN.prop_btnAddStyles ,
+            this._COMPONENT_PATTERN.prop_btnAddIcon ,
+            this._COMPONENT_PATTERN.prop_btnAddTitle ,
         ] ,
     }
 
+
+    /* ---------------------------------------------
+         PROPERTYs Schema
+     --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border: {
@@ -1139,26 +1224,58 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
 -------------------------------------*/
 class ComponentHeaderBase extends ComponentBase{
 
+
     /* ---------------------------------------------
-    PROPERTYs
+      PROPERTYs Pattern
     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_borderClass : {
+            prop: "prop_borderClass" ,
+            default: ["pb-0","px-2","mb-1","border-bottom"]
+        } ,
+        prop_borderStyles : {
+            prop: "prop_borderStyles" ,
+            default: {}
+        } ,
+        prop_size : {
+            prop: "prop_size" ,
+            default: 5
+        } ,
+        prop_title : {
+            prop: "prop_title" ,
+            default: ""
+        } ,
+        prop_icon : {
+            prop: "prop_icon" ,
+            default: null
+        } ,
+    }
+
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
         ] ,
         part_border: [
-            {prop : "prop_borderClass"   , default: ["pb-0","px-2","mb-1","border-bottom"]} ,
-            {prop : "prop_borderStyles"  , default: {}} ,
+            this._COMPONENT_PATTERN.prop_borderClass ,
+            this._COMPONENT_PATTERN.prop_borderStyles ,
         ] ,
         part_header: [
-            {prop : "prop_size"          , default: 5} ,
-            {prop : "prop_title"         , default: ""} ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_title ,
         ] ,
         part_icon: [
-            {prop : "prop_icon" , default: null}
+            this._COMPONENT_PATTERN.prop_icon ,
         ]
     }
 
+
+    /* ---------------------------------------------
+         PROPERTYs Schema
+     --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border: {
@@ -1320,28 +1437,71 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
 class ComponentLabelBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
-    --------------------------------------------- */
+     PROPERTYs Pattern
+   --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_labelClass : {
+            prop: "prop_labelClass" ,
+            default: ["shadow-sm" , "px-2" , "py-1"]
+        } ,
+        prop_labelStyles : {
+            prop: "prop_labelStyles" ,
+            default: {}
+        } ,
+        prop_labelBackgroundColor : {
+            prop: "prop_labelBackgroundColor" ,
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("backgroundColor")   ? tools_const.styles.label.backgroundColor : ""
+        } ,
+        prop_title : {
+            prop: "prop_title" ,
+            default: null
+        } ,
+        prop_for : {
+            prop: "prop_for" ,
+            default: null
+        } ,
+        prop_labelColor : {
+            prop: "prop_labelColor" ,
+            default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")             ? tools_const.styles.label.color           : ""
+        } ,
+        prop_tooltipIcon : {
+            prop: "prop_tooltipIcon" ,
+            default: "!"
+        } ,
+        prop_tooltipDescription : {
+            prop: "prop_tooltipDescription" ,
+            default: null
+        } ,
+    }
+
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
         ] ,
         part_border: [
-            {prop : "prop_labelClass"            , default:  ["shadow-sm" , "px-2" , "py-1"]} ,
-            {prop : "prop_labelStyles"           , default: {}} ,
-            {prop : "prop_labelBackgroundColor"  , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("backgroundColor")   ? tools_const.styles.label.backgroundColor : ""} ,
+            this._COMPONENT_PATTERN.prop_labelClass ,
+            this._COMPONENT_PATTERN.prop_labelStyles ,
+            this._COMPONENT_PATTERN.prop_labelBackgroundColor ,
         ] ,
         part_label: [
-            {prop : "prop_title"                 , default: null} ,
-            {prop : "prop_for"                   , default: null} ,
-            {prop : "prop_labelColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")             ? tools_const.styles.label.color           : ""} ,
+            this._COMPONENT_PATTERN.prop_title ,
+            this._COMPONENT_PATTERN.prop_for ,
+            this._COMPONENT_PATTERN.prop_labelColor ,
         ] ,
         part_tooltip_desctiopn: [
-            {prop : "prop_tooltipIcon"           , default: "!"} ,
-            {prop : "prop_tooltipDescription"    , default: null} ,
+            this._COMPONENT_PATTERN.prop_tooltipIcon ,
+            this._COMPONENT_PATTERN.prop_tooltipDescription ,
         ]
     }
 
+
+    /* ---------------------------------------------
+         PROPERTYs Schema
+     --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border: {
@@ -1552,49 +1712,128 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
 class ComponentLinkBase extends ComponentBase{
 
 
+
     /* ---------------------------------------------
-     PROPERTYs
-    --------------------------------------------- */
+     PROPERTYs Pattern
+   --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_borderClass: {
+            prop : "prop_borderClass",
+            default: ["row"  , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded"]
+        } ,
+        prop_borderStyles: {
+            prop : "prop_borderStyles",
+            default: {
+                "cursor" : "pointer" ,
+                "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("normal") && tools_const.styles.elementLink.normal.hasOwnProperty("backgroundColor")  ? tools_const.styles.elementLink.normal.backgroundColor : ""
+            }
+       } ,
+        prop_borderHoverStyles: {
+            prop : "prop_borderHoverStyles",
+            default: {
+                "transition" : "background-color ease 300ms" ,
+                "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("hover") && tools_const.styles.elementLink.hover.hasOwnProperty("backgroundColor") ? tools_const.styles.elementLink.hover.backgroundColor : ""
+            }
+        } ,
+        prop_linkHref: {
+            prop : "prop_linkHref",
+            default: null
+        } ,
+        prop_imageSource: {
+            prop : "prop_imageSource",
+            default: null
+        } ,
+        prop_imageTitle: {
+                prop : "prop_imageTitle",
+                default: null
+        } ,
+        prop_imageAlt: {
+            prop : "prop_imageAlt",
+            default: null
+        } ,
+        prop_imageClass: {
+            prop : "prop_imageClass",
+            default: ["text-center"]
+        } ,
+        prop_imageStyles:  {
+            prop : "prop_imageStyles",
+            default: null
+        } ,
+
+        prop_iconSource: {
+            prop : "prop_iconSource",
+            default: null
+        } ,
+        prop_iconIsItalik: {
+            prop : "prop_iconIsItalik",
+            default: false
+        } ,
+        prop_iconClass: {
+            prop : "prop_iconClass",
+            default: ["text-center"]
+        } ,
+        prop_iconStyles: {
+            prop : "prop_iconStyles",
+            default: null
+        } ,
+
+        prop_title: {
+            prop : "prop_title",
+            default: ""
+        } ,
+        prop_titleClass: {
+            prop : "prop_titleClass",
+            default: []
+        } ,
+        prop_titleStyles: {
+            prop : "prop_titleStyles",
+            default: {
+                "height": "100%",
+                "line-height": "500%",
+                "text-align": "center"
+            }
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+      --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
 
         ] ,
         part_border: [
-            {prop : "prop_borderClass"                  , default: ["row"  , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded"]} ,
-            {prop : "prop_borderStyles"                 , default: {
-                    "cursor" : "pointer" ,
-                    "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("normal") && tools_const.styles.elementLink.normal.hasOwnProperty("backgroundColor")  ? tools_const.styles.elementLink.normal.backgroundColor : ""
-                }} ,
-            {prop : "prop_borderHoverStyles"            , default: {
-                    "transition" : "background-color ease 300ms" ,
-                    "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("hover") && tools_const.styles.elementLink.hover.hasOwnProperty("backgroundColor") ? tools_const.styles.elementLink.hover.backgroundColor : ""
-                }} ,
-            {prop : "prop_linkHref"                     , default: null} ,
+            this._COMPONENT_PATTERN.prop_borderClass ,
+            this._COMPONENT_PATTERN.prop_borderStyles ,
+            this._COMPONENT_PATTERN.prop_borderHoverStyles ,
+            this._COMPONENT_PATTERN.prop_linkHref ,
         ] ,
         part_image: [
-            {prop : "prop_imageSource"                  , default: null} ,
-            {prop : "prop_imageTitle"                   , default: null} ,
-            {prop : "prop_imageAlt"                     , default: null} ,
-            {prop : "prop_imageClass"                   , default: ["text-center"]} ,
-            {prop : "prop_imageStyles"                  , default: null} ,
+            this._COMPONENT_PATTERN.prop_imageSource ,
+            this._COMPONENT_PATTERN.prop_imageTitle ,
+            this._COMPONENT_PATTERN.prop_imageAlt ,
+            this._COMPONENT_PATTERN.prop_imageClass ,
+            this._COMPONENT_PATTERN.prop_imageStyles ,
         ] ,
         part_icon: [
-            {prop : "prop_iconSource"                   , default: null} ,
-            {prop : "prop_iconIsItalik"                 , default: false} ,
-            {prop : "prop_iconClass"                    , default: ["text-center"]} ,
-            {prop : "prop_iconStyles"                   , default: null} ,
+            this._COMPONENT_PATTERN.prop_iconSource ,
+            this._COMPONENT_PATTERN.prop_iconIsItalik ,
+            this._COMPONENT_PATTERN.prop_iconClass ,
+            this._COMPONENT_PATTERN.prop_iconStyles ,
         ] ,
         part_title: [
-            {prop : "prop_title"                        , default: ""} ,
-            {prop : "prop_titleClass"                   , default: []} ,
-            {prop : "prop_titleStyles"                  , default: {
-                    "height": "100%",
-                    "line-height": "500%",
-                    "text-align": "center"
-                }} ,
+            this._COMPONENT_PATTERN.prop_title ,
+            this._COMPONENT_PATTERN.prop_titleClass ,
+            this._COMPONENT_PATTERN.prop_titleStyles ,
         ] ,
     }
 
+
+    /* ---------------------------------------------
+     PROPERTYs Schema
+     --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border: {
@@ -1849,39 +2088,97 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
 class ComponentDescriptionBase extends ComponentBase{
 
     /* ---------------------------------------------
-       PROPERTYs
-      --------------------------------------------- */
+       PROPERTYs Pattern
+       --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_borderClass: {
+            prop: "prop_borderClass",
+            default: []
+        },
+        prop_borderStyles: {
+            prop: "prop_borderStyles",
+            default: {}
+        },
+        prop_height: {
+            prop: "prop_height",
+            default: 250
+        },
+        var_showContent: {
+            prop: "var_showContent",
+            default: false
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: null
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: ""
+        },
+        prop_description: {
+            prop: "prop_description",
+            default: ""
+        },
+        prop_descriptionClass: {
+            prop: "prop_descriptionClass",
+            default: []
+        },
+        prop_descriptionStyles: {
+            prop: "prop_descriptionStyles",
+            default: {}
+        },
+        prop_buttonTitleMore: {
+            prop: "prop_buttonTitleMore",
+            default: "more ..."
+        },
+        prop_buttonTitleLess: {
+            prop: "prop_buttonTitleLess",
+            default: "less ..."
+        },
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_border: [
-            {prop : "prop_borderClass"      , default: []} ,
-            {prop : "prop_borderStyles"     , default: {}} ,
-        ] ,
-        part_border_content: [
-            {prop : "prop_height"                , default: 250} ,
-            {prop : "var_showContent"            , default: false} ,
-        ] ,
-        part_header: [
-            {prop : "prop_icon"                  , default: null} ,
-            {prop : "prop_title"                 , default: ""} ,
-            {prop : "var_showContent"            , default: false} ,
-        ] ,
-        part_description: [
-            {prop : "prop_description"           , default: ""} ,
-            {prop : "prop_descriptionClass"      , default: []} ,
-            {prop : "prop_descriptionStyles"     , default: {}} ,
-            {prop : "prop_height"                , default: 250} ,
-            {prop : "var_showContent"            , default: false} ,
-        ] ,
-        part_btnMore: [
-            {prop : "var_showContent"            , default: false} ,
-            {prop : "prop_buttonTitleMore"       , default: "more ..."} ,
-            {prop : "prop_buttonTitleLess"       , default: "less ..."} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_borderClass,
+            this._COMPONENT_PATTERN.prop_borderStyles,
+        ],
 
+        part_border_content: [
+            this._COMPONENT_PATTERN.prop_height,
+            this._COMPONENT_PATTERN.var_showContent,
+        ],
+
+        part_header: [
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.var_showContent,
+        ],
+
+        part_description: [
+            this._COMPONENT_PATTERN.prop_description,
+            this._COMPONENT_PATTERN.prop_descriptionClass,
+            this._COMPONENT_PATTERN.prop_descriptionStyles,
+            this._COMPONENT_PATTERN.prop_height,
+            this._COMPONENT_PATTERN.var_showContent,
+        ],
+
+        part_btnMore: [
+            this._COMPONENT_PATTERN.var_showContent,
+            this._COMPONENT_PATTERN.prop_buttonTitleMore,
+            this._COMPONENT_PATTERN.prop_buttonTitleLess,
+        ],
+    };
+
+
+    /* ---------------------------------------------
+     PROPERTYs Schema
+     --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border: {
@@ -2161,24 +2458,67 @@ window.ComponentDescription = class ComponentDescription extends ComponentDescri
 class ComponentInfoBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+       PROPERTYs Pattern
+       --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_icon: {
+            prop: "prop_icon",
+            default: null
+        },
+        prop_iconClass: {
+            prop: "prop_iconClass",
+            default: []
+        },
+        prop_iconStyles: {
+            prop: "prop_iconStyles",
+            default: {
+                "margin": "0 5px",
+                "width": "30px",
+                "line-height": "20px",
+                "font-size": "20pt",
+                "top": "0"
+            }
+        },
+        prop_info: {
+            prop: "prop_info",
+            default: ""
+        },
+        prop_infoClass: {
+            prop: "prop_infoClass",
+            default: []
+        },
+        prop_infoStyles: {
+            prop: "prop_infoStyles",
+            default: {}
+        }
+    };
+
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_icon: [
-            {prop : "prop_icon"                , default: null} ,
-            {prop : "prop_iconClass"           , default: []} ,
-            {prop : "prop_iconStyles"          , default: {"margin" : "0 5px", "width" : "30px", "line-height" :   "20px", "font-size" : "20pt;", "top" : "0" ,}} ,
-        ] ,
-        part_content: [
-            {prop : "prop_info"                , default: ""} ,
-            {prop : "prop_infoClass"           , default: []} ,
-            {prop : "prop_infoStyles"          , default: {}} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_iconClass,
+            this._COMPONENT_PATTERN.prop_iconStyles
+        ],
 
+        part_content: [
+            this._COMPONENT_PATTERN.prop_info,
+            this._COMPONENT_PATTERN.prop_infoClass,
+            this._COMPONENT_PATTERN.prop_infoStyles
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+     PROPERTYs Schema
+     --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_icon: {} ,
@@ -2303,8 +2643,6 @@ window.ComponentInfo = class ComponentInfo extends ComponentInfoBase{
 }
 
 
-
-
 /*-------------------------------------
  01-08) Component Card
 -------------------------------------
@@ -2326,28 +2664,70 @@ window.ComponentInfo = class ComponentInfo extends ComponentInfoBase{
 class ComponentCardBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_cardClass: {
+            prop: "prop_cardClass",
+            default: []
+        },
+        prop_cardStyles: {
+            prop: "prop_cardStyles",
+            default: {}
+        },
+        prop_header: {
+            prop: "prop_header",
+            default: null
+        },
+        prop_cardHeaderClassBackground: {
+            prop: "prop_cardHeaderClassBackground",
+            default: "bg-secondary"
+        },
+        prop_cardHeaderClassColor: {
+            prop: "prop_cardHeaderClassColor",
+            default: "text-white"
+        },
+        prop_body: {
+            prop: "prop_body",
+            default: null
+        },
+        prop_cardBodyClassBackground: {
+            prop: "prop_cardBodyClassBackground",
+            default: "bg-white"
+        },
+        prop_cardBodyClassColor: {
+            prop: "prop_cardBodyClassColor",
+            default: "text-dark"
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ],
         part_card: [
-            {prop : "prop_cardClass"                      , default: []} ,
-            {prop : "prop_cardStyles"                     , default: {}} ,
+            this._COMPONENT_PATTERN.prop_cardClass,
+            this._COMPONENT_PATTERN.prop_cardStyles,
         ],
-        part_card_header: [
-            {prop : "prop_header"                         , default: null} ,
-            {prop : "prop_cardHeaderClassBackground"      , default: "bg-secondary"} ,
-            {prop : "prop_cardHeaderClassColor"           , default: "text-white"} ,
-        ],
-        part_card_body: [
-            {prop : "prop_body"                           , default: null} ,
-            {prop : "prop_cardBodyClassBackground"        , default: "bg-white"} ,
-            {prop : "prop_cardBodyClassColor"             , default: "text-dark"} ,
-        ],
-    }
 
+        part_card_header: [
+            this._COMPONENT_PATTERN.prop_header,
+            this._COMPONENT_PATTERN.prop_cardHeaderClassBackground,
+            this._COMPONENT_PATTERN.prop_cardHeaderClassColor,
+        ],
+
+        part_card_body: [
+            this._COMPONENT_PATTERN.prop_body,
+            this._COMPONENT_PATTERN.prop_cardBodyClassBackground,
+            this._COMPONENT_PATTERN.prop_cardBodyClassColor,
+        ],
+    };
+
+    /* ---------------------------------------------
+     PROPERTYs Schema
+     --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_card_header : {} ,
@@ -2490,7 +2870,6 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
 
 
 
-
 /* ===============================================================================================================
  [02] FETCH
 =============================================================================================================== */
@@ -2509,19 +2888,41 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
 class ComponentLoadingBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type: {
+            prop: "prop_type",
+            default: "circle" // یا null اگر خواستی
+        },
+        prop_background_loading: {
+            prop: "prop_background_loading",
+            default: null
+        },
+        prop_background_shadow: {
+            prop: "prop_background_shadow",
+            default: true
+        },
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_loading: [
-            {prop : "prop_type"                            , default: "circle"  } ,  // circle  //null
-            {prop : "prop_background_loading"              , default: null} ,
-            {prop : "prop_background_shadow"               , default: true} ,
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_background_loading,
+            this._COMPONENT_PATTERN.prop_background_shadow,
         ]
-    }
+    };
 
+
+    /* ---------------------------------------------
+      PROPERTYs Schema
+      --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_loading: {} ,
@@ -2686,22 +3087,53 @@ window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
 class Component404Base extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
+        PROPERTYs Pattern
      --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type: {
+            prop: "prop_type",
+            default: "simple_animation" // یا مقدار پیش‌فرض دلخواه
+        },
+        prop_width: {
+            prop: "prop_width",
+            default: 250
+        },
+        prop_height: {
+            prop: "prop_height",
+            default: 100
+        },
+        prop_btnRetry: {
+            prop: "prop_btnRetry",
+            default: {
+                prop_type: "submit",
+                prop_title: "Retry",
+                prop_btnClass: ["w-100"]
+            }
+        },
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_404: [
-            {prop : "prop_type"                            , default: "simple_animation"  } ,     // simple_animation  //null
-            {prop : "prop_width"                           , default: 250                 } ,
-            {prop : "prop_height"                          , default: 100                 } ,
-        ] ,
-        part_button_retry: [
-            {prop : "prop_btnRetry"                        , default: {prop_type: "submit"  , prop_title: "Retry" , prop_btnClass: ["w-100"]}      } ,
-        ]
-    }
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_width,
+            this._COMPONENT_PATTERN.prop_height,
+        ],
 
+        part_button_retry: [
+            this._COMPONENT_PATTERN.prop_btnRetry
+        ]
+    };
+
+
+    /* ---------------------------------------------
+      PROPERTYs Schema
+      --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_404: {} ,
@@ -3030,32 +3462,70 @@ window.Component404 = class Component404 extends Component404Base{
 class ComponentFormBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: ["border", "shadow-sm", "p-2"]
+        },
+        prop_formStyles: {
+            prop: "prop_formStyles",
+            default: {}
+        },
+        prop_forms: {
+            prop: "prop_forms",
+            default: null
+        },
+        prop_url: {
+            prop: "prop_url",
+            default: ""
+        },
+        prop_data: {
+            prop: "prop_data",
+            default: []
+        },
+        prop_btnSubmit: {
+            prop: "prop_btnSubmit",
+            default: {
+                prop_type: "submit",
+                prop_title: "Submit",
+                prop_btnClass: ["w-100"]
+            }
+        }
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_border: [
-            {prop : "prop_formClass"      , default: ["border" , "shadow-sm" , "p-2" ]} ,
-            {prop : "prop_formStyles"     , default: {}} ,
-        ] ,
-        part_loading: [
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles
+        ],
 
-        ] ,
+        part_loading: [],
+
         part_form: [
-            {prop : "prop_forms"          , default: null } ,
-            {prop : "prop_url"            , default: "" } ,
-            {prop : "prop_data"           , default: [] } ,
-        ] ,
-        part_404: [
+            this._COMPONENT_PATTERN.prop_forms,
+            this._COMPONENT_PATTERN.prop_url,
+            this._COMPONENT_PATTERN.prop_data
+        ],
 
-        ] ,
+        part_404: [],
+
         part_button_submit: [
-            {prop : "prop_btnSubmit"      , default: {prop_type: "submit"  , prop_title: "Submit" , prop_btnClass: ["w-100"]}      } ,
+            this._COMPONENT_PATTERN.prop_btnSubmit
         ]
-    }
+    };
 
+
+    /* ---------------------------------------------
+       PROPERTYs Schema
+       --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border: {
@@ -3333,22 +3803,56 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
 class ComponentWidgetBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
+          PROPERTYs Pattern
+   --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_widgetClass: {
+            prop: "prop_widgetClass",
+            default: []
+        },
+        prop_widgetStyles: {
+            prop: "prop_widgetStyles",
+            default: { "min-height": "80px" }
+        },
+        prop_widgetMinHeight: {
+            prop: "prop_widgetMinHeight",
+            default: null
+        },
+        prop_btnMore_icon: {
+            prop: "prop_btnMore_icon",
+            default: ""
+        },
+        prop_btnMore_show: {
+            prop: "prop_btnMore_show",
+            default: false
+        },
+        prop_btnMore_link: {
+            prop: "prop_btnMore_link",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_border: [
-            {prop : "prop_widgetClass"                    , default:  []} ,
-            {prop : "prop_widgetStyles"                   , default:  {"min-height" : "80px"}} ,
-            {prop : "prop_widgetMinHeight"                , default:  null} ,
-            {prop : "prop_btnMore_icon"                   , default:  ""} ,
-            {prop : "prop_btnMore_show"                   , default:  false} ,
-            {prop : "prop_btnMore_link"                   , default:  null} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_widgetClass,
+            this._COMPONENT_PATTERN.prop_widgetStyles,
+            this._COMPONENT_PATTERN.prop_widgetMinHeight,
+            this._COMPONENT_PATTERN.prop_btnMore_icon,
+            this._COMPONENT_PATTERN.prop_btnMore_show,
+            this._COMPONENT_PATTERN.prop_btnMore_link
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border:{}
@@ -3611,21 +4115,51 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
 class ComponentIframeBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_url: {
+            prop: "prop_url",
+            default: ""
+        },
+        prop_width: {
+            prop: "prop_width",
+            default: "100%"
+        },
+        prop_height: {
+            prop: "prop_height",
+            default: "1000"
+        },
+        prop_iframeClass: {
+            prop: "prop_iframeClass",
+            default: []
+        },
+        prop_iframeStyles: {
+            prop: "prop_iframeStyles",
+            default: {}
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_iframe: [
-            {prop : "prop_url"                            , default:  ""} ,
-            {prop : "prop_width"                          , default:  "100%"} ,
-            {prop : "prop_height"                         , default:  "1000"} ,
-            {prop : "prop_iframeClass"                    , default:  []} ,
-            {prop : "prop_iframeStyles"                   , default:  {}} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_url,
+            this._COMPONENT_PATTERN.prop_width,
+            this._COMPONENT_PATTERN.prop_height,
+            this._COMPONENT_PATTERN.prop_iframeClass,
+            this._COMPONENT_PATTERN.prop_iframeStyles
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_iframe:{}
@@ -3763,25 +4297,70 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
 class ComponentButtonBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
-     --------------------------------------------- */
+         PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type: {
+            prop: "prop_type",
+            default: "submit"
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "BTN"
+        },
+        prop_btnClass: {
+            prop: "prop_btnClass",
+            default: ["w-100"]
+        },
+        prop_btnStyles: {
+            prop: "prop_btnStyles",
+            default: {}
+        },
+        prop_btnHoverStyles: {
+            prop: "prop_btnHoverStyles",
+            default: {}
+        },
+        prop_btnBackgroundColor: {
+            prop: "prop_btnBackgroundColor",
+            default: null
+        },
+        prop_btnBackgroundColor_hover: {
+            prop: "prop_btnBackgroundColor_hover",
+            default: null
+        },
+        prop_btnColor: {
+            prop: "prop_btnColor",
+            default: null
+        },
+        fn_callback: {
+            prop: "fn_callback",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_button: [
-            {prop : "prop_type"                         , default: "submit"  } ,  // cancel  //submit //null
-            {prop : "prop_title"                        , default: "BTN"     } ,
-            {prop : "prop_btnClass"                     , default: ["w-100"] } ,
-            {prop : "prop_btnStyles"                    , default: {}        } ,
-            {prop : "prop_btnHoverStyles"               , default: {}        } ,
-            {prop : "prop_btnBackgroundColor"           , default: null      } ,
-            {prop : "prop_btnBackgroundColor_hover"     , default: null      } ,
-            {prop : "prop_btnColor"                     , default: null      } ,
-            {prop : "fn_callback"                       , default: null      } ,
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_btnClass,
+            this._COMPONENT_PATTERN.prop_btnStyles,
+            this._COMPONENT_PATTERN.prop_btnHoverStyles,
+            this._COMPONENT_PATTERN.prop_btnBackgroundColor,
+            this._COMPONENT_PATTERN.prop_btnBackgroundColor_hover,
+            this._COMPONENT_PATTERN.prop_btnColor,
+            this._COMPONENT_PATTERN.fn_callback
         ]
-    }
+    };
 
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_button: {} ,
@@ -3935,45 +4514,84 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
 class ComponentOtpBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
-   --------------------------------------------- */
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        var_value: {
+            prop: "var_value",
+            default: null
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: "otp"
+        },
+        prop_input: {
+            prop: "prop_input",
+            default: null
+        },
+        prop_langs: {
+            prop: "prop_langs",
+            default: {
+                _title_otp_description: "کد برای شماره/ایمیل زیر ارسال شد",
+                _text_timer_after_active_otp: "تا ارسال مجدد کد",
+                _text_timer_after_di_active_otp: "کد منقضی شده است",
+                _text_get_new_otp: "کد جدید"
+            }
+        },
+        prop_length: {
+            prop: "prop_length",
+            default: 6
+        },
+        var_countdown_text: {
+            prop: "var_countdown_text",
+            default: "00:00"
+        },
+        var_activeForm_class: {
+            prop: "var_activeForm_class",
+            default: ""
+        },
+        var_diActiveForm_class: {
+            prop: "var_diActiveForm_class",
+            default: "d-none"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_value: [
-            {prop : "var_value"                           , default:  null} ,
-        ] ,
-        part_elements: [
+            this._COMPONENT_PATTERN.var_value
+        ],
 
-        ] ,
+        part_elements: [],
+
         part_label: [
-            {prop : "prop_name"                           , default:  "otp"} ,
-            {prop : "prop_input"                          , default:  null} ,
-            {prop : "prop_langs"                          , default:   {
-                    _title_otp_description : "کد برای شماره/ایمیل زیر ارسال شد" ,
-                    _text_timer_after_active_otp : "تا ارسال مجدد کد" ,
-                    _text_timer_after_di_active_otp : "کد منقضی شده است" ,
-                    _text_get_new_otp : "کد جدید" ,
-                }} ,
-        ] ,
-        part_inputs: [
-            {prop : "prop_name"                           , default:  "otp"} ,
-            {prop : "prop_length"                         , default:  6} ,
-        ] ,
-        part_description: [
-            {prop : "prop_langs"                          , default:   {
-                    _title_otp_description : "کد برای شماره/ایمیل زیر ارسال شد" ,
-                    _text_timer_after_active_otp : "تا ارسال مجدد کد" ,
-                    _text_timer_after_di_active_otp : "کد منقضی شده است" ,
-                    _text_get_new_otp : "کد جدید" ,
-                }} ,
-            {prop : "var_countdown_text"                   , default:  "00:00"} ,
-            {prop : "var_activeForm_class"                 , default:  ""} ,
-            {prop : "var_diActiveForm_class"               , default:  "d-none"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_input,
+            this._COMPONENT_PATTERN.prop_langs
+        ],
 
+        part_inputs: [
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_length
+        ],
+
+        part_description: [
+            this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.var_countdown_text,
+            this._COMPONENT_PATTERN.var_activeForm_class,
+            this._COMPONENT_PATTERN.var_diActiveForm_class
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_value: {} ,
@@ -4387,46 +5005,132 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
 class ComponentInputBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_title: {
+            prop: "prop_title",
+            default: null
+        },
+        prop_labelShow: {
+            prop: "prop_labelShow",
+            default: true
+        },
+        prop_labelTooltipDescription: {
+            prop: "prop_labelTooltipDescription",
+            default: null
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: null
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: null
+        },
+        prop_inputClass: {
+            prop: "prop_inputClass",
+            default: ["form-control"]
+        },
+        prop_inputStyles: {
+            prop: "prop_inputStyles",
+            default: {}
+        },
+        prop_type: {
+            prop: "prop_type",
+            default: "string"
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: null
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: null
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: null
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: ""
+        },
+        prop_btnAddStatus: {
+            prop: "prop_btnAddStatus",
+            default: false
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_btnAddIcon: {
+            prop: "prop_btnAddIcon",
+            default: "&plus;"
+        },
+        prop_btnAddTitle: {
+            prop: "prop_btnAddTitle",
+            default: "add item"
+        },
+        prop_btnAddClass: {
+            prop: "prop_btnAddClass",
+            default: []
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_label: [
-            {prop : "prop_title"                        , default: null} ,
-            {prop : "prop_labelShow"                    , default: true} ,
-            {prop : "prop_labelTooltipDescription"      , default: null} ,
-            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                  , default: null} ,
-            {prop : "prop_labelHoverStyles"             , default: null} ,
-        ] ,
-        part_input: [
-            {prop : "prop_inputClass"            , default: [" form-control"]} ,
-            {prop : "prop_inputStyles"           , default: {}} ,
-            {prop : "prop_type"                  , default: "string"} ,
-            {prop : "prop_name"                  , default: null} ,
-            {prop : "prop_value"                 , default: null} ,
-            {prop : "prop_placeholder"           , default: null} ,
-            {prop : "prop_icon"                  , default: ""} ,
-            {prop : "prop_btnAddStatus"          , default: false} ,
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
-        part_icon_clear: [
-            {prop : "prop_isDisable"             , default: false} ,
-            {prop : "prop_btnAddStatus"          , default: false} ,
-        ] ,
-        part_icon: [
-            {prop : "prop_icon"                  , default: ""} ,
-        ] ,
-        part_button: [
-            {prop : "prop_btnAddStatus"          , default: false} ,
-            {prop : "prop_btnAddIcon"            , default: "&plus;"} ,
-            {prop : "prop_btnAddTitle"           , default: "add item"} ,
-            {prop : "prop_btnAddClass"           , default: []} ,
-        ]
-    }
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelShow,
+            this._COMPONENT_PATTERN.prop_labelTooltipDescription,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles
+        ],
 
+        part_input: [
+            this._COMPONENT_PATTERN.prop_inputClass,
+            this._COMPONENT_PATTERN.prop_inputStyles,
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_placeholder,
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.prop_isDisable
+        ],
+
+        part_icon_clear: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_btnAddStatus
+        ],
+
+        part_icon: [
+            this._COMPONENT_PATTERN.prop_icon
+        ],
+
+        part_button: [
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.prop_btnAddIcon,
+            this._COMPONENT_PATTERN.prop_btnAddTitle,
+            this._COMPONENT_PATTERN.prop_btnAddClass
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label: {} ,
@@ -4836,50 +5540,135 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
 -------------------------------------*/
 class ComponentInputPriceBase extends ComponentBase{
 
+    /* ---------------------------------------------
+           PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_labelShow: {
+            prop: "prop_labelShow",
+            default: true
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: null
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: null
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: null
+        },
+        prop_inputClass: {
+            prop: "prop_inputClass",
+            default: ["form-control"]
+        },
+        prop_inputStyles: {
+            prop: "prop_inputStyles",
+            default: {}
+        },
+        prop_type: {
+            prop: "prop_type",
+            default: "string"
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: null
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: null
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: null
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: null
+        },
+        prop_btnAddStatus: {
+            prop: "prop_btnAddStatus",
+            default: false
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_btnAddIcon: {
+            prop: "prop_btnAddIcon",
+            default: "&plus;"
+        },
+        prop_btnAddTitle: {
+            prop: "prop_btnAddTitle",
+            default: "add item"
+        },
+        prop_btnAddClass: {
+            prop: "prop_btnAddClass",
+            default: []
+        },
+        prop_information: {
+            prop: "prop_information",
+            default: null
+        }
+    };
 
     /* ---------------------------------------------
-    PROPERTYs
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_label: [
-            {prop : "prop_labelShow"             , default: true} ,
-            {prop : "prop_labelClass"            , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"           , default: null} ,
-            {prop : "prop_labelHoverStyles"      , default: null} ,
-            {prop : "prop_title"                 , default: null} ,
-        ] ,
-        part_input: [
-            {prop : "prop_inputClass"            , default: [" form-control"]} ,
-            {prop : "prop_inputStyles"           , default: {}} ,
-            {prop : "prop_type"                  , default: "string"} ,
-            {prop : "prop_name"                  , default: null} ,
-            {prop : "prop_value"                 , default: null} ,
-            {prop : "prop_placeholder"           , default: null} ,
-            {prop : "prop_icon"                  , default: null} ,
-            {prop : "prop_btnAddStatus"          , default: false} ,
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
-        part_icon_clear: [
-            {prop : "prop_btnAddStatus"          , default: false} ,
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
-        part_icon: [
-            {prop : "prop_icon"                  , default: null} ,
-        ] ,
-        part_button: [
-            {prop : "prop_btnAddStatus"          , default: false} ,
-            {prop : "prop_btnAddIcon"            , default: "&plus;"} ,
-            {prop : "prop_btnAddTitle"           , default: "add item"} ,
-            {prop : "prop_btnAddClass"           , default: []} ,
-        ] ,
-        part_information: [
-            {prop : "prop_information"           , default: null} ,
-        ]
-    }
+            this._COMPONENT_PATTERN.prop_labelShow,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles,
+            this._COMPONENT_PATTERN.prop_title
+        ],
 
+        part_input: [
+            this._COMPONENT_PATTERN.prop_inputClass,
+            this._COMPONENT_PATTERN.prop_inputStyles,
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_placeholder,
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.prop_isDisable
+        ],
+
+        part_icon_clear: [
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.prop_isDisable
+        ],
+
+        part_icon: [
+            this._COMPONENT_PATTERN.prop_icon
+        ],
+
+        part_button: [
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.prop_btnAddIcon,
+            this._COMPONENT_PATTERN.prop_btnAddTitle,
+            this._COMPONENT_PATTERN.prop_btnAddClass
+        ],
+
+        part_information: [
+            this._COMPONENT_PATTERN.prop_information
+        ]
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label: {} ,
@@ -5391,62 +6180,165 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
 class ComponentInputColorBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_name: {
+            prop: "prop_name",
+            default: ""
+        },
+        var_colorSelected: {
+            prop: "var_colorSelected",
+            default: "#ff0000"
+        },
+        prop_labelShow: {
+            prop: "prop_labelShow",
+            default: true
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: null
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: null
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: null
+        },
+        prop_colorSelected: {
+            prop: "prop_colorSelected",
+            default: "#ff0000"
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_borderColor: {
+            prop: "prop_borderColor",
+            default: tools_const?.styles?.inputColor?.boderColor ?? ""
+        },
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: ["rounded"]
+        },
+        prop_formStyles: {
+            prop: "prop_formStyles",
+            default: { width: "25px", height: "25px" }
+        },
+        prop_optionHeight: {
+            prop: "prop_optionHeight",
+            default: 375
+        },
+        prop_optionWidth: {
+            prop: "prop_optionWidth",
+            default: 350
+        },
+        prop_optionStyles: {
+            prop: "prop_optionStyles",
+            default: {}
+        },
+        prop_positionTop: {
+            prop: "prop_positionTop",
+            default: "0px"
+        },
+        prop_backgroundColorBody: {
+            prop: "prop_backgroundColorBody",
+            default: tools_const?.styles?.inputColor?.backgroundColor_body ?? ""
+        },
+        prop_colorBody: {
+            prop: "prop_colorBody",
+            default: tools_const?.styles?.inputColor?.color_body ?? ""
+        },
+        prop_hasRules: {
+            prop: "prop_hasRules",
+            default: true
+        },
+        prop_isAbsoluteRule: {
+            prop: "prop_isAbsoluteRule",
+            default: true
+        },
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_value: [
-            {prop : "prop_name"                       , default:  ""} ,
-            {prop : "var_colorSelected"              , default:  "#ff0000"} ,
-        ] ,
-        part_label: [
-            {prop : "prop_labelShow"                  , default: true} ,
-            {prop : "prop_labelClass"                 , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                , default: null} ,
-            {prop : "prop_labelHoverStyles"           , default: null} ,
-            {prop : "prop_title"                      , default: null} ,
-        ] ,
-        part_form_color: [
-            {prop : "prop_colorSelected"              , default:  "#ff0000"} ,
-            {prop : "prop_isDisable"                  , default:  false} ,
-            {prop : "prop_borderColor"                , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputColor") &&  tools_const.styles.inputColor.hasOwnProperty("boderColor") ? tools_const.styles.inputColor.boderColor : "" } ,
-            {prop : "prop_formClass"                  , default: ["rounded"]} ,
-            {prop : "prop_formStyles"                 , default: {"width" : "25px" , "height" : "25px"}} ,
-        ] ,
-        part_form_selector: [
-            {prop : "prop_optionHeight"               , default: 375} ,
-            {prop : "prop_optionWidth"                , default: 350} ,
-            {prop : "prop_optionStyles"               , default: {}} ,
-            {prop : "prop_positionTop"                , default: "0px"} ,
-            {prop : "prop_backgroundColorBody"        , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputColor") &&  tools_const.styles.inputColor.hasOwnProperty("backgroundColor_body") ? tools_const.styles.inputColor.backgroundColor_body : "" } ,
-        ] ,
-        part_form_selector_information_code: [
-            {prop : "prop_colorSelected"              , default:  "#ff0000"} ,
-            {prop : "prop_colorBody"                  , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputColor") &&  tools_const.styles.inputColor.hasOwnProperty("color_body") ? tools_const.styles.inputColor.color_body : "" } ,
-        ] ,
-        part_form_selector_information_opacity: [
-            {prop : "prop_colorBody"                  , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputColor") &&  tools_const.styles.inputColor.hasOwnProperty("color_body") ? tools_const.styles.inputColor.color_body : "" } ,
-        ] ,
-        part_form_selector_hue_slider: [
-            {prop : "prop_optionWidth"                , default: 350} ,
-        ] ,
-        part_form_selector_saturation_lightness_square: [
-            {prop : "prop_optionWidth"                , default: 350} ,
-        ] ,
-        part_form_selector_opacity_slider: [
-            {prop : "prop_optionWidth"                , default: 350} ,
-        ] ,
-        part_validate: [
-            {prop : "prop_hasRules"              , default: true} ,
-            {prop : "prop_isAbsoluteRule"        , default: true} ,
-            {prop : "prop_listRules"             , default: []} ,
-            {prop : "prop_isDisable"             , default: false} ,
-            {prop : "prop_title"                 , default: "TITLE"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.var_colorSelected
+        ],
 
+        part_label: [
+            this._COMPONENT_PATTERN.prop_labelShow,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles,
+            this._COMPONENT_PATTERN.prop_title
+        ],
+
+        part_form_color: [
+            this._COMPONENT_PATTERN.prop_colorSelected,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_borderColor,
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles
+        ],
+
+        part_form_selector: [
+            this._COMPONENT_PATTERN.prop_optionHeight,
+            this._COMPONENT_PATTERN.prop_optionWidth,
+            this._COMPONENT_PATTERN.prop_optionStyles,
+            this._COMPONENT_PATTERN.prop_positionTop,
+            this._COMPONENT_PATTERN.prop_backgroundColorBody
+        ],
+
+        part_form_selector_information_code: [
+            this._COMPONENT_PATTERN.prop_colorSelected,
+            this._COMPONENT_PATTERN.prop_colorBody
+        ],
+
+        part_form_selector_information_opacity: [
+            this._COMPONENT_PATTERN.prop_colorBody
+        ],
+
+        part_form_selector_hue_slider: [
+            this._COMPONENT_PATTERN.prop_optionWidth
+        ],
+
+        part_form_selector_saturation_lightness_square: [
+            this._COMPONENT_PATTERN.prop_optionWidth
+        ],
+
+        part_form_selector_opacity_slider: [
+            this._COMPONENT_PATTERN.prop_optionWidth
+        ],
+
+        part_validate: [
+            this._COMPONENT_PATTERN.prop_hasRules,
+            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_title
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_value: {} ,
@@ -6299,54 +7191,136 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 class ComponentInputSizeBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_title: {
+            prop: "prop_title",
+            default: "title"
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: {}
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: {}
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: null
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_iconPositive: {
+            prop: "prop_iconPositive",
+            default: tools_icons.icon_plus_badge()
+        },
+        prop_iconNegetive: {
+            prop: "prop_iconNegetive",
+            default: tools_icons.icon_minus_badge()
+        },
+        prop_inputClass: {
+            prop: "prop_inputClass",
+            default: ["form-control"]
+        },
+        prop_inputStyles: {
+            prop: "prop_inputStyles",
+            default: {}
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: null
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: null
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: null
+        },
+        prop_min: {
+            prop: "prop_min",
+            default: null
+        },
+        prop_max: {
+            prop: "prop_max",
+            default: null
+        },
+        prop_isAbsoluteRule: {
+            prop: "prop_isAbsoluteRule",
+            default: true
+        },
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_label: [
-            {prop : "prop_title"                             , default:  "title"} ,
-            {prop : "prop_labelClass"                        , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                       , default:  {}} ,
-            {prop : "prop_labelHoverStyles"                  , default:  {}} ,
-        ] ,
-        part_body: [
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles
+        ],
 
-        ] ,
+        part_body: [],
+
         part_body_icon: [
-            {prop : "prop_icon"                              , default: null} ,
-        ] ,
-        part_body_icon_clear: [
-            {prop : "prop_isDisable"                         , default: false} ,
-        ] ,
-        part_body_icon_positive: [
-            {prop : "prop_isDisable"                         , default: false} ,
-            {prop : "prop_iconPositive"                      , default: tools_icons.icon_plus_badge()} ,
-        ] ,
-        part_body_icon_negetive: [
-            {prop : "prop_isDisable"                         , default: false} ,
-            {prop : "prop_iconNegetive"                      , default: tools_icons.icon_minus_badge()} ,
-        ] ,
-        part_body_input_size: [
-            {prop : "prop_inputClass"                        , default: [" form-control"]} ,
-            {prop : "prop_inputStyles"                       , default: {}} ,
-            {prop : "prop_name"                              , default: null} ,
-            {prop : "prop_value"                             , default: null} ,
-            {prop : "prop_placeholder"                       , default: null} ,
-            {prop : "prop_icon"                              , default: null} ,
-            {prop : "prop_isDisable"                         , default: false} ,
-            {prop : "prop_min"                               , default: null} ,
-            {prop : "prop_max"                               , default: null} ,
-        ] ,
-        part_validate: [
-            {prop : "prop_isAbsoluteRule"                    , default: true} ,
-            {prop : "prop_listRules"                         , default: []} ,
-            {prop : "prop_isDisable"                         , default: false} ,
-            {prop : "prop_title"                             , default: "TITLE"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_icon
+        ],
 
+        part_body_icon_clear: [
+            this._COMPONENT_PATTERN.prop_isDisable
+        ],
+
+        part_body_icon_positive: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_iconPositive
+        ],
+
+        part_body_icon_negetive: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_iconNegetive
+        ],
+
+        part_body_input_size: [
+            this._COMPONENT_PATTERN.prop_inputClass,
+            this._COMPONENT_PATTERN.prop_inputStyles,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_placeholder,
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_min,
+            this._COMPONENT_PATTERN.prop_max
+        ],
+
+        part_validate: [
+            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_title
+        ]
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label: {} ,
@@ -6931,50 +7905,137 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
 class ComponentInputPasswordBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
-      --------------------------------------------- */
+          PROPERTYs Pattern
+   --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_title: {
+            prop: "prop_title",
+            default: "title"
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: {}
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: {}
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: null
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_iconPositive: {
+            prop: "prop_iconPositive",
+            default: tools_icons.icon_plus_badge()
+        },
+        prop_iconNegetive: {
+            prop: "prop_iconNegetive",
+            default: tools_icons.icon_minus_badge()
+        },
+        prop_inputClass: {
+            prop: "prop_inputClass",
+            default: ["form-control"]
+        },
+        prop_inputStyles: {
+            prop: "prop_inputStyles",
+            default: {}
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: null
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: null
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: null
+        },
+        prop_min: {
+            prop: "prop_min",
+            default: null
+        },
+        prop_max: {
+            prop: "prop_max",
+            default: null
+        },
+        prop_isAbsoluteRule: {
+            prop: "prop_isAbsoluteRule",
+            default: true
+        },
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_label: [
-            {prop : "prop_title"                        , default: "TITLE"} ,
-            {prop : "prop_labelShow"                    , default: true} ,
-            {prop : "prop_labelTooltipDescription"      , default: null} ,
-            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                  , default: null} ,
-            {prop : "prop_labelHoverStyles"             , default: null} ,
-        ] ,
-        part_body: [
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles
+        ],
 
-        ] ,
-        part_body_password: [
-            {prop : "prop_inputClass"            , default: [" form-control"]} ,
-            {prop : "prop_inputStyles"           , default: {}} ,
-            {prop : "prop_name"                  , default: null} ,
-            {prop : "prop_value"                 , default: null} ,
-            {prop : "prop_placeholder"           , default: null} ,
-            {prop : "prop_icon"                  , default:  tools_icons.icon_lock()} ,
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
+        part_body: [],
+
         part_body_icon: [
-            {prop : "prop_icon"                  , default: null} ,
-        ] ,
-        part_body_icon_clear: [
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
-        part_body_icon_visit: [
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
-        part_body_validate: [
-            {prop : "prop_hasRules"              , default: true} ,
-            {prop : "prop_isAbsoluteRule"        , default: true} ,
-            {prop : "prop_listRules"             , default: []} ,
-            {prop : "prop_isDisable"             , default: false} ,
-            {prop : "prop_title"                 , default: "TITLE"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_icon
+        ],
 
+        part_body_icon_clear: [
+            this._COMPONENT_PATTERN.prop_isDisable
+        ],
+
+        part_body_icon_positive: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_iconPositive
+        ],
+
+        part_body_icon_negetive: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_iconNegetive
+        ],
+
+        part_body_input_size: [
+            this._COMPONENT_PATTERN.prop_inputClass,
+            this._COMPONENT_PATTERN.prop_inputStyles,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_placeholder,
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_min,
+            this._COMPONENT_PATTERN.prop_max
+        ],
+
+        part_validate: [
+            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_title
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure:{
             part_label : {} ,
@@ -7458,48 +8519,124 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
 @prop_isAbsoluteRule
 -------------------------------------*/
 class ComponentInputEmailBase extends ComponentBase{
+    /* ---------------------------------------------
+           PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_title: {
+            prop: "prop_title",
+            default: "TITLE"
+        },
+        prop_labelShow: {
+            prop: "prop_labelShow",
+            default: true
+        },
+        prop_labelTooltipDescription: {
+            prop: "prop_labelTooltipDescription",
+            default: null
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: null
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: null
+        },
+        prop_inputClass: {
+            prop: "prop_inputClass",
+            default: ["form-control"]
+        },
+        prop_inputStyles: {
+            prop: "prop_inputStyles",
+            default: {}
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: null
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: null
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: null
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: null
+        },
+        prop_iconEmail: {
+            prop: "prop_icon",
+            default: tools_icons.icon_email()
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_isAbsoluteRule: {
+            prop: "prop_isAbsoluteRule",
+            default: true
+        },
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        }
+    };
 
     /* ---------------------------------------------
-  PROPERTYs
-  --------------------------------------------- */
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_label: [
-            {prop : "prop_title"                        , default: "TITLE"} ,
-            {prop : "prop_labelShow"                    , default: true} ,
-            {prop : "prop_labelTooltipDescription"      , default: null} ,
-            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                  , default: null} ,
-            {prop : "prop_labelHoverStyles"             , default: null} ,
-        ] ,
-        part_body: [
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelShow,
+            this._COMPONENT_PATTERN.prop_labelTooltipDescription,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles
+        ],
 
-        ] ,
+        part_body: [],
+
         part_body_email: [
-            {prop : "prop_inputClass"            , default: [" form-control"]} ,
-            {prop : "prop_inputStyles"           , default: {}} ,
-            {prop : "prop_name"                  , default: null} ,
-            {prop : "prop_value"                 , default: null} ,
-            {prop : "prop_placeholder"           , default: null} ,
-            {prop : "prop_icon"                  , default:  tools_icons.icon_email()} ,
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
-        part_body_icon: [
-            {prop : "prop_icon"                  , default: null} ,
-        ] ,
-        part_body_icon_clear: [
-            {prop : "prop_isDisable"             , default: false} ,
-        ] ,
-        part_body_validate: [
-            {prop : "prop_isAbsoluteRule"        , default: true} ,
-            {prop : "prop_listRules"             , default: []} ,
-            {prop : "prop_isDisable"             , default: false} ,
-            {prop : "prop_title"                 , default: "TITLE"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_inputClass,
+            this._COMPONENT_PATTERN.prop_inputStyles,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_placeholder,
+            this._COMPONENT_PATTERN.prop_iconEmail,
+            this._COMPONENT_PATTERN.prop_isDisable
+        ],
 
+        part_body_icon: [
+            this._COMPONENT_PATTERN.prop_icon
+        ],
+
+        part_body_icon_clear: [
+            this._COMPONENT_PATTERN.prop_isDisable
+        ],
+
+        part_body_validate: [
+            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_title
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure:{
             part_label : {} ,
@@ -7885,60 +9022,166 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
 class ComponentInputFileBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_name: {
+            prop: "prop_name",
+            default: "NAME"
+        },
+        prop_accept: {
+            prop: "prop_accept",
+            default: "*"
+        },
+        prop_maxCount: {
+            prop: "prop_maxCount",
+            default: null
+        },
+        prop_maxSize: {
+            prop: "prop_maxSize",
+            default: null
+        },
+        prop_textValidateSize: {
+            prop: "prop_textValidateSize",
+            default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"
+        },
+        prop_textValidateAccept: {
+            prop: "prop_textValidateAccept",
+            default: "فرمت قابل پذیرش {{fileAccept}} می باشد"
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "TITLE"
+        },
+        prop_labelShow: {
+            prop: "prop_labelShow",
+            default: true
+        },
+        prop_labelTooltipDescription: {
+            prop: "prop_labelTooltipDescription",
+            default: null
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: null
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: null
+        },
+        prop_borderColor: {
+            prop: "prop_borderColor",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor") ? tools_const.styles.inputFile.boderColor : "red"
+        },
+        prop_borderColorHover: {
+            prop: "prop_borderColorHover",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColorHover") ? tools_const.styles.inputFile.boderColorHover : "red"
+        },
+        prop_borderHeight: {
+            prop: "prop_borderHeight",
+            default: "150px"
+        },
+        prop_textColor: {
+            prop: "prop_textColor",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("textColor") ? tools_const.styles.inputFile.textColor : "red"
+        },
+        prop_text: {
+            prop: "prop_text",
+            default: "لطفا فایل خود را بکشید و رها کنید یا برای انتخاب کلیک کنید "
+        },
+        prop_showListFiles: {
+            prop: "prop_showListFiles",
+            default: true
+        },
+        var_fileIsValid: {
+            prop: "var_fileIsValid",
+            default: null
+        },
+        var_fileIsNotValid: {
+            prop: "var_fileIsNotValid",
+            default: null
+        },
+        prop_deleteBody: {
+            prop: "prop_deleteBody",
+            default: "آیا از حذف قایل مطمئن هستید"
+        },
+        prop_deleteBtnCancel: {
+            prop: "prop_deleteBtnCancel",
+            default: "لغو"
+        },
+        prop_deleteBtnAccept: {
+            prop: "prop_deleteBtnAccept",
+            default: "تایید"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_value: [
-            {prop : "prop_name"                  , default: "NAME"} ,
-            {prop : "prop_accept"                , default: "*"} ,
-            {prop : "prop_maxCount"              , default: null} ,
-            {prop : "prop_maxSize"               , default: null} ,
-            {prop : "prop_textValidateSize"      , default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"} ,
-            {prop : "prop_textValidateAccept"    , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_accept,
+            this._COMPONENT_PATTERN.prop_maxCount,
+            this._COMPONENT_PATTERN.prop_maxSize,
+            this._COMPONENT_PATTERN.prop_textValidateSize,
+            this._COMPONENT_PATTERN.prop_textValidateAccept
+        ],
+
         part_label: [
-            {prop : "prop_title"                        , default: "TITLE"} ,
-            {prop : "prop_labelShow"                    , default: true} ,
-            {prop : "prop_labelTooltipDescription"      , default: null} ,
-            {prop : "prop_labelClass"                   , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                  , default: null} ,
-            {prop : "prop_labelHoverStyles"             , default: null} ,
-            {prop : "prop_maxCount"                     , default: null} ,
-            {prop : "prop_maxSize"                      , default: null} ,
-            {prop : "prop_textValidateSize"             , default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"} ,
-            {prop : "prop_textValidateAccept"           , default: "فرمت قابل پذیرش {{fileAccept}} می باشد"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelShow,
+            this._COMPONENT_PATTERN.prop_labelTooltipDescription,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles,
+            this._COMPONENT_PATTERN.prop_maxCount,
+            this._COMPONENT_PATTERN.prop_maxSize,
+            this._COMPONENT_PATTERN.prop_textValidateSize,
+            this._COMPONENT_PATTERN.prop_textValidateAccept
+        ],
+
         part_body: [
-            {prop : "prop_borderColor"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor")   ? tools_const.styles.inputFile.boderColor : "red"} ,
-            {prop : "prop_borderColorHover"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColorHover")   ? tools_const.styles.inputFile.boderColorHover : "red"} ,
-            {prop : "prop_borderHeight"          , default: "150px"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_borderColor,
+            this._COMPONENT_PATTERN.prop_borderColorHover,
+            this._COMPONENT_PATTERN.prop_borderHeight
+        ],
+
         part_body_text: [
-            {prop : "prop_textColor"             , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("textColor")   ? tools_const.styles.inputFile.textColor : "red"} ,
-            {prop : "prop_text"                  , default: "لطفا فایل خود را بکشید و رها کنید یا برای انتخاب کلیک کنید "} ,
-        ] ,
-        part_footer: [
+            this._COMPONENT_PATTERN.prop_textColor,
+            this._COMPONENT_PATTERN.prop_text
+        ],
 
-        ] ,
+        part_footer: [],
+
         part_footer_files: [
-            {prop : "prop_showListFiles"        , default: true} ,
-            {prop : "var_fileIsValid"           , default: null} ,
-            {prop : "var_fileIsNotValid"        , default: null} ,
-        ] ,
-        part_footer_files_tooltips: [
-            {prop : "prop_showListFiles"        , default: true} ,
-            {prop : "var_fileIsNotValid"        , default: null} ,
-        ] ,
-        part_window_confirm: [
-            {prop : "prop_deleteBody"            , default: "آیا از حذف قایل مطمئن هستید"} ,
-            {prop : "prop_deleteBtnCancel"       , default: "لغو"} ,
-            {prop : "prop_deleteBtnAccept"       , default: "تایید"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_showListFiles,
+            this._COMPONENT_PATTERN.var_fileIsValid,
+            this._COMPONENT_PATTERN.var_fileIsNotValid
+        ],
 
+        part_footer_files_tooltips: [
+            this._COMPONENT_PATTERN.prop_showListFiles,
+            this._COMPONENT_PATTERN.var_fileIsNotValid
+        ],
+
+        part_window_confirm: [
+            this._COMPONENT_PATTERN.prop_deleteBody,
+            this._COMPONENT_PATTERN.prop_deleteBtnCancel,
+            this._COMPONENT_PATTERN.prop_deleteBtnAccept
+        ]
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure:{
             part_label : {} ,
@@ -8667,115 +9910,209 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
 class ComponentDateBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
+     PROPERTYs Pattern
+    -------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_backgroundMain: {
+            prop: "prop_backgroundMain",
+            default: tools_const?.styles?.inputDate?.backgroundColor_main || ""
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: null
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: null
+        },
+        prop_labelTitle: {
+            prop: "prop_title",
+            default: "TITLE"
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: ""
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: null
+        },
+        prop_type: {
+            prop: "prop_type",
+            default: 0
+        },
+        var_selected_date: {
+            prop: "var_selected_date",
+            default: null
+        },
+        prop_prevYears: {
+            prop: "prop_prevYears",
+            default: 100
+        },
+        prop_nextYears: {
+            prop: "prop_nextYears",
+            default: 25
+        },
+        prop_titleMonth0: { prop: "prop_titleMonth0", default: "فروردین" },
+        prop_titleMonth1: { prop: "prop_titleMonth1", default: "اردیبهشت" },
+        prop_titleMonth2: { prop: "prop_titleMonth2", default: "خرداد" },
+        prop_titleMonth3: { prop: "prop_titleMonth3", default: "تیر" },
+        prop_titleMonth4: { prop: "prop_titleMonth4", default: "مرداد" },
+        prop_titleMonth5: { prop: "prop_titleMonth5", default: "شهریور" },
+        prop_titleMonth6: { prop: "prop_titleMonth6", default: "مهر" },
+        prop_titleMonth7: { prop: "prop_titleMonth7", default: "آبان" },
+        prop_titleMonth8: { prop: "prop_titleMonth8", default: "آذر" },
+        prop_titleMonth9: { prop: "prop_titleMonth9", default: "دی" },
+        prop_titleMonth10: { prop: "prop_titleMonth10", default: "بهمن" },
+        prop_titleMonth11: { prop: "prop_titleMonth11", default: "اسفند" },
+        prop_backgroundRowSelected: {
+            prop: "prop_backgroundRowSelected",
+            default: tools_const?.styles?.inputDate?.backgroundColor_rowSelected || ""
+        },
+        prop_backgroundColumnSelected: {
+            prop: "prop_backgroundColumnSelected",
+            default: tools_const?.styles?.inputDate?.backgroundColor_colSelected || ""
+        },
+        prop_colorColumnSelected: {
+            prop: "prop_colorColumnSelected",
+            default: tools_const?.styles?.inputDate?.color_columnSelected || ""
+        },
+        prop_titleDay0: { prop: "prop_titleDay0", default: "شنبه" },
+        prop_titleDay1: { prop: "prop_titleDay1", default: "یک شنبه" },
+        prop_titleDay2: { prop: "prop_titleDay2", default: "دو شنبه" },
+        prop_titleDay3: { prop: "prop_titleDay3", default: "سه شنبه" },
+        prop_titleDay4: { prop: "prop_titleDay4", default: "چهارشنبه" },
+        prop_titleDay5: { prop: "prop_titleDay5", default: "پنج شنبه" },
+        prop_titleDay6: { prop: "prop_titleDay6", default: "جمعه" },
+        prop_titleBtnAccept: { prop: "prop_titleBtnAccept", default: "تایید" },
+        prop_backgroundBtnAccept: {
+            prop: "prop_backgroundBtnAccept",
+            default: tools_const?.styles?.inputDate?.backgroundColor_btn || ""
+        },
+        prop_backgroundBtnHoverAccept: {
+            prop: "prop_backgroundBtnHoverAccept",
+            default: tools_const?.styles?.inputDate?.backgroundColor_btnHover || ""
+        },
+        prop_colorBtnAccept: {
+            prop: "prop_colorBtnAccept",
+            default: tools_const?.styles?.inputDate?.color_btn || ""
+        },
+        prop_titleBtnNow: { prop: "prop_titleBtnNow", default: "اکنون" },
+        prop_backgroundBtnNow: {
+            prop: "prop_backgroundBtnNow",
+            default: tools_const?.styles?.inputDate?.backgroundColor_btn || ""
+        },
+        prop_backgroundBtnHoverNow: {
+            prop: "prop_backgroundBtnHoverNow",
+            default: tools_const?.styles?.inputDate?.backgroundColor_btnHover || ""
+        },
+        prop_colorBtnNow: {
+            prop: "prop_colorBtnNow",
+            default: tools_const?.styles?.inputDate?.color_btn || ""
+        }
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_backgroundMain"      ,  default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("backgroundColor_main")   ? tools_const.styles.inputDate.backgroundColor_main : ""} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_backgroundMain
+        ],
+
         part_label: [
-            {prop : "prop_labelClass"            , default: ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"           , default: null} ,
-            {prop : "prop_labelHoverStyles"      , default: null} ,
-            {prop : "prop_title"                 , default: "TITLE"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles,
+            this._COMPONENT_PATTERN.prop_labelTitle
+        ],
+
         part_value: [
-            {prop : "prop_name"                  , default: ""} ,
-            {prop : "prop_value"                 , default: null} ,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value
+        ],
 
-        ] ,
-        part_header: [
-
-        ] ,
+        part_header: [],
         part_header_inputs: [
-            {prop : "prop_type"                     , default: 0} ,
-            {prop : "prop_value"                    , default: null} ,
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.var_selected_date
+        ],
 
-            {prop : "var_selected_date"             , default: null} ,
-        ] ,
-        part_header_icon_clear: [
+        part_header_icon_clear: [],
+        part_header_icon_calender: [],
 
-        ] ,
-        part_header_icon_calender: [
-
-        ] ,
-        part_body: [
-
-        ] ,
-        part_body_header: [
-
-        ] ,
-        part_body_header_year: [
-
-        ] ,
-        part_body_header_year_btn_previous: [
-
-        ] ,
+        part_body: [],
+        part_body_header: [],
+        part_body_header_year: [],
+        part_body_header_year_btn_previous: [],
         part_body_header_year_options: [
-            {prop : "prop_prevYears"                      , default: 100} ,
-            {prop : "prop_nextYears"                      , default: 25} ,
-            {prop : "prop_value"                          , default: null} ,
-        ] ,
-        part_body_header_year_btn_next: [
+            this._COMPONENT_PATTERN.prop_prevYears,
+            this._COMPONENT_PATTERN.prop_nextYears,
+            this._COMPONENT_PATTERN.prop_value
+        ],
 
-        ] ,
-        part_body_header_month: [
-
-        ] ,
-        part_body_header_month_btn_previous: [
-
-        ] ,
+        part_body_header_year_btn_next: [],
+        part_body_header_month: [],
+        part_body_header_month_btn_previous: [],
         part_body_header_month_options: [
-            {prop : "prop_titleMonth0"                    , default:  "فروردین"} ,
-            {prop : "prop_titleMonth1"                    , default:  "اردیبهشت"} ,
-            {prop : "prop_titleMonth2"                    , default:  "خرداد"} ,
-            {prop : "prop_titleMonth3"                    , default:  "تیر"} ,
-            {prop : "prop_titleMonth4"                    , default:  "مرداد"} ,
-            {prop : "prop_titleMonth5"                    , default:  "شهریور"} ,
-            {prop : "prop_titleMonth6"                    , default:  "مهر"} ,
-            {prop : "prop_titleMonth7"                    , default:  "آبان"} ,
-            {prop : "prop_titleMonth8"                    , default:  "آذر"} ,
-            {prop : "prop_titleMonth9"                    , default:  "دی"} ,
-            {prop : "prop_titleMonth10"                   , default:  "بهمن"} ,
-            {prop : "prop_titleMonth11"                   , default:  "اسفند"} ,
-            {prop : "prop_value"                          , default: null} ,
-        ] ,
-        part_body_header_month_btn_next: [
+            this._COMPONENT_PATTERN.prop_titleMonth0,
+            this._COMPONENT_PATTERN.prop_titleMonth1,
+            this._COMPONENT_PATTERN.prop_titleMonth2,
+            this._COMPONENT_PATTERN.prop_titleMonth3,
+            this._COMPONENT_PATTERN.prop_titleMonth4,
+            this._COMPONENT_PATTERN.prop_titleMonth5,
+            this._COMPONENT_PATTERN.prop_titleMonth6,
+            this._COMPONENT_PATTERN.prop_titleMonth7,
+            this._COMPONENT_PATTERN.prop_titleMonth8,
+            this._COMPONENT_PATTERN.prop_titleMonth9,
+            this._COMPONENT_PATTERN.prop_titleMonth10,
+            this._COMPONENT_PATTERN.prop_titleMonth11,
+            this._COMPONENT_PATTERN.prop_value
+        ],
 
-        ] ,
-        part_body_weeks: [
-
-        ] ,
+        part_body_header_month_btn_next: [],
+        part_body_weeks: [],
         part_body_weeks_table: [
-            {prop : "prop_backgroundRowSelected"          , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("backgroundColor_rowSelected")   ? tools_const.styles.inputDate.backgroundColor_rowSelected : ""} ,
-            {prop : "prop_backgroundColumnSelected"       , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("backgroundColor_colSelected")   ? tools_const.styles.inputDate.backgroundColor_colSelected : ""} ,
-            {prop : "prop_colorColumnSelected"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("color_columnSelected")   ? tools_const.styles.inputDate.color_columnSelected : ""} ,
-            {prop : "prop_titleDay0"                      , default:  "شنبه"} ,
-            {prop : "prop_titleDay1"                      , default:  "یک شنبه"} ,
-            {prop : "prop_titleDay2"                      , default:  "دو شنبه"} ,
-            {prop : "prop_titleDay3"                      , default:  "سه شنبه"} ,
-            {prop : "prop_titleDay4"                      , default:  "چهارشنبه"} ,
-            {prop : "prop_titleDay5"                      , default:  "پنج شنبه"} ,
-            {prop : "prop_titleDay6"                      , default:  "جمعه"} ,
-            {prop : "prop_value"                          , default: null} ,
-        ] ,
-        part_body_footer: [
+            this._COMPONENT_PATTERN.prop_backgroundRowSelected,
+            this._COMPONENT_PATTERN.prop_backgroundColumnSelected,
+            this._COMPONENT_PATTERN.prop_colorColumnSelected,
+            this._COMPONENT_PATTERN.prop_titleDay0,
+            this._COMPONENT_PATTERN.prop_titleDay1,
+            this._COMPONENT_PATTERN.prop_titleDay2,
+            this._COMPONENT_PATTERN.prop_titleDay3,
+            this._COMPONENT_PATTERN.prop_titleDay4,
+            this._COMPONENT_PATTERN.prop_titleDay5,
+            this._COMPONENT_PATTERN.prop_titleDay6,
+            this._COMPONENT_PATTERN.prop_value
+        ],
 
-        ] ,
+        part_body_footer: [],
         part_body_footer_btn_accept: [
-            {prop : "prop_titleBtnAccept"                 , default: "تایید"} ,
-            {prop : "prop_backgroundBtnAccept"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("backgroundColor_btn")   ? tools_const.styles.inputDate.backgroundColor_btn : ""} ,
-            {prop : "prop_backgroundBtnHoverAccept"       , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("backgroundColor_btnHover")   ? tools_const.styles.inputDate.backgroundColor_btnHover : ""} ,
-            {prop : "prop_colorBtnAccept"                 , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("color_btn")   ? tools_const.styles.inputDate.color_btn : ""} ,
-        ] ,
-        part_body_footer_btn_now: [
-            {prop : "prop_titleBtnNow"                    , default: "اکنون"} ,
-            {prop : "prop_backgroundBtnNow"               , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("backgroundColor_btn")   ? tools_const.styles.inputDate.backgroundColor_btn : ""} ,
-            {prop : "prop_backgroundBtnHoverNow"          , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("backgroundColor_btnHover")   ? tools_const.styles.inputDate.backgroundColor_btnHover : ""} ,
-            {prop : "prop_colorBtnNow"                    , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputDate") && tools_const.styles.inputDate.hasOwnProperty("color_btn")   ? tools_const.styles.inputDate.color_btn : ""} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_titleBtnAccept,
+            this._COMPONENT_PATTERN.prop_backgroundBtnAccept,
+            this._COMPONENT_PATTERN.prop_backgroundBtnHoverAccept,
+            this._COMPONENT_PATTERN.prop_colorBtnAccept
+        ],
 
+        part_body_footer_btn_now: [
+            this._COMPONENT_PATTERN.prop_titleBtnNow,
+            this._COMPONENT_PATTERN.prop_backgroundBtnNow,
+            this._COMPONENT_PATTERN.prop_backgroundBtnHoverNow,
+            this._COMPONENT_PATTERN.prop_colorBtnNow
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label: {} ,
@@ -10558,70 +11895,204 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
 class ComponentSelectOptionBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+        PROPERTYs Pattern
+   --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_name: {
+            prop: "prop_name",
+            default: ""
+        },
+        prop_itemSelected: {
+            prop: "prop_itemSelected",
+            default: null
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "title"
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: {}
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: {}
+        },
+        prop_titleClass: {
+            prop: "prop_titleClass",
+            default: ["form-control", " px-2"]
+        },
+        prop_titleStyles: {
+            prop: "prop_titleStyles",
+            default: {"line-height": "24px", "height": "30px"}
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: null
+        },
+        prop_options: {
+            prop: "prop_options",
+            default: []
+        },
+        prop_btnAddStatus: {
+            prop: "prop_btnAddStatus",
+            default: false
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: null
+        },
+        prop_btnAddIcon: {
+            prop: "prop_btnAddIcon",
+            default: "&plus;"
+        },
+        prop_btnAddTitle: {
+            prop: "prop_btnAddTitle",
+            default: "add item"
+        },
+        prop_btnAddClass: {
+            prop: "prop_btnAddClass",
+            default: []
+        },
+        var_showFormSelectOption: {
+            prop: "var_showFormSelectOption",
+            default: false
+        },
+        prop_optionHeight: {
+            prop: "prop_optionHeight",
+            default: 200
+        },
+        prop_optionWidth: {
+            prop: "prop_optionWidth",
+            default: "100%"
+        },
+        prop_optionStyles: {
+            prop: "prop_optionStyles",
+            default: {}
+        },
+        prop_positionTop: {
+            prop: "prop_positionTop",
+            default: ""
+        },
+        prop_positionLeft: {
+            prop: "prop_positionLeft",
+            default: ""
+        },
+        prop_positionBottom: {
+            prop: "prop_positionBottom",
+            default: ""
+        },
+        prop_positionRight: {
+            prop: "prop_positionRight",
+            default: ""
+        },
+        prop_listIcons: {
+            prop: "prop_listIcons",
+            default: null
+        },
+        prop_firstCallback: {
+            prop: "prop_firstCallback",
+            default: false
+        },
+        prop_optionItemNotSelectedBackground: {
+            prop: "prop_optionItemNotSelectedBackground",
+            default: tools_const?.styles?.selectOption?.backgroundColor_itemNotSelected || ""
+        },
+        prop_optionItemHoverBackground: {
+            prop: "prop_optionItemHoverBackground",
+            default: tools_const?.styles?.selectOption?.backgroundColor_itemHover || ""
+        },
+        prop_optionItemSelectedBackground: {
+            prop: "prop_optionItemSelectedBackground",
+            default: tools_const?.styles?.selectOption?.backgroundColor_itemSelected || ""
+        },
+        var_searcherSelectOption: {
+            prop: "var_searcherSelectOption",
+            default: ""
+        }
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_value: [
-            {prop : "prop_name"                              , default:  ""} ,
-            {prop : "prop_itemSelected"                      , default:  null} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_itemSelected
+        ],
+
         part_label: [
-            {prop : "prop_title"                             , default:  "title"} ,
-            {prop : "prop_labelClass"                        , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                       , default:  {}} ,
-            {prop : "prop_labelHoverStyles"                  , default:  {}} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles
+        ],
+
         part_header: [
-            {prop : "prop_titleClass"                        , default:  ["form-control" , " px-2"]} ,
-            {prop : "prop_titleStyles"                       , default:  {"line-height" : "24px" , "height": "30px"}} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_titleClass,
+            this._COMPONENT_PATTERN.prop_titleStyles
+        ],
+
         part_header_icon: [
-            {prop : "prop_icon"                              , default: null} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_icon
+        ],
+
         part_header_title: [
-            {prop : "prop_icon"                              , default: null} ,
-            {prop : "prop_options"                           , default:  []} ,
-            {prop : "prop_itemSelected"                      , default:  null} ,
-            {prop : "prop_btnAddStatus"                      , default:  false} ,
-            {prop : "prop_placeholder"                       , default:  null} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_options,
+            this._COMPONENT_PATTERN.prop_itemSelected,
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.prop_placeholder
+        ],
+
         part_header_button: [
-            {prop : "prop_btnAddStatus"                       , default: false} ,
-            {prop : "prop_btnAddIcon"                         , default: "&plus;"} ,
-            {prop : "prop_btnAddTitle"                        , default: "add item"} ,
-            {prop : "prop_btnAddClass"                        , default: []} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.prop_btnAddIcon,
+            this._COMPONENT_PATTERN.prop_btnAddTitle,
+            this._COMPONENT_PATTERN.prop_btnAddClass
+        ],
+
         part_header_arrow_icon: [
-            {prop : "prop_btnAddStatus"                       , default:  false} ,
-            {prop : "var_showFormSelectOption"                , default:  false} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.var_showFormSelectOption
+        ],
+
         part_body: [
-            {prop : "prop_optionHeight"                       , default:  200} ,
-            {prop : "prop_optionWidth"                        , default:  "100%"} ,
-            {prop : "prop_optionStyles"                       , default:  {}} ,
-            {prop : "prop_positionTop"                        , default: ""} ,
-            {prop : "prop_positionLeft"                       , default: ""} ,
-            {prop : "prop_positionBottom"                     , default: ""} ,
-            {prop : "prop_positionRight"                      , default: ""} ,
-        ] ,
-        part_body_searcher: [
+            this._COMPONENT_PATTERN.prop_optionHeight,
+            this._COMPONENT_PATTERN.prop_optionWidth,
+            this._COMPONENT_PATTERN.prop_optionStyles,
+            this._COMPONENT_PATTERN.prop_positionTop,
+            this._COMPONENT_PATTERN.prop_positionLeft,
+            this._COMPONENT_PATTERN.prop_positionBottom,
+            this._COMPONENT_PATTERN.prop_positionRight
+        ],
 
-        ] ,
+        part_body_searcher: [],
+
         part_body_options: [
-            {prop : "prop_listIcons"                          , default:  null} ,
-            {prop : "prop_firstCallback"                      , default:  false} ,
-            {prop : "prop_itemSelected"                       , default:  null} ,
-            {prop : "prop_options"                            , default:  []} ,
-            {prop : "prop_optionItemNotSelectedBackground"    , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemNotSelected")  ? tools_const.styles.selectOption.backgroundColor_itemNotSelected : "" } ,
-            {prop : "prop_optionItemHoverBackground"          , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemHover")  ? tools_const.styles.selectOption.backgroundColor_itemHover : "" } ,
-            {prop : "prop_optionItemSelectedBackground"       , default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemSelected")  ? tools_const.styles.selectOption.backgroundColor_itemSelected : "" } ,
-            {prop : "var_searcherSelectOption"                , default:  ""} ,
+            this._COMPONENT_PATTERN.prop_listIcons,
+            this._COMPONENT_PATTERN.prop_firstCallback,
+            this._COMPONENT_PATTERN.prop_itemSelected,
+            this._COMPONENT_PATTERN.prop_options,
+            this._COMPONENT_PATTERN.prop_optionItemNotSelectedBackground,
+            this._COMPONENT_PATTERN.prop_optionItemHoverBackground,
+            this._COMPONENT_PATTERN.prop_optionItemSelectedBackground,
+            this._COMPONENT_PATTERN.var_searcherSelectOption
         ]
-    }
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_value: {} ,
@@ -11306,31 +12777,78 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
 class ComponentSelectIconBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+       PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_name: {
+            prop: "prop_name",
+            default: ""
+        },
+        prop_iconSelected: {
+            prop: "prop_iconSelected",
+            default: null
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "title"
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block "]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: {}
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: {}
+        },
+        prop_isAbsoluteRule: {
+            prop: "prop_isAbsoluteRule",
+            default: true
+        },
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        }
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_value: [
-            {prop : "prop_name"                              , default:  ""} ,
-            {prop : "prop_iconSelected"                      , default:  null} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_iconSelected
+        ],
+
         part_label: [
-            {prop : "prop_title"                             , default:  "title"} ,
-            {prop : "prop_labelClass"                        , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                       , default:  {}} ,
-            {prop : "prop_labelHoverStyles"                  , default:  {}} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles
+        ],
 
         part_validate: [
-            {prop : "prop_isAbsoluteRule"                    , default: true} ,
-            {prop : "prop_listRules"                         , default: []} ,
-            {prop : "prop_isDisable"                         , default: false} ,
-            {prop : "prop_title"                             , default: "TITLE"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_title
+        ]
+    };
 
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_value: {} ,
@@ -11517,46 +13035,124 @@ window.ComponentSelectIcon = class ComponentSelectIcon extends ComponentSelectIc
 -------------------------------------*/
 class ComponentCheckBoxBase extends ComponentBase{
 
+
     /* ---------------------------------------------
-    PROPERTYs
+         PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_name: {
+            prop: "prop_name",
+            default: ""
+        },
+        prop_isSelected: {
+            prop: "prop_isSelected",
+            default: false
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "title"
+        },
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["shadow-sm", "px-2", "py-1", "d-block "]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: {}
+        },
+        prop_labelHoverStyles: {
+            prop: "prop_labelHoverStyles",
+            default: {}
+        },
+        prop_borderColor: {
+            prop: "prop_borderColor",
+            default: tools_const?.styles?.inputCheckBox?.boderColor ?? ""
+        },
+        prop_backgroundColor_unSelected: {
+            prop: "prop_backgroundColor_unSelected",
+            default: tools_const?.styles?.inputCheckBox?.backgroundColor_unSelected ?? ""
+        },
+        prop_backgroundColor_selected: {
+            prop: "prop_backgroundColor_selected",
+            default: tools_const?.styles?.inputCheckBox?.backgroundColor_selected ?? ""
+        },
+        prop_backgroundColor_disable: {
+            prop: "prop_backgroundColor_disable",
+            default: tools_const?.styles?.inputCheckBox?.backgroundColor_disable ?? ""
+        },
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: ["rounded"]
+        },
+        prop_formStyles: {
+            prop: "prop_formStyles",
+            default: { "width": "25px", "height": "25px" }
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: tools_icons.icon_tik("#e7e7e7", 22.5)
+        },
+        prop_isAbsoluteRule: {
+            prop: "prop_isAbsoluteRule",
+            default: true
+        },
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
+        part_structure: [],
 
         part_value: [
-            {prop : "prop_name"                              , default:  ""} ,
-            {prop : "prop_isSelected"                        , default:  false} ,
-        ] ,
-        part_label: [
-            {prop : "prop_title"                             , default:  "title"} ,
-            {prop : "prop_labelClass"                        , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block "]} ,
-            {prop : "prop_labelStyles"                       , default:  {}} ,
-            {prop : "prop_labelHoverStyles"                  , default:  {}} ,
-        ] ,
-        part_form: [
-            {prop : "prop_borderColor"                       , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputCheckBox") &&  tools_const.styles.inputCheckBox.hasOwnProperty("boderColor") ? tools_const.styles.inputCheckBox.boderColor : "" } ,
-            {prop : "prop_backgroundColor_unSelected"        , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputCheckBox") &&  tools_const.styles.inputCheckBox.hasOwnProperty("backgroundColor_unSelected") ? tools_const.styles.inputCheckBox.backgroundColor_unSelected : "" } ,
-            {prop : "prop_backgroundColor_selected"          , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputCheckBox") &&  tools_const.styles.inputCheckBox.hasOwnProperty("backgroundColor_selected") ? tools_const.styles.inputCheckBox.backgroundColor_selected : "" } ,
-            {prop : "prop_backgroundColor_disable"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputCheckBox") &&  tools_const.styles.inputCheckBox.hasOwnProperty("backgroundColor_disable") ? tools_const.styles.inputCheckBox.backgroundColor_disable : "" } ,
-            {prop : "prop_formClass"                         , default: ["rounded"]} ,
-            {prop : "prop_formStyles"                        , default: {"width" : "25px" , "height" : "25px"}} ,
-            {prop : "prop_isSelected"                        , default: false} ,
-            {prop : "prop_isDisable"                         , default: false} ,
-        ] ,
-        part_form_icon: [
-            {prop : "prop_icon"                              , default: tools_icons.icon_tik("#e7e7e7", 22.5) } ,
-            {prop : "prop_isSelected"                        , default:  false} ,
-        ] ,
-        part_validate: [
-            {prop : "prop_isAbsoluteRule"                    , default: true} ,
-            {prop : "prop_listRules"                         , default: []} ,
-            {prop : "prop_isDisable"                         , default: false} ,
-            {prop : "prop_title"                             , default: "TITLE"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_isSelected
+        ],
 
+        part_label: [
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles,
+            this._COMPONENT_PATTERN.prop_labelHoverStyles
+        ],
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_borderColor,
+            this._COMPONENT_PATTERN.prop_backgroundColor_unSelected,
+            this._COMPONENT_PATTERN.prop_backgroundColor_selected,
+            this._COMPONENT_PATTERN.prop_backgroundColor_disable,
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles,
+            this._COMPONENT_PATTERN.prop_isSelected,
+            this._COMPONENT_PATTERN.prop_isDisable
+        ],
+
+        part_form_icon: [
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_isSelected
+        ],
+
+        part_validate: [
+            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_title
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_value: {} ,
@@ -11809,27 +13405,65 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
 class ComponentValidateBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
-     --------------------------------------------- */
+      PROPERTYs Pattern
+ --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        },
+        prop_isAbsolute: {
+            prop: "prop_isAbsolute",
+            default: false
+        },
+        prop_reference: {
+            prop: "prop_reference",
+            default: ""
+        },
+        var_htmlRules: {
+            prop: "var_htmlRules",
+            default: ""
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "---"
+        },
+        var_validation_msg: {
+            prop: "var_validation_msg",
+            default: {}
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_listRules"             , default: []} ,
-        ] ,
-        part_form: [
-            {prop : "prop_isAbsolute"            , default: false} ,
-        ] ,
-        part_form_html: [
-            {prop : "prop_reference"             , default: ""} ,
-            {prop : "prop_listRules"             , default: []} ,
-            {prop : "var_htmlRules"              , default: ""} ,
-        ] ,
-        part_form_validates: [
-            {prop : "prop_title"                 , default: "---"} ,
-            {prop : "prop_reference"             , default: ""} ,
-            {prop : "var_validation_msg"         , default: {}} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_listRules
+        ],
 
+        part_form: [
+            this._COMPONENT_PATTERN.prop_isAbsolute
+        ],
+
+        part_form_html: [
+            this._COMPONENT_PATTERN.prop_reference,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.var_htmlRules
+        ],
+
+        part_form_validates: [
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_reference,
+            this._COMPONENT_PATTERN.var_validation_msg
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_form:{
@@ -12144,26 +13778,65 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
 -------------------------------------*/
 class ComponentTooltipDescriptionBase extends ComponentBase{
 
+
     /* ---------------------------------------------
-   PROPERTYs
-   --------------------------------------------- */
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_icon: {
+            prop: "prop_icon",
+            default: ""
+        },
+        prop_iconClass: {
+            prop: "prop_iconClass",
+            default: ["shadow-sm", "bg-dark", "text-white", "rounded", "d-inline-block", "text-center"]
+        },
+        prop_iconStyles: {
+            prop: "prop_iconStyles",
+            default: {"width": "15px", "height": "15px", "line-height": "15px", "cursor": "pointer"}
+        },
+        prop_descriptionBackground: {
+            prop: "prop_descriptionBackground",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tooltipDescription") && tools_const.styles.tooltipDescription.hasOwnProperty("backgroundColor_description") ? tools_const.styles.tooltipDescription.backgroundColor_description : "black"
+        },
+        prop_descriptionColor: {
+            prop: "prop_descriptionColor",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tooltipDescription") && tools_const.styles.tooltipDescription.hasOwnProperty("color_description") ? tools_const.styles.tooltipDescription.color_description : "black"
+        },
+        prop_description: {
+            prop: "prop_description",
+            default: null
+        },
+        prop_descriptionWidth: {
+            prop: "prop_descriptionWidth",
+            default: "300px"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ],
         part_icon: [
-            {prop : "prop_icon"                       , default: ""} ,
-            {prop : "prop_iconClass"                  , default: ["shadow-sm" , "bg-dark" , "text-white" , "rounded" , "d-inline-block" , "text-center"]} ,
-            {prop : "prop_iconStyles"                 , default: {"width" : "15px" , "height" : "15px", "line-height" : "15px", "cursor" : "pointer"}} ,
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_iconClass,
+            this._COMPONENT_PATTERN.prop_iconStyles
         ],
-        part_description: [
-            {prop : "prop_descriptionBackground"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tooltipDescription") && tools_const.styles.tooltipDescription.hasOwnProperty("backgroundColor_description")   ? tools_const.styles.tooltipDescription.backgroundColor_description : "black"} ,
-            {prop : "prop_descriptionColor"           , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tooltipDescription") && tools_const.styles.tooltipDescription.hasOwnProperty("color_description")   ? tools_const.styles.tooltipDescription.color_description : "black"} ,
-            {prop : "prop_description"                , default: null} ,
-            {prop : "prop_descriptionWidth"           , default: "300px"} ,
-        ],
-    }
 
+        part_description: [
+            this._COMPONENT_PATTERN.prop_descriptionBackground,
+            this._COMPONENT_PATTERN.prop_descriptionColor,
+            this._COMPONENT_PATTERN.prop_description,
+            this._COMPONENT_PATTERN.prop_descriptionWidth
+        ]
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_icon:{},
@@ -12389,60 +14062,154 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
 class ComponentTableBase extends ComponentBase{
 
 
+
     /* ---------------------------------------------
-     PROPERTYs
+     PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_tableClass: {
+            prop: "prop_tableClass",
+            default: ["table"]
+        },
+        prop_tableStyles: {
+            prop: "prop_tableStyles",
+            default: {}
+        },
+        prop_tableType: {
+            prop: "prop_tableType",
+            default: 0
+        },
+        prop_tableBordered: {
+            prop: "prop_tableBordered",
+            default: 0
+        },
+        prop_tableStriped: {
+            prop: "prop_tableStriped",
+            default: false
+        },
+        prop_tableHover: {
+            prop: "prop_tableHover",
+            default: false
+        },
+        prop_tableBorderless: {
+            prop: "prop_tableBorderless",
+            default: false
+        },
+        prop_tableHeadClass: {
+            prop: "prop_tableHeadClass",
+            default: []
+        },
+        prop_tableHeadStyles: {
+            prop: "prop_tableHeadStyles",
+            default: {}
+        },
+        prop_tableItemHeadClass: {
+            prop: "prop_tableItemHeadClass",
+            default: []
+        },
+        prop_tableItemHeadStyles: {
+            prop: "prop_tableItemHeadStyles",
+            default: {}
+        },
+        prop_order: {
+            prop: "prop_order",
+            default: {}
+        },
+        prop_header: {
+            prop: "prop_header",
+            default: {}
+        },
+        prop_tableBodyClass: {
+            prop: "prop_tableBodyClass",
+            default: []
+        },
+        prop_tableBodyStyles: {
+            prop: "prop_tableBodyStyles",
+            default: {}
+        },
+        prop_tableItemBodyClass: {
+            prop: "prop_tableItemBodyClass",
+            default: []
+        },
+        prop_tableItemBodyStyles: {
+            prop: "prop_tableItemBodyStyles",
+            default: {}
+        },
+        prop_tableItemBodyHoverStyles: {
+            prop: "prop_tableItemBodyHoverStyles",
+            default: {}
+        },
+        prop_data: {
+            prop: "prop_data",
+            default: []
+        },
+        prop_valueType: {
+            prop: "prop_valueType",
+            default: 0
+        },
+        prop_valueRow_backgroundColor: {
+            prop: "prop_valueRow_backgroundColor",
+            default: tools_const?.styles?.table?.backgroundColor_rowSelected || ""
+        },
+        prop_valueCol_backgroundColor: {
+            prop: "prop_valueCol_backgroundColor",
+            default: tools_const?.styles?.table?.backgroundColor_columnSelected || ""
+        },
+        prop_valueCol_textColor: {
+            prop: "prop_valueCol_textColor",
+            default: tools_const?.styles?.table?.backgroundColor_textSelected || ""
+        }
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_table: [
-            {prop : "prop_tableClass"                  , default: [ "table" ]} ,
-            {prop : "prop_tableStyles"                 , default: {}} ,
+            this._COMPONENT_PATTERN.prop_tableClass,
+            this._COMPONENT_PATTERN.prop_tableStyles,
+            this._COMPONENT_PATTERN.prop_tableType,
+            this._COMPONENT_PATTERN.prop_tableBordered,
+            this._COMPONENT_PATTERN.prop_tableStriped,
+            this._COMPONENT_PATTERN.prop_tableHover,
+            this._COMPONENT_PATTERN.prop_tableBorderless
+        ],
 
-            {prop : "prop_tableType"                   , default: 0} ,
-            {prop : "prop_tableBordered"               , default: 0} ,
-
-            {prop : "prop_tableStriped"                , default: false} ,
-            {prop : "prop_tableHover"                  , default: false} ,
-            {prop : "prop_tableBorderless"             , default: false} ,
-        ] ,
         part_table_header: [
-            {prop : "prop_tableHeadClass"              , default: []} ,
-            {prop : "prop_tableHeadStyles"             , default: {} } ,
-            {prop : "prop_tableItemHeadClass"          , default: []} ,
-            {prop : "prop_tableItemHeadStyles"         , default: {} } ,
+            this._COMPONENT_PATTERN.prop_tableHeadClass,
+            this._COMPONENT_PATTERN.prop_tableHeadStyles,
+            this._COMPONENT_PATTERN.prop_tableItemHeadClass,
+            this._COMPONENT_PATTERN.prop_tableItemHeadStyles,
+            this._COMPONENT_PATTERN.prop_order,
+            this._COMPONENT_PATTERN.prop_header
+        ],
 
-            {prop : "prop_order"                       , default: {} } ,
-            {prop : "prop_header"                      , default: {} } ,
-        ] ,
         part_table_body: [
-            {prop : "prop_tableBodyClass"              , default: []} ,
-            {prop : "prop_tableBodyStyles"             , default: {}} ,
-            {prop : "prop_tableItemBodyClass"          , default: []} ,
-            {prop : "prop_tableItemBodyStyles"         , default: {} } ,
-            {prop : "prop_tableItemBodyHoverStyles"    , default: {} } ,
-            {prop : "prop_order"                       , default: {} } ,
-            {prop : "prop_header"                      , default: {} } ,
-            {prop : "prop_data"                        , default: {} } ,
+            this._COMPONENT_PATTERN.prop_tableBodyClass,
+            this._COMPONENT_PATTERN.prop_tableBodyStyles,
+            this._COMPONENT_PATTERN.prop_tableItemBodyClass,
+            this._COMPONENT_PATTERN.prop_tableItemBodyStyles,
+            this._COMPONENT_PATTERN.prop_tableItemBodyHoverStyles,
+            this._COMPONENT_PATTERN.prop_order,
+            this._COMPONENT_PATTERN.prop_header,
+            this._COMPONENT_PATTERN.prop_data,
+            this._COMPONENT_PATTERN.prop_valueType,
+            this._COMPONENT_PATTERN.prop_valueRow_backgroundColor,
+            this._COMPONENT_PATTERN.prop_valueCol_backgroundColor,
+            this._COMPONENT_PATTERN.prop_valueCol_textColor
+        ],
 
-            {prop : "prop_valueType"                   , default: 0 } ,
-            {prop : "prop_valueRow_backgroundColor"    , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("table") &&  tools_const.styles.table.hasOwnProperty("backgroundColor_rowSelected") ? tools_const.styles.table.backgroundColor_rowSelected : "" } ,
-            {prop : "prop_valueCol_backgroundColor"    , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("table") &&  tools_const.styles.table.hasOwnProperty("backgroundColor_columnSelected") ? tools_const.styles.table.backgroundColor_columnSelected : "" } ,
-            {prop : "prop_valueCol_textColor"          , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("table") &&  tools_const.styles.table.hasOwnProperty("backgroundColor_textSelected")   ? tools_const.styles.table.backgroundColor_textSelected : "" } ,
+        part_table_footer: []
+    };
 
-            {prop : "prop_order"                       , default: {} } ,
-            {prop : "prop_header"                      , default: {} } ,
-            {prop : "prop_data"                        , default: [] } ,
 
-            {prop : "prop_valueRow"                    , default: null } ,
-            {prop : "prop_valueCol"                    , default: null } ,
-        ] ,
-        part_table_footer: [
 
-        ]
-    }
-
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_table : {
@@ -12884,21 +14651,48 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
 -------------------------------------*/
 class ComponentTabsBase extends ComponentBase{
 
+
     /* ---------------------------------------------
-        PROPERTYs
-        --------------------------------------------- */
+           PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type: {
+            prop: "prop_type",
+            default: 0
+        },
+        prop_tabs: {
+            prop: "prop_tabs",
+            default: []
+        },
+        prop_tabSelected: {
+            prop: "prop_tabSelected",
+            default: null
+        },
+        prop_firstCallBack: {
+            prop: "prop_firstCallBack",
+            default: true
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_tabs: [
-            {prop : "prop_type"                           , default:  0 } ,
-            {prop : "prop_tabs"                           , default:  [] } ,
-            {prop : "prop_tabSelected"                    , default:  null } ,
-            {prop : "prop_firstCallBack"                  , default:  true } ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_tabs,
+            this._COMPONENT_PATTERN.prop_tabSelected,
+            this._COMPONENT_PATTERN.prop_firstCallBack
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_tabs: {} ,
@@ -13129,20 +14923,50 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
 class ComponentTreeBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+       PROPERTYs Pattern
+       --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_backgroundColor_unSelected: {
+            prop: "prop_backgroundColor_unSelected",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tree") && tools_const.styles.tree.hasOwnProperty("backgroundColor_unSelected")
+                ? tools_const.styles.tree.backgroundColor_unSelected
+                : ""
+        },
+        prop_backgroundColor_selected: {
+            prop: "prop_backgroundColor_selected",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tree") && tools_const.styles.tree.hasOwnProperty("backgroundColor_selected")
+                ? tools_const.styles.tree.backgroundColor_selected
+                : ""
+        },
+        prop_list: {
+            prop: "prop_list",
+            default: []
+        },
+        prop_itemSelected: {
+            prop: "prop_itemSelected",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_tree: [
+            this._COMPONENT_PATTERN.prop_backgroundColor_unSelected,
+            this._COMPONENT_PATTERN.prop_backgroundColor_selected,
+            this._COMPONENT_PATTERN.prop_list,
+            this._COMPONENT_PATTERN.prop_itemSelected
+        ]
+    };
 
-            {prop : "prop_backgroundColor_unSelected"          , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tree") && tools_const.styles.tree.hasOwnProperty("backgroundColor_unSelected")   ? tools_const.styles.tree.backgroundColor_unSelected : ""} ,
-            {prop : "prop_backgroundColor_selected"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tree") && tools_const.styles.tree.hasOwnProperty("backgroundColor_selected")   ? tools_const.styles.tree.backgroundColor_selected : ""} ,
-            {prop : "prop_list"                                , default:  [] } ,
-            {prop : "prop_itemSelected"                        , default:  null } ] ,
-    }
 
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_tree: {}
@@ -13399,29 +15223,58 @@ window.ComponentTree = class ComponentTree extends ComponentTreeBase{
 -------------------------------------*/
 class ComponentCollapseBase extends ComponentBase{
 
+
     /* ---------------------------------------------
-         PROPERTYs
-       --------------------------------------------- */
+           PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_title: {
+            prop: "prop_title",
+            default: "---"
+        },
+        prop_bodyShow: {
+            prop: "prop_bodyShow",
+            default: false
+        },
+        prop_bodyBackgroundColor: {
+            prop: "prop_bodyBackgroundColor",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("collapse") && tools_const.styles.collapse.hasOwnProperty("backgroundColor")
+                ? tools_const.styles.collapse.backgroundColor
+                : ""
+        },
+        prop_body: {
+            prop: "prop_body",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ] ,
         part_collapse_header: [
-            {prop : "prop_title"                          , default: "---"} ,
-        ] ,
-        part_label: [
+            this._COMPONENT_PATTERN.prop_title
+        ],
 
-        ] ,
+        part_label: [],
+
         part_collapse_header_icon: [
-            {prop : "prop_bodyShow"                       , default: false} ,
-        ] ,
-        part_collapse_body: [
-            {prop : "prop_bodyBackgroundColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("collapse") && tools_const.styles.collapse.hasOwnProperty("backgroundColor")   ? tools_const.styles.collapse.backgroundColor : ""} ,
-            {prop : "prop_body"                           , default: null} ,
-            {prop : "prop_bodyShow"                       , default: false} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_bodyShow
+        ],
 
+        part_collapse_body: [
+            this._COMPONENT_PATTERN.prop_bodyBackgroundColor,
+            this._COMPONENT_PATTERN.prop_body,
+            this._COMPONENT_PATTERN.prop_bodyShow
+        ]
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_collapse_header: {
@@ -13655,45 +15508,95 @@ class ComponentWindowBase extends ComponentBase{
 
 
     /* ---------------------------------------------
-      PROPERTYs
+        PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_blurBackgroundColor: {
+            prop: "prop_blurBackgroundColor",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("window") && tools_const.styles.window.hasOwnProperty("backgroundColor_blur")
+                ? tools_const.styles.window.backgroundColor_blur
+                : ""
+        },
+        prop_windowBackgroundColor: {
+            prop: "prop_windowBackgroundColor",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("window") && tools_const.styles.window.hasOwnProperty("backgroundColor_window")
+                ? tools_const.styles.window.backgroundColor_window
+                : ""
+        },
+        prop_windowWidth: {
+            prop: "prop_windowWidth",
+            default: 700
+        },
+        prop_windowHeight: {
+            prop: "prop_windowHeight",
+            default: 400
+        },
+        prop_windowRound: {
+            prop: "prop_windowRound",
+            default: "0"
+        },
+        prop_header: {
+            prop: "prop_header",
+            default: null
+        },
+        prop_showBtnResize: {
+            prop: "prop_showBtnResize",
+            default: true
+        },
+        prop_body: {
+            prop: "prop_body",
+            default: null
+        },
+        prop_footer: {
+            prop: "prop_footer",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ],
         part_blur: [
-            {prop : "prop_blurBackgroundColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("window") && tools_const.styles.window.hasOwnProperty("backgroundColor_blur")   ? tools_const.styles.window.backgroundColor_blur : ""} ,
-
+            this._COMPONENT_PATTERN.prop_blurBackgroundColor
         ],
+
         part_window: [
-            {prop : "prop_windowBackgroundColor"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("window") && tools_const.styles.window.hasOwnProperty("backgroundColor_window")   ? tools_const.styles.window.backgroundColor_window : ""} ,
-            {prop : "prop_windowWidth"                      , default: 700} ,
-            {prop : "prop_windowHeight"                     , default: 400} ,
-            {prop : "prop_windowRound"                      , default: "0"} ,
+            this._COMPONENT_PATTERN.prop_windowBackgroundColor,
+            this._COMPONENT_PATTERN.prop_windowWidth,
+            this._COMPONENT_PATTERN.prop_windowHeight,
+            this._COMPONENT_PATTERN.prop_windowRound
         ],
-        part_window_header: [
 
-        ],
+        part_window_header: [],
+
         part_window_header_title: [
-            {prop : "prop_header"                            , default: null} ,
+            this._COMPONENT_PATTERN.prop_header
         ],
-        part_window_header_icons: [
 
-        ],
-        part_window_header_icons_icon_close: [
+        part_window_header_icons: [],
 
-        ],
+        part_window_header_icons_icon_close: [],
+
         part_window_header_icons_icon_resize: [
-            {prop : "prop_showBtnResize"                    , default: true} ,
+            this._COMPONENT_PATTERN.prop_showBtnResize
         ],
-        part_window_body: [
-            {prop : "prop_body"                             , default: null} ,
-        ],
-        part_window_footer: [
-            {prop : "prop_footer"                           , default: null} ,
-        ],
-    }
 
+        part_window_body: [
+            this._COMPONENT_PATTERN.prop_body
+        ],
+
+        part_window_footer: [
+            this._COMPONENT_PATTERN.prop_footer
+        ]
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_blur:{
@@ -13736,7 +15639,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 
     /* ---------------------------------------------
    TEMPLATEs
---------------------------------------------- */
+   --------------------------------------------- */
     componentFn(){
         this.templateFn("part_window_header_icons_icon_close");
         this.templateFn("part_window_header_icons_icon_resize");
@@ -14311,32 +16214,64 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 class ComponentWindowConfirmBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
+       PROPERTYs Pattern
+       --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_showBtnResize: {
+            prop: "prop_showBtnResize",
+            default: true
+        },
+        prop_header: {
+            prop: "prop_header",
+            default: null
+        },
+        prop_body: {
+            prop: "prop_body",
+            default: null
+        },
+        prop_titleBtnCancel: {
+            prop: "prop_titleBtnCancel",
+            default: "لغو"
+        },
+        prop_titleBtnAccept: {
+            prop: "prop_titleBtnAccept",
+            default: "تایید"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ],
         part_window: [
-            {prop : "prop_showBtnResize"                     , default: true} ,
+            this._COMPONENT_PATTERN.prop_showBtnResize
         ],
+
         part_window_header: [
-            {prop : "prop_header"                            , default: null} ,
+            this._COMPONENT_PATTERN.prop_header
         ],
+
         part_window_body: [
-            {prop : "prop_body"                              , default: null} ,
+            this._COMPONENT_PATTERN.prop_body
         ],
-        part_window_footer: [
 
-        ],
+        part_window_footer: [],
+
         part_window_footer_btn_candel: [
-            {prop : "prop_titleBtnCancel"                    , default: "لغو"} ,
+            this._COMPONENT_PATTERN.prop_titleBtnCancel
         ],
-        part_window_footer_btn_accept: [
-            {prop : "prop_titleBtnAccept"                    , default: "تایید"} ,
-        ],
-    }
 
+        part_window_footer_btn_accept: [
+            this._COMPONENT_PATTERN.prop_titleBtnAccept
+        ]
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_window:{
@@ -14641,38 +16576,83 @@ class ComponentSliderShowOverlappingBase extends ComponentBase{
 
 
     /* ---------------------------------------------
-      PROPERTYs
+         PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_labelClass: {
+            prop: "prop_labelClass",
+            default: ["text-center"]
+        },
+        prop_labelStyles: {
+            prop: "prop_labelStyles",
+            default: {"font-size": "16pt"}
+        },
+        prop_borderClass: {
+            prop: "prop_borderClass",
+            default: ["border", "shadow-sm", "my-2", "mx-auto", "d-block", "p-1"]
+        },
+        prop_borderStyles: {
+            prop: "prop_borderStyles",
+            default: {}
+        },
+        prop_imageDuration: {
+            prop: "prop_imageDuration",
+            default: 3000
+        },
+        prop_imageSelected: {
+            prop: "prop_imageSelected",
+            default: 0
+        },
+        prop_images: {
+            prop: "prop_images",
+            default: []
+        },
+        prop_imageMaxWidth: {
+            prop: "prop_imageMaxWidth",
+            default: null
+        }
+    };
+
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
+        part_structure: [],
 
-        ],
         part_label: [
-            {prop: "prop_labelClass"                               , default:  [ "text-center"]},
-            {prop: "prop_labelStyles"                              , default:  { "font-size" : "16pt"}}
-        ] ,
+            this._COMPONENT_PATTERN.prop_labelClass,
+            this._COMPONENT_PATTERN.prop_labelStyles
+        ],
+
         part_border: [
-            {prop : "prop_borderClass"                            , default: ["border" , "shadow-sm" , "my-2" , "mx-auto" , "d-block" , "p-1"]} ,
-            {prop : "prop_borderStyles"                           , default: {}} ,
+            this._COMPONENT_PATTERN.prop_borderClass,
+            this._COMPONENT_PATTERN.prop_borderStyles
         ],
-        part_btn_next: [
 
-        ],
-        part_btn_previous: [
+        part_btn_next: [],
 
-        ],
+        part_btn_previous: [],
+
         part_bottom_selector: [
-            {prop : "prop_imageDuration"                        , default: 3000} ,
-            {prop : "prop_imageSelected"                        , default: 0} ,
-            {prop : "prop_images"                               , default: []} ,
+            this._COMPONENT_PATTERN.prop_imageDuration,
+            this._COMPONENT_PATTERN.prop_imageSelected,
+            this._COMPONENT_PATTERN.prop_images
         ],
-        part_images: [
-            {prop : "prop_imageMaxWidth"                        , default: null} ,
-            {prop : "prop_imageSelected"                        , default: 0} ,
-            {prop : "prop_images"                               , default: []} ,
-        ],
-    }
 
+        part_images: [
+            this._COMPONENT_PATTERN.prop_imageMaxWidth,
+            this._COMPONENT_PATTERN.prop_imageSelected,
+            this._COMPONENT_PATTERN.prop_images
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label: {} ,
@@ -15084,28 +17064,63 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
 class ComponentBreadcrumbBase extends ComponentBase{
 
     /* ---------------------------------------------
-      PROPERTYs
+       PROPERTYs Pattern
+--------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_showBtn: {
+            prop: "prop_showBtn",
+            default: true
+        },
+        prop_unactiveBreadcrumb: {
+            prop: "prop_unactiveBreadcrumb",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("backgroundColor_unactive") ? tools_const.styles.breadcrumb.backgroundColor_unactive : ""
+        },
+        prop_colorUnactive: {
+            prop: "prop_colorUnactive",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("color_unactive") ? tools_const.styles.breadcrumb.color_unactive : ""
+        },
+        prop_activeBreadcrumb: {
+            prop: "prop_activeBreadcrumb",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("backgroundColor_active") ? tools_const.styles.breadcrumb.backgroundColor_active : ""
+        },
+        prop_colorActive: {
+            prop: "prop_colorActive",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("color_active") ? tools_const.styles.breadcrumb.color_active : ""
+        },
+        prop_breadcrumbs: {
+            prop: "prop_breadcrumbs",
+            default: []
+        },
+        prop_stepSelected: {
+            prop: "prop_stepSelected",
+            default: 1
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ],
-        part_scroller: [
-
-        ],
+        part_structure: [],
+        part_scroller: [],
         part_btnBack: [
-            {prop : "prop_showBtn"                       , default: true} ,
+            this._COMPONENT_PATTERN.prop_showBtn
         ],
         part_breadcrumbs: [
-            {prop : "prop_unactiveBreadcrumb"            , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("backgroundColor_unactive")   ? tools_const.styles.breadcrumb.backgroundColor_unactive : ""} ,
-            {prop : "color_unactive"                     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("color_unactive")   ? tools_const.styles.breadcrumb.color_unactive : ""} ,
-            {prop : "prop_activeBreadcrumb"              , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("backgroundColor_active")   ? tools_const.styles.breadcrumb.backgroundColor_active : ""} ,
-            {prop : "color_active"                       , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumb") && tools_const.styles.breadcrumb.hasOwnProperty("color_active")   ? tools_const.styles.breadcrumb.color_active : ""} ,
-            {prop : "prop_breadcrumbs"                   , default: []} ,
-            {prop : "prop_stepSelected"                  , default: 1} ,
-        ],
-    }
+            this._COMPONENT_PATTERN.prop_unactiveBreadcrumb,
+            this._COMPONENT_PATTERN.prop_colorUnactive,
+            this._COMPONENT_PATTERN.prop_activeBreadcrumb,
+            this._COMPONENT_PATTERN.prop_colorActive,
+            this._COMPONENT_PATTERN.prop_breadcrumbs,
+            this._COMPONENT_PATTERN.prop_stepSelected
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_scroller:{
@@ -15201,8 +17216,6 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
     }
 
 
-
-
     template_render_btnBack(partName) {
         const data = this.getPartProps(partName)
 
@@ -15242,7 +17255,6 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
     }
 
 
-
     template_render_breadcrumbs(partName) {
         const data = this.getPartProps(partName)
 
@@ -15251,13 +17263,13 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
             const directionRtl               =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
 
             const prop_unactiveBreadcrumb    =  data.hasOwnProperty("prop_unactiveBreadcrumb")         ?  data.prop_unactiveBreadcrumb            : "";
-            const color_unactive             =  data.hasOwnProperty("color_unactive")                  ?  data.color_unactive                     : "";
+            const prop_colorUnactive         =  data.hasOwnProperty("prop_colorUnactive")              ?  data.prop_colorUnactive                 : "";
             const prop_activeBreadcrumb      =  data.hasOwnProperty("prop_activeBreadcrumb")           ?  data.prop_activeBreadcrumb              : "";
-            const color_active               =  data.hasOwnProperty("color_active")                    ?  data.color_active                       : "";
+            const prop_colorActive           =  data.hasOwnProperty("prop_colorActive")                ?  data.prop_colorActive                   : "";
             const prop_breadcrumbs           =  data.hasOwnProperty("prop_breadcrumbs")                ?  data.prop_breadcrumbs                   : [];
             const prop_stepSelected          =  data.hasOwnProperty("prop_stepSelected")               ?  data.prop_stepSelected                  : 1;
 
-            const {style , html} = this.fn_readyListBreadCrumb(prop_breadcrumbs , prop_activeBreadcrumb , color_active , prop_unactiveBreadcrumb , color_unactive , prop_stepSelected , directionRtl);
+            const {style , html} = this.fn_readyListBreadCrumb(prop_breadcrumbs , prop_activeBreadcrumb , prop_colorActive , prop_unactiveBreadcrumb , prop_colorUnactive , prop_stepSelected , directionRtl);
 
             return `
 <section data-part-name="${partName}" 
@@ -15454,6 +17466,204 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
 
 
 
+/*-------------------------------------
+ 15-01) Breadcrumb wuth arrow
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_unactiveBreadcrumb
+@prop_activeBreadcrumb
+@prop_breadcrumbs
+
+@fn_callback
+@fn_onBackClick
+-------------------------------------*/
+class ComponentBreadcrumbWithArrowBase extends ComponentBase{
+
+    /* ---------------------------------------------
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_side: {
+            prop: "prop_side",
+            default: 20
+        },
+        prop_length: {
+            prop: "prop_length",
+            default: 120
+        },
+        prop_gap: {
+            prop: "prop_gap",
+            default: 6
+        },
+        prop_height: {
+            prop: "prop_height",
+            default: 25
+        },
+        prop_breadcrumbs: {
+            prop: "prop_breadcrumbs",
+            default: []
+        },
+        prop_stepSelected: {
+            prop: "prop_stepSelected",
+            default: 1
+        },
+        prop_marginMinPerent: {
+            prop: "prop_marginMinPerent",
+            default: 10
+        },
+
+        prop_unactiveBreadcrumb: {
+            prop: "prop_unactiveBreadcrumb",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumbWithArrow") && tools_const.styles.breadcrumbWithArrow.hasOwnProperty("backgroundColor_unactive") ? tools_const.styles.breadcrumbWithArrow.backgroundColor_unactive : ""
+        },
+        prop_colorUnactive: {
+            prop: "prop_colorUnactive",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumbWithArrow") && tools_const.styles.breadcrumbWithArrow.hasOwnProperty("color_unactive") ? tools_const.styles.breadcrumbWithArrow.color_unactive : ""
+        },
+        prop_activeBreadcrumb: {
+            prop: "prop_activeBreadcrumb",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumbWithArrow") && tools_const.styles.breadcrumbWithArrow.hasOwnProperty("backgroundColor_active") ? tools_const.styles.breadcrumbWithArrow.backgroundColor_active : ""
+        },
+        prop_colorActive: {
+            prop: "prop_colorActive",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumbWithArrow") && tools_const.styles.breadcrumbWithArrow.hasOwnProperty("color_active") ? tools_const.styles.breadcrumbWithArrow.color_active : ""
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+        part_breadcrumbs: [
+            this._COMPONENT_PATTERN.prop_side,
+            this._COMPONENT_PATTERN.prop_length,
+            this._COMPONENT_PATTERN.prop_gap,
+            this._COMPONENT_PATTERN.prop_height,
+            this._COMPONENT_PATTERN.prop_breadcrumbs,
+            this._COMPONENT_PATTERN.prop_stepSelected,
+            this._COMPONENT_PATTERN.prop_marginMinPerent,
+            this._COMPONENT_PATTERN.prop_unactiveBreadcrumb,
+            this._COMPONENT_PATTERN.prop_colorUnactive,
+            this._COMPONENT_PATTERN.prop_activeBreadcrumb,
+            this._COMPONENT_PATTERN.prop_colorActive
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_breadcrumbs:{}
+        }
+    }
+
+}
+window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends ComponentBreadcrumbWithArrowBase {
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentBreadcrumbWithArrow.name],
+            elId
+        );
+        this.onCreate(
+            config,
+            this._COMPONENT_PROPS,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+
+            case "part_breadcrumbs":
+                return this.template_render_breadcrumbs(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+            ${this.templateFn("part_breadcrumbs") ?? ""}
+        `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+    template_render_breadcrumbs(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_unactiveBreadcrumb    =  data.hasOwnProperty("prop_unactiveBreadcrumb")         ?  data.prop_unactiveBreadcrumb            : "";
+            const color_unactive             =  data.hasOwnProperty("color_unactive")                  ?  data.color_unactive                     : "";
+            const prop_activeBreadcrumb      =  data.hasOwnProperty("prop_activeBreadcrumb")           ?  data.prop_activeBreadcrumb              : "";
+            const color_active               =  data.hasOwnProperty("color_active")                    ?  data.color_active                       : "";
+            const prop_breadcrumbs           =  data.hasOwnProperty("prop_breadcrumbs")                ?  data.prop_breadcrumbs                   : [];
+            const prop_stepSelected          =  data.hasOwnProperty("prop_stepSelected")               ?  data.prop_stepSelected                  : 1;
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-breadcrumb-breadcrumbs-with-arrow-${this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+    <style>
+    
+        #${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-with-arrow-${this._COMPONENT_RANDOM_ID}{
+              
+        } 
+
+    </style>
+    
+    sss
+    
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+
+}
+
+
+
+
 
 /* ===============================================================================================================
  [20] Charts
@@ -15490,30 +17700,81 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
 class ComponentChartBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type: {
+            prop: "prop_type",
+            default: 0
+        },
+        prop_TypeDirection: {
+            prop: "prop_TypeDirection",
+            default: 0
+        },
+        prop_height: {
+            prop: "prop_height",
+            default: null
+        },
+        prop_title_text: {
+            prop: "prop_title_text",
+            default: null
+        },
+        prop_title_align: {
+            prop: "prop_title_align",
+            default: "left"
+        },
+        prop_x_title_text: {
+            prop: "prop_x_title_text",
+            default: null
+        },
+        prop_x_title_align: {
+            prop: "prop_x_title_align",
+            default: "left"
+        },
+        prop_categories: {
+            prop: "prop_categories",
+            default: []
+        },
+        prop_series: {
+            prop: "prop_series",
+            default: []
+        },
+        prop_tooltip_header: {
+            prop: "prop_tooltip_header",
+            default: `<b>{series.name}</b><br />`
+        },
+        prop_tooltip_format: {
+            prop: "prop_tooltip_format",
+            default: `{point.y}`
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
-        part_chart_element: [
-
-        ] ,
+        part_structure: [],
+        part_chart_element: [],
         part_chart_view: [
-            {prop : "prop_type"                  , default: 0} ,
-            {prop : "prop_TypeDirection"         , default: 0} ,
-            {prop : "prop_height"                , default: null} ,
-            {prop : "prop_title_text"            , default: null} ,
-            {prop : "prop_title_align"           , default: "left"} ,
-            {prop : "prop_x_title_text"          , default: null} ,
-            {prop : "prop_x_title_align"         , default: "left"} ,
-            {prop : "prop_categories"            , default: []} ,
-            {prop : "prop_series"                , default: []} ,
-            {prop : "prop_tooltip_header"        , default: `<b>{series.name}</b><br />`} ,
-            {prop : "prop_tooltip_format"        , default: `{point.y}`} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_TypeDirection,
+            this._COMPONENT_PATTERN.prop_height,
+            this._COMPONENT_PATTERN.prop_title_text,
+            this._COMPONENT_PATTERN.prop_title_align,
+            this._COMPONENT_PATTERN.prop_x_title_text,
+            this._COMPONENT_PATTERN.prop_x_title_align,
+            this._COMPONENT_PATTERN.prop_categories,
+            this._COMPONENT_PATTERN.prop_series,
+            this._COMPONENT_PATTERN.prop_tooltip_header,
+            this._COMPONENT_PATTERN.prop_tooltip_format
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_chart_element: {
@@ -15717,37 +17978,107 @@ window.ComponentChart = class ComponentChart extends ComponentChartBase{
 class ComponentChartTreeYBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formScrollerHeight: {
+            prop: "prop_formScrollerHeight",
+            default: "450px"
+        },
+        prop_svgWGap: {
+            prop: "prop_svgWGap",
+            default: 1000
+        },
+        prop_svgHGap: {
+            prop: "prop_svgHGap",
+            default: 1000
+        },
+        prop_objects: {
+            prop: "prop_objects",
+            default: []
+        },
+        prop_objectsLevelClose: {
+            prop: "prop_objectsLevelClose",
+            default: null
+        },
+        prop_template: {
+            prop: "prop_template",
+            default: ""
+        },
+        prop_templateWidth: {
+            prop: "prop_templateWidth",
+            default: 100
+        },
+        prop_templateHeight: {
+            prop: "prop_templateHeight",
+            default: 100
+        },
+        prop_templateHeightPoint: {
+            prop: "prop_templateHeightPoint",
+            default: 30
+        },
+        prop_templateHeightGap: {
+            prop: "prop_templateHeightGap",
+            default: 30
+        },
+        prop_lineHeightMin: {
+            prop: "prop_lineHeightMin",
+            default: 20
+        },
+        prop_lineWidth: {
+            prop: "prop_lineWidth",
+            default: 3
+        },
+        prop_lineDurationAnim: {
+            prop: "prop_lineDurationAnim",
+            default: 250
+        },
+        prop_lineColor: {
+            prop: "prop_lineColor",
+            default: "#c2c2c2"
+        },
+        prop_lineMarkerStart: {
+            prop: "prop_lineMarkerStart",
+            default: "circle"
+        },
+        prop_lineMarkerEnd: {
+            prop: "prop_lineMarkerEnd",
+            default: "arrow"
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
+        part_structure: [],
         part_layout_mouse_scroller: [
-            {prop : "prop_formScrollerHeight"          , default: "450px"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_formScrollerHeight
+        ],
         part_layout_svg: [
-            {prop : "prop_svgWGap"                     , default: 1000} ,
-            {prop : "prop_svgHGap"                     , default: 1000} ,
+            this._COMPONENT_PATTERN.prop_svgWGap,
+            this._COMPONENT_PATTERN.prop_svgHGap,
+            this._COMPONENT_PATTERN.prop_objects,
+            this._COMPONENT_PATTERN.prop_objectsLevelClose,
+            this._COMPONENT_PATTERN.prop_template,
+            this._COMPONENT_PATTERN.prop_templateWidth,
+            this._COMPONENT_PATTERN.prop_templateHeight,
+            this._COMPONENT_PATTERN.prop_templateHeightPoint,
+            this._COMPONENT_PATTERN.prop_templateHeightGap,
+            this._COMPONENT_PATTERN.prop_lineHeightMin,
+            this._COMPONENT_PATTERN.prop_lineWidth,
+            this._COMPONENT_PATTERN.prop_lineDurationAnim,
+            this._COMPONENT_PATTERN.prop_lineColor,
+            this._COMPONENT_PATTERN.prop_lineMarkerStart,
+            this._COMPONENT_PATTERN.prop_lineMarkerEnd
+        ]
+    };
 
-            {prop : "prop_objects"                     , default: []} ,
-            {prop : "prop_objectsLevelClose"           , default: null} ,
 
-            {prop : "prop_template"                    , default: ""} ,
-            {prop : "prop_templateWidth"               , default: 100} ,
-            {prop : "prop_templateHeight"              , default: 100} ,
-            {prop : "prop_templateHeightPoint"         , default: 30} ,
-            {prop : "prop_templateHeightGap"           , default: 30} ,
 
-            {prop : "prop_lineHeightMin"               , default: 20} ,
-            {prop : "prop_lineWidth"                   , default: 3} ,
-            {prop : "prop_lineDurationAnim"            , default: 250} ,
-            {prop : "prop_lineColor"                   , default: "#c2c2c2"} ,
-            {prop : "prop_lineMarkerStart"             , default: "circle"} ,
-            {prop : "prop_lineMarkerEnd"               , default: "arrow"} ,
-        ] ,
-    }
-
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_layout_mouse_scroller: {
@@ -16255,35 +18586,58 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentChartTre
 class ComponentQrCodeBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
-   --------------------------------------------- */
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: ["border", "rounded", "shadow-sm", "text-center"]
+        },
+        prop_formStyles: {
+            prop: "prop_formStyles",
+            default: {}
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: ""
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: 4
+        },
+        prop_version: {
+            prop: "prop_version",
+            default: 3
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
-        part_label: [
-
-        ] ,
+        part_structure: [],
+        part_label: [],
         part_qr_code_element: [
-            {prop : "prop_formClass"                  , default: [ "border" , "rounded" , "shadow-sm" , "text-center"]} ,
-            {prop : "prop_formStyles"                 , default: {}} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles
+        ],
         part_qr_code_view: [
-            {prop : "prop_value"                      , default: ""} ,
-            {prop : "prop_size"                       , default: 4} ,
-            {prop : "prop_version"                    , default: 3} ,
-        ] ,
-        part_qr_code_bottom: [
-
-        ] ,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_version
+        ],
+        part_qr_code_bottom: [],
         part_qr_code_bottom_text: [
-            {prop : "prop_value"                      , default: ""} ,
-        ] ,
-        part_qr_code_bottom_icon: [
+            this._COMPONENT_PATTERN.prop_value
+        ],
+        part_qr_code_bottom_icon: []
+    };
 
-        ] ,
-    }
 
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label:{} ,
@@ -16558,36 +18912,75 @@ class ComponentCameraQrCodeReaderBase extends ComponentBase{
 
 
     /* ---------------------------------------------
-    PROPERTYs
+       PROPERTYs Pattern
+--------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formMinHight: {
+            prop: "prop_formMinHight",
+            default: "150px"
+        },
+        prop_fps: {
+            prop: "prop_fps",
+            default: 10
+        },
+        prop_qrbox: {
+            prop: "prop_qrbox",
+            default: 250
+        },
+        prop_titleErrorExistCamera: {
+            prop: "prop_titleErrorExistCamera",
+            default: "دوربینی در دستگاه شما یافت نشد"
+        },
+        prop_titleBtnRetry: {
+            prop: "prop_titleBtnRetry",
+            default: "تلاج مجدد"
+        },
+        prop_titleErrorPermisionCamera: {
+            prop: "prop_titleErrorPermisionCamera",
+            default: "مجوز برای درخواست دوربین تایید نشد"
+        },
+        prop_showInput: {
+            prop: "prop_showInput",
+            default: true
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: "camera_qr_code"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
-        part_label: [
-
-        ] ,
+        part_structure: [],
+        part_label: [],
         part_form: [
-            {prop : "prop_formMinHight"                 , default: "150px"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_formMinHight
+        ],
         part_element: [
-            {prop : "prop_fps"                          , default: 10} ,
-            {prop : "prop_qrbox"                        , default: 250} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_fps,
+            this._COMPONENT_PATTERN.prop_qrbox
+        ],
         part_error_exist_camera: [
-            {prop : "prop_titleErrorExistCamera"        , default: "دوربینی در دستگاه شما یافت نشد"} ,
-            {prop : "prop_titleBtnRetry"                , default: "تلاج مجدد"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_titleErrorExistCamera,
+            this._COMPONENT_PATTERN.prop_titleBtnRetry
+        ],
         part_error_permision_camera: [
-            {prop : "prop_titleErrorPermisionCamera"    , default: "مجوز برای درخواست دوربین تایید نشد"} ,
-            {prop : "prop_titleBtnRetry"                , default: "تلاج مجدد"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_titleErrorPermisionCamera,
+            this._COMPONENT_PATTERN.prop_titleBtnRetry
+        ],
         part_input: [
-            {prop : "prop_showInput"                    , default: true} ,
-            {prop : "prop_name"                         , default: "camera_qr_code"} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_showInput,
+            this._COMPONENT_PATTERN.prop_name
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label:{} ,
@@ -16894,20 +19287,43 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
 class ComponentUploadQrCodeReaderBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formHight: {
+            prop: "prop_formHight",
+            default: 150
+        },
+        prop_showInput: {
+            prop: "prop_showInput",
+            default: true
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: "upload_qr_code"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [],
         part_label: [],
         part_element: [
-            {prop: "prop_formHight"                 , default: 150},
+            this._COMPONENT_PATTERN.prop_formHight
         ],
         part_input: [
-            {prop : "prop_showInput"                , default: true} ,
-            {prop: "prop_name"                      , default: "upload_qr_code"},
-        ],
-    }
+            this._COMPONENT_PATTERN.prop_showInput,
+            this._COMPONENT_PATTERN.prop_name
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label: {},
@@ -17101,36 +19517,61 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
 class ComponentQrCodeReaderBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_titleTabCamera: {
+            prop: "prop_titleTabCamera",
+            default: "دوربین"
+        },
+        prop_titleTabFile: {
+            prop: "prop_titleTabFile",
+            default: "فایل"
+        },
+        prop_titleTabInput: {
+            prop: "prop_titleTabInput",
+            default: "ورودی"
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: ""
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: ""
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: ""
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ],
-        part_label: [
-
-        ],
+        part_structure: [],
+        part_label: [],
         part_tabs: [
-            {prop : "prop_titleTabCamera"               , default: "دوربین"} ,
-            {prop : "prop_titleTabFile"                 , default: "فایل"} ,
-            {prop : "prop_titleTabInput"                , default: "ورودی"} ,
+            this._COMPONENT_PATTERN.prop_titleTabCamera,
+            this._COMPONENT_PATTERN.prop_titleTabFile,
+            this._COMPONENT_PATTERN.prop_titleTabInput
         ],
-        part_qr_code: [
-
-        ],
-        part_qr_code_file: [
-
-        ],
-        part_qr_code_camera: [
-
-        ],
+        part_qr_code: [],
+        part_qr_code_file: [],
+        part_qr_code_camera: [],
         part_input: [
-            {prop : "prop_name"                          , default: ""} ,
-            {prop : "prop_value"                         , default: ""} ,
-            {prop : "prop_placeholder"                   , default: ""} ,
-        ],
-    }
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_placeholder
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label: {},
@@ -17433,22 +19874,55 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCo
 class ComponentIconBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
+        PROPERTYs Pattern
      --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_icon: {
+            prop: "prop_icon",
+            default: ""
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: ""
+        },
+        prop_isItalik: {
+            prop: "prop_isItalik",
+            default: false
+        },
+        prop_iconClass: {
+            prop: "prop_iconClass",
+            default: []
+        },
+        prop_iconStyles: {
+            prop: "prop_iconStyles",
+            default: {}
+        },
+        fn_callback: {
+            prop: "fn_callback",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
+        part_structure: [],
         part_icon: [
-            {prop : "prop_icon"        , default: ""} ,
-            {prop : "prop_title"       , default: ""} ,
-            {prop : "prop_isItalik"    , default: false} ,
-            {prop : "prop_iconClass"   , default: []} ,
-            {prop : "prop_iconStyles"  , default: {}} ,
-            {prop : "fn_callback"      , default: null} ,
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_isItalik,
+            this._COMPONENT_PATTERN.prop_iconClass,
+            this._COMPONENT_PATTERN.prop_iconStyles,
+            this._COMPONENT_PATTERN.fn_callback
         ]
-    }
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_icon: {} ,
@@ -17591,28 +20065,77 @@ ${this.templateFn_render_icon("part_icon")}
 class ComponentPositionElementBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
-   --------------------------------------------- */
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_elementClass: {
+            prop: "prop_elementClass",
+            default: ["border", "shadow-sm", "bg-white", "px-2", "py-1", "rounded"]
+        },
+        prop_elementStyles: {
+            prop: "prop_elementStyles",
+            default: {}
+        },
+        prop_positionType: {
+            prop: "prop_positionType",
+            default: "absolute"
+        },
+        prop_positionTop: {
+            prop: "prop_positionTop",
+            default: ""
+        },
+        prop_positionLeft: {
+            prop: "prop_positionLeft",
+            default: ""
+        },
+        prop_positionBottom: {
+            prop: "prop_positionBottom",
+            default: ""
+        },
+        prop_positionRight: {
+            prop: "prop_positionRight",
+            default: ""
+        },
+        prop_width: {
+            prop: "prop_width",
+            default: "100%"
+        },
+        prop_height: {
+            prop: "prop_height",
+            default: "200px"
+        },
+        prop_content: {
+            prop: "prop_content",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
+        part_structure: [],
         part_border: [
-            {prop : "prop_elementClass"            , default: ["border" , "shadow-sm" , "bg-white" ,"px-2" , "py-1" , "rounded"]} ,
-            {prop : "prop_elementStyles"           , default: {}} ,
-            {prop : "prop_positionType"            , default: "absolute"} ,
-            {prop : "prop_positionTop"             , default: ""} ,
-            {prop : "prop_positionLeft"            , default: ""} ,
-            {prop : "prop_positionBottom"          , default: ""} ,
-            {prop : "prop_positionRight"           , default: ""} ,
-            {prop : "prop_width"                   , default: "100%"} ,
-            {prop : "prop_height"                  , default: "200px"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_elementClass,
+            this._COMPONENT_PATTERN.prop_elementStyles,
+            this._COMPONENT_PATTERN.prop_positionType,
+            this._COMPONENT_PATTERN.prop_positionTop,
+            this._COMPONENT_PATTERN.prop_positionLeft,
+            this._COMPONENT_PATTERN.prop_positionBottom,
+            this._COMPONENT_PATTERN.prop_positionRight,
+            this._COMPONENT_PATTERN.prop_width,
+            this._COMPONENT_PATTERN.prop_height
+        ],
         part_content: [
-            {prop : "prop_content"                 , default: null} ,
+            this._COMPONENT_PATTERN.prop_content
         ]
-    }
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border: {
@@ -17776,25 +20299,68 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 class ComponentBorderBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_structureClass: {
+            prop: "prop_structureClass",
+            default: ["border", "shadow-sm", "rounded", "px-1", "px-2"]
+        },
+        prop_structureStyles: {
+            prop: "prop_structureStyles",
+            default: { "position": "relative" }
+        },
+        prop_borderClass: {
+            prop: "prop_borderClass",
+            default: []
+        },
+        prop_borderStyles: {
+            prop: "prop_borderStyles",
+            default: {}
+        },
+        prop_content: {
+            prop: "prop_content",
+            default: null
+        },
+        prop_btnMore_icon: {
+            prop: "prop_btnMore_icon",
+            default: ""
+        },
+        prop_btnMore_show: {
+            prop: "prop_btnMore_show",
+            default: false
+        },
+        prop_btnMore_link: {
+            prop: "prop_btnMore_link",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"            , default: ["border" , "shadow-sm" , "rounded" , "px-1" , "px-2"]} ,
-            {prop : "prop_structureStyles"           , default: {"position" : "relative" }} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_structureClass,
+            this._COMPONENT_PATTERN.prop_structureStyles
+        ],
         part_border: [
-            {prop : "prop_borderClass"            , default: []} ,
-            {prop : "prop_borderStyles"           , default: {}} ,
-            {prop : "prop_content"                , default: null} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_borderClass,
+            this._COMPONENT_PATTERN.prop_borderStyles,
+            this._COMPONENT_PATTERN.prop_content
+        ],
         part_icon_more: [
-            {prop : "prop_btnMore_icon"           , default: ""} ,
-            {prop : "prop_btnMore_show"           , default: false} ,
-            {prop : "prop_btnMore_link"           , default: null} ,
+            this._COMPONENT_PATTERN.prop_btnMore_icon,
+            this._COMPONENT_PATTERN.prop_btnMore_show,
+            this._COMPONENT_PATTERN.prop_btnMore_link
         ]
-    }
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_border: {} ,
@@ -17969,22 +20535,61 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
 class ComponentImageBase extends ComponentBase{
 
     /* ---------------------------------------------
-    PROPERTYs
-   --------------------------------------------- */
+           PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_structureClass: {
+            prop: "prop_structureClass",
+            default: ["border", "shadow-sm", "rounded", "px-1", "px-2", "mx-auto"]
+        },
+        prop_structureStyles: {
+            prop: "prop_structureStyles",
+            default: { "position": "relative" }
+        },
+        prop_imageSource: {
+            prop: "prop_imageSource",
+            default: ""
+        },
+        prop_imageTitle: {
+            prop: "prop_imageTitle",
+            default: ""
+        },
+        prop_imageAlt: {
+            prop: "prop_imageAlt",
+            default: ""
+        },
+        prop_imageClass: {
+            prop: "prop_imageClass",
+            default: ["d-block", "mx-auto"]
+        },
+        prop_imageStyles: {
+            prop: "prop_imageStyles",
+            default: {}
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"            , default: ["border" , "shadow-sm" , "rounded" , "px-1" , "px-2" , "mx-auto"]} ,
-            {prop : "prop_structureStyles"           , default: {"position" : "relative"}} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_structureClass,
+            this._COMPONENT_PATTERN.prop_structureStyles
+        ],
         part_image: [
-            {prop : "prop_imageSource"               , default: ""} ,
-            {prop : "prop_imageTitle"                , default: ""} ,
-            {prop : "prop_imageAlt"                  , default: ""} ,
-            {prop : "prop_imageClass"                , default: ["d-block" , "mx-auto"]} ,
-            {prop : "prop_imageStyles"               , default: {}} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_imageSource,
+            this._COMPONENT_PATTERN.prop_imageTitle,
+            this._COMPONENT_PATTERN.prop_imageAlt,
+            this._COMPONENT_PATTERN.prop_imageClass,
+            this._COMPONENT_PATTERN.prop_imageStyles
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_image: {} ,
@@ -18105,20 +20710,51 @@ window.ComponentImage = class ComponentImage extends ComponentImageBase{
 class ComponentLayoutBase extends ComponentBase{
 
     /* ---------------------------------------------
-     PROPERTYs
+         PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_structureClass: {
+            prop: "prop_structureClass",
+            default: []
+        },
+        prop_structureStyles: {
+            prop: "prop_structureStyles",
+            default: {}
+        },
+        prop_layoutClass: {
+            prop: "prop_layoutClass",
+            default: []
+        },
+        prop_layoutStyles: {
+            prop: "prop_layoutStyles",
+            default: {}
+        },
+        prop_layoutContent: {
+            prop: "prop_layoutContent",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"            , default: []} ,
-            {prop : "prop_structureStyles"           , default: {}} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_structureClass,
+            this._COMPONENT_PATTERN.prop_structureStyles
+        ],
         part_layout: [
-            {prop : "prop_layoutClass"               , default: []} ,
-            {prop : "prop_layoutStyles"              , default: {}} ,
-            {prop : "prop_layoutContent"             , default: null} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_layoutClass,
+            this._COMPONENT_PATTERN.prop_layoutStyles,
+            this._COMPONENT_PATTERN.prop_layoutContent
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_layout: {} ,
@@ -18270,57 +20906,152 @@ class ComponentMouseScrollerBase extends ComponentBase{
 
 
     /* ---------------------------------------------
-     PROPERTYs
+        PROPERTYs Pattern
+ --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_structureClass: {
+            prop: "prop_structureClass",
+            default: []
+        },
+        prop_structureStyles: {
+            prop: "prop_structureStyles",
+            default: {}
+        },
+        prop_borderClass: {
+            prop: "prop_borderClass",
+            default: ["border", "border-secondry"]
+        },
+        prop_borderStyles: {
+            prop: "prop_borderStyles",
+            default: {}
+        },
+        prop_backgroundColor_type: {
+            prop: "prop_backgroundColor_type",
+            default: null
+        },
+        prop_backgroundColor_dark: {
+            prop: "prop_backgroundColor_dark",
+            default: tools_const?.styles?.mosuseScroller?.backgroundColor_dark ?? ""
+        },
+        prop_backgroundColor_light: {
+            prop: "prop_backgroundColor_light",
+            default: tools_const?.styles?.mosuseScroller?.backgroundColor_light ?? ""
+        },
+        prop_scollerClass: {
+            prop: "prop_scollerClass",
+            default: []
+        },
+        prop_scrollerStyles: {
+            prop: "prop_scrollerStyles",
+            default: {}
+        },
+        prop_scrollerWidth: {
+            prop: "prop_scrollerWidth",
+            default: "100%"
+        },
+        prop_scrollerHeight: {
+            prop: "prop_scrollerHeight",
+            default: "250px"
+        },
+        prop_backgroundColor_tools: {
+            prop: "prop_backgroundColor_tools",
+            default: tools_const?.styles?.mosuseScroller?.backgroundColor_tools ?? ""
+        },
+        prop_moreIcons: {
+            prop: "prop_moreIcons",
+            default: ""
+        },
+        prop_iconRefresh: {
+            prop: "prop_iconRefresh",
+            default: "&#x21bb;"
+        },
+        prop_iconZoomIn: {
+            prop: "prop_iconZoomIn",
+            default: "&#x2795;"
+        },
+        prop_iconZoomOut: {
+            prop: "prop_iconZoomOut",
+            default: "&#x2796;"
+        },
+        prop_iconZoomStandard: {
+            prop: "prop_iconZoomStandard",
+            default: "&#x1F50D;"
+        },
+        prop_iconBgDark: {
+            prop: "prop_iconBgDark",
+            default: "&#9790"
+        },
+        prop_iconBgLight: {
+            prop: "prop_iconBgLight",
+            default: "&#9728;"
+        },
+        prop_layoutContent: {
+            prop: "prop_layoutContent",
+            default: null
+        },
+        var_scrollerScaleText: {
+            prop: "var_scrollerScaleText",
+            default: this._SCALE * 100
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-            {prop : "prop_structureClass"            , default: []} ,
-            {prop : "prop_structureStyles"           , default: {}} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_structureClass,
+            this._COMPONENT_PATTERN.prop_structureStyles
+        ],
         part_layout_border: [
-            {prop : "prop_borderClass"                , default: ["border" , "border-secondry"]} ,
-            {prop : "prop_borderStyles"               , default: {}} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_borderClass,
+            this._COMPONENT_PATTERN.prop_borderStyles
+        ],
         part_layout_scroll: [
-            {prop : "prop_backgroundColor_type"      , default: null } ,
-            {prop : "prop_backgroundColor_dark"      , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_dark")    ? tools_const.styles.mosuseScroller.backgroundColor_dark : ""} ,
-            {prop : "prop_backgroundColor_light"     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_light")   ? tools_const.styles.mosuseScroller.backgroundColor_light : ""} ,
-            {prop : "prop_scollerClass"              , default: []} ,
-            {prop : "prop_scrollerStyles"            , default: {}} ,
-            {prop : "prop_scrollerWidth"             , default: "100%"} ,
-            {prop : "prop_scrollerHeight"            , default: "250px"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_backgroundColor_type,
+            this._COMPONENT_PATTERN.prop_backgroundColor_dark,
+            this._COMPONENT_PATTERN.prop_backgroundColor_light,
+            this._COMPONENT_PATTERN.prop_scollerClass,
+            this._COMPONENT_PATTERN.prop_scrollerStyles,
+            this._COMPONENT_PATTERN.prop_scrollerWidth,
+            this._COMPONENT_PATTERN.prop_scrollerHeight
+        ],
         part_layout_tools: [
-            {prop : "prop_backgroundColor_tools"     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_tools")   ? tools_const.styles.mosuseScroller.backgroundColor_tools : ""} ,
-            {prop : "prop_moreIcons"                 , default: ""} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_backgroundColor_tools,
+            this._COMPONENT_PATTERN.prop_moreIcons
+        ],
         part_layout_tools_btn_refresh: [
-            {prop : "prop_iconRefresh"              , default: "&#x21bb;"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_iconRefresh
+        ],
         part_layout_tools_btn_zoom_in: [
-            {prop : "prop_iconZoomIn"               , default: "&#x2795;"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_iconZoomIn
+        ],
         part_layout_tools_btn_zoom_out: [
-            {prop : "prop_iconZoomOut"              , default: "&#x2796;"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_iconZoomOut
+        ],
         part_layout_tools_btn_zoom_standard: [
-            {prop : "prop_iconZoomStandard"         , default: "&#x1F50D;"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_iconZoomStandard
+        ],
         part_layout_tools_btn_bg_dark: [
-            {prop : "prop_iconBgDark"               , default: "&#9790"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_iconBgDark
+        ],
         part_layout_tools_btn_bg_light: [
-            {prop : "prop_iconBgLight"              , default: "&#9728;"} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_iconBgLight
+        ],
         part_layout_content: [
-            {prop : "prop_layoutContent"            , default: null} ,
-        ] ,
+            this._COMPONENT_PATTERN.prop_layoutContent
+        ],
         part_layout_zoom_text: [
-            {prop : "prop_backgroundColor_tools"     , default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("mosuseScroller") && tools_const.styles.mosuseScroller.hasOwnProperty("backgroundColor_tools")   ? tools_const.styles.mosuseScroller.backgroundColor_tools : ""} ,
-            {prop : "var_scrollerScaleText"          , default: this._SCALE*100} ,
-        ] ,
-    }
+            this._COMPONENT_PATTERN.prop_backgroundColor_tools,
+            this._COMPONENT_PATTERN.var_scrollerScaleText
+        ]
+    };
 
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_layout_border: {

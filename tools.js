@@ -205,6 +205,13 @@ tools_init = {
                 color_active : component_props.darkColor1 ,
             } ,
 
+            breadcrumbWithArrow: {
+                backgroundColor_unactive : component_props.primaryColor1 ,
+                color_unactive : component_props.shanColor1 ,
+                backgroundColor_active : component_props.secondaryColor1 ,
+                color_active : component_props.darkColor1 ,
+            } ,
+
 
             tree: {
                 backgroundColor_unSelected : component_props.shadowColor1 ,
@@ -926,6 +933,36 @@ tools_svg = {
 
 
 
+    toPointsString(shape){
+        return shape.map(p => `${p.x},${p.y}`).join(" ");
+    } ,
+
+    getPointsPolygonElement(shape){
+        let rawPoints = shape.getAttribute("points");
+        return rawPoints
+            .trim()
+            .split(" ")
+            .map(p => {
+                let [x, y] = p.split(",").map(Number);
+                return {x, y};
+            });
+    } ,
+
+    getCenterPolygonElement(shape){
+        const shapePoints = tools_svg.getPointsPolygonElement(shape);
+        let sumX = 0, sumY = 0;
+        shapePoints.forEach(p => { sumX += p.x; sumY += p.y; });
+        return {x: sumX/shapePoints.length, y: sumY/shapePoints.length};
+    } ,
+
+    getCenterCircleElement(shape){
+        return {x: parseInt(shape.getAttribute("cx")), y: parseInt(shape.getAttribute("cy"))};
+    } ,
+
+
+
+
+
 
 
 
@@ -1074,7 +1111,9 @@ tools_svg = {
         foreign.style.zIndex = 2;
 
         foreign.insertAdjacentHTML('beforeend', html);
-        svg.appendChild(foreign);
+        if (svg != null){
+            svg.appendChild(foreign);
+        }
 
         const animY = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         animY.setAttribute("attributeName", "y");
@@ -1083,8 +1122,150 @@ tools_svg = {
         animY.setAttribute("dur", animDuration + "ms");
         animY.setAttribute("fill", "freeze");
 
-        foreign.appendChild(animY);
-    }
+        if (svg != null){
+            svg.appendChild(animY);
+        }
+    } ,
+
+    craeteSvgPolygon(svg , points=[] , attrs={}){
+        let poly = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+        poly.setAttribute("points", tools_svg.toPointsString(points));
+        Object.keys(attrs).forEach(key => {
+            poly.setAttribute(key, attrs[key]);
+        })
+        if (svg != null){
+            svg.appendChild(poly);
+        }
+
+        return poly;
+    } ,
+
+    craeteSvgCircle(svg  , centerX=0 , centerY=0 ,  radius= 10 , attrs={}){
+        let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        circle.setAttribute("cx", centerX)
+        circle.setAttribute("cy", centerY);
+        circle.setAttribute("r", radius);
+        Object.keys(attrs).forEach(key => {
+            circle.setAttribute(key, attrs[key]);
+        })
+        if (svg != null){
+            svg.appendChild(circle);
+        }
+
+        return circle;
+    } ,
+
+
+
+
+
+
+    craeteSvgPathToCenterCircleElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, draw= "" , attrs={}){
+        let center = tools_svg.getCenterCircleElement(shapRelatedElement);
+
+        let path = document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("d", draw);
+        path.setAttribute("transform", `translate(${center.x + shapRelatedDefX}, ${center.y + shapRelatedDefY})`);
+        Object.keys(attrs).forEach(key => {
+            path.setAttribute(key, attrs[key]);
+        });
+        if (svg != null){
+            svg.appendChild(path);
+        }
+
+        return path;
+    } ,
+
+    craeteSvgTextToCenterCircleElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0 , content , attrs={}){
+        let center = tools_svg.getCenterCircleElement(shapRelatedElement);
+        console.log(center)
+
+        let text = document.createElementNS("http://www.w3.org/2000/svg","text");
+        text.setAttribute("x", center.x + shapRelatedDefX);
+        text.setAttribute("y", center.y + shapRelatedDefY);
+        Object.keys(attrs).forEach(key => {
+            text.setAttribute(key, attrs[key]);
+        });
+        text.textContent = content;
+
+        if (svg != null){
+            svg.appendChild(text);
+        }
+
+        return text;
+    } ,
+
+
+
+
+
+
+
+    craeteSvgPathToCenterPolygonElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, draw= "" , attrs={}){
+        let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
+
+        let path = document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("d", draw);
+        path.setAttribute("transform", `translate(${center.x + shapRelatedDefX}, ${center.y + shapRelatedDefY})`);
+        Object.keys(attrs).forEach(key => {
+            path.setAttribute(key, attrs[key]);
+        });
+        svg.appendChild(path);
+
+        return path;
+    } ,
+
+    craeteSvgCircleToCenterPolygonElement(svg  , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, radius= 10 , attrs={}){
+        let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
+
+        let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        circle.setAttribute("cx", center.x + shapRelatedDefX)
+        circle.setAttribute("cy", center.y + shapRelatedDefY);
+        circle.setAttribute("r", radius);
+        Object.keys(attrs).forEach(key => {
+            circle.setAttribute(key, attrs[key]);
+        })
+        svg.appendChild(circle);
+
+        return circle;
+    } ,
+
+    craeteSvgTextToCenterPolygonElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0 , content , attrs={}){
+        let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
+
+        let text = document.createElementNS("http://www.w3.org/2000/svg","text");
+        text.setAttribute("x", center.x + shapRelatedDefX);
+        text.setAttribute("y", center.y + shapRelatedDefY);
+        Object.keys(attrs).forEach(key => {
+            text.setAttribute(key, attrs[key]);
+        });
+        text.textContent = content;
+        svg.appendChild(text);
+
+        return text;
+    } ,
+
+    createShadowInsidePolygonElement(svg , el , pointStart , pointsLentgh ,  attrs={}){
+        const points = tools_svg.getPointsPolygonElement(el);
+        if (points != null && points.length > 0){
+            let shadowPoints = [];
+            for (let i = pointStart; i < pointStart + pointsLentgh ; i++) {
+                shadowPoints.push(points[i]);
+            }
+            shadowPoints.push(points[pointStart]);
+
+            let polyShadow = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+            polyShadow.setAttribute("points", tools_svg.toPointsString(shadowPoints));
+            Object.keys(attrs).forEach(key => {
+                polyShadow.setAttribute(key, attrs[key]);
+            })
+            svg.appendChild(polyShadow);
+
+            return polyShadow;
+        }
+
+        return null;
+    } ,
 
 }
 
