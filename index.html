@@ -49,18 +49,25 @@
         <component-body>
 
             <section class="row p-0 m-0">
+
+
                 <component-loading    id="loading"></component-loading>
 
                 <component-404        id="c404"></component-404>
 
                 <component-form       id="form">
                     <component-body>
-                        form data
+
+                        <component-input-email  id="input_email"></component-input-email>
+
+                        <component-input-password  id="input_password"></component-input-password>
                     </component-body>
                 </component-form>
 
                 <component-widget     id="widget"></component-widget>
 
+
+                <component-iframe     id="iframe"></component-iframe>
             </section>
 
         </component-body>
@@ -85,6 +92,20 @@
 
                 <component-input-file  id="input_file"></component-input-file>
 
+                <div class="col-md-3 col-12 mt-2">
+                    <input  id="input_component_validate"/>
+                    <component-validate  id="component_validate"></component-validate>
+                </div>
+
+                <component-check-box  id="check_box"></component-check-box>
+
+                <component-input-color  id="input-color"></component-input-color>
+
+                <component-input-size  id="input-size"></component-input-size>
+
+                <component-select-icon  id="select-icon"></component-select-icon>
+
+
             </section>
 
         </component-body>
@@ -101,13 +122,6 @@
 
         </component-body>
     </component-collapse>
-
-
-
-
-
-
-
 
     <component-collapse  id="tables">
         <component-body>
@@ -172,11 +186,6 @@
         </component-body>
     </component-collapse>
 
-
-
-
-
-
     <component-collapse  id="sliderShow">
         <component-body>
 
@@ -190,8 +199,6 @@
         </component-body>
     </component-collapse>
 
-
-
     <component-collapse  id="breadcrumbs">
         <component-body>
 
@@ -199,23 +206,29 @@
 
                 <component-breadcrumb id="Breadcrumb" ></component-breadcrumb>
 
+                <component-breadcrumb-with-arrow id="Breadcrumb_withArrow" ></component-breadcrumb-with-arrow>
+
             </section>
 
         </component-body>
     </component-collapse>
-
-
-
-
-
-
-
 
     <component-collapse  id="charts">
         <component-body>
             <section class="row p-0 m-0">
 
                 <component-chart  id="chart"></component-chart>
+
+                <style>
+                    #form_chartTreeY{
+                        height: 500px;
+                    }
+                </style>
+                <div id="form_chartTreeY" class="col-md-6 col-12 mt-2">
+                    <component-chart-tree-y  id="chartTreeY"></component-chart-tree-y>
+                </div>
+
+
 
             </section>
         </component-body>
@@ -236,11 +249,6 @@
             </section>
         </component-body>
     </component-collapse>
-
-
-
-
-
 
     <component-collapse  id="others">
         <component-body>
@@ -267,11 +275,26 @@
 
                 <component-layout     id="layout"></component-layout>
 
+                <component-mouse-scroller     id="mouseScroller">
+                    <component-body>
+                        <style>
+                            #content-mouse-scroller{
+                                display: block;
+                                width:1000px;
+                                height: 1000px;
+                            }
+                        </style>
+                        <div id="content-mouse-scroller">
+                            Hello World Element Scroller
+                        </div>
+
+                    </component-body>
+                </component-mouse-scroller>
+
             </section>
 
         </component-body>
     </component-collapse>
-
 
 
 
@@ -513,6 +536,19 @@
         }
     );
 
+    /*-------------------------------------
+     02-04)  Component otp
+    -------------------------------------*/
+    new window.ComponentIframe(
+        "iframe" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_url: "https://google1.com" ,
+            prop_height: "250" ,
+        }
+    );
+
 
 
     /* ====================
@@ -534,10 +570,232 @@
         }
     )
 
-    /*-------------------------------------
-      03-02)  Component Select Option
-    -------------------------------------*/
 
+    /*-------------------------------------
+    03-02)  Component otp
+    -------------------------------------*/
+    const otp = new window.ComponentOtp(
+        "otp" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name: "otp_phone" ,
+            prop_input: "09302171809" ,
+            prop_length: 4 ,
+            prop_langs: {
+                _title_otp_description : "کد برای شماره/ایمیل زیر ارسال شد" ,
+                _text_timer_after_active_otp : "تا ارسال مجدد کد" ,
+                _text_timer_after_di_active_otp : "کد منقضی شده است" ,
+                _text_get_new_otp : "کد جدید" ,
+            } ,
+
+            fn_onGetNewToken:() => {
+                alert("get new token");
+                otp.call_startCountdown(1);
+            }
+        }
+    );
+    otp.call_startCountdown(1);
+
+
+    /*-------------------------------------
+     03-03)   Component Input
+    -------------------------------------*/
+    new window.ComponentInput(
+        "input" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_labelShow: true ,
+            prop_title: "input test" ,
+            prop_icon: "&#10124;" ,
+            prop_placeholder: "string format" ,
+
+            prop_btnAddStatus: true ,
+
+            fn_oninput: (event , value) => {
+                console.log("fn_oninput"  , event , value)
+            } ,
+            fn_onfocus: (event , value) => {
+                console.log("fn_onfocus"  , event , value)
+            } ,
+            fn_onblur: (event , value) => {
+                console.log("fn_onblur"  , event , value)
+            } ,
+
+
+            fn_clickBtnTools: (event , index)=>{
+                alert(index)
+            }
+
+        }
+    )
+
+
+    /*-------------------------------------
+       03-04) Component Input Price
+    -------------------------------------*/
+    const cImputPrice = new window.ComponentInputPrice(
+        "input_price" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_value: 511231235 ,
+
+            prop_labelShow: true ,
+            prop_title: "input price test" ,
+            prop_icon: "&#10124;" ,
+            prop_placeholder: "number format" ,
+
+            prop_btnAddStatus: true ,
+
+            fn_oninput: (event , value) => {
+                console.log("fn_oninput"  , event , value)
+            } ,
+            fn_onfocus: (event , value) => {
+                console.log("fn_onfocus"  , event , value)
+            } ,
+            fn_onblur: (event , value) => {
+                console.log("fn_onblur"  , event , value)
+            } ,
+
+
+            fn_clickBtnTools: (event , index)=>{
+                cImputPrice.call_setValue(561454)
+            },
+
+
+            prop_information : [
+                {
+                    title: "test 1" ,
+                    title_backgroundColor: "#b6b6b6" ,
+                    title_color: "#ffffff" ,
+                    value: "12554" ,
+                    value_backgroundColor: "#e7e7e7" ,
+                    value_color: "#343434" ,
+                }
+            ] ,
+
+        }
+    )
+
+
+
+    /*-------------------------------------
+      03-05) Component input color
+    -------------------------------------*/
+    new window.ComponentInputColor(
+        "input-color" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"input color" ,
+            prop_title:"color picker" ,
+            prop_colorSelected:"#000" ,
+
+        }
+    )
+
+
+    /*-------------------------------------
+      03-06)  Component input size
+    -------------------------------------*/
+    new window.ComponentInputSize(
+        "input-size" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"input size" ,
+            prop_title:"input size" ,
+            prop_icon: "&#10124;" ,
+            //prop_iconSelected: "" ,
+            prop_min: 0 ,
+            prop_max: 100 ,
+        }
+    )
+
+
+
+    /*-------------------------------------
+      03-06) Component Input Password
+    -------------------------------------*/
+    new window.ComponentInputPassword(
+        "input_password" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name: "password" ,
+            prop_title: "input password" ,
+           // prop_isAbsoluteRule: false ,
+            prop_listRules : [
+                {
+                    description: "تعداد کاراکترها باید {{min}} باشد",
+                    rule : "_char_length" ,
+                    params: {
+                        min:4
+                    }
+                } ,
+                {
+                    description: "تعداد عددها باید {{min}} باشد",
+                    rule : "_num_length" ,
+                    params: {
+                        min:4
+                    }
+                }
+            ]
+        }
+    )
+
+    /*-------------------------------------
+      03-07) Component Input Email
+    -------------------------------------*/
+    new window.ComponentInputEmail(
+        "input_email" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name: "email" ,
+            prop_title: "input email" ,
+            prop_listRules :[]
+        }
+    )
+
+
+
+
+
+    /*-------------------------------------
+      03-08) Component Input File
+    -------------------------------------*/
+    new window.ComponentInputFile(
+        "input_file" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "input File" ,
+            prop_accept: "image/*" ,
+            prop_maxCount: 3 ,
+            prop_maxSize: 3000000 ,
+        }
+    )
+
+    /*-------------------------------------
+      03-09) Component Date
+    -------------------------------------*/
+    new window.ComponentDate(
+        "input_date" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: "input date" ,
+            prop_type: 0,
+        }
+    )
+
+
+    /*-------------------------------------
+      03-010)  Component Select Option
+    -------------------------------------*/
     new window.ComponentSelectOption(
         "select-option-1" ,
         {
@@ -585,140 +843,117 @@
     )
 
     /*-------------------------------------
-    03-03)  Component otp
+      03-010)  Component Select Option
     -------------------------------------*/
-    const otp = new window.ComponentOtp(
-        "otp" ,
+    new window.ComponentSelectOption(
+        "select-option-1" ,
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_name: "otp_phone" ,
-            prop_input: "09302171809" ,
-            prop_length: 4 ,
-            prop_langs: {
-                _title_otp_description : "کد برای شماره/ایمیل زیر ارسال شد" ,
-                _text_timer_after_active_otp : "تا ارسال مجدد کد" ,
-                _text_timer_after_di_active_otp : "کد منقضی شده است" ,
-                _text_get_new_otp : "کد جدید" ,
-            } ,
-
-            fn_onGetNewToken:() => {
-                alert("get new token");
-                otp.call_startCountdown(1);
-            }
-        }
-    );
-    otp.call_startCountdown(1);
-
-
-    /*-------------------------------------
-     03-04)   Component Input
-    -------------------------------------*/
-    new window.ComponentInput(
-        "input" ,
-        {
-            classList: "col-md-3 col-12 mt-2"  ,
-
-            prop_labelShow: true ,
-            prop_title: "input test" ,
+            prop_name:"select_option" ,
+            prop_title:"select options" ,
+            prop_itemSelected: 1 ,
             prop_icon: "&#10124;" ,
-            prop_placeholder: "string format" ,
+            prop_options: [
+                {name: "default"} ,
+                {id:1 , name: "test 1"} ,
+                {id:2 , name: "test 2"} ,
+                {id:3 , name: "test 3"} ,
+                {id:4 , name: "test 4"} ,
+                {id:5 , name: "test 5"} ,
+                {id:6 , name: "test 6"} ,
+            ] ,
+            prop_listIcons: [
+                {
+                    icon: "&#10124;" ,
+                    name: "methodOne" ,
+                    method: (event , id) => {
+                        alert(`item selected [1]: ${id}`)
+                    } ,
+                } ,
+                {
+                    icon: "&#10125;" ,
+                    name: "methodTwo" ,
+                    method: (event , id) => {
+                        alert(`item selected [2]: ${id}`)
+                    }
+                }
+            ],
 
             prop_btnAddStatus: true ,
 
-            fn_oninput: (event , value) => {
-                console.log("fn_oninput"  , event , value)
+            fn_callback:  (event , index)=>{
+                alert(index)
             } ,
-            fn_onfocus: (event , value) => {
-                console.log("fn_onfocus"  , event , value)
-            } ,
-            fn_onblur: (event , value) => {
-                console.log("fn_onblur"  , event , value)
-            } ,
-
-
             fn_clickBtnTools: (event , index)=>{
                 alert(index)
             }
+        }
+    )
+
+    /*-------------------------------------
+      03-010)  Component Select Icon
+    -------------------------------------*/
+    new window.ComponentSelectIcon(
+        "select-icon" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_name:"select_icon" ,
+            prop_title:"select icon" ,
+            //prop_iconSelected: "" ,
 
         }
     )
 
 
     /*-------------------------------------
-       03-05) Component Input Price
+      03-011) Component check box
     -------------------------------------*/
-    const cImputPrice = new window.ComponentInputPrice(
-        "input_price" ,
+    new window.ComponentCheckBox(
+        "check_box" ,
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_value: 511231235 ,
-
-            prop_labelShow: true ,
-            prop_title: "input price test" ,
-            prop_icon: "&#10124;" ,
-            prop_placeholder: "number format" ,
-
-            prop_btnAddStatus: true ,
-
-            fn_oninput: (event , value) => {
-                console.log("fn_oninput"  , event , value)
-            } ,
-            fn_onfocus: (event , value) => {
-                console.log("fn_onfocus"  , event , value)
-            } ,
-            fn_onblur: (event , value) => {
-                console.log("fn_onblur"  , event , value)
-            } ,
+            prop_name:"check_box" ,
+            prop_title:"check box" ,
+            //prop_isDisable:true ,
+            prop_isSelected:true ,
 
 
-            fn_clickBtnTools: (event , index)=>{
-                cImputPrice.call_setValue(561454)
-            },
+        }
+    )
 
 
-            prop_information : [
+    /*-------------------------------------
+      03-012) Component validate
+    -------------------------------------*/
+    new window.ComponentValidate(
+        "component_validate" ,
+        {
+            classList: ""  ,
+
+            prop_title: "test" ,
+            prop_reference: "input_component_validate" ,
+            prop_listRules : [
                 {
-                    title: "test 1" ,
-                    title_backgroundColor: "#b6b6b6" ,
-                    title_color: "#ffffff" ,
-                    value: "12554" ,
-                    value_backgroundColor: "#e7e7e7" ,
-                    value_color: "#343434" ,
+                    description: "تعداد کاراکترها باید {{min}} باشد",
+                    rule : "_char_length" ,
+                    params: {
+                        min:4
+                    }
+                } ,
+                {
+                    description: "تعداد عددها باید {{min}} باشد",
+                    rule : "_num_length" ,
+                    params: {
+                        min:4
+                    }
                 }
-            ] ,
-
+            ]
         }
     )
 
-    /*-------------------------------------
-      03-06) Component Date
-    -------------------------------------*/
-    new window.ComponentDate(
-        "input_date" ,
-        {
-            classList: "col-md-3 col-12 mt-2"  ,
-
-            prop_title: "input date" ,
-            prop_type: 0,
-        }
-    )
-
-    /*-------------------------------------
-      03-06) Component Input File
-    -------------------------------------*/
-    new window.ComponentInputFile(
-        "input_file" ,
-        {
-            classList: "col-md-3 col-12 mt-2"  ,
-
-            prop_title: "input File" ,
-            prop_accept: "image/*" ,
-            prop_maxCount: 3 ,
-            prop_maxSize: 3000000 ,
-        }
-    )
 
 
 
@@ -1062,7 +1297,7 @@
     new window.ComponentBreadcrumb(
         "breadcrumb" ,
         {
-            classList: "col-md-2 col-12 mt-2"  ,
+            classList: "col-12 mt-2"  ,
 
             prop_stepSelected : 2 ,
             prop_breadcrumbs: [
@@ -1086,6 +1321,38 @@
 
             fn_onBackClick: (event)=>{
                 console.log("back")
+            }
+        }
+    )
+
+
+    new window.ComponentBreadcrumbWithArrow(
+        "Breadcrumb_withArrow" ,
+        {
+            classList: "col-12 mt-2"  ,
+
+            prop_stepSelected : 1 ,
+            prop_breadcrumbs: [
+                {
+                    id: 1 ,
+                    title: "item 1"
+                } ,
+                {
+                    id: 2 ,
+                    title: "item 2"
+                },
+                {
+                    id: 3 ,
+                    title: "item 3"
+                },
+                {
+                    id: 4 ,
+                    title: "item 4"
+                }
+            ],
+
+            fn_callback: (event , itemData)=>{
+                console.log(itemData)
             }
         }
     )
@@ -1137,6 +1404,66 @@
 
         }
     );
+    /*-------------------------------------
+      20-01) Component chart tree Y
+    -------------------------------------*/
+    const chartTreeY = new window.ComponentChartTreeY(
+        "chartTreeY" ,
+        {
+            classList: ""  ,
+
+            prop_objects: [ {id:1, parent:0, tags:{charName:"A"}},
+                {id:2,  parent:1,  tags:{charName:"B"}},
+                {id:11, parent:1,  tags:{charName:"C"}},
+                {id:3,  parent:1,  tags:{charName:"D"}},
+                {id:4,  parent:2,  tags:{charName:"E"}},
+                {id:5,  parent:2,  tags:{charName:"F"}},
+                {id:6,  parent:2,  tags:{charName:"G"}},
+                {id:7,  parent:2,  tags:{charName:"H"}},
+                {id:8,  parent:3,  tags:{charName:"K"}},
+                {id:9,  parent:3,  tags:{charName:"L"}},
+                {id:10, parent:9,  tags:{charName:"M"}},
+                {id:12, parent:9,  tags:{charName:"N"}},
+                {id:13, parent:11, tags:{charName:"T"}}
+            ] ,
+
+           /* prop_template:  `
+<div style="border: 3px solid black; width:100px;border-radius: 100%; line-height: 100px; height:100px;text-align: center;cursor: pointer; background-color: whitesmoke" onclick="showOrHideChildChartTree({{id}})">{{charName}}</div>
+` ,*/
+            prop_scrollerHeight: "400px" ,
+            prop_templateWidth: 350 ,
+            prop_templateHeight: 160 ,
+            prop_lineMarkerStart: null ,
+            prop_template:  `
+<style>
+   .item-arrow-chart-tree{
+      opacity: 0.5;
+   }
+   .item-chart-tree:hover  .item-arrow-chart-tree{
+      transition: opacity ease 350ms;
+      opacity: 1;
+   }
+</style>
+              <div  class=" item-chart-tree col-md-3 col-12 mt-2">
+                    <div class="border rounded shadow bg-white p-2 position-relative" style="width: 350px;">
+                        <div class="row">
+                            <div class="col-4 p-0" >
+                                <div style="border-radius: 100%; width: 100px; height: 100px" class="border shadow-sm my-2 mx-auto"></div>
+                            </div>
+                            <div class="col-8">
+                                <p class="pt-0 border-bottom pb-0 m-0"> <b>Mehdi Marefiyan</b> </p>
+                                <p class="pt-3 pb-0 m-0">
+                                    تاریخ ایجاد:
+                                    <b>1404/01/01</b>
+                                </p>
+                            </div>
+                        </div>
+                        {{elementShow}}
+                    </div>
+                </div>
+            ` ,
+        }
+    );
 
 
 
@@ -1153,7 +1480,8 @@
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_value: "abs"
+            prop_version: 2 ,
+            prop_value: "sdas"
         }
     );
 
@@ -1282,6 +1610,8 @@
         }
     )
 
+
+
     /*-------------------------------------
      99-04) Component image
     -------------------------------------*/
@@ -1294,6 +1624,20 @@
         }
     )
     cLayout.call_addElement('Hi World')
+
+
+
+    /*-------------------------------------
+     99-04) Component image
+    -------------------------------------*/
+    new window.ComponentMouseScroller(
+        "mouseScroller" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            //prop_layoutContent: "content"
+        }
+    )
 
 
 
@@ -1409,7 +1753,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [15] breadcrumbs " ,
-            prop_bodyShow: true
+            prop_bodyShow: tree
         }
     )
 
@@ -1442,4 +1786,7 @@
         }
     )
 
+
+    // const e = new ComponentInfoBase();
+    // console.log(e);
 </script>

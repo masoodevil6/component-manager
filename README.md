@@ -20,20 +20,25 @@
         Component404:                        "component-404" ,                            //02-02
         ComponentForm:                       "component-form" ,                           //02-03
         ComponentWidget:                     "component-widget" ,                         //02-04
+        ComponentIframe:                     "component-iframe" ,                         //02-05
 
 
         // [03] Button and Inputs
         ComponentButton:                     "component-button" ,                         //03-01
-        ComponentSelectOption:               "component-select-option" ,                  //03-02
-        ComponentOtp:                        "component-otp" ,                            //03-03
-        ComponentInput:                      "component-input" ,                          //03-04
-        ComponentInputPrice:                 "component-input-price" ,                    //03-05
-        ComponentDate:                       "component-date" ,                           //03-06
+        ComponentOtp:                        "component-otp" ,                            //03-02
+        ComponentInput:                      "component-input" ,                          //03-03
+        ComponentInputPrice:                 "component-input-price" ,                    //03-04
+        ComponentInputPassword:              "component-input-password" ,                 //03-05
+        ComponentInputEmail:                 "component-input-email" ,                    //03-06
         ComponentInputFile:                  "component-input-file" ,                     //03-07
+        ComponentDate:                       "component-date" ,                           //03-08
+        ComponentSelectOption:               "component-select-option" ,                  //03-09
+        ComponentCheckBox:                   "component-check-box" ,                      //03-010
+        ComponentValidate:                   "component-validate" ,                       //03-011
+        
 
         // [04] tooltips
         ComponentTooltipDescription:         "component-tooltip-description" ,            //04-01
-
 
 
         // [10] Tables
@@ -41,6 +46,7 @@
 
         // [11] Tabs
         ComponentTabs:                       "component-tabs" ,                           //11-01
+        ComponentTree:                       "component-tree" ,                           //11-02
 
         // [12] Collapse
         ComponentCollapse:                   "component-collapse" ,                       //12-01
@@ -52,11 +58,15 @@
         // [14] Slider Shows
         ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //14-01
 
+        // [15] Breadcrumb
+        ComponentBreadcrumb :                "component-breadcrumb" ,                     //15-01
+
 
 
 
         // [20] Charts
         ComponentChart:                      "component-chart" ,                          //20-01
+        ComponentChartTreeY:                 "component-chart-tree-y" ,                   //20-02
 
         // [21] QR CODE
         ComponentQrCode:                     "component-qr-code" ,                        //21-01
@@ -65,13 +75,14 @@
         ComponentQrCodeReader:               "component-qr-code-reader" ,                 //21-04
 
 
-        
+
         // [99] Others
         ComponentIcon:                       "component-icon" ,                           //99-01
         ComponentPositionElement:            "component-position-element" ,               //99-02
         ComponentBorder:                     "component-border" ,                         //99-03
         ComponentImage:                      "component-image" ,                          //99-04
         ComponentLayout:                     "component-layout" ,                         //99-05
+        ComponentMouseScroller:              "component-mouse-scroller" ,                 //99-06
 
     }
 ```
@@ -455,64 +466,6 @@
     )
 ```
 
-
-**03-02 Component Select Option:**
-```
-/*-------------------------------------
- 03-02) Component Select Option
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_name
-@prop_itemSelected
-
-@prop_title
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_titleClass
-@prop_titleStyles
-
-@prop_icon
-
-@prop_options
-@prop_placeholder
-
-@prop_btnAddStatus
-@prop_btnAddIcon
-@prop_btnAddClass
-@prop_btnAddTitle
-
-@prop_optionHeight
-@prop_optionWidth
-@prop_optionStyles
-@prop_positionTop
-@prop_positionLeft
-@prop_positionBottom
-@prop_positionRight
-
-@prop_options
-@prop_optionStyles
-@prop_optionWidth
-@prop_optionItemNotSelectedBackground
-@prop_optionItemHoverBackground
-@prop_optionItemSelectedBackground
-
-@fn_callback
-@fn_clickBtnTools
--------------------------------------*/
-    new window.ComponentSelectOption(
-        "element_id" ,
-        {
-            
-        }
-    )
-```
-
-
 **03-03) Component OTP:**
 ```
 /*-------------------------------------
@@ -541,10 +494,11 @@
 ```
 
 
-**03-04) Component Input:**
+
+**03-03) Component Input:**
 ```
 /*-------------------------------------
- 03-04) Component Input
+ 03-03) Component Input
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -580,10 +534,10 @@
 ```
 
 
-**03-05) Component Input Price:**
+**03-04) Component Input Price:**
 ```
 /*-------------------------------------
- 03-05) Component Input
+ 03-04) Component Input
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -621,10 +575,219 @@
 ```   
 
 
-**03-06) Component Date:**
+
+**03-05) Component Input Color:**
 ```
 /*-------------------------------------
- 03-06) Component Date
+ 03-05) Component Input Color
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_colorSelected
+
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_colorSelected
+@prop_isDisable
+@prop_borderColor
+@prop_formClass
+@prop_formStyles
+
+@prop_optionHeight
+@prop_optionWidth
+@prop_optionStyles
+@prop_positionTop
+@prop_backgroundColorBody
+
+@prop_colorBody
+-------------------------------------*/
+    new window.ComponentInputColor(
+        "element_id" ,
+        {
+
+        }
+    )
+```   
+
+
+
+**03-06) Component Input size:**
+```
+/*-------------------------------------
+ 03-06) Component Input size
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_icon
+
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_value
+@prop_placeholder
+@prop_icon
+@prop_isDisable
+@prop_min
+@prop_max
+
+@prop_iconPositive
+@prop_iconNegetive
+
+@prop_isAbsoluteRule
+@prop_listRules
+-------------------------------------*/
+    new window.ComponentInputSize(
+        "element_id" ,
+        {
+
+        }
+    )
+```   
+
+
+
+
+**03-07) Component Input Password:**
+```
+/*-------------------------------------
+ 03-07) Component Input Password
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_placeholder
+@prop_isDisable
+
+@prop_icon
+
+@prop_hasRules
+@prop_listRules
+@prop_isAbsoluteRule
+-------------------------------------*/
+    new window.ComponentInputPassword(
+        "element_id" ,
+        {
+
+        }
+    )
+```   
+
+
+
+**03-08) Component Input Email:**
+```
+/*-------------------------------------
+ 03-08) Component Input email
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_show_label
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+@prop_title
+
+@prop_inputClass
+@prop_inputStyles
+@prop_name
+@prop_value
+@prop_placeholder
+@prop_isDisable
+
+@prop_icon
+
+@prop_listRules
+@prop_isAbsoluteRule
+-------------------------------------*/
+    new window.ComponentInputEmail(
+        "element_id" ,
+        {
+
+        }
+    )
+```   
+
+
+
+**03-09) Component Input File:**
+```
+/*-------------------------------------
+ 03-09) Component Input File
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_accept
+@prop_maxCount
+@prop_maxSize
+@prop_textValidateSize
+@prop_textValidateAccept
+@prop_labelTooltipDescription
+
+@prop_title
+@prop_labelShow
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderColor
+@prop_borderColorHover
+@prop_borderHeight
+
+@prop_textColor
+@prop_text
+
+@prop_showListFiles
+
+@prop_deleteBody
+@prop_deleteBtnCancel
+@prop_deleteBtnAccept
+
+-------------------------------------*/
+new window.ComponentInputFile(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+**03-010) Component Date:**
+```
+/*-------------------------------------
+ 03-010) Component Date
 -------------------------------------
 @prop_show
 @prop_structureClass
@@ -687,50 +850,132 @@
 ```
 
 
-**03-07) Component Input File:**
+
+**03-011 Component Select Option:**
 ```
 /*-------------------------------------
- 03-07) Component Input File
+ 03-011) Component Select Option
 -------------------------------------
 @prop_show
 @prop_structureClass
 @prop_structureStyles
 
 @prop_name
-@prop_accept
-@prop_maxCount
-@prop_maxSize
-@prop_textValidateSize
-@prop_textValidateAccept
-@prop_labelTooltipDescription
+@prop_itemSelected
 
 @prop_title
-@prop_labelShow
 @prop_labelClass
 @prop_labelStyles
 @prop_labelHoverStyles
 
-@prop_borderColor
-@prop_borderColorHover
-@prop_borderHeight
+@prop_titleClass
+@prop_titleStyles
 
-@prop_textColor
-@prop_text
+@prop_icon
 
-@prop_showListFiles
+@prop_options
+@prop_placeholder
 
-@prop_deleteBody
-@prop_deleteBtnCancel
-@prop_deleteBtnAccept
+@prop_btnAddStatus
+@prop_btnAddIcon
+@prop_btnAddClass
+@prop_btnAddTitle
 
+@prop_optionHeight
+@prop_optionWidth
+@prop_optionStyles
+@prop_positionTop
+@prop_positionLeft
+@prop_positionBottom
+@prop_positionRight
+
+@prop_options
+@prop_optionStyles
+@prop_optionWidth
+@prop_optionItemNotSelectedBackground
+@prop_optionItemHoverBackground
+@prop_optionItemSelectedBackground
+
+@fn_callback
+@fn_clickBtnTools
 -------------------------------------*/
-new window.ComponentInputFile(
+    new window.ComponentSelectOption(
         "element_id" ,
         {
             
         }
     )
 ```
+
+
+
+**03-012 Component check box:**
+```
+/*-------------------------------------
+ 03-012) Component check box
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_isSelected
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderColor
+@prop_backgroundColor_unSelected
+@prop_backgroundColor_selected
+@prop_backgroundColor_disable
+@prop_formClass
+@prop_formStyles
+@prop_isDisable
+
+@prop_icon
+
+@prop_isAbsoluteRule
+@prop_listRules
+
+-------------------------------------*/
+    new window.ComponentCheckBox(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+**03-013 Component Validate:**
+```
+/*-------------------------------------
+ 03-013) Component Validate
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_isAbsolute
+@prop_reference
+@prop_listRules
+@prop_title
+
+-------------------------------------*/
+    new window.ComponentValidate(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
+
 
 
 
@@ -1064,6 +1309,46 @@ new window.ComponentTooltipDescription(
 
 
 
+**20-02) Component Chart Tree Y:**
+```
+/*-------------------------------------
+ 20-02) Component Chart Tree Y
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_formScrollerHeight
+
+@prop_svgWGap
+@prop_svgHGap
+
+@prop_objects
+@prop_objectsLevelClose
+
+@prop_template
+@prop_templateWidth
+@prop_templateHeight
+@prop_templateHeightPoint
+@prop_templateHeightGap
+
+@prop_lineHeightMin
+@prop_lineWidth
+@prop_lineDurationAnim
+@prop_lineColor
+@prop_lineMarkerStart
+@prop_lineMarkerEnd
+-------------------------------------*/
+    new window.ComponentChartTreeY(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+
+
 
 
 /* ====================
@@ -1315,6 +1600,45 @@ new window.ComponentTooltipDescription(
 @fn_callback
 -------------------------------------*/
     new window.ComponentImage(
+        "element_id" ,
+        {
+            
+        }
+    )
+```
+
+**99-05) Component Mouse Scroller:**
+```
+/*-------------------------------------
+ 99-04) Component Mouse Scroller
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_borderClass
+@prop_borderStyles
+
+@prop_backgroundColor_type
+@prop_backgroundColor_dark
+@prop_backgroundColor_light
+@prop_scollerClass
+@prop_scrollerStyles
+@prop_scrollerWidth
+@prop_scrollerHeight
+@prop_positionXDefault
+@prop_positionYDefault
+
+@prop_backgroundColor_tools
+@prop_moreIcons
+@prop_iconRefresh
+@prop_iconZoomIn
+@prop_iconZoomOut
+@prop_iconBgDark
+@prop_iconBgLight
+@prop_layoutContent
+-------------------------------------*/
+    new window.ComponentMouseScroller(
         "element_id" ,
         {
             

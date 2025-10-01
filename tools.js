@@ -12,11 +12,11 @@ if (typeof component_props === 'undefined') {
 
 
         // -----------------------
-        primaryColor1: "#f47920",
-        primaryColor2: "#faa46c",
+        primaryColor1: "#15244b",
+        primaryColor2: "#334783",
 
-        secondaryColor1: "#38e1c3",
-        secondaryColor2: "#78f1db",
+        secondaryColor1: "#fab01b",
+        secondaryColor2: "#f5bf53",
 
         errorColor1: "#dc3545",
         errorColor2: "#e8616f",
@@ -27,11 +27,11 @@ if (typeof component_props === 'undefined') {
         successColor1: "#9eeaf9",
         successColor2: "#c7f4ff",
 
-        shadowColor1: "rgba(98,98,98,0.2)",
+        shadowColor1: "rgba(98,98,98,0.60)",
         shadowColor2: "rgba(98,98,98,0.07)",
 
-        darkColor1: "rgb(0,0,0)",
-        darkColor2: "rgb(42,42,42)",
+        darkColor1: "rgb(30,30,30)",
+        darkColor2: "rgb(157,157,157)",
 
         shanColor1: "#ffffff",
         shanColor2: "#f3f3f3",
@@ -174,6 +174,19 @@ tools_init = {
                 textColor : component_props.primaryColor1 ,
             } ,
 
+            inputCheckBox: {
+                boderColor :                    component_props.darkColor2 ,
+                backgroundColor_unSelected :    component_props.shanColor1 ,
+                backgroundColor_selected :      component_props.primaryColor1 ,
+                backgroundColor_disable :       component_props.darkColor2 ,
+            } ,
+
+            inputColor: {
+                boderColor :                    component_props.shanColor1 ,
+                backgroundColor_body :          component_props.darkColor1 ,
+                color_body :                    component_props.shanColor1 ,
+            } ,
+
             window: {
                 backgroundColor_blur : component_props.shadowColor1 ,
                 backgroundColor_window : component_props.shanColor1 ,
@@ -192,10 +205,24 @@ tools_init = {
                 color_active : component_props.darkColor1 ,
             } ,
 
+            breadcrumbWithArrow: {
+                backgroundColor_unactive : component_props.primaryColor1 ,
+                color_unactive : component_props.darkColor1 ,
+                backgroundColor_active : component_props.secondaryColor1 ,
+                color_active : component_props.shanColor1 ,
+                color_shadow : component_props.shadowColor1 ,
+            } ,
+
 
             tree: {
                 backgroundColor_unSelected : component_props.shadowColor1 ,
                 backgroundColor_selected : component_props.secondaryColor1 ,
+            } ,
+
+            mosuseScroller: {
+                backgroundColor_dark : component_props.darkColor2 ,
+                backgroundColor_light: component_props.shanColor2 ,
+                backgroundColor_tools: component_props.darkColor1 ,
             } ,
 
 
@@ -697,6 +724,24 @@ tools_converter = {
     } ,
 
 
+    convertStrToNum: function(str){
+
+        const pattern = /^-?\d*(\.\d*)?$/;
+
+        if (!pattern.test(str)) {
+            str = str.replace(/[^0-9.-]/g, "");
+
+            str = str.replace(/(?!^)-/g, "");
+
+            const parts = str.split(".");
+            if (parts.length > 2) {
+                str = parts[0] + "." + parts.slice(1).join("");
+            }
+        }
+
+        return str;
+    }
+
 };
 
 
@@ -757,6 +802,30 @@ tools_public = {
         }
 
         return  null;
+    } ,
+
+    parseJson(jsonStr){
+        try {
+            return JSON.parse(jsonStr);
+        }
+        catch (e){
+            console.error("json pareser error" , jsonStr  , e)
+        }
+        return  null;
+    } ,
+
+    getCopyText(txt){
+        navigator.clipboard.writeText(txt).then(() => {
+            console.log('متن کپی شد: ' , txt);
+        }).catch(err => {
+            console.error('خطا در کپی کردن متن: ', err);
+        });
+    } ,
+
+    replaceInTextWithPatternParams(template, params) {
+        return template.replace(/{{(.*?)}}/g, (match, key) => {
+            return params[key.trim()] ?? match;
+        });
     }
 
 }
@@ -819,3 +888,733 @@ tools_stepper = {
         return node;
     }
 }
+
+
+
+tools_svg = {
+
+    addDefsForMarker(svg){
+        let svgDefs = svg.getElementsByTagName("defs");
+        if (svgDefs.length == 0){
+            svg.innerHTML = svg.innerHTML + "<defs></defs>";
+        }
+        return svg.getElementsByTagName("defs")[0];
+    } ,
+
+    addMarker(svg , markerName, bgColor){
+        let svgDefs = tools_svg.addDefsForMarker(svg);
+        let markerHtml = null;
+        let markerId = `${markerName}_${Math.random()*1000}`;
+        switch (markerName){
+            case "arrow":
+                markerHtml = `
+        <marker id="${markerId}" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L3,3 L0,6 L9,3 z" fill="${bgColor}" />
+        </marker>
+        `;
+                break;
+
+            case "circle":
+                markerHtml = `
+        <marker id="${markerId}" markerWidth="20" markerHeight="20" refX="10" refY="10" orient="auto" markerUnits="strokeWidth" >
+          <circle cx="10" cy="10" r="3" fill="white" stroke="${bgColor}" stroke-width="1"  style="pointer-events:none; cursor:pointer;" />
+        </marker>
+        `;
+                break;
+
+            case "shadow":
+                markerHtml = `
+        <filter id="${markerId}" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="${bgColor}" />
+        </filter>
+        `;
+                break;
+        }
+
+        if (markerHtml != null){
+            svgDefs.innerHTML = svgDefs.innerHTML + markerHtml;
+            return markerId;
+        }
+
+        return null;
+    } ,
+
+
+
+
+
+    toPointsString(shape){
+        return shape.map(p => `${p.x},${p.y}`).join(" ");
+    } ,
+
+    getPointsPolygonElement(shape){
+        let rawPoints = shape.getAttribute("points");
+        return rawPoints
+            .trim()
+            .split(" ")
+            .map(p => {
+                let [x, y] = p.split(",").map(Number);
+                return {x, y};
+            });
+    } ,
+
+    getCenterPolygonElement(shape){
+        const shapePoints = tools_svg.getPointsPolygonElement(shape);
+        let sumX = 0, sumY = 0;
+        shapePoints.forEach(p => { sumX += p.x; sumY += p.y; });
+        return {x: sumX/shapePoints.length, y: sumY/shapePoints.length};
+    } ,
+
+    getCenterCircleElement(shape){
+        return {x: parseInt(shape.getAttribute("cx")), y: parseInt(shape.getAttribute("cy"))};
+    } ,
+
+
+
+
+
+
+
+
+    getPointInLinWithPercent(pointA , pointB , isStart=true , percent=0.1){
+        return {
+            x: (isStart ? percent : (1-percent)) * (pointB.x - pointA.x) + pointA.x ,
+            y: (isStart ? percent : (1-percent)) * (pointB.y - pointA.y) + pointA.y ,
+        }
+    } ,
+
+    getPointInLinWithLength(pointA , pointB , isStart=true , length=10){
+        const d = Math.sqrt(Math.pow(pointB.x - pointA.x, 2) + Math.pow(pointB.y - pointA.y, 2));
+        const p = length/d;
+        return tools_svg.getPointInLinWithPercent(pointA , pointB , isStart , p);
+    } ,
+
+
+
+
+
+
+
+
+
+    connectDirectionPoint(svg , points , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"){
+        const pointsProgressed = [];
+        if (points != null && Array.isArray(points)){
+            for (let i = 0; i < points.length ; i++) {
+                const pointSelected = points[i];
+
+                let isJoin = true;
+                if (i == 0 || i == points.length -1){
+                    isJoin = false;
+                }
+
+                if (isJoin){
+                    const pointAB = tools_svg.getPointInLinWithLength(points[i-1] , points[i]  , false);
+                    pointSelected.isJoin = true;
+                    const pointBC = tools_svg.getPointInLinWithLength(points[i]  , points[i+1] , true);
+                    pointsProgressed.push(...[pointAB , pointSelected , pointBC])
+                }
+                else {
+                    pointsProgressed.push(pointSelected)
+                }
+            }
+        }
+
+        let animTimer = 0;
+        for (let i = 0; i < pointsProgressed.length-1 ; i++) {
+            const pointPrevious = pointsProgressed[i-1];
+            const pointSelected = pointsProgressed[i];
+            const pointNext = pointsProgressed[i+1];
+
+            if (!pointNext.hasOwnProperty("isJoin") || !pointNext.isJoin){
+                if (pointSelected.hasOwnProperty("isJoin") && pointSelected.isJoin){
+                    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    const d = `
+             M ${pointPrevious.x},${pointPrevious.y}
+             Q ${pointSelected.x},${pointSelected.y}
+               ${pointNext.x},${pointNext.y}`;
+                    path.setAttribute("d", d);
+                    path.setAttribute("stroke", bgColor);
+                    path.setAttribute("stroke-width", lineWidth);
+                    path.setAttribute("fill", "none");
+                    svg.appendChild(path);
+
+                    const length = path.getTotalLength();
+                    path.setAttribute("stroke-dasharray", length);
+                    path.setAttribute("stroke-dashoffset", length);
+
+                    const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                    animate.setAttribute("attributeName", "stroke-dashoffset");
+                    animate.setAttribute("from", length);
+                    animate.setAttribute("to", 0);
+                    animate.setAttribute("dur", animDuration/2+"ms");
+                    animate.setAttribute("fill", "freeze");
+                    animate.setAttribute("begin", "indefinite"); // ❌
+                   // animate.setAttribute("begin", animTimer+"ms");
+                    requestAnimationFrame(() => {
+                        path.getBoundingClientRect(); // force reflow
+                        path.style.transition = `stroke-dashoffset ${animDuration}ms linear`;
+                        path.style.strokeDashoffset = '0';
+                    });
+                    path.appendChild(animate);
+
+                    animTimer +=animDuration/2
+                }
+                else {
+                    const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                    polyline.setAttribute("points", `${pointSelected.x},${pointSelected.y}  ${pointNext.x},${pointNext.y}`);
+                    polyline.setAttribute("stroke", bgColor);
+                    polyline.setAttribute("stroke-width", lineWidth);
+                    polyline.setAttribute("fill", "none");
+
+                    svg.appendChild(polyline);
+
+                    const length = polyline.getTotalLength();
+                    polyline.setAttribute("stroke-dasharray", length);
+                    polyline.setAttribute("stroke-dashoffset", length);
+
+                    const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                    animate.setAttribute("attributeName", "stroke-dashoffset");
+                    animate.setAttribute("from", length);
+                    animate.setAttribute("to", 0);
+                    animate.setAttribute("dur", animDuration+"ms");
+                    animate.setAttribute("fill", "freeze");
+                    animate.setAttribute("begin", animTimer+"ms");
+                    animate.setAttribute("begin", "indefinite"); // ❌
+                    //polyline.appendChild(animate);
+
+                    requestAnimationFrame(() => {
+                        polyline.getBoundingClientRect(); // force reflow
+                        polyline.style.transition = `stroke-dashoffset ${animDuration}ms linear`;
+                        polyline.style.strokeDashoffset = '0';
+                    });
+
+                    animTimer +=animDuration;
+                    if (pointSelected.hasOwnProperty("markerStart") && pointSelected.markerStart != null){
+                        const markerId = tools_svg.addMarker(svg , pointSelected.markerStart , bgColor)
+                        if (markerId != null ){
+                            polyline.setAttribute("marker-start", `url(#${markerId})`);
+                        }
+                    }
+                    if (pointNext.hasOwnProperty("markerEnd") && pointNext.markerEnd != null){
+
+                        setTimeout(()=>{
+                            const markerId = tools_svg.addMarker(svg , pointNext.markerEnd , bgColor)
+
+                            if (markerId != null ){
+                                polyline.setAttribute("marker-end", `url(#${markerId})`);
+                            }
+                        } , animTimer-animDuration*3)
+                    }
+                }
+            }
+        }
+    } ,
+
+    createHtmlOnPoint(svg , html , point , animDuration=100 ){
+        const foreign = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+        foreign.setAttribute("x", point.x);   // مختصات X
+        foreign.setAttribute("y", point.y);   // مختصات Y
+        foreign.setAttribute("width", point.width);
+        foreign.setAttribute("height", point.height);
+        foreign.style.position = "relative";
+        foreign.style.zIndex = 2;
+
+        foreign.insertAdjacentHTML('beforeend', html);
+        if (svg != null){
+            svg.appendChild(foreign);
+        }
+
+        const animY = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+        animY.setAttribute("attributeName", "y");
+        animY.setAttribute("from", point.y - 60);
+        animY.setAttribute("to", point.y);
+        animY.setAttribute("dur", animDuration + "ms");
+        animY.setAttribute("fill", "freeze");
+
+        if (svg != null){
+            svg.appendChild(animY);
+        }
+    } ,
+
+    craeteSvgPolygon(svg , points=[] , attrs={}  , eventListiners={} ){
+        let poly = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+        poly.setAttribute("points", tools_svg.toPointsString(points));
+        Object.keys(attrs).forEach(key => {
+            poly.setAttribute(key, attrs[key]);
+        });
+        Object.keys(eventListiners).forEach(key => {
+            poly.addEventListener(key, eventListiners[key]);
+        });
+        if (svg != null){
+            svg.appendChild(poly);
+        }
+
+        return poly;
+    } ,
+
+    craeteSvgCircle(svg  , centerX=0 , centerY=0 ,  radius= 10 , attrs={} , eventListiners={}){
+        let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        circle.setAttribute("cx", centerX)
+        circle.setAttribute("cy", centerY);
+        circle.setAttribute("r", radius);
+        Object.keys(attrs).forEach(key => {
+            circle.setAttribute(key, attrs[key]);
+        });
+        Object.keys(eventListiners).forEach(key => {
+            circle.addEventListener(key, eventListiners[key]);
+        });
+        if (svg != null){
+            svg.appendChild(circle);
+        }
+
+        return circle;
+    } ,
+
+
+
+
+
+
+    craeteSvgPathToCenterCircleElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, draw= "" , attrs={}, eventListiners={}){
+        let center = tools_svg.getCenterCircleElement(shapRelatedElement);
+
+        let path = document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("d", draw);
+        path.setAttribute("transform", `translate(${center.x + shapRelatedDefX}, ${center.y + shapRelatedDefY})`);
+        Object.keys(attrs).forEach(key => {
+            path.setAttribute(key, attrs[key]);
+        });
+        Object.keys(eventListiners).forEach(key => {
+            path.addEventListener(key, eventListiners[key]);
+        });
+        if (svg != null){
+            svg.appendChild(path);
+        }
+
+        return path;
+    } ,
+
+    craeteSvgTextToCenterCircleElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0 , content , attrs={}, eventListiners={}){
+        let center = tools_svg.getCenterCircleElement(shapRelatedElement);
+
+        let text = document.createElementNS("http://www.w3.org/2000/svg","text");
+        text.setAttribute("x", center.x + shapRelatedDefX);
+        text.setAttribute("y", center.y + shapRelatedDefY);
+        Object.keys(attrs).forEach(key => {
+            text.setAttribute(key, attrs[key]);
+        });
+        Object.keys(eventListiners).forEach(key => {
+            text.addEventListener(key, eventListiners[key]);
+        });
+        text.textContent = content;
+
+        if (svg != null){
+            svg.appendChild(text);
+        }
+
+        return text;
+    } ,
+
+
+
+
+
+
+
+    craeteSvgPathToCenterPolygonElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, draw= "" , attrs={} , eventListiners={}){
+        let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
+
+        let path = document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("d", draw);
+        path.setAttribute("transform", `translate(${center.x + shapRelatedDefX}, ${center.y + shapRelatedDefY})`);
+        Object.keys(attrs).forEach(key => {
+            path.setAttribute(key, attrs[key]);
+        });
+        Object.keys(eventListiners).forEach(key => {
+            path.addEventListener(key, eventListiners[key]);
+        });
+        svg.appendChild(path);
+
+        return path;
+    } ,
+
+    craeteSvgCircleToCenterPolygonElement(svg  , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, radius= 10 , attrs={}, eventListiners={}){
+        let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
+
+        let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        circle.setAttribute("cx", center.x + shapRelatedDefX)
+        circle.setAttribute("cy", center.y + shapRelatedDefY);
+        circle.setAttribute("r", radius);
+        Object.keys(attrs).forEach(key => {
+            circle.setAttribute(key, attrs[key]);
+        });
+        Object.keys(eventListiners).forEach(key => {
+            circle.addEventListener(key, eventListiners[key]);
+        });
+        svg.appendChild(circle);
+
+        return circle;
+    } ,
+
+    craeteSvgTextToCenterPolygonElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0 , content , attrs={}, eventListiners={}){
+        let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
+
+        let text = document.createElementNS("http://www.w3.org/2000/svg","text");
+        text.setAttribute("x", center.x + shapRelatedDefX);
+        text.setAttribute("y", center.y + shapRelatedDefY);
+        Object.keys(attrs).forEach(key => {
+            text.setAttribute(key, attrs[key]);
+        });
+        Object.keys(eventListiners).forEach(key => {
+            text.addEventListener(key, eventListiners[key]);
+        });
+        text.textContent = content;
+        svg.appendChild(text);
+
+        return text;
+    } ,
+
+    createShadowInsidePolygonElement(svg , el , pointStart , pointsLentgh ,  attrs={}, eventListiners={}){
+        const points = tools_svg.getPointsPolygonElement(el);
+        if (points != null && points.length > 0){
+            let shadowPoints = [];
+            for (let i = pointStart; i < pointStart + pointsLentgh ; i++) {
+                shadowPoints.push(points[i]);
+            }
+            shadowPoints.push(points[pointStart]);
+
+            let polyShadow = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+            polyShadow.setAttribute("points", tools_svg.toPointsString(shadowPoints));
+            Object.keys(attrs).forEach(key => {
+                polyShadow.setAttribute(key, attrs[key]);
+            });
+            Object.keys(eventListiners).forEach(key => {
+                polyShadow.addEventListener(key, eventListiners[key]);
+            });
+            svg.appendChild(polyShadow);
+
+            return polyShadow;
+        }
+
+        return null;
+    } ,
+
+}
+
+
+
+
+
+tools_validtor = {
+
+    validtor_checkList(input , listRules , directionRtl) {
+        let messages = [];
+        let rulesHtml = "";
+        let isInputCurrect = true;
+
+        for (let i = 0; i < listRules.length; i++) {
+            const itemRule = listRules[i];
+            if (itemRule.hasOwnProperty("description") && itemRule.hasOwnProperty("params") && itemRule.hasOwnProperty("rule")) {
+                let description = itemRule.description;
+                const rule = itemRule.rule;
+                const params = itemRule.params;
+
+                let isTrue = false;
+                switch (rule) {
+                    case "_is_email" :
+                        [isTrue , description] = tools_validtor.validtor_checkIsEmail(input, params , description)
+                        break;
+                    case "_not_empty" :
+                        [isTrue , description] = tools_validtor.validtor_checkNotEmpty(input, params , description)
+                        break;
+                    case "_char_length" :
+                        [isTrue , description] = tools_validtor.validtor_checkInputChar(input, params , description)
+                        break;
+                    case "_num_length" :
+                        [isTrue , description] = tools_validtor.validtor_checkInputNum(input, params , description)
+                        break;
+                    case "_text_length" :
+                        [isTrue , description] = tools_validtor.validtor_checkInputText(input, params , description)
+                        break;
+                    case "_text_forbidden" :
+                        [isTrue , description] = tools_validtor.validtor_checkInputForbidden(input, params , description)
+                        break;
+                    case "_text_char_upper" :
+                        [isTrue , description] = tools_validtor.validtor_checkExistChartUpper(input, params , description)
+                        break;
+                }
+
+                if (!isTrue) {
+                    messages.push(description)
+                    isInputCurrect = false;
+                }
+
+                const icon = isTrue ? tools_icons.icon_is_true() : tools_icons.icon_is_false();
+                const color = isTrue ? "text-success" : "text-danger";
+
+                rulesHtml +=
+                    `
+                    <div style="display: flow-root"  class="item_country_code pt-1 border-bottom mx-1 line-height-30px font-12pt ${color}" >
+                        <span class="icon-rule  ${directionRtl ? "float-end" : "float-start"}"   ms-1">${icon}</span>
+                        <span class="ms-3 ${directionRtl ? "float-end" : "float-start"}"> - ${description}</span>
+                    </div>
+                    `;
+
+            }
+        }
+
+        return [messages , rulesHtml , isInputCurrect]
+    } ,
+
+    validtor_checkIsEmail(input , params , description) {
+        let isValid = true;
+
+        if (!input) {
+            isValid = false;
+        } else {
+            const value = input.trim();
+
+            // regex ساده برای فرمت ایمیل
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            isValid = emailRegex.test(value);
+        }
+
+        return [isValid, tools_public.replaceInTextWithPatternParams(description, params)];
+    } ,
+
+    validtor_checkNotEmpty(input , params , description) {
+        let isNotEmpty = true;
+        if (!input) isNotEmpty = false;
+        else{
+            const value = input.trim(); // حذف فاصله‌های ابتدا/انتها
+            isNotEmpty = value.length > 0;
+        }
+        return [isNotEmpty , tools_public.replaceInTextWithPatternParams(description , params) ];
+    } ,
+
+    validtor_checkInputChar(input , params , description) {
+        let min = 4;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const nonDigitChars = input.split('').filter(char => !/\d/.test(char));
+        return [nonDigitChars.length >= min , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+    validtor_checkInputNum(input , params , description) {
+        let min = 1;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const digitChars = input.split('').filter(char => /\d/.test(char));
+        return [digitChars.length >= min , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+    validtor_checkInputText(input , params , description) {
+        let min = 8;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        return [input.length >= min , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+    validtor_checkInputForbidden(input , params , description) {
+        let validPattern = /^[a-zA-Z0-9]*$/;
+        if (params != null && params.hasOwnProperty("chars")){
+            const escapedParams = params.chars.map(c => '\\' + c).join('');
+            validPattern = new RegExp(`^[a-zA-Z0-9${escapedParams}]*$`);
+        }
+        return [validPattern.test(input) , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+    validtor_checkExistChartUpper(input , params , description) {
+        let min = 1;
+        if (params != null && params.hasOwnProperty("min")){
+            min = params.min
+        }
+        const regex = new RegExp(`(?:.*[A-Z]){${min},}`);
+        return [regex.test(input) , tools_public.replaceInTextWithPatternParams(description , params)];
+    } ,
+
+}
+
+
+
+
+
+
+
+
+tools_icons = {
+
+    icon_visit(color = "#ffffff", size = 24) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" 
+     fill="none" 
+     viewBox="0 0 24 24" 
+     stroke="${color}" 
+     width="${size}" height="${size}">
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 012.041-3.362M9.88 9.88a3 3 0 104.24 4.24M6.1 6.1l11.8 11.8M17.94 17.94A9.969 9.969 0 0021.542 12a9.97 9.97 0 00-4.133-5.868" />
+</svg>
+`;
+    } ,
+
+
+
+    icon_un_visit(color = "#ffffff", size = 24) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" 
+     fill="none" 
+     viewBox="0 0 24 24" 
+     stroke="${color}" 
+     width="${size}" height="${size}">
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+</svg>
+`;
+    } ,
+
+
+
+    icon_is_true(color = "#4caf50", size = 24) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" 
+     fill="none" 
+     viewBox="0 0 24 24" 
+     stroke="${color}" 
+     width="${size}" height="${size}">
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        d="M5 13l4 4L19 7" />
+</svg>
+`;
+    } ,
+
+
+
+    icon_is_false(color = "#f44336", size = 24) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" 
+     fill="none" 
+     viewBox="0 0 24 24" 
+     stroke="${color}" 
+     width="${size}" height="${size}">
+  <path stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        d="M6 18L18 6M6 6l12 12" />
+</svg>
+`;
+    } ,
+
+
+
+    icon_email(bg_color = "#e7e7e7", size = 24) {
+        return `
+<svg class="icon-email outline" 
+     width="${size}" height="${size}" 
+     viewBox="0 0 24 24" 
+     fill="none" 
+     xmlns="http://www.w3.org/2000/svg" 
+     role="img" aria-hidden="false">
+  <title>ایمیل</title>
+  <rect x="2" y="5" width="20" height="14" rx="2" 
+        stroke="${bg_color}" 
+        stroke-width="1.5" 
+        fill="none"/>
+  <path d="M3 7.5L12 13L21 7.5" 
+        stroke="${bg_color}" 
+        stroke-width="1.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+</svg>
+`;
+    } ,
+
+
+
+    icon_lock(bg_color = "#e7e7e7", size = 24) {
+        return `
+<svg class="icon-password lock" 
+     width="${size}" height="${size}" 
+     viewBox="0 0 24 24" 
+     fill="none"
+     xmlns="http://www.w3.org/2000/svg" 
+     aria-hidden="true">
+  <rect x="5" y="10" width="14" height="10" rx="2" 
+        stroke="${bg_color}" 
+        stroke-width="1.5"/>
+  <path d="M8 10V7a4 4 0 0 1 8 0v3" 
+        stroke="${bg_color}" 
+        stroke-width="1.5" 
+        stroke-linecap="round"/>
+</svg>
+`;
+    } ,
+
+
+
+    icon_tik(bg_color = "#e7e7e7", size = 20) {
+        return `
+<svg class="icon-selected-check" 
+     width="${size}" height="${size}" 
+     viewBox="0 0 24 24" 
+     fill="none" 
+     xmlns="http://www.w3.org/2000/svg" 
+     role="img" aria-hidden="false" 
+     style="padding:2px;">
+     
+  <title>selected</title>
+ 
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="-1.5" stdDeviation="1" flood-color="rgba(0,0,0,0.35)" />
+    </filter>
+  </defs>
+
+  <path d="M20 6L9 17l-5-5" 
+        stroke="${bg_color}" 
+        stroke-width="2.2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#shadow)" />
+        
+</svg>
+`;
+    } ,
+
+
+
+    icon_plus_badge(bg_color = "#fff", size = 28) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="add"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <path d="M12 8v8M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    } ,
+
+
+
+    icon_minus_badge(bg_color = "#fff" , size = 28) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="remove"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <path d="M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    } ,
+
+}
+
+
