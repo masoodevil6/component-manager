@@ -427,3 +427,16 @@
 
 
 </script>
+
+
+<svg id="mysvg" width="400" height="100">
+    <polygon id="p1" points="10,10 100,10 100,60 10,60" fill="orange" style="cursor:pointer" />
+</svg>
+
+<script>
+    const p1 = document.getElementById('p1');
+    p1.addEventListener('click', (ev) => {
+        console.log('polygon clicked', ev);
+        // ev.target === p1
+    });
+</script>

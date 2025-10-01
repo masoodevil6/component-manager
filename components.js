@@ -453,28 +453,51 @@ class ComponentBase{
     //--------------------------------------------------
     // tools
     //--------------------------------------------------
+    _SCREAN_WIDTH = {
+        XS   : {name:"xs" ,max:576             } ,
+        S    : {name:"s"  ,min:576   , max:768 } ,  /// is for mobile
+        M    : {name:"m"  ,min:768   , max:992 } ,  /// is for tablet
+        L    : {name:"l"  ,min:992   , max:1200} ,
+        XL   : {name:"xl" ,min:1200  , max:1450} ,  /// is for pc
+        XXL  : {name:"xxl" ,min:1450           } ,
+    }
+
     getScreenWidth(){
         let screanWidth = window.innerWidth;
         let screanWidthType = "";
-        if (screanWidth < 576) {
-            screanWidthType = "xs"
-        }
-        else if (screanWidth >= 576 && screanWidth < 768) {
-            screanWidthType = "s"
-        }
-        else if (screanWidth >= 768 && screanWidth < 992) {
-            screanWidthType = "m"
-        }
-        else if (screanWidth >= 992 && screanWidth < 1200) {
-            screanWidthType = "l"
-        }
-        else if (screanWidth >= 1200 && screanWidth < 1200) {
-            screanWidthType = "xl"
-        }
-        else if (screanWidth >=1200) {
-            screanWidthType = "xxl"
-        }
+
+        Object.keys(this._SCREAN_WIDTH).forEach(key => {
+            const sizeType = this._SCREAN_WIDTH[key];
+            if (sizeType.hasOwnProperty("name")){
+                const sizeName = sizeType.name;
+
+                const checkIsMoreThenMin = sizeType.hasOwnProperty("min") ? screanWidth >= sizeType.min : true;
+                const checkIsLessThenMax = sizeType.hasOwnProperty("max") ? screanWidth <= sizeType.max : true;
+
+                if (checkIsMoreThenMin && checkIsLessThenMax){
+                    screanWidthType = sizeName;
+                    return;
+                }
+            }
+        })
+
         return screanWidthType;
+    }
+
+    checkMoreThanScreanWidth(sizeName){
+        let screanWidth = window.innerWidth;
+        let screanWidthStatus = false;
+
+        Object.keys(this._SCREAN_WIDTH).forEach(key => {
+            const sizeType = this._SCREAN_WIDTH[key];
+            if (sizeType.hasOwnProperty("name") && sizeType.name == sizeName){
+                const point = sizeType.hasOwnProperty("max") ? sizeType.max : (sizeType.hasOwnProperty("min") ? sizeType.min : null);
+                screanWidthStatus = point!=null && screanWidth >= point
+                return;
+            }
+        })
+
+        return screanWidthStatus;
     }
 
 
@@ -17531,6 +17554,10 @@ class ComponentBreadcrumbWithArrowBase extends ComponentBase{
             prop: "prop_colorActive",
             default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumbWithArrow") && tools_const.styles.breadcrumbWithArrow.hasOwnProperty("color_active") ? tools_const.styles.breadcrumbWithArrow.color_active : ""
         },
+        prop_colorShadow: {
+            prop: "prop_colorShadow",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("breadcrumbWithArrow") && tools_const.styles.breadcrumbWithArrow.hasOwnProperty("color_shadow") ? tools_const.styles.breadcrumbWithArrow.color_shadow : ""
+        },
     };
 
     /* ---------------------------------------------
@@ -17549,7 +17576,8 @@ class ComponentBreadcrumbWithArrowBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_unactiveBreadcrumb,
             this._COMPONENT_PATTERN.prop_colorUnactive,
             this._COMPONENT_PATTERN.prop_activeBreadcrumb,
-            this._COMPONENT_PATTERN.prop_colorActive
+            this._COMPONENT_PATTERN.prop_colorActive ,
+            this._COMPONENT_PATTERN.prop_colorShadow ,
         ]
     };
 
@@ -17590,9 +17618,13 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
      TEMPLATEs
     --------------------------------------------- */
     componentFn() {
+        requestAnimationFrame(() => {
+            this.fn_renderBreadCrumb();
+        });
     }
 
     templateFn(partName = null) {
+
         switch (partName) {
             case "part_structure":
                 return this.template_render_structure(partName);
@@ -17612,19 +17644,11 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
         return this.templateBasic_render_structure(content);
     }
 
-
     template_render_breadcrumbs(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null) {
-
-            const prop_unactiveBreadcrumb    =  data.hasOwnProperty("prop_unactiveBreadcrumb")         ?  data.prop_unactiveBreadcrumb            : "";
-            const color_unactive             =  data.hasOwnProperty("color_unactive")                  ?  data.color_unactive                     : "";
-            const prop_activeBreadcrumb      =  data.hasOwnProperty("prop_activeBreadcrumb")           ?  data.prop_activeBreadcrumb              : "";
-            const color_active               =  data.hasOwnProperty("color_active")                    ?  data.color_active                       : "";
-            const prop_breadcrumbs           =  data.hasOwnProperty("prop_breadcrumbs")                ?  data.prop_breadcrumbs                   : [];
-            const prop_stepSelected          =  data.hasOwnProperty("prop_stepSelected")               ?  data.prop_stepSelected                  : 1;
-
+            let prop_height          = data.hasOwnProperty("prop_height")           ?  data.prop_height             : 25;
 
             return `
 <section data-part-name="${partName}" 
@@ -17639,7 +17663,8 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
 
     </style>
     
-    sss
+    <svg id="component-breadcrumb-breadcrumbs-with-arrow-${this._COMPONENT_RANDOM_ID}-svg" width="100%" height="${prop_height*2.5}" ></defs>
+</svg>
     
 </section>
         `;
@@ -17652,12 +17677,364 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
 
 
 
-
-
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
+    fn_getElementSvg(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-breadcrumb-breadcrumbs-with-arrow-${this._COMPONENT_RANDOM_ID}-svg`);
+    }
 
+    fn_renderBreadCrumb(){
+        window.addEventListener('resize', this.fn_renderBreadCrumb_resize.bind(this));
+        this.fn_renderBreadCrumb_resize();
+    }
+
+    fn_renderBreadCrumb_resize(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_breadcrumbs")){
+            const prop_breadcrumbs         =  data.prop_breadcrumbs;
+            const prop_stepSelected        =  data.hasOwnProperty("prop_stepSelected")         ? data.prop_stepSelected           : 0;
+            const prop_unactiveBreadcrumb  =  data.hasOwnProperty("prop_unactiveBreadcrumb")   ? data.prop_unactiveBreadcrumb     : "";
+            const  prop_colorUnactive      =  data.hasOwnProperty("prop_colorUnactive")        ? data.prop_colorUnactive          : "";
+            const prop_activeBreadcrumb    =  data.hasOwnProperty("prop_activeBreadcrumb")     ? data.prop_activeBreadcrumb       : "";
+            const  prop_colorActive        =  data.hasOwnProperty("prop_colorActive")          ? data.prop_colorActive            : "";
+            const  prop_colorShadow        =  data.hasOwnProperty("prop_colorShadow")          ? data.prop_colorShadow            : "";
+
+            const isWideScreen = this.checkMoreThanScreanWidth(this._SCREAN_WIDTH.M.name);
+            if (isWideScreen){
+                this.fn_renderBreadCrumb_resize_isForPc(prop_breadcrumbs , prop_stepSelected , prop_unactiveBreadcrumb , prop_colorUnactive , prop_activeBreadcrumb , prop_colorActive , prop_colorShadow);
+            }
+            else {
+                this.fn_renderBreadCrumb_resize_isForMobile(prop_breadcrumbs , prop_stepSelected, prop_unactiveBreadcrumb , prop_colorUnactive , prop_activeBreadcrumb , prop_colorActive , prop_colorShadow);
+            }
+        }
+    }
+
+
+    fn_renderBreadCrumb_resize_isForMobile(prop_breadcrumbs , prop_stepSelected, prop_unactiveBreadcrumb , prop_colorUnactive , prop_activeBreadcrumb , prop_colorActive , prop_colorShadow){
+        const data = this._COMPONENT_CONFIG;
+        const svg = this.fn_getElementSvg();
+        svg.innerHTML = "";
+        const shadowMarker = tools_svg.addMarker(svg , "shadow" , prop_colorShadow);
+
+        const directionRtl       = data.hasOwnProperty("directionRtl")          ? data.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+        let prop_height          = data.hasOwnProperty("prop_height")           ?  data.prop_height             : 25;
+        let prop_marginMinPerent = data.hasOwnProperty("prop_marginMinPerent")  ?  data.prop_marginMinPerent    : 10;
+
+        const stepLength = prop_breadcrumbs.length;
+        const svgWidth   = svg.width.baseVal.value;
+        const marginMin  = (prop_marginMinPerent/10)*svgWidth;
+        const margin     = marginMin
+        const partWidth  = (svgWidth - 2*margin)/stepLength;
+
+        for (let number = 0; number < stepLength ; number++) {
+            const step = prop_breadcrumbs[number];
+
+            const xStart =  directionRtl ?  margin + ( number )*partWidth :  margin + (stepLength - number - 1)*partWidth;
+            const eventListiner = (e) =>{
+                this.fn_onBackClick(e , step)
+            }
+
+            if (number < stepLength-1 ){
+                const linePoints = [
+                    {x: directionRtl ? xStart +  partWidth/2    :  xStart +  partWidth/2        , y:  ((3*prop_height/2) - 2)} ,
+                    {x: directionRtl ? xStart +  3*partWidth/2  :  xStart -  partWidth/2        , y:  ((3*prop_height/2) - 2)} ,
+                    {x: directionRtl ? xStart +  3*partWidth/2  :  xStart -  partWidth/2        , y:  ((3*prop_height/2) + 2)} ,
+                    {x: directionRtl ? xStart +  partWidth/2    :  xStart +  partWidth/2        , y:  ((3*prop_height/2) + 2)} ,
+                    {x: directionRtl ? xStart +  partWidth/2    :  xStart +  partWidth/2        , y:  ((3*prop_height/2) - 2)} ,
+                ]
+
+                const line = tools_svg.craeteSvgPolygon(svg , linePoints ,
+                    {
+                        "fill" :  number <= prop_stepSelected-1 ? prop_activeBreadcrumb : prop_unactiveBreadcrumb ,
+                        "filter" : `url(#${shadowMarker})`
+                    },
+                    {
+                        "click" : eventListiner
+                    });
+            }
+
+
+
+            const shapeCircle = tools_svg.craeteSvgCircle(svg , xStart+(partWidth/2) , (3*prop_height/2) , prop_height/2  ,
+                {
+                    "fill" :  number <= prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb ,
+                    "stroke" : number <= prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb ,
+                    "stroke-width" : "2" ,
+                    "filter" : `url(#${shadowMarker})`
+                },
+                {
+                    "click" : eventListiner
+                });
+
+
+            const shapeText = tools_svg.craeteSvgTextToCenterCircleElement(svg , shapeCircle , 0 , -prop_height , step.title  ,
+                {
+                    "text-anchor" : "middle" ,
+                    "dominant-baseline" : "middle" ,
+                    "font-size" : "16" ,
+                    "fill" : number <= prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb ,
+                },
+                {
+                    "click" : eventListiner
+                });
+
+            if(  number <= prop_stepSelected){
+                const shapeTik = tools_svg.craeteSvgPathToCenterCircleElement(svg , shapeCircle , 0  , 0 ,  "M-4,0 L-1,3 L4,-4" ,
+                    {
+                        "fill" : "none" ,
+                        "stroke" :  number <= prop_stepSelected ? prop_colorUnactive : prop_colorActive  ,
+                        "stroke-width" : "2" ,
+                        "filter" : `url(#${shadowMarker})`
+                    },
+                    {
+                        "click" : eventListiner
+                    });
+            }
+            else{
+                const shapenumber = tools_svg.craeteSvgTextToCenterCircleElement(svg , shapeCircle , 0  , 0 ,  number+1 ,
+                    {
+                        "text-anchor" : "middle" ,
+                        "dominant-baseline" : "middle" ,
+                        "font-size" : "16" ,
+                        "fill" : number <= prop_stepSelected ? prop_colorUnactive : prop_colorActive  ,
+                    },
+                    {
+                        "click" : eventListiner
+                    });
+            }
+
+
+        }
+
+    }
+
+
+
+    fn_renderBreadCrumb_resize_isForPc(prop_breadcrumbs , prop_stepSelected, prop_unactiveBreadcrumb , prop_colorUnactive , prop_activeBreadcrumb , prop_colorActive , prop_colorShadow){
+        const data = this._COMPONENT_CONFIG;
+        const svg = this.fn_getElementSvg();
+        svg.innerHTML = "";
+        const shadowMarker = tools_svg.addMarker(svg , "shadow" , prop_colorShadow);
+
+        const directionRtl       = data.hasOwnProperty("directionRtl")          ? data.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+        let prop_side            = data.hasOwnProperty("prop_side")             ?  data.prop_side               : 20;
+        let prop_length          = data.hasOwnProperty("prop_length")           ?  data.prop_length             : 120;
+        let prop_gap             = data.hasOwnProperty("prop_gap")              ?  data.prop_gap                : 6;
+        let prop_height          = data.hasOwnProperty("prop_height")           ?  data.prop_height             : 25;
+        let prop_marginMinPerent = data.hasOwnProperty("prop_marginMinPerent")  ?  data.prop_marginMinPerent    : 10;
+
+        const stepLength = prop_breadcrumbs.length;
+        const svgWidth   = svg.width.baseVal.value;
+        const partWidth  = 3*prop_side +prop_length;
+        const marginMin = (prop_marginMinPerent/10)*svgWidth;
+        const margin = (svgWidth - stepLength*partWidth)/2 > marginMin/100 ? (svgWidth - stepLength*partWidth)/2  : marginMin/100;
+
+        for (let number = 0; number < stepLength ; number++) {
+            const step = prop_breadcrumbs[number];
+
+            const xStart =  directionRtl ?  margin + (stepLength - number - 1)*partWidth : margin + ( number )*partWidth ;
+            const eventListiner = (e) =>{
+                this.fn_onBackClick(e , step)
+            }
+
+            /// SHAPE A
+            let shapeAPoints = [];
+
+            if (directionRtl){
+
+                if (number == stepLength-1 ){
+                    shapeAPoints.push({x: xStart + prop_side                              , y: 0})
+                }
+                else {
+                    shapeAPoints.push({x: xStart + 2*prop_side                            , y: 0})
+                }
+
+                shapeAPoints.push({x: xStart + 3*prop_side+prop_length                    , y: 0})
+
+                if (number == 0){
+                    shapeAPoints.push({x: xStart + 3*prop_side+prop_length               , y: prop_height})
+                }
+                else {
+                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length               , y: prop_height})
+                }
+
+                shapeAPoints.push({x: xStart + 3*prop_side+prop_length                   , y: 2*prop_height})
+
+                if (number == stepLength-1 ){
+                    shapeAPoints.push({x: xStart + prop_side                             , y: 2*prop_height})
+                }
+                else {
+                    shapeAPoints.push({x: xStart + 2*prop_side                           , y: 2*prop_height})
+                }
+
+                shapeAPoints.push({x: xStart + prop_side                               , y: prop_height})
+
+                if (number == stepLength-1 ){
+                    shapeAPoints.push({x: xStart + prop_side                             , y: 0})
+                }
+                else {
+                    shapeAPoints.push({x: xStart + 2*prop_side                           , y: 0})
+                }
+
+            }
+            else{
+                shapeAPoints.push({x: xStart                                             , y: 0})
+
+                if (number == stepLength-1 ){
+                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length               , y: 0})
+                }
+                else {
+                    shapeAPoints.push({x: xStart + prop_side+prop_length               , y: 0})
+                }
+
+                shapeAPoints.push({x: xStart + 2*prop_side+prop_length                   , y: prop_height})
+
+                if (number == stepLength-1 ){
+                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length               , y: 2*prop_height})
+                }
+                else {
+                    shapeAPoints.push({x: xStart + prop_side+prop_length               , y: 2*prop_height})
+                }
+
+                shapeAPoints.push({x: xStart                                             , y: 2*prop_height})
+
+                if (number == 0){
+                    shapeAPoints.push({x: xStart                                         , y: prop_height})
+                }
+                else {
+                    shapeAPoints.push({x: xStart + prop_side                             , y: prop_height})
+                }
+
+                shapeAPoints.push({x: xStart                                             , y: 0})
+
+            }
+
+            /// SHAPE B
+            if (number < stepLength - 1 ){
+                let shapeBPoints = [];
+                if (directionRtl){
+                    shapeBPoints = [
+                        {x: xStart +prop_side             -prop_gap   , y: 0} ,
+                        {x: xStart +2*prop_side-prop_gap  -prop_gap   , y: 0} ,
+                        {x: xStart +prop_side-prop_gap    -prop_gap   , y: prop_height} ,
+                        {x: xStart +2*prop_side-prop_gap  -prop_gap   , y: 2*prop_height} ,
+                        {x: xStart +prop_side             -prop_gap   , y: 2*prop_height} ,
+                        {x: xStart                        -prop_gap   , y: prop_height} ,
+                        {x: xStart +prop_side             -prop_gap   , y: 0} ,
+                    ]
+                }
+                else{
+                    shapeBPoints = [
+                        {x: xStart                            + 2*prop_side+prop_length   -prop_gap   , y: 0} ,
+                        {x: xStart + prop_side-prop_gap       + 2*prop_side+prop_length   -prop_gap    , y: 0} ,
+                        {x: xStart + 2*prop_side-prop_gap     + 2*prop_side+prop_length   -prop_gap    , y: prop_height} ,
+                        {x: xStart + prop_side-prop_gap       + 2*prop_side+prop_length   -prop_gap    , y: 2*prop_height} ,
+                        {x: xStart                            + 2*prop_side+prop_length   -prop_gap    , y: 2*prop_height} ,
+                        {x: xStart + prop_side                + 2*prop_side+prop_length   -prop_gap    , y: prop_height} ,
+                        {x: xStart                            + 2*prop_side+prop_length   -prop_gap    , y: 0} ,
+                    ];
+                }
+
+                const shapeB = tools_svg.craeteSvgPolygon(svg , shapeBPoints ,
+                    {
+                        "fill" :  number <= prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb ,
+                        "filter" : `url(#${shadowMarker})`
+                    },
+                    {
+                        "click" : eventListiner
+                    });
+
+                const shapeBShadow = tools_svg.createShadowInsidePolygonElement(svg , shapeB , 2 , 4 ,
+                    {
+                        "fill" : "rgba(255,255,255,0.2)"
+                    },
+                    {
+                        "click" : eventListiner
+                    });
+
+            }
+
+            const shapeA = tools_svg.craeteSvgPolygon(svg , shapeAPoints ,
+                {
+                    "fill" :  number <= prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb ,
+                    "filter" : `url(#${shadowMarker})`
+                },
+                {
+                    "click" : eventListiner
+                });
+
+
+
+            const shapeAShadow = tools_svg.createShadowInsidePolygonElement(svg , shapeA , 2 , 4 ,
+                {
+                    "fill" : "rgba(255,255,255,0.2)"
+                },
+                {
+                    "click" : eventListiner
+                });
+
+            const shapeText = tools_svg.craeteSvgTextToCenterPolygonElement(svg , shapeA ,  directionRtl?  0 : 0.25*prop_length , 0.15*prop_height , step.title ,
+                {
+                    "text-anchor" : "middle" ,
+                    "dominant-baseline" : "middle" ,
+                    "font-size" : "16" ,
+                    "fill" : number <= prop_stepSelected ? prop_colorUnactive : prop_colorActive ,
+                },
+                {
+                    "click" : eventListiner
+                });
+
+            const shapeCircleTik = tools_svg.craeteSvgCircleToCenterPolygonElement(svg , shapeA , directionRtl? 0.40*prop_length : -0.25*prop_length  , 0.10*prop_height  , prop_height/2 ,
+                {
+                    "fill" : "#ff000000" ,
+                    "stroke" : number <= prop_stepSelected ? prop_colorUnactive : prop_colorActive ,
+                    "stroke-width" : "2" ,
+                    "filter" : `url(#${shadowMarker})` ,
+                },
+                {
+                    "click" : eventListiner
+                });
+
+            if(  number <= prop_stepSelected){
+                const shapeTik = tools_svg.craeteSvgPathToCenterCircleElement(svg , shapeCircleTik , 0 , 0 ,  "M-4,0 L-1,3 L4,-4" ,
+                    {
+                        "fill" : "none" ,
+                        "stroke" : number <= prop_stepSelected ? prop_colorUnactive : prop_colorActive ,
+                        "stroke-width" : "2" ,
+                        "filter" : `url(#${shadowMarker})` ,
+                    },
+                    {
+                        "click" : eventListiner
+                    });
+            }
+            else{
+                const shapenumber = tools_svg.craeteSvgTextToCenterCircleElement(svg , shapeCircleTik , 0 , 2.5,  number+1 ,
+                    {
+                        "text-anchor" : "middle" ,
+                        "dominant-baseline" : "middle" ,
+                        "font-size" : "16" ,
+                        "fill" : number <= prop_stepSelected ? prop_colorUnactive : prop_colorActive ,
+                    },
+                    {
+                        "click" : eventListiner
+                    });
+            }
+        }
+
+
+    }
+
+
+
+    fn_onBackClick(event , stepData){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , stepData);
+        }
+    }
 
 }
 
