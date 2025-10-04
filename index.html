@@ -563,6 +563,7 @@
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
+            prop_size: "m" ,
             prop_title: "asd" ,
             fn_callback: ()=>{
                 alert("asd");
@@ -802,6 +803,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_name:"select_option" ,
+           // prop_size: "m" ,
             prop_title:"select options" ,
             prop_itemSelected: 1 ,
             prop_icon: "&#10124;" ,
@@ -842,54 +844,6 @@
         }
     )
 
-    /*-------------------------------------
-      03-010)  Component Select Option
-    -------------------------------------*/
-    new window.ComponentSelectOption(
-        "select-option-1" ,
-        {
-            classList: "col-md-3 col-12 mt-2"  ,
-
-            prop_name:"select_option" ,
-            prop_title:"select options" ,
-            prop_itemSelected: 1 ,
-            prop_icon: "&#10124;" ,
-            prop_options: [
-                {name: "default"} ,
-                {id:1 , name: "test 1"} ,
-                {id:2 , name: "test 2"} ,
-                {id:3 , name: "test 3"} ,
-                {id:4 , name: "test 4"} ,
-                {id:5 , name: "test 5"} ,
-                {id:6 , name: "test 6"} ,
-            ] ,
-            prop_listIcons: [
-                {
-                    icon: "&#10124;" ,
-                    name: "methodOne" ,
-                    method: (event , id) => {
-                        alert(`item selected [1]: ${id}`)
-                    } ,
-                } ,
-                {
-                    icon: "&#10125;" ,
-                    name: "methodTwo" ,
-                    method: (event , id) => {
-                        alert(`item selected [2]: ${id}`)
-                    }
-                }
-            ],
-
-            prop_btnAddStatus: true ,
-
-            fn_callback:  (event , index)=>{
-                alert(index)
-            } ,
-            fn_clickBtnTools: (event , index)=>{
-                alert(index)
-            }
-        }
-    )
 
     /*-------------------------------------
       03-010)  Component Select Icon
@@ -1678,7 +1632,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [02] Fetch " ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -1687,7 +1641,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [03] Button And Inputs" ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -1753,7 +1707,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [15] breadcrumbs " ,
-            prop_bodyShow: tree
+            prop_bodyShow: false
         }
     )
 

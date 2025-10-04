@@ -238,6 +238,70 @@ tools_init = {
 }
 
 
+tools_css = {
+
+    standardSizes: {
+        xs: {
+            name: "x-s",
+            fontSize: 8,
+            height: 18
+        } ,
+        s: {
+            name: "s" ,
+            fontSize: 10 ,
+            height: 22
+        } ,
+        m: {
+            name: "m" ,
+            fontSize: 12,
+            height: 26
+        } ,
+        l: {
+            name:  "l"  ,
+            fontSize: 14,
+            height: 28
+        } ,
+        xl: {
+            name:  "x-l" ,
+            fontSize: 16,
+            height: 30
+        } ,
+        xll: {
+            name: "xx-l",
+            fontSize: 18 ,
+            height: 34
+        }
+    } ,
+
+
+    getHeightSize(sizeName){
+        let val = 20;
+        Object.keys(tools_css.standardSizes).forEach(key=>{
+            itemHeight = tools_css.standardSizes[key];
+            if(itemHeight.name == sizeName){
+                val = itemHeight.height;
+                return;
+            }
+        });
+        return val;
+    },
+
+
+    getFontSize(sizeName){
+        let val = 10;
+        Object.keys(tools_css.standardSizes).forEach(key=>{
+            itemFont = tools_css.standardSizes[key];
+            if(itemFont.name == sizeName){
+                val = itemFont.fontSize;
+                return;
+            }
+        });
+        return val;
+    }
+
+}
+
+
 
 
 tools_component = {
@@ -1449,7 +1513,7 @@ tools_validtor = {
 
 tools_icons = {
 
-    icon_visit(color = "#ffffff", size = 24) {
+    icon_visit( size = 24 , color = "#ffffff") {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1466,7 +1530,7 @@ tools_icons = {
 
 
 
-    icon_un_visit(color = "#ffffff", size = 24) {
+    icon_un_visit( size = 24 , color = "#ffffff",) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1487,7 +1551,7 @@ tools_icons = {
 
 
 
-    icon_is_true(color = "#4caf50", size = 24) {
+    icon_is_true( size = 24 , color = "#4caf50",) {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1504,7 +1568,7 @@ tools_icons = {
 
 
 
-    icon_is_false(color = "#f44336", size = 24) {
+    icon_is_false( size = 24 , color = "#f44336") {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1521,7 +1585,7 @@ tools_icons = {
 
 
 
-    icon_email(bg_color = "#e7e7e7", size = 24) {
+    icon_email( size = 24 , bg_color = "#e7e7e7") {
         return `
 <svg class="icon-email outline" 
      width="${size}" height="${size}" 
@@ -1545,7 +1609,7 @@ tools_icons = {
 
 
 
-    icon_lock(bg_color = "#e7e7e7", size = 24) {
+    icon_lock( bg_color = "#e7e7e7",size = 24 ) {
         return `
 <svg class="icon-password lock" 
      width="${size}" height="${size}" 
@@ -1566,7 +1630,7 @@ tools_icons = {
 
 
 
-    icon_tik(bg_color = "#e7e7e7", size = 20) {
+    icon_tik(size = 20 ,bg_color = "#e7e7e7") {
         return `
 <svg class="icon-selected-check" 
      width="${size}" height="${size}" 
@@ -1597,7 +1661,7 @@ tools_icons = {
 
 
 
-    icon_plus_badge(bg_color = "#fff", size = 28) {
+    icon_plus_badge(size = 28 ,bg_color = "#fff") {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="add"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -1607,7 +1671,7 @@ tools_icons = {
 
 
 
-    icon_minus_badge(bg_color = "#fff" , size = 28) {
+    icon_minus_badge(size = 28 , bg_color = "#fff") {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="remove"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -1615,6 +1679,43 @@ tools_icons = {
 </svg>`;
     } ,
 
-}
 
+    icon_arrow_down(size = 18 , bg_color = "#000") {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow-down"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <path d="M6 9l6 6 6-6" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    }  ,
+
+
+    icon_arrow_up(size = 18 , bg_color = "#000" ) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow-up"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <path d="M18 15l-6-6-6 6" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    },
+
+
+    icon_clear(size = 18 , bg_color = "#8e8e8e") {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="clear"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <path d="M6 6l12 12M6 18L18 6" 
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    },
+
+
+    icon_exclamation_square(size = 18, color = "#000") {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="warning" 
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <rect x="2" y="2" width="20" height="20" rx="3" ry="3" fill="${color}"/>
+  <path d="M12 7v6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 16h.01" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    }
+}
 

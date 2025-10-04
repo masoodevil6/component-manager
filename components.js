@@ -19,6 +19,8 @@ if (typeof listLayoutZIndex === 'undefined') {
 
 
 
+
+
 if (typeof listComponent === 'undefined') {
     var listComponent = {
 
@@ -121,9 +123,9 @@ if (typeof components === 'undefined') {
 
 
 
-    /* -------------------------------------
+/* -------------------------------------
      Component Base:
-    ------------------------------------- */
+------------------------------------- */
 class ComponentBase{
 
     _COMPONENT_PATTERN = {};
@@ -177,7 +179,7 @@ class ComponentBase{
                 props["part_label"].push( {prop: "prop_labelTooltipDescription"     , default: null});
             }
             if (!props.part_label.hasOwnProperty("prop_labelClass")){
-                props["part_label"].push( {prop: "prop_labelClass"                  , default:  ["shadow-sm" , "px-2" ,"py-1" , "d-block"]});
+                props["part_label"].push( {prop: "prop_labelClass"                  , default:  ["shadow-sm" , "px-2" , "d-block"]});
             }
             if (!props.part_label.hasOwnProperty("prop_labelStyles")){
                 props["part_label"].push( {prop: "prop_labelStyles"                 , default:  { "font-size" : "10pt"}});
@@ -1465,7 +1467,7 @@ class ComponentLabelBase extends ComponentBase{
     _COMPONENT_PATTERN = {
         prop_labelClass : {
             prop: "prop_labelClass" ,
-            default: ["shadow-sm" , "px-2" , "py-1"]
+            default: ["shadow-sm" , "px-2" , "py/-0"]
         } ,
         prop_labelStyles : {
             prop: "prop_labelStyles" ,
@@ -1483,13 +1485,21 @@ class ComponentLabelBase extends ComponentBase{
             prop: "prop_for" ,
             default: null
         } ,
+        prop_size : {
+            prop: "prop_size" ,
+            default: tools_css.standardSizes.m.name
+        } ,
         prop_labelColor : {
             prop: "prop_labelColor" ,
             default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")             ? tools_const.styles.label.color           : ""
         } ,
         prop_tooltipIcon : {
             prop: "prop_tooltipIcon" ,
-            default: "!"
+            default: tools_icons.icon_exclamation_square
+        } ,
+        prop_size : {
+            prop: "prop_size" ,
+            default: tools_css.standardSizes.m.name
         } ,
         prop_tooltipDescription : {
             prop: "prop_tooltipDescription" ,
@@ -1514,10 +1524,12 @@ class ComponentLabelBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_title ,
             this._COMPONENT_PATTERN.prop_for ,
             this._COMPONENT_PATTERN.prop_labelColor ,
+            this._COMPONENT_PATTERN.prop_size ,
         ] ,
         part_tooltip_desctiopn: [
             this._COMPONENT_PATTERN.prop_tooltipIcon ,
             this._COMPONENT_PATTERN.prop_tooltipDescription ,
+            this._COMPONENT_PATTERN.prop_size ,
         ]
     }
 
@@ -1602,18 +1614,25 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
             const prop_for          =   data.hasOwnProperty("prop_for")                                   ?  data.prop_for          : "";
             const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
             const prop_labelColor   =   data.hasOwnProperty("prop_labelColor")                            ?  data.prop_labelColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")   ? tools_const.styles.label.color : "";
+            const prop_size         =   data.hasOwnProperty("prop_size")                                  ?  data.prop_size         :  null;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elfontsize = tools_css.getFontSize(prop_size);
 
             return `
 <label data-part-name="${partName}"   
          id="component-label-label-${this._COMPONENT_RANDOM_ID}" 
          class=" d-block" 
-          for="${prop_for}" 
+         for="${prop_for}" 
          onclick="${this.getFn('fn_onCLickLabel' , 'event' , `'${prop_for}'`)}">
          
      <style>
          #${this._COMPONENT_ID} #component-label-label-${this._COMPONENT_RANDOM_ID}{
               cursor: pointer;
               color: ${prop_labelColor};
+              font-size: ${elfontsize}px;
+              height: ${elHeight}px;
+              line-height: ${elHeight}px;
          }
      </style>
        
@@ -1660,6 +1679,9 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
 
             const prop_tooltipDescription        =   data.hasOwnProperty("prop_tooltipDescription") && data.prop_tooltipDescription !=null       ?  data.prop_tooltipDescription        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("description") ? this._COMPONENT_SLOTS.description : null);
             const prop_tooltipIcon               =   data.hasOwnProperty("prop_tooltipIcon")                                                     ?  data.prop_tooltipIcon               : "";
+            const prop_size                      =   data.hasOwnProperty("prop_size")                                                            ?  data.prop_size                      : null;
+
+            const elHeight = tools_css.getHeightSize(prop_size/2);
 
             if (prop_tooltipDescription != null){
 
@@ -1677,7 +1699,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
                         prop_structureClass: ["position-absolute"] ,
                         prop_structureStyles: styles,
 
-                        prop_icon: prop_tooltipIcon ,
+                        prop_icon: prop_tooltipIcon != null ? (typeof prop_tooltipIcon == "function" ? prop_tooltipIcon(elHeight) : prop_tooltipIcon) : ""  ,
                         prop_description: prop_tooltipDescription ,
                     }
                 )
@@ -4306,6 +4328,7 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
 
 @prop_type   // cancel  //submit //null
 @prop_title
+@prop_size
 
 @prop_btnClass
 @prop_btnStyles
@@ -4334,6 +4357,10 @@ class ComponentButtonBase extends ComponentBase{
         prop_btnClass: {
             prop: "prop_btnClass",
             default: ["w-100"]
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
         },
         prop_btnStyles: {
             prop: "prop_btnStyles",
@@ -4376,6 +4403,7 @@ class ComponentButtonBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_btnBackgroundColor,
             this._COMPONENT_PATTERN.prop_btnBackgroundColor_hover,
             this._COMPONENT_PATTERN.prop_btnColor,
+            this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.fn_callback
         ]
     };
@@ -4444,6 +4472,7 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
             const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
 
             const prop_btnClass         =   data.hasOwnProperty("prop_btnClass")             ?  data.prop_btnClass           : "w-100"
+            const prop_size             =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               : 0;
             const prop_btnStyles        =   data.hasOwnProperty("prop_btnStyles")            ?  data.prop_btnStyles          : null;
             const prop_btnHoverStyles   =   data.hasOwnProperty("prop_btnHoverStyles")       ?  data.prop_btnHoverStyles     : null;
 
@@ -4469,6 +4498,9 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
                     break;
             }
 
+            const btnHeight = tools_css.getHeightSize(prop_size);
+            const btnfontSize = tools_css.getFontSize(prop_size);
+
 
             return `
 <section data-part-name="${partName}">
@@ -4477,6 +4509,9 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
       #${this._COMPONENT_ID} #component-button-${this._COMPONENT_RANDOM_ID}{
           background-color: ${btnBackgroundColor};
           color:            ${btnColor};
+          height:           ${btnHeight}px;
+          line-height:      ${btnHeight}px;
+          font-size:        ${btnfontSize}px;
           ${tools_public.renderListStyle(prop_btnStyles)}
      }
       #${this._COMPONENT_ID} #component-button-${this._COMPONENT_RANDOM_ID}:hover{
@@ -4486,7 +4521,8 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
      }
    </style>
 
-   <button id="component-button-${this._COMPONENT_RANDOM_ID}" class="shadow-sm border-0 rounded ${tools_public.renderListClass(prop_btnClass)}   "
+   <button id="component-button-${this._COMPONENT_RANDOM_ID}" 
+           class="shadow-sm border-0 rounded ${tools_public.renderListClass(prop_btnClass)}  "
             onclick="${this.getFn('fn_onCLickBtn' , "event")}">
       ${prop_title}
    </button>
@@ -5045,7 +5081,7 @@ class ComponentInputBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2",  "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -5573,7 +5609,7 @@ class ComponentInputPriceBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2",  "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -6220,7 +6256,7 @@ class ComponentInputColorBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2",  "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -7223,7 +7259,7 @@ class ComponentInputSizeBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2",  "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -7243,15 +7279,19 @@ class ComponentInputSizeBase extends ComponentBase{
         },
         prop_iconPositive: {
             prop: "prop_iconPositive",
-            default: tools_icons.icon_plus_badge()
+            default: tools_icons.icon_plus_badge
         },
         prop_iconNegetive: {
             prop: "prop_iconNegetive",
-            default: tools_icons.icon_minus_badge()
+            default: tools_icons.icon_minus_badge
         },
         prop_inputClass: {
             prop: "prop_inputClass",
-            default: ["form-control"]
+            default: ["border" , "border-1", "w-100"]
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
         },
         prop_inputStyles: {
             prop: "prop_inputStyles",
@@ -7300,24 +7340,30 @@ class ComponentInputSizeBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_labelHoverStyles
         ],
 
-        part_body: [],
+        part_body: [
+            this._COMPONENT_PATTERN.prop_size ,
+        ],
 
         part_body_icon: [
-            this._COMPONENT_PATTERN.prop_icon
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_size ,
         ],
 
         part_body_icon_clear: [
-            this._COMPONENT_PATTERN.prop_isDisable
+            this._COMPONENT_PATTERN.prop_isDisable ,
+            this._COMPONENT_PATTERN.prop_size ,
         ],
 
         part_body_icon_positive: [
             this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_iconPositive
+            this._COMPONENT_PATTERN.prop_iconPositive,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_body_icon_negetive: [
             this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_iconNegetive
+            this._COMPONENT_PATTERN.prop_iconNegetive,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_body_input_size: [
@@ -7329,7 +7375,8 @@ class ComponentInputSizeBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_icon,
             this._COMPONENT_PATTERN.prop_isDisable,
             this._COMPONENT_PATTERN.prop_min,
-            this._COMPONENT_PATTERN.prop_max
+            this._COMPONENT_PATTERN.prop_max,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_validate: [
@@ -7439,15 +7486,19 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
 
             return                                       `
 <section  data-part-name="${partName}"
           id="component-input-password-body-${this._COMPONENT_RANDOM_ID}"  
-          class="position-relative bg-secondary rounded d-block" >
+          class="position-relative  rounded d-block border" >
           
      <style>
          #${this._COMPONENT_ID} #component-input-password-body-${this._COMPONENT_RANDOM_ID}{
-         
+             background-color: rgba(176,245,237,0);
+             height: ${elHeight+2}px;
          }
          
      </style>
@@ -7457,8 +7508,8 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
      <component-icon id="component-input-size-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
      <component-icon id="component-input-size-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
      <component-icon id="component-input-size-icon-return-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-     <component-icon id="component-input-size-icon-positive-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-     <component-icon id="component-input-size-icon-negetive-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-button id="component-input-size-icon-positive-${this._COMPONENT_RANDOM_ID}" ></component-button>
+     <component-button id="component-input-size-icon-negetive-${this._COMPONENT_RANDOM_ID}" ></component-button>
         
 </section>
         `;
@@ -7476,6 +7527,7 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
         if (data != null){
             const screanWidthType = this.getScreenWidth();
 
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
             const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
             const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
             const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
@@ -7483,8 +7535,10 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
             const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
             const prop_isDisable     =   data.hasOwnProperty("prop_isDisable")                ?  data.prop_isDisable                                    : false;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
 
-            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
+            let elHeight = tools_css.getHeightSize(prop_size);
+            let elFontSize = tools_css.getFontSize(prop_size);
 
             let padding = "180px"
             if (screanWidthType == "xs"){
@@ -7502,15 +7556,16 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
               ${directionRtl ? "margin-left" : "margin-right"} : 70px;
          }
          #${this._COMPONENT_ID} #component-input-size-${this._COMPONENT_RANDOM_ID}{
-              height: 30px;
-
+              height: ${elHeight}px;
+              font-size: ${elFontSize}px;
+              border-radius: 0 !important;
               ${directionRtl ? "padding-left" : "padding-right"} : 20px;
               ${tools_public.renderListStyle(prop_inputStyles)}
          }
      </style>
 
      <input id="component-input-size-${this._COMPONENT_RANDOM_ID}"   
-            class=" ${tools_public.renderListClass(prop_inputClass)} border-2"
+            class=" ${tools_public.renderListClass(prop_inputClass)}"
             name="${prop_name || "" }"  
             type="text"  
             value="${prop_value || ""}"
@@ -7546,11 +7601,15 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
         if (data != null){
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
 
             let styles = {
                 "z-index" : listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
                 "cursor" : "pointer",
-                "font-size" : "20pt;",
+                "line-height" : elHeight+"px",
+                "height" : elHeight+"px",
                 "top" : "50%" ,
                 "transform" : "translate(0, -50%)" ,
             }
@@ -7565,9 +7624,9 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
                 new window.ComponentIcon(
                     `component-input-size-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: prop_icon ,
+                        prop_icon: prop_icon != null ? ( typeof prop_icon == "function" ? prop_icon(elHeight) : prop_icon)  : null ,
 
-                        prop_iconClass : ["position-absolute" , "text-white"] ,
+                        prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
 
                         fn_callback: ()=>{
@@ -7588,15 +7647,17 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
             const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
 
             if (!prop_isDisable){
+                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
 
-                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+               let elHeight = tools_css.getHeightSize(prop_size);
+
                 let styles = {
                     "z-index" :  listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
                     "width" :   "35px",
-                    "line-height" : "30px",
                     "cursor" : "pointer",
-                    "height" : "30px" ,
-                    "top" : "0" ,
+                    "top" : "50%" ,
+                    "transform" : "translate(0 , -50%)" ,
                     "text-align" : "center" ,
                 };
 
@@ -7611,13 +7672,11 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
                 new window.ComponentIcon(
                     `component-input-size-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        styles: {
-                            "height" : "38px"
-                        }  ,
+                        styles: {}  ,
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : "&#10540;" ,
+                        prop_icon : tools_icons.icon_clear(elHeight/2),
 
                         fn_callback: (event)=>{
                             this.fn_onClearInput(event);
@@ -7641,36 +7700,44 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
 
                 const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")    ? this._COMPONENT_CONFIG.directionRtl         : false;
                 const prop_iconPositive     =  data.hasOwnProperty("prop_iconPositive")                 ?  data.prop_iconPositive                     : false;
+                const prop_size             =   data.hasOwnProperty("prop_size")                        ?  data.prop_size                             : null;
 
+                let elHeight = tools_css.getHeightSize(prop_size);
 
-                let styles = {
+                let btnStyles = {
                     "z-index" :  listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
                     "width" :   "35px",
-                    "line-height" : "30px",
                     "cursor" : "pointer",
-                    "height" : "30px" ,
                     "top" : "0" ,
                     "text-align" : "center" ,
                 };
+                let styles = {
+                    "height" : "38px" ,
+                }
 
                 if (directionRtl){
-                    styles["left"]= "0px";
+                    btnStyles["left"]= "0px";
+
+                    btnStyles["border-top-right-radius"]= "0px !important";
+                    btnStyles["border-bottom-right-radius"]= "0px !important";
                 }
                 else {
-                    styles["right"]= "0px";
+                    btnStyles["right"]= "0px";
+
+                    btnStyles["border-top-left-radius"]= "0px !important";
+                    btnStyles["border-bottom-left-radius"]= "0px !important";
                 }
 
 
-                new window.ComponentIcon(
+                new window.ComponentButton(
                     `component-input-size-icon-positive-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        styles: {
-                            "height" : "38px"
-                        }  ,
+                        styles: styles ,
 
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-                        prop_icon : prop_iconPositive ,
+                        prop_btnClass : ["position-absolute"  , " border-white" , "border-start"] ,
+                        prop_size : prop_size ,
+                        prop_btnStyles : btnStyles ,
+                        prop_title : prop_iconPositive(prop_size) ,
 
                         fn_callback: (event)=>{
                             this.fn_positiveInputValue(event);
@@ -7694,14 +7761,14 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
 
                 const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")    ? this._COMPONENT_CONFIG.directionRtl         : false;
                 const prop_iconNegetive     =  data.hasOwnProperty("prop_iconNegetive")                 ?  data.prop_iconNegetive                     : false;
+                const prop_size             =   data.hasOwnProperty("prop_size")                        ?  data.prop_size                             : null;
 
+                let elHeight = tools_css.getHeightSize(prop_size);
 
                 let styles = {
                     "z-index" :  listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
                     "width" :   "35px",
-                    "line-height" : "30px",
                     "cursor" : "pointer",
-                    "height" : "30px" ,
                     "top" : "0" ,
                     "text-align" : "center" ,
                 };
@@ -7714,16 +7781,17 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
                 }
 
 
-                new window.ComponentIcon(
+                new window.ComponentButton(
                     `component-input-size-icon-negetive-${this._COMPONENT_RANDOM_ID}` ,
                     {
                         styles: {
-                            "height" : "38px"
+                            "border-radius" : "0 important"
                         }  ,
 
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-                        prop_icon : prop_iconNegetive ,
+                        prop_btnClass : ["position-absolute" , "rounded-0" , " border-white" , "border-start"] ,
+                        prop_size : prop_size ,
+                        prop_btnStyles : styles ,
+                        prop_title : prop_iconNegetive(prop_size) ,
 
                         fn_callback: (event)=>{
                             this.fn_negetiveInputValue(event);
@@ -7937,7 +8005,7 @@ class ComponentInputPasswordBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2" , "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -8560,7 +8628,7 @@ class ComponentInputEmailBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2" , "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -9086,7 +9154,7 @@ class ComponentInputFileBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2" , "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -9942,7 +10010,7 @@ class ComponentDateBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2" , "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -11878,6 +11946,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
 @prop_itemSelected
 
 @prop_title
+@prop_size
 @prop_labelClass
 @prop_labelStyles
 @prop_labelHoverStyles
@@ -11935,7 +12004,7 @@ class ComponentSelectOptionBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block"]
+            default: ["shadow-sm", "px-2", "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -11947,11 +12016,11 @@ class ComponentSelectOptionBase extends ComponentBase{
         },
         prop_titleClass: {
             prop: "prop_titleClass",
-            default: ["form-control", " px-2"]
+            default: [" px-2"]
         },
         prop_titleStyles: {
             prop: "prop_titleStyles",
-            default: {"line-height": "24px", "height": "30px"}
+            default: {}
         },
         prop_icon: {
             prop: "prop_icon",
@@ -11968,6 +12037,10 @@ class ComponentSelectOptionBase extends ComponentBase{
         prop_placeholder: {
             prop: "prop_placeholder",
             default: null
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name,
         },
         prop_btnAddIcon: {
             prop: "prop_btnAddIcon",
@@ -12044,7 +12117,9 @@ class ComponentSelectOptionBase extends ComponentBase{
            PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [],
+        part_structure: [,
+            this._COMPONENT_PATTERN.prop_size
+        ],
 
         part_value: [
             this._COMPONENT_PATTERN.prop_name,
@@ -12060,11 +12135,13 @@ class ComponentSelectOptionBase extends ComponentBase{
 
         part_header: [
             this._COMPONENT_PATTERN.prop_titleClass,
-            this._COMPONENT_PATTERN.prop_titleStyles
+            this._COMPONENT_PATTERN.prop_titleStyles,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_header_icon: [
-            this._COMPONENT_PATTERN.prop_icon
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_size ,
         ],
 
         part_header_title: [
@@ -12072,14 +12149,16 @@ class ComponentSelectOptionBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_options,
             this._COMPONENT_PATTERN.prop_itemSelected,
             this._COMPONENT_PATTERN.prop_btnAddStatus,
-            this._COMPONENT_PATTERN.prop_placeholder
+            this._COMPONENT_PATTERN.prop_placeholder,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_header_button: [
             this._COMPONENT_PATTERN.prop_btnAddStatus,
             this._COMPONENT_PATTERN.prop_btnAddIcon,
             this._COMPONENT_PATTERN.prop_btnAddTitle,
-            this._COMPONENT_PATTERN.prop_btnAddClass
+            this._COMPONENT_PATTERN.prop_btnAddClass ,
+            this._COMPONENT_PATTERN.prop_size ,
         ],
 
         part_header_arrow_icon: [
@@ -12203,6 +12282,8 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
     }
 
     template_render_structure(partName ) {
+        const data = this.getPartProps(partName)
+
         const content = `
       
      <style>
@@ -12268,16 +12349,21 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_titleClass           =  data.hasOwnProperty("prop_titleClass")                ?  data.prop_titleClass                    :  ["  form-control " , " px-2" ];
-            const prop_titleStyles          =  data.hasOwnProperty("prop_titleStyles")               ?  data.prop_titleStyles                   :  {"line-height" : "24px" , "height": "30px"};
+            const prop_titleClass           =  data.hasOwnProperty("prop_titleClass")                ?  data.prop_titleClass                    :  [];
+            const prop_titleStyles          =  data.hasOwnProperty("prop_titleStyles")               ?  data.prop_titleStyles                   :  {};
+            const prop_size                 =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  0;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
 
             return `
 <section data-part-name="${partName}" 
          id="component-select-option-header-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_titleClass)} position-relative p-0"  
+         class="${tools_public.renderListClass(prop_titleClass)} form-control position-relative p-0"  
          onclick="${this.getFn('fn_showListOptions' , 'event')}">
      <style>
          #${this._COMPONENT_ID} #component-select-option-header-${ this._COMPONENT_RANDOM_ID}{
+               height: ${elHeight}px;
+       
                ${tools_public.renderListStyle(prop_titleStyles)}
                cursor: pointer;
          }
@@ -12321,9 +12407,12 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             const prop_placeholder          =  data.hasOwnProperty("prop_placeholder")               ?  data.prop_placeholder                   : null;
             const prop_icon                 =  data.hasOwnProperty("prop_icon")                      ?  data.prop_icon                          : null;
             const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_size                 =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  0;
+
+            const elfontSize = tools_css.getFontSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
 
             const var_itemSelectedTitle =this.fn_getItemSelectedTitle(prop_options , prop_itemSelected , prop_placeholder)
-
 
             let padding = "180px"
             if (screanWidthType == "xs"){
@@ -12333,16 +12422,23 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             return `
 <section data-part-name="${partName}"
          id="component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}"
-         class=" d-block" >
+         class=" d-block ${prop_icon != null ? "border": ""} ${prop_btnAddStatus ? "" : "rounded"} " >
      <style>
          #${this._COMPONENT_ID} #component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}{
-            ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? padding : "20"};
-            ${directionRtl ? "padding-right" : "padding-left"} : ${prop_icon != null ? "30px" : "0"} ;
+            ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
+            ${directionRtl ? "padding-left" : "padding-right"} : 25px ;
+            ${directionRtl ? `right : 0` :`left : 0` };
+            width: calc(${prop_btnAddStatus? "60%" : "100%"} - ${prop_icon != null ? "30px" : "0px"});
+            ${directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important" } ;
+            ${directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important" } ;
+            height: ${elHeight}px;
+            line-height: ${elHeight}px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            height: 28px;
-            line-height: 30px;
+            font-size: ${elfontSize}px;
+            position: absolute;
+            top: 0;
          }
      </style>
 
@@ -12445,15 +12541,19 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         if (data != null){
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+            const prop_size          =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  0;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elfontSize = tools_css.getFontSize(prop_size);
 
             let styles = {
                 "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
-                "margin" : "0 5px",
+                "margin" : "auto",
+                "display" : "contents",
                 "width" : "30px",
-                "line-height" :   "30px",
                 "cursor" : "pointer",
-                "font-size" : "20pt;",
-                "top" : "0" ,
+                "top" : "50%" ,
+                "transform" : "translate(0 , -50%)",
             }
             if (directionRtl){
                 styles["right"]= "0"
@@ -12486,20 +12586,20 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
 
             const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
-            const var_showFormSelectOption  =  data.hasOwnProperty("var_showFormSelectOption")           ?  data.var_showFormSelectOption        : false;
+            const var_showFormSelectOption  =  data.hasOwnProperty("var_showFormSelectOption")        ?  data.var_showFormSelectOption           : false;
 
             let styles = {
                 "font-size" : "20pt",
-                "height" : "30px",
                 "margin" : "0 10px",
-                "top" : "0px",
+                "top" : "50%",
+                "transform" : "translate(0 , -50%)",
             }
             if (directionRtl){
                 if (screanWidthType == "xs"){
                     styles["left"]= prop_btnAddStatus ? "30px" : "0px";
                 }
                 else{
-                    styles["left"]= prop_btnAddStatus ? "165px" : "0px";
+                    styles["left"]= prop_btnAddStatus ? "160px" : "0px";
                 }
             }
             else {
@@ -12507,24 +12607,15 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                     styles["right"]= prop_btnAddStatus ? "30px" : "0px";
                 }
                 else{
-                    styles["right"]= prop_btnAddStatus ? "165px" : "0px";
+                    styles["right"]= prop_btnAddStatus ? "160px" : "0px";
                 }
             }
-
-            if (var_showFormSelectOption){
-                styles["line-height"]= "5pt";
-            }
-            else{
-                styles["line-height"]= "35pt";
-            }
-
-
 
 
             new window.ComponentIcon(
                 `component-select-option-header-icon-arrow-${ this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon: var_showFormSelectOption ? "&#129169" : "&#129171" ,
+                    prop_icon: var_showFormSelectOption ? tools_icons.icon_arrow_down() :  tools_icons.icon_arrow_up(),// "&#129169" : "&#129171" ,
 
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles : styles ,
@@ -12548,19 +12639,24 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 const prop_btnAddIcon           =  data.hasOwnProperty("prop_btnAddIcon")                 ?  data.prop_btnAddIcon                    : "&plus;";
                 const prop_btnAddTitle          =  data.hasOwnProperty("prop_btnAddTitle")                ?  data.prop_btnAddTitle                   : "add item";
                 const prop_btnAddClass          =  data.hasOwnProperty("prop_btnAddClass")                ?  data.prop_btnAddClass                   : [];
+                const prop_size                 =  data.hasOwnProperty("prop_size")                       ?  data.prop_size                          :  0;
 
                 let styles =  {
                     "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
-                    "height" : "30px" ,
-                    "line-height" : "20px" ,
                 };
                 if (directionRtl){
                     styles["left"] = "0";
+
+                    styles["border-bottom-right-radius"] = "0 !important";
+                    styles["border-top-right-radius"] = "0 !important";
                 }
                 else {
                     styles["right"] = "0";
+
+                    styles["border-bottom-left-radius"] = "0 !important";
+                    styles["border-top-left-radius"] = "0 !important";
                 }
 
                 if (screanWidthType == "xs"){
@@ -12573,8 +12669,10 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 new window.ComponentButton(
                     `component-select-option-header-button-${ this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_btnClass: "border shadow-sm position-absolute p-0 m-0   " + prop_btnAddClass.join(" ") ,
+                        prop_btnClass: ["border" , "shadow-sm","position-absolute", "p-0" , "m-0" , "border-withe" , directionRtl? "border-end" : "border-start"] ,
                         prop_btnStyles: styles ,
+                        prop_size: prop_size ,
+
                         prop_title: `
 <span id="component-select-option-header-button-icon-${ this._COMPONENT_RANDOM_ID}" class="mx-3">
     ${prop_btnAddIcon}
@@ -12817,7 +12915,7 @@ class ComponentSelectIconBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block "]
+            default: ["shadow-sm", "px-2" , "d-block "]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -13077,7 +13175,7 @@ class ComponentCheckBoxBase extends ComponentBase{
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2", "py-1", "d-block "]
+            default: ["shadow-sm", "px-2" , "d-block "]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -13117,7 +13215,7 @@ class ComponentCheckBoxBase extends ComponentBase{
         },
         prop_icon: {
             prop: "prop_icon",
-            default: tools_icons.icon_tik("#e7e7e7", 22.5)
+            default: tools_icons.icon_tik(22.5 , "#e7e7e7")
         },
         prop_isAbsoluteRule: {
             prop: "prop_isAbsoluteRule",
@@ -13808,11 +13906,15 @@ class ComponentTooltipDescriptionBase extends ComponentBase{
     _COMPONENT_PATTERN = {
         prop_icon: {
             prop: "prop_icon",
-            default: ""
+            default: tools_icons.icon_exclamation_square
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
         },
         prop_iconClass: {
             prop: "prop_iconClass",
-            default: ["shadow-sm", "bg-dark", "text-white", "rounded", "d-inline-block", "text-center"]
+            default: [/*"shadow-sm", "bg-dark", "text-white", "rounded", "d-inline-block", "text-center"*/]
         },
         prop_iconStyles: {
             prop: "prop_iconStyles",
@@ -13845,6 +13947,7 @@ class ComponentTooltipDescriptionBase extends ComponentBase{
         part_icon: [
             this._COMPONENT_PATTERN.prop_icon,
             this._COMPONENT_PATTERN.prop_iconClass,
+            this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_iconStyles
         ],
 
@@ -13990,14 +14093,15 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
             const prop_icon          =   data.hasOwnProperty("prop_icon")                ?  data.prop_icon               :  null;
             const prop_iconClass     =   data.hasOwnProperty("prop_iconClass")           ?  data.prop_iconClass          :  [];
             const prop_iconStyles    =   data.hasOwnProperty("prop_iconStyles")          ?  data.prop_iconStyles         :  {};
+            const prop_size          =   data.hasOwnProperty("prop_size")                ?  data.prop_size               :  null;
 
-
+            const elHeight = tools_css.getHeightSize(prop_size);
 
             if (prop_icon != null){
                 new window.ComponentIcon(
                     `component-tooltip-description-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: prop_icon ,
+                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(prop_size) : prop_icon) : "" ,
 
                         prop_iconClass : prop_iconClass ,
                         prop_iconStyles : prop_iconStyles ,
@@ -20447,7 +20551,7 @@ class ComponentPositionElementBase extends ComponentBase{
     _COMPONENT_PATTERN = {
         prop_elementClass: {
             prop: "prop_elementClass",
-            default: ["border", "shadow-sm", "bg-white", "px-2", "py-1", "rounded"]
+            default: ["border", "shadow-sm", "bg-white", "px-2", "py-1", "rounded-0"]
         },
         prop_elementStyles: {
             prop: "prop_elementStyles",
@@ -20589,6 +20693,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
             const prop_width              =  data.hasOwnProperty("prop_width")                                                         ?  data.prop_width                :  "100%";
             const prop_height             =  data.hasOwnProperty("prop_height")                                                        ?  data.prop_height               :   "200px";
 
+
             //---------------
             prop_elementStyles["z-index"] =  listComponent.hasOwnProperty("tools") ? listComponent.tools: 9 ;
             if (prop_positionType != null){
@@ -20613,11 +20718,17 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
                 prop_elementStyles["height"] = prop_height;
             }
 
+
+            console.log(prop_elementStyles)
+
             new window.ComponentBorder(
                 `component-position-element-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_structureClass:  prop_elementClass ,
+                   // prop_structureClass:  prop_elementClass ,
                     prop_structureStyles: prop_elementStyles ,
+
+                    prop_structureClass:  prop_elementClass ,
+                    //prop_borderStyles: prop_elementStyles ,
                 }
             )
         }
@@ -20681,11 +20792,11 @@ class ComponentBorderBase extends ComponentBase{
     _COMPONENT_PATTERN = {
         prop_structureClass: {
             prop: "prop_structureClass",
-            default: ["border", "shadow-sm", "rounded", "px-1", "px-2"]
+            default: ["border", "shadow-sm", "rounded", "py-1", "px-2", "position-relative"]
         },
         prop_structureStyles: {
             prop: "prop_structureStyles",
-            default: { "position": "relative" }
+            default: { }
         },
         prop_borderClass: {
             prop: "prop_borderClass",
