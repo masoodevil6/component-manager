@@ -513,8 +513,9 @@
     new window.ComponentForm(
         "form" ,
         {
-            classList: "col-md-3 col-12 mt-2"  ,
-
+            classList: "col-md-6 col-12 mt-2"  ,
+            prop_title: "test Form"  ,
+            prop_size: "xx-l" ,
             prop_formStyles: {
               //  "min-height" : "200px"
             },
@@ -580,6 +581,7 @@
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
+           // prop_size: "xx-l" ,
             prop_name: "otp_phone" ,
             prop_input: "09302171809" ,
             prop_length: 4 ,
@@ -609,10 +611,11 @@
 
             prop_labelShow: true ,
             prop_title: "input test" ,
+           // prop_size: "xx-l" ,
             prop_icon: "&#10124;" ,
             prop_placeholder: "string format" ,
 
-            prop_btnAddStatus: true ,
+           // prop_btnAddStatus: true ,
 
             fn_oninput: (event , value) => {
                 console.log("fn_oninput"  , event , value)
@@ -709,6 +712,7 @@
             prop_name:"input size" ,
             prop_title:"input size" ,
             prop_icon: "&#10124;" ,
+          //  prop_size: "xx-l" ,
             //prop_iconSelected: "" ,
             prop_min: 0 ,
             prop_max: 100 ,
@@ -727,7 +731,9 @@
 
             prop_name: "password" ,
             prop_title: "input password" ,
-           // prop_isAbsoluteRule: false ,
+
+            prop_hasRules: true ,
+            prop_isAbsoluteRule: false ,
             prop_listRules : [
                 {
                     description: "تعداد کاراکترها باید {{min}} باشد",

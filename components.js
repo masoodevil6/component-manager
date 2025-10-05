@@ -187,6 +187,9 @@ class ComponentBase{
             if (!props.part_label.hasOwnProperty("prop_labelHoverStyles")){
                 props["part_label"].push( {prop: "prop_labelHoverStyles"             , default: null});
             }
+            if (!props.part_label.hasOwnProperty("prop_labelSize")){
+                props["part_label"].push( {prop: "prop_labelSize"                    , default: tools_css.standardSizes.m.name});
+            }
         }
 
         this.readyConfigBasic(config , props);
@@ -640,32 +643,11 @@ class ComponentBase{
 
         if (data != null){
 
-            const prop_title                       = data.hasOwnProperty("prop_title") && data.prop_title !=null         ?  data.prop_title                      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("label") ? this._COMPONENT_SLOTS.label : null);
-            const prop_labelShow                   = data.hasOwnProperty("prop_labelShow")                               ? data.prop_labelShow                   : true;
-            const prop_labelClass                  = data.hasOwnProperty("prop_labelClass")                              ? data.prop_labelClass                  : ["shadow-sm" , "px-2" ,"py-1" , "d-block "];
-            const prop_labelStyles                 = data.hasOwnProperty("prop_labelStyles")                             ? data.prop_labelStyles                 : {"height": "25px" , "line-hight" : "25px"};
-            const prop_labelHoverStyles            = data.hasOwnProperty("prop_labelHoverStyles")                        ? data.prop_labelHoverStyles            : {};
-            const prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")                 ? data.prop_labelTooltipDescription     : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("tooltip") ? this._COMPONENT_SLOTS.tooltip : null);
+            Object.keys(props).forEach(key=> {
+                data[key] = props[key]
+            })
 
-            if (prop_labelShow && (prop_title != null || (props != null && props.hasOwnProperty("prop_title")))){
-
-                new window.ComponentLabel(
-                    elementId ,
-                    {
-                        prop_title:  (props != null && props.hasOwnProperty("prop_title") ? props.prop_title : prop_title) ,
-                        prop_for:  (props != null && props.hasOwnProperty("prop_for") ? props.prop_for : null) ,
-
-                        prop_labelClass:       prop_labelClass ,
-                        prop_labelStyles:      prop_labelStyles ,
-                        prop_labelHoverStyles: prop_labelHoverStyles ,
-
-                        prop_tooltipDescription: (props != null && props.hasOwnProperty("prop_labelTooltipDescription") ? props.prop_labelTooltipDescription : prop_labelTooltipDescription) ,
-
-                        fn_callback: (props != null && props.hasOwnProperty("fn_callback") ? props.fn_callback : null) ,
-                    }
-                )
-
-            }
+            new window.ComponentLabel(elementId , data);
 
         }
     }
@@ -1446,6 +1428,8 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
 @prop_structureClass
 @prop_structureStyles
 
+@prop_size
+
 @prop_labelClass
 @prop_labelStyles
 @prop_labelBackgroundColor
@@ -1485,8 +1469,8 @@ class ComponentLabelBase extends ComponentBase{
             prop: "prop_for" ,
             default: null
         } ,
-        prop_size : {
-            prop: "prop_size" ,
+        prop_lableSize : {
+            prop: "prop_lableSize" ,
             default: tools_css.standardSizes.m.name
         } ,
         prop_labelColor : {
@@ -1496,10 +1480,6 @@ class ComponentLabelBase extends ComponentBase{
         prop_tooltipIcon : {
             prop: "prop_tooltipIcon" ,
             default: tools_icons.icon_exclamation_square
-        } ,
-        prop_size : {
-            prop: "prop_size" ,
-            default: tools_css.standardSizes.m.name
         } ,
         prop_tooltipDescription : {
             prop: "prop_tooltipDescription" ,
@@ -1519,17 +1499,18 @@ class ComponentLabelBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_labelClass ,
             this._COMPONENT_PATTERN.prop_labelStyles ,
             this._COMPONENT_PATTERN.prop_labelBackgroundColor ,
+            this._COMPONENT_PATTERN.prop_lableSize ,
         ] ,
         part_label: [
             this._COMPONENT_PATTERN.prop_title ,
             this._COMPONENT_PATTERN.prop_for ,
             this._COMPONENT_PATTERN.prop_labelColor ,
-            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_lableSize ,
         ] ,
         part_tooltip_desctiopn: [
             this._COMPONENT_PATTERN.prop_tooltipIcon ,
             this._COMPONENT_PATTERN.prop_tooltipDescription ,
-            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_lableSize ,
         ]
     }
 
@@ -1614,10 +1595,10 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
             const prop_for          =   data.hasOwnProperty("prop_for")                                   ?  data.prop_for          : "";
             const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
             const prop_labelColor   =   data.hasOwnProperty("prop_labelColor")                            ?  data.prop_labelColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")   ? tools_const.styles.label.color : "";
-            const prop_size         =   data.hasOwnProperty("prop_size")                                  ?  data.prop_size         :  null;
+            const prop_lableSize    =   data.hasOwnProperty("prop_lableSize")                             ?  data.prop_lableSize    :  null;
 
-            const elHeight = tools_css.getHeightSize(prop_size);
-            const elfontsize = tools_css.getFontSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_lableSize);
+            const elfontsize = tools_css.getFontSize(prop_lableSize);
 
             return `
 <label data-part-name="${partName}"   
@@ -1631,12 +1612,13 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
               cursor: pointer;
               color: ${prop_labelColor};
               font-size: ${elfontsize}px;
-              height: ${elHeight}px;
               line-height: ${elHeight}px;
          }
      </style>
        
-     ${prop_title}
+     <b>
+        ${prop_title}
+     </b>
        
 </label>
             `;
@@ -1679,9 +1661,9 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
 
             const prop_tooltipDescription        =   data.hasOwnProperty("prop_tooltipDescription") && data.prop_tooltipDescription !=null       ?  data.prop_tooltipDescription        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("description") ? this._COMPONENT_SLOTS.description : null);
             const prop_tooltipIcon               =   data.hasOwnProperty("prop_tooltipIcon")                                                     ?  data.prop_tooltipIcon               : "";
-            const prop_size                      =   data.hasOwnProperty("prop_size")                                                            ?  data.prop_size                      : null;
+            const prop_lableSize                 =   data.hasOwnProperty("prop_lableSize")                                                       ?  data.prop_lableSize                 : null;
 
-            const elHeight = tools_css.getHeightSize(prop_size/2);
+            const elHeight = tools_css.getHeightSize(prop_lableSize/2);
 
             if (prop_tooltipDescription != null){
 
@@ -3512,7 +3494,15 @@ class ComponentFormBase extends ComponentBase{
     _COMPONENT_PATTERN = {
         prop_formClass: {
             prop: "prop_formClass",
-            default: ["border", "shadow-sm", "p-2"]
+            default: ["border", "shadow-sm"]
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: null
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
         },
         prop_formStyles: {
             prop: "prop_formStyles",
@@ -3545,14 +3535,22 @@ class ComponentFormBase extends ComponentBase{
            PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [],
+        part_structure: [
+
+        ],
 
         part_border: [
             this._COMPONENT_PATTERN.prop_formClass,
-            this._COMPONENT_PATTERN.prop_formStyles
+            this._COMPONENT_PATTERN.prop_formStyles,
+            this._COMPONENT_PATTERN.prop_size,
         ],
 
         part_loading: [],
+
+        part_title: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_title,
+        ],
 
         part_form: [
             this._COMPONENT_PATTERN.prop_forms,
@@ -3563,7 +3561,8 @@ class ComponentFormBase extends ComponentBase{
         part_404: [],
 
         part_button_submit: [
-            this._COMPONENT_PATTERN.prop_btnSubmit
+            this._COMPONENT_PATTERN.prop_btnSubmit,
+            this._COMPONENT_PATTERN.prop_size,
         ]
     };
 
@@ -3573,6 +3572,7 @@ class ComponentFormBase extends ComponentBase{
        --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
+            part_title: {} ,
             part_border: {
                 part_loading: {} ,
                 part_form: {} ,
@@ -3618,6 +3618,8 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
                 return this.template_render_structure(partName);
             case "part_border":
                 return this.componentFn_render_border(partName);
+            case "part_title":
+                return this.template_render_title(partName);
             case "part_form":
                 return this.template_render_form( partName);
             case "part_button_submit":
@@ -3628,7 +3630,12 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
     }
 
     template_render_structure(partName) {
+
         const content = `
+           
+           
+           ${this.templateFn("part_title") ?? ""}
+
            <component-border id="component-form-border-${this._COMPONENT_RANDOM_ID}">
                <component-body>
                
@@ -3636,7 +3643,7 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
          
                     ${this.templateFn("part_form") ?? ""}
          
-                    <section class="" style="display: flow-root">
+                    <section class="mx-2 border-top py-1" style="display: flow-root">
                         <component-button id="component-form-button-submit-${this._COMPONENT_RANDOM_ID}"></component-button>
                     </section>
          
@@ -3647,7 +3654,7 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
                </component-body>
           </component-border> 
                 `;
-        return this.templateBasic_render_structure(content , ["position-relative"]);
+        return this.templateBasic_render_structure(content , ["position-relative" , "mt-2"]);
     }
 
     template_render_form(partName) {
@@ -3678,13 +3685,59 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
         `;
     }
 
+    template_render_title(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl    =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            const prop_size       =     data.hasOwnProperty("prop_size")                   ? data.prop_size                           : null;
+            const prop_title      =    data.hasOwnProperty("prop_title")                   ? data.prop_title                          : null;
+
+            const elheight = tools_css.getHeightSize(prop_size);
+            const elfontSize = tools_css.getFontSize(prop_size);
+
+            if (prop_title != null){
+                return `
+<section data-part-name="${partName}"  
+         class="position-relative">
+         
+    <style>
+        #${this._COMPONENT_ID} #component-form-title-${this._COMPONENT_RANDOM_ID}{
+            top: -${elheight/2}px;
+            height: ${elheight}px;
+            line-height: ${elheight}px;
+            font-size: ${elfontSize}px;
+            ${directionRtl ? "right" : "left"} : 30px;
+            width: 200px;
+        }
+    </style>
+    
+    <b id="component-form-title-${this._COMPONENT_RANDOM_ID}" 
+         class="position-absolute bg-white border px-3">
+        ${prop_title}
+    </b>
+    
+</section>
+        `;
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
     componentFn_render_border(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
 
-            const prop_formClass =      data.hasOwnProperty("prop_formClass")     ? data.prop_formClass    : null;
-            const prop_formStyles =     data.hasOwnProperty("prop_formStyles")    ? data.prop_formStyles   : null;
+            const prop_formClass  =      data.hasOwnProperty("prop_formClass")             ? data.prop_formClass              : null;
+            const prop_formStyles =     data.hasOwnProperty("prop_formStyles")             ? data.prop_formStyles             : null;
+            const prop_size       =     data.hasOwnProperty("prop_size")                   ? data.prop_size                   : null;
+            const elheight = tools_css.getHeightSize(prop_size);
 
             new window.ComponentBorder(
                 `component-form-border-${this._COMPONENT_RANDOM_ID}` ,
@@ -3693,6 +3746,10 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
 
                     prop_structureClass: prop_formClass ,
                     prop_structureStyles: prop_formStyles ,
+
+                    prop_borderStyles: {
+                        "padding-top" : `${elheight/2}px`
+                    }
                 }
             )
         }
@@ -3702,7 +3759,8 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_btnSubmit   =  data.hasOwnProperty("prop_btnSubmit")             ?  data.prop_btnSubmit      : {};
+            const prop_btnSubmit   =  data.hasOwnProperty("prop_btnSubmit")             ?  data.prop_btnSubmit              : {};
+            const prop_size        =  data.hasOwnProperty("prop_size")                  ?  data.prop_size                   : null;
 
             const prop_type       =  prop_btnSubmit.hasOwnProperty("prop_type")         ?  prop_btnSubmit.prop_type         : "submit";
             const prop_title      =  prop_btnSubmit.hasOwnProperty("prop_title")        ?  prop_btnSubmit.prop_title        : "submit";
@@ -3719,6 +3777,7 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
 
                     },
 
+                    prop_size ,
                     prop_type ,
                     prop_title ,
                     prop_btnClass ,
@@ -4560,6 +4619,8 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
 @prop_structureClass
 @prop_structureStyles
 
+@prop_size
+
 @prop_name
 @prop_length
 @prop_input
@@ -4579,6 +4640,10 @@ class ComponentOtpBase extends ComponentBase{
         var_value: {
             prop: "var_value",
             default: null
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
         },
         prop_name: {
             prop: "prop_name",
@@ -4630,19 +4695,22 @@ class ComponentOtpBase extends ComponentBase{
         part_label: [
             this._COMPONENT_PATTERN.prop_name,
             this._COMPONENT_PATTERN.prop_input,
-            this._COMPONENT_PATTERN.prop_langs
+            this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_inputs: [
             this._COMPONENT_PATTERN.prop_name,
-            this._COMPONENT_PATTERN.prop_length
+            this._COMPONENT_PATTERN.prop_length,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_description: [
             this._COMPONENT_PATTERN.prop_langs,
             this._COMPONENT_PATTERN.var_countdown_text,
             this._COMPONENT_PATTERN.var_activeForm_class,
-            this._COMPONENT_PATTERN.var_diActiveForm_class
+            this._COMPONENT_PATTERN.var_diActiveForm_class,
+            this._COMPONENT_PATTERN.prop_size
         ]
     };
 
@@ -4796,6 +4864,13 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
             const prop_name             =   data.hasOwnProperty("prop_name")             ?  data.prop_name             :  "otp";
             const prop_length           =   data.hasOwnProperty("prop_length")           ?  data.prop_length           :  6;
             const prop_langs            =   data.hasOwnProperty("prop_langs")            ?  data.prop_langs            : {};
+            const prop_size             =   data.hasOwnProperty("prop_size")             ?  data.prop_size             : null;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elfontSize = tools_css.getFontSize(prop_size);
+
+
+
 
             let inputHtmls = "";
             for (let num=0; num<prop_length; num++){
@@ -4806,7 +4881,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
         onkeydown="${num > 0 ?  this.getFn("fn_onMoveToPrev" , "event" , `'component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num-1}'`)  : ''}" 
         onfocus="${this.getFn("fn_onFocus" , "event" , `'component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num}'`)}"
         type="text"  maxlength="1"
-        class="input-otp my-1 mx-2 text-center  form-control rounded line-height-35px border rounded shadow-sm font-10pt"  />
+        class="input-otp my-1 mx-2 text-center  form-control rounded-0  border rounded shadow-sm font-10pt"  />
 `;
             }
 
@@ -4818,6 +4893,10 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
      <style>
          #${this._COMPONENT_ID} #component-otp-inputs-${ this._COMPONENT_RANDOM_ID} .form-otp{
              direction: ltr !important;
+          }
+         #${this._COMPONENT_ID} #component-otp-inputs-${ this._COMPONENT_RANDOM_ID} .input-otp{
+             height: ${elHeight}px;
+             line-height: ${elHeight}px;
           }
      </style>
      
@@ -4843,24 +4922,31 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
             const var_countdown_text         =   data.hasOwnProperty("var_countdown_text")        ?  data.var_countdown_text       : "00:00";
             const var_activeForm_class       =   data.hasOwnProperty("var_activeForm_class")      ?  data.var_activeForm_class     : "";
             const var_diActiveForm_class     =   data.hasOwnProperty("var_diActiveForm_class")    ?  data.var_diActiveForm_class   : "d-none";
+            const prop_size             =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               : 0;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elfontSize = tools_css.getFontSize(prop_size);
+
 
             return `
 <section data-part-name="${partName}" 
-         id="component-tabs-description-${ this._COMPONENT_RANDOM_ID}" 
+         id="component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID}" 
          class="" >
          
      <style>
-         #${this._COMPONENT_ID} #component-tabs-description-${ this._COMPONENT_RANDOM_ID}{
-         
+         #${this._COMPONENT_ID} #component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID}{
+             line-height: ${elHeight}px;
          }
-         #${this._COMPONENT_ID} #component-tabs-description-${ this._COMPONENT_RANDOM_ID} .btn-get-new-token{
+         #${this._COMPONENT_ID} #component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID} .btn-get-new-token{
              cursor: pointer;
+             height: ${elHeight}px;
+             line-height: ${elHeight}px;
          }
      </style>
      
      <div class="mt-1  text-center">
          <p  id="form-timer-otp"  class="d-inline-block">
-                 <span  class="countdown bg-secondary rounded text-white px-2 mx-2">
+                 <span  class="countdown bg-secondary rounded-0 text-white px-2 mx-2">
                      ${var_countdown_text}
                  </span>
 
@@ -5043,6 +5129,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
 @prop_labelStyles
 @prop_labelHoverStyles
 @prop_title
+@prop_size
 
 @prop_inputClass
 @prop_inputStyles
@@ -5071,6 +5158,18 @@ class ComponentInputBase extends ComponentBase{
             prop: "prop_title",
             default: null
         },
+        prop_backgroundColorForm: {
+            prop: "prop_backgroundColorForm",
+            default: tools_const?.styles?.input?.backgroundColor_form ?? ""
+        },
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.input?.color_icon ?? ""
+        },
+        prop_size : {
+            prop: "prop_size" ,
+            default: tools_css.standardSizes.m.name
+        } ,
         prop_labelShow: {
             prop: "prop_labelShow",
             default: true
@@ -5117,7 +5216,7 @@ class ComponentInputBase extends ComponentBase{
         },
         prop_icon: {
             prop: "prop_icon",
-            default: ""
+            default: null
         },
         prop_btnAddStatus: {
             prop: "prop_btnAddStatus",
@@ -5156,6 +5255,10 @@ class ComponentInputBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_labelHoverStyles
         ],
 
+        part_form: [
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_backgroundColorForm ,
+        ],
         part_input: [
             this._COMPONENT_PATTERN.prop_inputClass,
             this._COMPONENT_PATTERN.prop_inputStyles,
@@ -5165,23 +5268,28 @@ class ComponentInputBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_placeholder,
             this._COMPONENT_PATTERN.prop_icon,
             this._COMPONENT_PATTERN.prop_btnAddStatus,
-            this._COMPONENT_PATTERN.prop_isDisable
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_icon_clear: [
             this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_btnAddStatus
+            this._COMPONENT_PATTERN.prop_btnAddStatus,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
         part_icon: [
-            this._COMPONENT_PATTERN.prop_icon
+            this._COMPONENT_PATTERN.prop_icon,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_colorIcon
         ],
 
         part_button: [
             this._COMPONENT_PATTERN.prop_btnAddStatus,
             this._COMPONENT_PATTERN.prop_btnAddIcon,
             this._COMPONENT_PATTERN.prop_btnAddTitle,
-            this._COMPONENT_PATTERN.prop_btnAddClass
+            this._COMPONENT_PATTERN.prop_btnAddClass,
+            this._COMPONENT_PATTERN.prop_size
         ]
     };
 
@@ -5193,10 +5301,12 @@ class ComponentInputBase extends ComponentBase{
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_label: {} ,
-            part_input: {} ,
-            part_icon_clear: {} ,
-            part_icon: {} ,
-            part_button: {} ,
+            part_form: {
+                part_input: {} ,
+                part_icon_clear: {} ,
+                part_icon: {} ,
+                part_button: {} ,
+            } ,
         } ,
     }
 
@@ -5238,6 +5348,8 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
                 return this.template_render_structure(partName);
             case "part_label":
                 return this.componentFn_render_label(partName)
+            case "part_form":
+                return this.template_render_form(partName);
             case "part_input":
                 return this.template_render_input(partName);
             case "part_icon_clear":
@@ -5266,17 +5378,57 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
 
          <component-label id="component-input-label-${this._COMPONENT_RANDOM_ID}"></component-label>
 
-        <div class="position-relative">
-           ${this.templateFn("part_input") ?? ""}
+         ${this.templateFn("part_form") ?? ""}
+         
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_form(partName ) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                    =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  null;
+            const prop_backgroundColorForm     =  data.hasOwnProperty("prop_backgroundColorForm")       ?  data.prop_backgroundColorForm           :  null;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-input-form-${ this._COMPONENT_RANDOM_ID}" 
+         class=" position-relative p-0" >
+     <style>
+         #${this._COMPONENT_ID} #component-input-form-${ this._COMPONENT_RANDOM_ID}{
+               height: ${elHeight}px;
+               background-color: ${prop_backgroundColorForm};
+         }
+         
+         @media (max-width: 768px) {
+               #${this._COMPONENT_ID} #component-input-form-button-text-${ this._COMPONENT_RANDOM_ID}{
+                    display: none;
+               }
+               #${this._COMPONENT_ID} #component-input-form-button-icon-${ this._COMPONENT_RANDOM_ID}{
+                 
+               }
+         }
+     </style>
+     
+          ${this.templateFn("part_input") ?? ""}
      
            <component-icon id="component-input-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
      
            <component-icon id="component-input-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
            
            <component-button id="component-input-button-${this._COMPONENT_RANDOM_ID}" ></component-button>
-        </div>
-                `;
-        return this.templateBasic_render_structure(content);
+           
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
     }
 
     template_render_input(partName) {
@@ -5296,6 +5448,10 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
             const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
 
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_size          =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  0;
+
+            const elfontSize = tools_css.getFontSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
 
             let padding = "180px"
             if (screanWidthType == "xs"){
@@ -5305,24 +5461,38 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
             return `
 <section  data-part-name="${partName}"
           id="component-input-input-element-${this._COMPONENT_RANDOM_ID}"  
-          class="" >
+        class="  " >
           
      <style>
          #${this._COMPONENT_ID} #component-input-input-element-${this._COMPONENT_RANDOM_ID}{
-         
+          
          }
          #${this._COMPONENT_ID} #component-input-input-${this._COMPONENT_RANDOM_ID}{
-              height: 30px;
-              
-              ${directionRtl ? "padding-left" : "padding-right"} : ${prop_btnAddStatus ? padding : "20"};
-     
-              ${directionRtl ? "padding-right" : "padding-left"}: ${(prop_icon != null && prop_icon != "") ?  "30px"  : "10px"}!important;
-              ${tools_public.renderListStyle(prop_inputStyles)}
+            ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
+            ${directionRtl ? "padding-left" : "padding-right"} : 25px ;
+            ${directionRtl ? `right : 0` :`left : 0` };
+            width: calc(${prop_btnAddStatus? "60%" : "100%"} - ${prop_icon != null ? "30px" : "0px"});
+            
+            ${prop_icon != null ? (directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important") : ""};
+            ${prop_icon != null ? (directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important") : ""};
+           
+            ${prop_btnAddStatus  ? (directionRtl ? "border-top-left-radius: 0 !important" : "border-top-right-radius: 0 !important") : ""};
+            ${prop_btnAddStatus  ? (directionRtl ? "border-bottom-left-radius: 0 !important" : "border-bottom-right-radius: 0 !important") : ""};
+           
+            height: ${elHeight}px;
+            line-height: ${elHeight}px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: ${elfontSize}px;
+            position: absolute;
+            top: 0;
+            ${tools_public.renderListStyle(prop_inputStyles)}
          }
      </style>
      
      <input id="component-input-input-${this._COMPONENT_RANDOM_ID}"   
-            class=" ${tools_public.renderListClass(prop_inputClass)}"
+            class=" ${tools_public.renderListClass(prop_inputClass)} d-block ${prop_icon != null ? "border": ""} ${prop_btnAddStatus ? "" : "rounded-0"}"
             name="${prop_name || "" }"  
             type="${prop_type || "" }"  
             value="${prop_value || ""}"
@@ -5343,6 +5513,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
     }
 
     componentFn_render_label(partName) {
+
         this.componentFneBasic_render_structure(
             `component-input-label-${ this._COMPONENT_RANDOM_ID}` ,
             {
@@ -5361,52 +5532,53 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
             if (!prop_isDisable){
                 const screanWidthType = this.getScreenWidth();
 
-                const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                  : false;
-                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
+                const prop_size                 =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  0;
+
+                const elHeight = tools_css.getHeightSize(prop_size);
 
                 let styles = {
-                    "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
-                    "width" :   "35px",
-                    "line-height" : "30px",
-                    "cursor" : "pointer",
-                    "height" : "30px" ,
-                    "top" : "0" ,
-                    "text-align" : "center" ,
-                };
+                    "font-size" : "20pt",
+                    "margin" : "0 10px",
+                    "top" : "50%",
+                }
                 if (directionRtl){
                     if (screanWidthType == "xs"){
-                        styles["left"]= prop_btnAddStatus ? "30px" : "5px";
+                        styles["left"]= "0px";
+                        styles["transform"]= prop_btnAddStatus ? "translate(30px , -50%)" : "translate(0 , -50%)";
                     }
                     else{
-                        styles["left"]= prop_btnAddStatus ? "165px" : "5px";
+                        styles["left"]=  "0px";
+                        styles["transform"]= prop_btnAddStatus ? "translate(160px , -50%)" : "translate(0 , -50%)";
                     }
                 }
                 else {
                     if (screanWidthType == "xs"){
-                        styles["right"]= prop_btnAddStatus ? "30px" : "5px";
+                        styles["right"]=  "0px";
+                        styles["transform"]= prop_btnAddStatus ? "translate(-30px , -50%)" : "translate(0 , -50%)";
                     }
                     else{
-                        styles["right"]= prop_btnAddStatus ? "165px" : "5px";
+                        styles["right"]=  "0px";
+                        styles["transform"]= prop_btnAddStatus ? "translate(-160px , -50%)" : "translate(0 , -50%)";
                     }
                 }
+
 
                 new window.ComponentIcon(
                     `component-input-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        classList: []  ,
-                        styles: {
-                            "height" : "38px"
-                        }  ,
+                        prop_icon : tools_icons.icon_clear(elHeight/2),
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : "&#10540;" ,
 
-                        fn_callback: ()=>{
-                            this.runFn("fn_onClearInput" , "event")
+                        fn_callback: (event)=>{
+                            this.fn_onClearInput(event);
                         }
                     }
                 )
+
 
             }
 
@@ -5420,28 +5592,32 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
         if (data != null){
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+            const prop_size          =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  null;
+            const prop_colorIcon     =  data.hasOwnProperty("prop_colorIcon")                 ?  data.prop_colorIcon                     :  null;
+
+            const elIconHeight = tools_css.getIconSize(prop_size);
 
             let styles = {
                 "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10  ,
-                "margin" : "0 5px",
-                "width" : "30px",
-                "line-height" :   "30px",
+                "margin" : "auto",
                 "cursor" : "pointer",
-                "font-size" : "20pt;",
-                "top" : "0" ,
+                "top" : "50%" ,
+                "color" : prop_colorIcon ,
             }
             if (directionRtl){
-                styles["right"]= "0"
+                styles["right"]= "0";
+                styles["transform"]= "translate(-7.5px , -50%)" ;
             }
             else {
-                styles["left"]= "0"
+                styles["left"]= "0";
+                styles["transform"]= "translate(7.5px , -50%)" ;
             }
 
 
             new window.ComponentIcon(
                 `component-input-icon-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon: prop_icon ,
+                    prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? pprop_icon(elIconHeight , prop_colorIcon) : prop_icon) : "" ,
 
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles : styles ,
@@ -5469,20 +5645,26 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
                 const prop_btnAddIcon           =  data.hasOwnProperty("prop_btnAddIcon")                 ?  data.prop_btnAddIcon                    : "&plus;";
                 const prop_btnAddTitle          =  data.hasOwnProperty("prop_btnAddTitle")                ?  data.prop_btnAddTitle                   : "add item";
                 const prop_btnAddClass          =  data.hasOwnProperty("prop_btnAddClass")                ?  data.prop_btnAddClass                   : [];
+                const prop_size                 =  data.hasOwnProperty("prop_size")                       ?  data.prop_size                          : null;
 
                 let styles =  {
                     "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10  ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
-                    "height" : "30px" ,
-                    "line-height" : "20px" ,
                 };
+
 
                 if (directionRtl){
                     styles["left"] = "0";
+
+                    styles["border-bottom-right-radius"] = "0 !important";
+                    styles["border-top-right-radius"] = "0 !important";
                 }
                 else {
                     styles["right"] = "0";
+
+                    styles["border-bottom-left-radius"] = "0 !important";
+                    styles["border-top-left-radius"] = "0 !important";
                 }
 
                 if (screanWidthType == "xs"){
@@ -5492,11 +5674,14 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
                     styles["width"] = "160px";
                 }
 
+
+
                 new window.ComponentButton(
                     `component-input-button-${this._COMPONENT_RANDOM_ID}` ,
                     {
                         prop_btnClass: "border shadow-sm position-absolute px-3   " + prop_btnAddClass.join(" ") ,
                         prop_btnStyles: styles ,
+                        prop_size: prop_size ,
                         prop_title: `
 <span id="component-input-button-icon-${ this._COMPONENT_RANDOM_ID}" class="">
     ${prop_btnAddIcon}
@@ -6284,7 +6469,7 @@ class ComponentInputColorBase extends ComponentBase{
         },
         prop_formClass: {
             prop: "prop_formClass",
-            default: ["rounded"]
+            default: ["rounded-0"]
         },
         prop_formStyles: {
             prop: "prop_formStyles",
@@ -7257,6 +7442,14 @@ class ComponentInputSizeBase extends ComponentBase{
             prop: "prop_title",
             default: "title"
         },
+        prop_backgroundColorForm: {
+            prop: "prop_backgroundColorForm",
+            default: tools_const?.styles?.inputSize?.backgroundColor_form ?? ""
+        },
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.inputSize?.color_icon ?? ""
+        },
         prop_labelClass: {
             prop: "prop_labelClass",
             default: ["shadow-sm", "px-2",  "d-block"]
@@ -7287,7 +7480,7 @@ class ComponentInputSizeBase extends ComponentBase{
         },
         prop_inputClass: {
             prop: "prop_inputClass",
-            default: ["border" , "border-1", "w-100"]
+            default: ["form-control" ,"border" , "border-1", "w-100"]
         },
         prop_size: {
             prop: "prop_size",
@@ -7337,16 +7530,18 @@ class ComponentInputSizeBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_title,
             this._COMPONENT_PATTERN.prop_labelClass,
             this._COMPONENT_PATTERN.prop_labelStyles,
-            this._COMPONENT_PATTERN.prop_labelHoverStyles
+            this._COMPONENT_PATTERN.prop_labelHoverStyles,
         ],
 
         part_body: [
             this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_backgroundColorForm ,
         ],
 
         part_body_icon: [
             this._COMPONENT_PATTERN.prop_icon ,
             this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_colorIcon ,
         ],
 
         part_body_icon_clear: [
@@ -7486,21 +7681,22 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+            const prop_size                    =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                      : null;
+            const prop_backgroundColorForm     =   data.hasOwnProperty("prop_backgroundColorForm")      ?  data.prop_backgroundColorForm       : null;
 
             let elHeight = tools_css.getHeightSize(prop_size);
 
             return                                       `
 <section  data-part-name="${partName}"
           id="component-input-password-body-${this._COMPONENT_RANDOM_ID}"  
-          class="position-relative  rounded d-block border" >
+          class="position-relative  rounded-0 d-block border" >
           
      <style>
          #${this._COMPONENT_ID} #component-input-password-body-${this._COMPONENT_RANDOM_ID}{
              background-color: rgba(176,245,237,0);
              height: ${elHeight+2}px;
+             background-color: ${prop_backgroundColorForm};
          }
-         
      </style>
      
      ${this.templateFn("part_body_input_size") ?? ""}
@@ -7600,31 +7796,32 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
 
         if (data != null){
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
-            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          : null;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
+            const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
 
-            let elHeight = tools_css.getHeightSize(prop_size);
+            const elIconHeight = tools_css.getIconSize(prop_size);
 
             let styles = {
                 "z-index" : listLayoutZIndex.hasOwnProperty("icon_attach") ? listLayoutZIndex.icon_attach: 5 ,
                 "cursor" : "pointer",
-                "line-height" : elHeight+"px",
-                "height" : elHeight+"px",
                 "top" : "50%" ,
-                "transform" : "translate(0, -50%)" ,
+                "color" : prop_colorIcon ,
             }
             if (directionRtl){
-                styles["right"]= "5px"
+                styles["right"]= "0"
+                styles["transform"]= "translate(-7.5px, -50%)";
             }
             else {
-                styles["left"]= "5px"
+                styles["left"]= "0";
+                styles["transform"]= "translate(7.5px, -50%)";
             }
 
             if (prop_icon != null){
                 new window.ComponentIcon(
                     `component-input-size-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: prop_icon != null ? ( typeof prop_icon == "function" ? prop_icon(elHeight) : prop_icon)  : null ,
+                        prop_icon: prop_icon != null ? ( typeof prop_icon == "function" ? prop_icon(elIconHeight , prop_colorIcon) : prop_icon)  : null ,
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -7657,15 +7854,15 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
                     "width" :   "35px",
                     "cursor" : "pointer",
                     "top" : "50%" ,
-                    "transform" : "translate(0 , -50%)" ,
-                    "text-align" : "center" ,
                 };
 
                 if (directionRtl){
-                    styles["left"]= "70px";
+                    styles["left"]= "0";
+                    styles["transform"]= "translate(70px , -50%)"
                 }
                 else {
-                    styles["right"]= "70px";
+                    styles["right"]= "0";
+                    styles["transform"]= "translate(-70px , -50%)"
                 }
 
 
@@ -7994,18 +8191,38 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
 @prop_isAbsoluteRule
 -------------------------------------*/
 class ComponentInputPasswordBase extends ComponentBase{
-
     /* ---------------------------------------------
-          PROPERTYs Pattern
-   --------------------------------------------- */
+              PROPERTYs Pattern
+       --------------------------------------------- */
+
     _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_backgroundColorForm: {
+            prop: "prop_backgroundColorForm",
+            default: tools_const?.styles?.inputPassword?.backgroundColor_form ?? ""
+        },
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.inputPassword?.color_icon ?? ""
+        },
         prop_title: {
             prop: "prop_title",
-            default: "title"
+            default: "null"
+        },
+        prop_labelShow: {
+            prop: "prop_labelShow",
+            default: true
+        },
+        prop_labelTooltipDescription: {
+            prop: "prop_labelTooltipDescription",
+            default: null
         },
         prop_labelClass: {
             prop: "prop_labelClass",
-            default: ["shadow-sm", "px-2" , "d-block"]
+            default: ["shadow-sm", "px-2",  "d-block"]
         },
         prop_labelStyles: {
             prop: "prop_labelStyles",
@@ -8015,25 +8232,9 @@ class ComponentInputPasswordBase extends ComponentBase{
             prop: "prop_labelHoverStyles",
             default: {}
         },
-        prop_icon: {
-            prop: "prop_icon",
-            default: null
-        },
-        prop_isDisable: {
-            prop: "prop_isDisable",
-            default: false
-        },
-        prop_iconPositive: {
-            prop: "prop_iconPositive",
-            default: tools_icons.icon_plus_badge()
-        },
-        prop_iconNegetive: {
-            prop: "prop_iconNegetive",
-            default: tools_icons.icon_minus_badge()
-        },
         prop_inputClass: {
             prop: "prop_inputClass",
-            default: ["form-control"]
+            default: [" form-control"]
         },
         prop_inputStyles: {
             prop: "prop_inputStyles",
@@ -8051,13 +8252,17 @@ class ComponentInputPasswordBase extends ComponentBase{
             prop: "prop_placeholder",
             default: null
         },
-        prop_min: {
-            prop: "prop_min",
-            default: null
+        prop_icon: {
+            prop: "prop_icon",
+            default: tools_icons.icon_password
         },
-        prop_max: {
-            prop: "prop_max",
-            default: null
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_hasRules: {
+            prop: "prop_hasRules",
+            default: true
         },
         prop_isAbsoluteRule: {
             prop: "prop_isAbsoluteRule",
@@ -8066,8 +8271,9 @@ class ComponentInputPasswordBase extends ComponentBase{
         prop_listRules: {
             prop: "prop_listRules",
             default: []
-        }
+        },
     };
+
 
     /* ---------------------------------------------
            PROPERTYs Props
@@ -8077,44 +8283,48 @@ class ComponentInputPasswordBase extends ComponentBase{
 
         part_label: [
             this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_labelShow,
+            this._COMPONENT_PATTERN.prop_labelTooltipDescription,
             this._COMPONENT_PATTERN.prop_labelClass,
             this._COMPONENT_PATTERN.prop_labelStyles,
-            this._COMPONENT_PATTERN.prop_labelHoverStyles
+            this._COMPONENT_PATTERN.prop_labelHoverStyles,
         ],
 
-        part_body: [],
+        part_body: [
+            this._COMPONENT_PATTERN.prop_backgroundColorForm ,
+            this._COMPONENT_PATTERN.prop_size ,
+        ],
+
+        part_body_password: [
+            this._COMPONENT_PATTERN.prop_inputClass ,
+            this._COMPONENT_PATTERN.prop_inputStyles ,
+            this._COMPONENT_PATTERN.prop_name ,
+            this._COMPONENT_PATTERN.prop_value ,
+            this._COMPONENT_PATTERN.prop_placeholder ,
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_isDisable ,
+            this._COMPONENT_PATTERN.prop_size ,
+        ],
 
         part_body_icon: [
-            this._COMPONENT_PATTERN.prop_icon
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_colorIcon
         ],
 
         part_body_icon_clear: [
-            this._COMPONENT_PATTERN.prop_isDisable
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_size
         ],
 
-        part_body_icon_positive: [
+        part_body_icon_visit: [
             this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_iconPositive
-        ],
-
-        part_body_icon_negetive: [
-            this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_iconNegetive
-        ],
-
-        part_body_input_size: [
-            this._COMPONENT_PATTERN.prop_inputClass,
-            this._COMPONENT_PATTERN.prop_inputStyles,
-            this._COMPONENT_PATTERN.prop_name,
-            this._COMPONENT_PATTERN.prop_value,
-            this._COMPONENT_PATTERN.prop_placeholder,
-            this._COMPONENT_PATTERN.prop_icon,
-            this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_min,
-            this._COMPONENT_PATTERN.prop_max
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_colorIcon
         ],
 
         part_validate: [
+            this._COMPONENT_PATTERN.prop_hasRules,
             this._COMPONENT_PATTERN.prop_isAbsoluteRule,
             this._COMPONENT_PATTERN.prop_listRules,
             this._COMPONENT_PATTERN.prop_isDisable,
@@ -8206,7 +8416,6 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
         }
     }
 
-
     template_render_structure(partName) {
 
         const content = `
@@ -8226,15 +8435,20 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const prop_size                     =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                     : null;
+            const prop_backgroundColorForm      =   data.hasOwnProperty("prop_backgroundColorForm")      ?  data.prop_backgroundColorForm      : null;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
 
             return                                       `
 <section  data-part-name="${partName}"
           id="component-input-password-body-${this._COMPONENT_RANDOM_ID}"  
-          class="position-relative bg-secondary rounded d-block" >
+          class="position-relative d-block" >
           
      <style>
          #${this._COMPONENT_ID} #component-input-password-body-${this._COMPONENT_RANDOM_ID}{
-         
+               height: ${elHeight}px;
+               background-color: ${prop_backgroundColorForm};
          }
          
      </style>
@@ -8267,14 +8481,20 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
             const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
             const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
-            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                                    : false;
+            const prop_isDisable     =   data.hasOwnProperty("prop_isDisable")                ?  data.prop_isDisable                                    : false;
 
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+            let elfontSize = tools_css.getFontSize(prop_size);
 
             let padding = "180px"
             if (screanWidthType == "xs"){
                 padding = "35px";
             }
+
+            console.log("prop_icon" , prop_icon)
 
             return `
 <section  data-part-name="${partName}"
@@ -8283,19 +8503,33 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
           
      <style>
          #${this._COMPONENT_ID} #component-input-password-element-${this._COMPONENT_RANDOM_ID}{
-              ${prop_icon ? (directionRtl ? "margin-right: 35px;" : "margin-left: 35px;") : ""}
-              ${directionRtl ? "margin-left" : "margin-right"} : 35px;
+            
          }
          #${this._COMPONENT_ID} #component-input-password-${this._COMPONENT_RANDOM_ID}{
-              height: 30px;
-
-              ${directionRtl ? "padding-left" : "padding-right"} : 20px;
+              ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
+              ${directionRtl ? "margin-left" : "margin-right"} : 30px ;
+              ${directionRtl ? `right : 0` :`left : 0` };
+              width: calc( 100% - 30px - ${prop_icon != null ? "30px" : "0px"});
+            
+              ${prop_icon != null ? (directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important") : ""};
+              ${prop_icon != null ? (directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important") : ""};
+           
+              ${(directionRtl ? "border-top-left-radius: 0 !important" : "border-top-right-radius: 0 !important") };
+              ${(directionRtl ? "border-bottom-left-radius: 0 !important" : "border-bottom-right-radius: 0 !important")};
+           
+              height: ${elHeight}px;
+              line-height: ${elHeight}px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-size: ${elfontSize}px;
+              top: 0;
               ${tools_public.renderListStyle(prop_inputStyles)}
          }
      </style>
 
      <input id="component-input-password-${this._COMPONENT_RANDOM_ID}"   
-            class=" ${tools_public.renderListClass(prop_inputClass)} border-2"
+            class=" ${tools_public.renderListClass(prop_inputClass)} border-1 position-absolute"
             name="${prop_name || "" }"  
             type="password"  
             value="${prop_value || ""}"
@@ -8322,38 +8556,45 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
         if (data != null){
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
+            const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
+
+            const elIconHeight = tools_css.getIconSize(prop_size);
 
             let styles = {
                 "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                 "cursor" : "pointer",
-                "font-size" : "20pt;",
                 "top" : "50%" ,
-                "transform" : "translate(0, -50%)" ,
+                "color" : prop_colorIcon ,
             }
             if (directionRtl){
-                styles["right"]= "5px"
+                styles["right"]= "0"
+                styles["transform"]= "translate(-7.5px, -50%)"
             }
             else {
-                styles["left"]= "5px"
+                styles["left"]= "0"
+                styles["transform"]= "translate(7.5px, -50%)"
             }
 
             if (prop_icon != null){
                 new window.ComponentIcon(
                     `component-input-password-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: prop_icon ,
+                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(elIconHeight , prop_colorIcon) : prop_icon) : null ,
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
 
-                        fn_callback: ()=>{
-                            this.runFn("fn_onFocusInput" , "event")
+                        fn_callback: (event)=>{
+                            this.fn_onFocusInput(event);
                         }
                     }
                 )
             }
 
         }
+
+
     }
 
     componentFn_render_bodyIconClear(partName) {
@@ -8366,34 +8607,34 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
             if (!prop_isDisable){
 
                 const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+
+                const elIconHeight = tools_css.getIconSize(prop_size);
+
                 let styles = {
                     "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
-                    "width" :   "35px",
-                    "line-height" : "30px",
                     "cursor" : "pointer",
-                    "height" : "30px" ,
-                    "top" : "0" ,
-                    "text-align" : "center" ,
+                    "top" : "50%" ,
                 };
 
                 if (directionRtl){
-                    styles["left"]= "35px";
+                    styles["left"]= "0";
+                    styles["transform"]=  "translate(40px, -50%)" ;
                 }
                 else {
-                    styles["right"]= "35px";
+                    styles["right"]= "0";
+                    styles["transform"]=  "translate(-40px, -50%)" ;
                 }
 
 
                 new window.ComponentIcon(
                     `component-input-password-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        styles: {
-                            "height" : "38px"
-                        }  ,
+                        styles: {}  ,
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : "&#10540;" ,
+                        prop_icon : tools_icons.icon_clear(elIconHeight) ,
 
                         fn_callback: ()=>{
                             this.runFn("fn_onClearInput" , "event")
@@ -8416,39 +8657,42 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
             if (!prop_isDisable){
 
                 const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
+                const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
+
+                const elIconHeight = tools_css.getIconSize(prop_size);
 
                 let styles = {
                     "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
-                    "width" :   "35px",
                     "cursor" : "pointer",
-                    "height" : "25px" ,
                     "top" : "50%" ,
-                    "text-align" : "center" ,
-                    "transform" : "translate(0, -50%)" ,
+                    "color" : prop_colorIcon ,
                 };
 
                 if (directionRtl){
-                    styles["left"]= "2.5px";
+                    styles["left"]= "0"
+                    styles["transform"]= "translate(7.5px, -50%)"
                 }
                 else {
-                    styles["right"]= "2.5px";
+                    styles["right"]= "0"
+                    styles["transform"]= "translate(-7.5px, -50%)"
                 }
 
 
                 new window.ComponentIcon(
                     `component-input-password-icon-visit-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        classList: ["text-white"]  ,
+                        classList: []  ,
                         styles: {
-                            "height" : "38px"
+
                         }  ,
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit() : tools_icons.icon_un_visit(),
+                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit(elIconHeight , prop_colorIcon) : tools_icons.icon_un_visit(elIconHeight , prop_colorIcon),
 
-                        fn_callback: ()=>{
-                            this.runFn("fn_onVisitInput" , "event")
+                        fn_callback: (event)=>{
+                            this.fn_onVisitInput(event);
                         }
                     }
                 )
@@ -8519,8 +8763,6 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
        FUNCTIONs
     --------------------------------------------- */
 
-
-
     fn_getInputElement(){
         return   document.querySelector(`input#component-input-password-${this._COMPONENT_RANDOM_ID}`);
     }
@@ -8532,15 +8774,12 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
     }
 
 
-
-
     fn_onHandleInput(event){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
             this.fn_readyListRules(data.prop_listRules)
         }
     }
-
 
 
     fn_onInputCallBack(event){
@@ -8550,12 +8789,14 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
         }
     }
 
+
     fn_onFocusCallBack(event){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_onfocus") && typeof data.fn_onfocus != null){
             data.fn_onfocus(event , this.fn_getValueInput());
         }
     }
+
 
     fn_onBlurCallBack(event){
         const data = this._COMPONENT_CONFIG;
@@ -8565,13 +8806,12 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
     }
 
 
-
-
     fn_onClearInput(event){
         this.fn_getInputElement().value="";
         this.fn_onInputCallBack(event);
         this.fn_onFocusInput(event);
     }
+
 
     fn_onVisitInput(event){
         this._STATUS_IS_SHOW = !this._STATUS_IS_SHOW;
@@ -8579,6 +8819,12 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
         this.fn_getInputElement().setAttribute("type" , this._STATUS_IS_SHOW ? "" : "password")
     }
 
+
+    fn_onFocusInput(event){
+        const input = this.fn_getInputElement();
+        input.focus();
+        this.fn_onFocusCallBack();
+    }
 
 }
 
@@ -8922,15 +9168,14 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
             let styles = {
                 "z-index" : listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
                 "cursor" : "pointer",
-                "font-size" : "20pt;",
                 "top" : "50%" ,
-                "transform" : "translate(0, -50%)" ,
+                "transform" : "translate(-5px, -50%)" ,
             }
             if (directionRtl){
-                styles["right"]= "5px"
+                styles["right"]= "0"
             }
             else {
-                styles["left"]= "5px"
+                styles["left"]= "0"
             }
 
             if (prop_icon != null){
@@ -11994,6 +12239,14 @@ class ComponentSelectOptionBase extends ComponentBase{
             prop: "prop_name",
             default: ""
         },
+        prop_backgroundColorForm: {
+            prop: "prop_backgroundColorForm",
+            default: tools_const?.styles?.selectOption?.backgroundColor_form ?? ""
+        },
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.selectOption?.color_icon ?? ""
+        },
         prop_itemSelected: {
             prop: "prop_itemSelected",
             default: null
@@ -12106,6 +12359,10 @@ class ComponentSelectOptionBase extends ComponentBase{
             prop: "prop_optionItemSelectedBackground",
             default: tools_const?.styles?.selectOption?.backgroundColor_itemSelected || ""
         },
+        prop_optionItemSelectedColor: {
+            prop: "prop_optionItemSelectedColor",
+            default: tools_const?.styles?.selectOption?.color_itemSelected || ""
+        },
         var_searcherSelectOption: {
             prop: "var_searcherSelectOption",
             default: ""
@@ -12117,7 +12374,7 @@ class ComponentSelectOptionBase extends ComponentBase{
            PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [,
+        part_structure: [
             this._COMPONENT_PATTERN.prop_size
         ],
 
@@ -12136,12 +12393,14 @@ class ComponentSelectOptionBase extends ComponentBase{
         part_header: [
             this._COMPONENT_PATTERN.prop_titleClass,
             this._COMPONENT_PATTERN.prop_titleStyles,
+            this._COMPONENT_PATTERN.prop_backgroundColorForm,
             this._COMPONENT_PATTERN.prop_size
         ],
 
         part_header_icon: [
             this._COMPONENT_PATTERN.prop_icon ,
             this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_colorIcon ,
         ],
 
         part_header_title: [
@@ -12176,7 +12435,10 @@ class ComponentSelectOptionBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_positionRight
         ],
 
-        part_body_searcher: [],
+        part_body_searcher: [
+            this._COMPONENT_PATTERN.prop_colorIcon ,
+            this._COMPONENT_PATTERN.prop_size ,
+        ],
 
         part_body_options: [
             this._COMPONENT_PATTERN.prop_listIcons,
@@ -12186,7 +12448,9 @@ class ComponentSelectOptionBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_optionItemNotSelectedBackground,
             this._COMPONENT_PATTERN.prop_optionItemHoverBackground,
             this._COMPONENT_PATTERN.prop_optionItemSelectedBackground,
-            this._COMPONENT_PATTERN.var_searcherSelectOption
+            this._COMPONENT_PATTERN.prop_optionItemSelectedColor,
+            this._COMPONENT_PATTERN.var_searcherSelectOption,
+            this._COMPONENT_PATTERN.prop_size
         ]
     };
 
@@ -12351,18 +12615,20 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         if (data != null){
             const prop_titleClass           =  data.hasOwnProperty("prop_titleClass")                ?  data.prop_titleClass                    :  [];
             const prop_titleStyles          =  data.hasOwnProperty("prop_titleStyles")               ?  data.prop_titleStyles                   :  {};
-            const prop_size                 =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  0;
+            const prop_size                 =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  null;
+            const prop_backgroundColorForm  =  data.hasOwnProperty("prop_backgroundColorForm")       ?  data.prop_backgroundColorForm           :  "";
 
             const elHeight = tools_css.getHeightSize(prop_size);
 
             return `
 <section data-part-name="${partName}" 
          id="component-select-option-header-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_titleClass)} form-control position-relative p-0"  
+         class="${tools_public.renderListClass(prop_titleClass)} form-control position-relative p-0 rounded-0"  
          onclick="${this.getFn('fn_showListOptions' , 'event')}">
      <style>
          #${this._COMPONENT_ID} #component-select-option-header-${ this._COMPONENT_RANDOM_ID}{
-               height: ${elHeight}px;
+               height: ${elHeight+2}px;
+               background-color: ${prop_backgroundColorForm};
        
                ${tools_public.renderListStyle(prop_titleStyles)}
                cursor: pointer;
@@ -12422,7 +12688,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             return `
 <section data-part-name="${partName}"
          id="component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}"
-         class=" d-block ${prop_icon != null ? "border": ""} ${prop_btnAddStatus ? "" : "rounded"} " >
+         class=" d-block ${prop_icon != null ? "border": ""} ${prop_btnAddStatus ? "" : "rounded-0"} bg-white " >
      <style>
          #${this._COMPONENT_ID} #component-select-option-header-title-${ this._COMPONENT_RANDOM_ID}{
             ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
@@ -12468,12 +12734,17 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             const prop_listIcons                         =  data.hasOwnProperty("prop_listIcons")                            ?  data.prop_listIcons                            :  null;
             const prop_options                           =  data.hasOwnProperty("prop_options")                              ?  data.prop_options                              :  [];
             const prop_itemSelected                      =  data.hasOwnProperty("prop_itemSelected")                         ?  data.prop_itemSelected                         :   null;
-            const prop_optionItemNotSelectedBackground   =  data.hasOwnProperty("prop_optionItemNotSelectedBackground")      ?  data.prop_optionItemNotSelectedBackground      :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemNotSelected")  ? tools_const.styles.selectOption.backgroundColor_itemNotSelected : "";
-            const prop_optionItemHoverBackground         =  data.hasOwnProperty("prop_optionItemHoverBackground")            ?  data.prop_optionItemHoverBackground            :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemHover")  ? tools_const.styles.selectOption.backgroundColor_itemHover : "";
-            const prop_optionItemSelectedBackground      =  data.hasOwnProperty("prop_optionItemSelectedBackground")         ?  data.prop_optionItemSelectedBackground         :   tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("selectOption") && tools_const.styles.selectOption.hasOwnProperty("backgroundColor_itemSelected")  ? tools_const.styles.selectOption.backgroundColor_itemSelected : "";
-            const var_searcherSelectOption               =  data.hasOwnProperty("var_searcherSelectOption")                  ?  data.var_searcherSelectOption                  :   "";
+            const prop_optionItemNotSelectedBackground   =  data.hasOwnProperty("prop_optionItemNotSelectedBackground")      ?  data.prop_optionItemNotSelectedBackground      :  "";
+            const prop_optionItemHoverBackground         =  data.hasOwnProperty("prop_optionItemHoverBackground")            ?  data.prop_optionItemHoverBackground            :  "";
+            const prop_optionItemSelectedBackground      =  data.hasOwnProperty("prop_optionItemSelectedBackground")         ?  data.prop_optionItemSelectedBackground         :  "";
+            const prop_optionItemSelectedColor           =  data.hasOwnProperty("prop_optionItemSelectedColor")              ?  data.prop_optionItemSelectedColor              :  "";
+            const prop_size                              =  data.hasOwnProperty("prop_size")                                 ?  data.prop_size                                 :  null;
+            const var_searcherSelectOption               =  data.hasOwnProperty("var_searcherSelectOption")                  ?  data.var_searcherSelectOption                  :  "";
 
             const optionHtml = this.fn_onGetBodyOptions(prop_options , prop_itemSelected , var_searcherSelectOption , prop_listIcons);
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elfontSize = tools_css.getFontSize(prop_size);
 
             return `
 <section data-part-name="${partName}" 
@@ -12481,13 +12752,15 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
          class=" d-block" >
      <style>
          #${this._COMPONENT_ID} #component-select-option-body-options-${ this._COMPONENT_RANDOM_ID}{
-              
+                  
          }
          #${this._COMPONENT_ID} #component-select-option-body-options-element-${ this._COMPONENT_RANDOM_ID}{
               height: calc(100% - 45px);
          }
          #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}{
              background-color: ${prop_optionItemNotSelectedBackground};
+             height: ${elHeight}px;
+             font-size: ${elfontSize}px;
              padding: 3px 10px !important;
          }
          #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}:hover{
@@ -12497,6 +12770,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
          }
          #${this._COMPONENT_ID} .component-select-option-body-options-item-selected-${this._COMPONENT_RANDOM_ID}{
              background-color: ${prop_optionItemSelectedBackground};
+             color: ${prop_optionItemSelectedColor};
          }
          
          #${this._COMPONENT_ID} .component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID}{
@@ -12509,7 +12783,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
      </style>
        
      <div id="component-select-option-body-options-element-${ this._COMPONENT_RANDOM_ID}"
-          class="overflow-auto">
+          class="overflow-hidden">
          ${optionHtml}
      </div>
        
@@ -12541,32 +12815,32 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         if (data != null){
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
-            const prop_size          =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  0;
+            const prop_size          =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  null;
+            const prop_colorIcon     =  data.hasOwnProperty("prop_colorIcon")                 ?  data.prop_colorIcon                     :  "";
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elfontSize = tools_css.getFontSize(prop_size);
 
             let styles = {
                 "z-index" :  listLayoutZIndex.hasOwnProperty("tools_btn") ? listLayoutZIndex.tools_btn: 10 ,
-                "margin" : "auto",
-                "display" : "contents",
-                "width" : "30px",
                 "cursor" : "pointer",
                 "top" : "50%" ,
-                "transform" : "translate(0 , -50%)",
+                "color" : prop_colorIcon ,
             }
             if (directionRtl){
-                styles["right"]= "0"
+                styles["right"]= "0";
+                styles["transform"]= "translate(-7.5px , -50%)" ;
             }
             else {
-                styles["left"]= "0"
+                styles["left"]= "0";
+                styles["transform"]= "translate(7.5px , -50%)" ;
             }
 
             if (prop_icon != null){
                 new window.ComponentIcon(
                     `component-select-option-header-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: prop_icon ,
+                        prop_icon: typeof prop_icon == "function" ? prop_icon(elHeight , prop_colorIcon) : prop_icon,
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -12592,22 +12866,25 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 "font-size" : "20pt",
                 "margin" : "0 10px",
                 "top" : "50%",
-                "transform" : "translate(0 , -50%)",
             }
             if (directionRtl){
                 if (screanWidthType == "xs"){
-                    styles["left"]= prop_btnAddStatus ? "30px" : "0px";
+                    styles["left"]=  "0px";
+                    styles["transform"]= prop_btnAddStatus ? "translate(30px , -50%)" : "translate(0 , -50%)";
                 }
                 else{
-                    styles["left"]= prop_btnAddStatus ? "160px" : "0px";
+                    styles["left"]=  "0px";
+                    styles["transform"]= prop_btnAddStatus ? "translate(160px , -50%)" : "translate(0 , -50%)";
                 }
             }
             else {
                 if (screanWidthType == "xs"){
-                    styles["right"]= prop_btnAddStatus ? "30px" : "0px";
+                    styles["right"]=  "0px";
+                    styles["transform"]= prop_btnAddStatus ? "translate(-30px , -50%)" :  "translate(0 , -50%)";
                 }
                 else{
-                    styles["right"]= prop_btnAddStatus ? "160px" : "0px";
+                    styles["right"]= "0px";
+                    styles["transform"]= prop_btnAddStatus ? "translate(-160px , -50%)" : "translate(0 , -50%)";
                 }
             }
 
@@ -12615,7 +12892,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             new window.ComponentIcon(
                 `component-select-option-header-icon-arrow-${ this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon: var_showFormSelectOption ? tools_icons.icon_arrow_down() :  tools_icons.icon_arrow_up(),// "&#129169" : "&#129171" ,
+                    prop_icon: var_showFormSelectOption ? tools_icons.icon_arrow_down() :  tools_icons.icon_arrow_up(),
 
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles : styles ,
@@ -12646,17 +12923,15 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                     "top" : "0" ,
                     "cursor" : "pointer" ,
                 };
+                styles["border-bottom-right-radius"] = "0 !important";
+                styles["border-top-right-radius"] = "0 !important";
+                styles["border-bottom-left-radius"] = "0 !important";
+                styles["border-top-left-radius"] = "0 !important";
                 if (directionRtl){
                     styles["left"] = "0";
-
-                    styles["border-bottom-right-radius"] = "0 !important";
-                    styles["border-top-right-radius"] = "0 !important";
                 }
                 else {
                     styles["right"] = "0";
-
-                    styles["border-bottom-left-radius"] = "0 !important";
-                    styles["border-top-left-radius"] = "0 !important";
                 }
 
                 if (screanWidthType == "xs"){
@@ -12731,12 +13006,16 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const prop_size          =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  null;
+            const prop_colorIcon     =  data.hasOwnProperty("prop_colorIcon")                 ?  data.prop_colorIcon                     :  "";
+
+            const elIconHeight = tools_css.getIconSize(prop_size);
 
             new window.ComponentInput(
                 `component-select-option-body-searcher-${ this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_show_label: false ,
-                    prop_icon: "&#x2315;" ,
+                    prop_icon: tools_icons.icon_search(elIconHeight ,prop_colorIcon ) ,
 
                     fn_oninput: (event , value) => {
                         this.set("var_searcherSelectOption" , value)
@@ -13203,7 +13482,7 @@ class ComponentCheckBoxBase extends ComponentBase{
         },
         prop_formClass: {
             prop: "prop_formClass",
-            default: ["rounded"]
+            default: ["rounded-0"]
         },
         prop_formStyles: {
             prop: "prop_formStyles",
@@ -14095,13 +14374,13 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
             const prop_iconStyles    =   data.hasOwnProperty("prop_iconStyles")          ?  data.prop_iconStyles         :  {};
             const prop_size          =   data.hasOwnProperty("prop_size")                ?  data.prop_size               :  null;
 
-            const elHeight = tools_css.getHeightSize(prop_size);
+            const elIconHeight = tools_css.getIconSize(prop_size);
 
             if (prop_icon != null){
                 new window.ComponentIcon(
                     `component-tooltip-description-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(prop_size) : prop_icon) : "" ,
+                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(elIconHeight) : prop_icon) : "" ,
 
                         prop_iconClass : prop_iconClass ,
                         prop_iconStyles : prop_iconStyles ,
@@ -17856,6 +18135,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                     },
                     {
                         "click" : eventListiner
+                    },
+                    {
+                        "cursor" : "pointer"
                     });
             }
 
@@ -17870,6 +18152,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 },
                 {
                     "click" : eventListiner
+                },
+                {
+                    "cursor" : "pointer"
                 });
 
 
@@ -17882,6 +18167,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 },
                 {
                     "click" : eventListiner
+                },
+                {
+                    "cursor" : "pointer"
                 });
 
             if(  number <= prop_stepSelected){
@@ -17894,6 +18182,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                     },
                     {
                         "click" : eventListiner
+                    },
+                    {
+                        "cursor" : "pointer"
                     });
             }
             else{
@@ -17906,6 +18197,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                     },
                     {
                         "click" : eventListiner
+                    },
+                    {
+                        "cursor" : "pointer"
                     });
             }
 
@@ -18049,6 +18343,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                     },
                     {
                         "click" : eventListiner
+                    },
+                    {
+                        "cursor" : "pointer"
                     });
 
                 const shapeBShadow = tools_svg.createShadowInsidePolygonElement(svg , shapeB , 2 , 4 ,
@@ -18057,6 +18354,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                     },
                     {
                         "click" : eventListiner
+                    },
+                    {
+                        "cursor" : "pointer"
                     });
 
             }
@@ -18068,6 +18368,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 },
                 {
                     "click" : eventListiner
+                },
+                {
+                    "cursor" : "pointer"
                 });
 
 
@@ -18078,6 +18381,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 },
                 {
                     "click" : eventListiner
+                },
+                {
+                    "cursor" : "pointer"
                 });
 
             const shapeText = tools_svg.craeteSvgTextToCenterPolygonElement(svg , shapeA ,  directionRtl?  0 : 0.25*prop_length , 0.15*prop_height , step.title ,
@@ -18089,6 +18395,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 },
                 {
                     "click" : eventListiner
+                },
+                {
+                    "cursor" : "pointer"
                 });
 
             const shapeCircleTik = tools_svg.craeteSvgCircleToCenterPolygonElement(svg , shapeA , directionRtl? 0.40*prop_length : -0.25*prop_length  , 0.10*prop_height  , prop_height/2 ,
@@ -18100,6 +18409,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 },
                 {
                     "click" : eventListiner
+                },
+                {
+                    "cursor" : "pointer"
                 });
 
             if(  number <= prop_stepSelected){
@@ -18112,6 +18424,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                     },
                     {
                         "click" : eventListiner
+                    },
+                    {
+                        "cursor" : "pointer"
                     });
             }
             else{
@@ -18124,6 +18439,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                     },
                     {
                         "click" : eventListiner
+                    },
+                    {
+                        "cursor" : "pointer"
                     });
             }
         }

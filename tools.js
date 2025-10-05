@@ -130,11 +130,28 @@ tools_init = {
 
             },
 
+            input: {
+                backgroundColor_form:                  component_props.primaryColor1 ,
+                color_icon:                            component_props.shanColor1 ,
+            },
+
+            inputPassword: {
+                backgroundColor_form:                  component_props.primaryColor1 ,
+                color_icon:                            component_props.shanColor1 ,
+            },
+
+            inputSize: {
+                backgroundColor_form:                  component_props.primaryColor1 ,
+                color_icon:                            component_props.shanColor1 ,
+            },
+
             selectOption: {
-                backgroundColor_itemNotSelected: component_props.shanColor2 ,
-                backgroundColor_itemHover: component_props.primaryColor2 ,
-                backgroundColor_itemSelected: component_props.primaryColor1 ,
-                color_icon: component_props.darkColor1
+                backgroundColor_form:                   component_props.primaryColor1 ,
+                color_icon:                             component_props.shanColor1 ,
+                backgroundColor_itemNotSelected:        component_props.shanColor2 ,
+                backgroundColor_itemHover:              component_props.primaryColor2 ,
+                backgroundColor_itemSelected:           component_props.primaryColor2 ,
+                color_itemSelected:                     component_props.shanColor1
             },
 
             elementLink: {
@@ -244,32 +261,38 @@ tools_css = {
         xs: {
             name: "x-s",
             fontSize: 8,
-            height: 18
+            height: 18,
+            icon: 12
         } ,
         s: {
             name: "s" ,
             fontSize: 10 ,
-            height: 22
+            height: 22,
+            icon: 14
         } ,
         m: {
             name: "m" ,
             fontSize: 12,
-            height: 26
+            height: 26,
+            icon: 16
         } ,
         l: {
             name:  "l"  ,
-            fontSize: 14,
-            height: 28
+            fontSize: 13,
+            height: 28,
+            icon: 18
         } ,
         xl: {
             name:  "x-l" ,
-            fontSize: 16,
-            height: 30
+            fontSize: 14,
+            height: 30,
+            icon: 19
         } ,
         xll: {
             name: "xx-l",
-            fontSize: 18 ,
-            height: 34
+            fontSize: 15 ,
+            height: 34,
+            icon: 20
         }
     } ,
 
@@ -293,6 +316,19 @@ tools_css = {
             itemFont = tools_css.standardSizes[key];
             if(itemFont.name == sizeName){
                 val = itemFont.fontSize;
+                return;
+            }
+        });
+        return val;
+    },
+
+
+    getIconSize(sizeName){
+        let val = 10;
+        Object.keys(tools_css.standardSizes).forEach(key=>{
+            itemFont = tools_css.standardSizes[key];
+            if(itemFont.name == sizeName){
+                val = itemFont.icon;
                 return;
             }
         });
@@ -1201,7 +1237,7 @@ tools_svg = {
         }
     } ,
 
-    craeteSvgPolygon(svg , points=[] , attrs={}  , eventListiners={} ){
+    craeteSvgPolygon(svg , points=[] , attrs={}  , eventListiners={}  , styles={} ){
         let poly = document.createElementNS("http://www.w3.org/2000/svg","polygon");
         poly.setAttribute("points", tools_svg.toPointsString(points));
         Object.keys(attrs).forEach(key => {
@@ -1210,6 +1246,9 @@ tools_svg = {
         Object.keys(eventListiners).forEach(key => {
             poly.addEventListener(key, eventListiners[key]);
         });
+        Object.keys(styles).forEach(key => {
+            poly.style[key] = styles[key];
+        });
         if (svg != null){
             svg.appendChild(poly);
         }
@@ -1217,7 +1256,7 @@ tools_svg = {
         return poly;
     } ,
 
-    craeteSvgCircle(svg  , centerX=0 , centerY=0 ,  radius= 10 , attrs={} , eventListiners={}){
+    craeteSvgCircle(svg  , centerX=0 , centerY=0 ,  radius= 10 , attrs={} , eventListiners={} , styles={} ){
         let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
         circle.setAttribute("cx", centerX)
         circle.setAttribute("cy", centerY);
@@ -1227,6 +1266,9 @@ tools_svg = {
         });
         Object.keys(eventListiners).forEach(key => {
             circle.addEventListener(key, eventListiners[key]);
+        });
+        Object.keys(styles).forEach(key => {
+            circle.style[key] = styles[key];
         });
         if (svg != null){
             svg.appendChild(circle);
@@ -1240,7 +1282,7 @@ tools_svg = {
 
 
 
-    craeteSvgPathToCenterCircleElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, draw= "" , attrs={}, eventListiners={}){
+    craeteSvgPathToCenterCircleElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, draw= "" , attrs={}, eventListiners={} , styles={} ){
         let center = tools_svg.getCenterCircleElement(shapRelatedElement);
 
         let path = document.createElementNS("http://www.w3.org/2000/svg","path");
@@ -1252,6 +1294,9 @@ tools_svg = {
         Object.keys(eventListiners).forEach(key => {
             path.addEventListener(key, eventListiners[key]);
         });
+        Object.keys(styles).forEach(key => {
+            path.style[key] = styles[key];
+        });
         if (svg != null){
             svg.appendChild(path);
         }
@@ -1259,7 +1304,7 @@ tools_svg = {
         return path;
     } ,
 
-    craeteSvgTextToCenterCircleElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0 , content , attrs={}, eventListiners={}){
+    craeteSvgTextToCenterCircleElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0 , content , attrs={}, eventListiners={} , styles={} ){
         let center = tools_svg.getCenterCircleElement(shapRelatedElement);
 
         let text = document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -1270,6 +1315,9 @@ tools_svg = {
         });
         Object.keys(eventListiners).forEach(key => {
             text.addEventListener(key, eventListiners[key]);
+        });
+        Object.keys(styles).forEach(key => {
+            text.style[key] = styles[key];
         });
         text.textContent = content;
 
@@ -1286,7 +1334,7 @@ tools_svg = {
 
 
 
-    craeteSvgPathToCenterPolygonElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, draw= "" , attrs={} , eventListiners={}){
+    craeteSvgPathToCenterPolygonElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, draw= "" , attrs={} , eventListiners={} , styles={} ){
         let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
 
         let path = document.createElementNS("http://www.w3.org/2000/svg","path");
@@ -1298,12 +1346,15 @@ tools_svg = {
         Object.keys(eventListiners).forEach(key => {
             path.addEventListener(key, eventListiners[key]);
         });
+        Object.keys(styles).forEach(key => {
+            path.style[key] = styles[key];
+        });
         svg.appendChild(path);
 
         return path;
     } ,
 
-    craeteSvgCircleToCenterPolygonElement(svg  , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, radius= 10 , attrs={}, eventListiners={}){
+    craeteSvgCircleToCenterPolygonElement(svg  , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0, radius= 10 , attrs={}, eventListiners={} , styles={} ){
         let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
 
         let circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
@@ -1316,12 +1367,15 @@ tools_svg = {
         Object.keys(eventListiners).forEach(key => {
             circle.addEventListener(key, eventListiners[key]);
         });
+        Object.keys(styles).forEach(key => {
+            circle.style[key] = styles[key];
+        });
         svg.appendChild(circle);
 
         return circle;
     } ,
 
-    craeteSvgTextToCenterPolygonElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0 , content , attrs={}, eventListiners={}){
+    craeteSvgTextToCenterPolygonElement(svg , shapRelatedElement , shapRelatedDefX=0 , shapRelatedDefY=0 , content , attrs={}, eventListiners={} , styles={} ){
         let center = tools_svg.getCenterPolygonElement(shapRelatedElement);
 
         let text = document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -1333,13 +1387,16 @@ tools_svg = {
         Object.keys(eventListiners).forEach(key => {
             text.addEventListener(key, eventListiners[key]);
         });
+        Object.keys(styles).forEach(key => {
+            text.style[key] = styles[key];
+        });
         text.textContent = content;
         svg.appendChild(text);
 
         return text;
     } ,
 
-    createShadowInsidePolygonElement(svg , el , pointStart , pointsLentgh ,  attrs={}, eventListiners={}){
+    createShadowInsidePolygonElement(svg , el , pointStart , pointsLentgh ,  attrs={}, eventListiners={} , styles={} ){
         const points = tools_svg.getPointsPolygonElement(el);
         if (points != null && points.length > 0){
             let shadowPoints = [];
@@ -1355,6 +1412,9 @@ tools_svg = {
             });
             Object.keys(eventListiners).forEach(key => {
                 polyShadow.addEventListener(key, eventListiners[key]);
+            });
+            Object.keys(styles).forEach(key => {
+                polyShadow.style[key] = styles[key];
             });
             svg.appendChild(polyShadow);
 
@@ -1609,7 +1669,7 @@ tools_icons = {
 
 
 
-    icon_lock( bg_color = "#e7e7e7",size = 24 ) {
+    icon_lock( size = 24  , bg_color = "#e7e7e7") {
         return `
 <svg class="icon-password lock" 
      width="${size}" height="${size}" 
@@ -1716,6 +1776,31 @@ tools_icons = {
   <path d="M12 7v6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M12 16h.01" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
+    },
+
+
+
+    icon_password(size = 18 , color="#e7e7e7"){
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img"  aria-label="password" 
+      width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <rect x="5" y="10" width="14" height="10" rx="2" stroke="${color}" stroke-width="1.5"/>
+  <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+
+`;
+    } ,
+
+    icon_search(size = 18 , color = "#8e8e8e" ) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="search"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <circle cx="11" cy="11" r="7" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="16.65" y1="16.65" x2="21" y2="21" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
     }
+
+
+
 }
 
