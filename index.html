@@ -250,6 +250,19 @@
         </component-body>
     </component-collapse>
 
+    <component-collapse  id="el_specials">
+        <component-body>
+
+            <section class="row p-0 m-0">
+                <component-draggable-orders    id="draggable_orders"></component-draggable-orders>
+
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
+
     <component-collapse  id="others">
         <component-body>
 
@@ -295,8 +308,6 @@
 
         </component-body>
     </component-collapse>
-
-
 
 </section>
 
@@ -878,6 +889,7 @@
             prop_name:"check_box" ,
             prop_title:"check box" ,
             //prop_isDisable:true ,
+            prop_showTitleFront:true ,
             prop_isSelected:true ,
 
 
@@ -959,11 +971,11 @@
 
             prop_order : ["id" , "name" , "family" , "has"] ,
             prop_header : [
-                {id:"id" , content: "id"},
+                {id:"id" , content: "id" , width:"10%"},
 
-                {id:"has" , content: "has"},
-                {id:"name" , content: "name"},
-                {id:"family" , content: "family"},
+                {id:"has" , content: "has" , width:"30%"},
+                {id:"name" , content: "name" , width:"30%"},
+                {id:"family" , content: "family" , width:"30%"},
             ] ,
             prop_data : [
                 {id:1 , name:"mehdi" , family:"marefiyan" , has:false} ,
@@ -1497,6 +1509,31 @@
 
 
 
+    /* ===============================================================================================================
+       [080] elements spcials
+    =============================================================================================================== */
+    new window.ComponentDraggableOrders(
+        "draggable_orders" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_items: [
+                {
+                    "id" : "item_1" ,
+                    "name" : "item 1" ,
+                } ,
+                {
+                    "id" : "item_2" ,
+                    "name" : "item 2" ,
+                },
+                {
+                    "id" : "item_3" ,
+                    "name" : "item 3" ,
+                }
+            ]
+
+        }
+    );
 
 
 
@@ -1638,7 +1675,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [02] Fetch " ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(
@@ -1647,7 +1684,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [03] Button And Inputs" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(
@@ -1733,6 +1770,16 @@
 
             prop_title: " [21] QR Codes " ,
             prop_bodyShow: false
+        }
+    )
+
+    new window.ComponentCollapse(
+        "el_specials" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: " [99] el_specials" ,
+            prop_bodyShow: tree
         }
     )
 

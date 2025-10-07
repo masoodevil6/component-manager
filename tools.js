@@ -8,7 +8,7 @@ Version: 0.1
 
 if (typeof component_props === 'undefined') {
     component_props = {
-        directionRtl: false,
+        directionRtl: true,
 
 
         // -----------------------
@@ -24,11 +24,11 @@ if (typeof component_props === 'undefined') {
         warningColor1: "#f47920",
         warningColor2: "#fd9248",
 
-        successColor1: "#9eeaf9",
-        successColor2: "#c7f4ff",
+        successColor1: "#198754",
+        successColor2: "#56c08f",
 
-        shadowColor1: "rgba(98,98,98,0.60)",
-        shadowColor2: "rgba(98,98,98,0.07)",
+        shadowColor1: "rgba(98,98,98,0.30)",
+        shadowColor2: "rgba(98,98,98,0.10)",
 
         darkColor1: "rgb(30,30,30)",
         darkColor2: "rgb(157,157,157)",
@@ -75,6 +75,7 @@ tools_init = {
 
         tools_const.styles =  {
             message: {
+                color_icon:          component_props.shanColor1 ,
                 success: {
                     backgroundColor: component_props.successColor1 ,
                     color:           component_props.darkColor1 ,
@@ -140,10 +141,35 @@ tools_init = {
                 color_icon:                            component_props.shanColor1 ,
             },
 
+            inputEmail: {
+                backgroundColor_form:                  component_props.primaryColor1 ,
+                color_icon:                            component_props.shanColor1 ,
+            },
+
+            inputPrice: {
+                backgroundColor_form:                  component_props.primaryColor1 ,
+                color_icon:                            component_props.shanColor1 ,
+            },
+
             inputSize: {
                 backgroundColor_form:                  component_props.primaryColor1 ,
                 color_icon:                            component_props.shanColor1 ,
             },
+
+            inputColor: {
+                boderColor :                           component_props.shanColor1 ,
+                backgroundColor_body :                 component_props.darkColor1 ,
+                color_body :                           component_props.shanColor1 ,
+            } ,
+
+            inputCheckBox: {
+                color_icon:                            component_props.shanColor1 ,
+                boderColor :                           component_props.darkColor2 ,
+                backgroundColor_unSelected :           component_props.shadowColor1 ,
+                backgroundColor_selected :             component_props.primaryColor1 ,
+                backgroundColor_disable :              component_props.darkColor2 ,
+            } ,
+
 
             selectOption: {
                 backgroundColor_form:                   component_props.primaryColor1 ,
@@ -191,18 +217,7 @@ tools_init = {
                 textColor : component_props.primaryColor1 ,
             } ,
 
-            inputCheckBox: {
-                boderColor :                    component_props.darkColor2 ,
-                backgroundColor_unSelected :    component_props.shanColor1 ,
-                backgroundColor_selected :      component_props.primaryColor1 ,
-                backgroundColor_disable :       component_props.darkColor2 ,
-            } ,
 
-            inputColor: {
-                boderColor :                    component_props.shanColor1 ,
-                backgroundColor_body :          component_props.darkColor1 ,
-                color_body :                    component_props.shanColor1 ,
-            } ,
 
             window: {
                 backgroundColor_blur : component_props.shadowColor1 ,
@@ -296,6 +311,26 @@ tools_css = {
         }
     } ,
 
+    standardScreanWidth : {
+        XS   : {name:"xs" ,max:576             } ,
+        S    : {name:"s"  ,min:576   , max:768 } ,  /// is for mobile
+        M    : {name:"m"  ,min:768   , max:992 } ,  /// is for tablet
+        L    : {name:"l"  ,min:992   , max:1200} ,
+        XL   : {name:"xl" ,min:1200  , max:1450} ,  /// is for pc
+        XXL  : {name:"xxl" ,min:1450           } ,
+    } ,
+
+    standardZIndex:{
+        basic:       {name:"basic"       ,val:1             } ,
+        menu_main:   {name:"menu_main"   ,val:2             } ,
+        tools:       {name:"tools"       ,val:3             } ,
+        icon_attach: {name:"icon_attach" ,val:4             } ,
+        tools_btn:   {name:"tools_btn"   ,val:5             } ,
+        blur_popup:  {name:"blur_popup"  ,val:6             } ,
+        popup:       {name:"popup"       ,val:7             } ,
+    } ,
+
+    //---------------------------------------------------------------------------
 
     getHeightSize(sizeName){
         let val = 20;
@@ -333,8 +368,72 @@ tools_css = {
             }
         });
         return val;
-    }
+    } ,
 
+
+    //---------------------------------------------------------------------------
+
+
+    getScreenWidth(element=null){
+        if (element == null){
+            element = window;
+        }
+        let screanWidth = element.innerWidth;
+        let screanWidthType = "";
+
+        Object.keys(tools_css.standardScreanWidth).forEach(key => {
+            const sizeType = tools_css.standardScreanWidth[key];
+            if (sizeType.hasOwnProperty("name")){
+                const sizeName = sizeType.name;
+
+                const checkIsMoreThenMin = sizeType.hasOwnProperty("min") ? screanWidth >= sizeType.min : true;
+                const checkIsLessThenMax = sizeType.hasOwnProperty("max") ? screanWidth <= sizeType.max : true;
+
+                if (checkIsMoreThenMin && checkIsLessThenMax){
+                    screanWidthType = sizeName;
+                    return;
+                }
+            }
+        })
+
+        return screanWidthType;
+    } ,
+
+
+    checkMoreThanScreanWidth(sizeName , element=null){
+        if (element == null){
+            element = window;
+        }
+        let screanWidth = element.innerWidth;
+        let screanWidthStatus = false;
+
+        Object.keys(tools_css.standardScreanWidth).forEach(key => {
+            const sizeType = tools_css.standardScreanWidth[key];
+            if (sizeType.hasOwnProperty("name") && sizeType.name == sizeName){
+                const point = sizeType.hasOwnProperty("max") ? sizeType.max : (sizeType.hasOwnProperty("min") ? sizeType.min : null);
+                screanWidthStatus = point!=null && screanWidth >= point
+                return;
+            }
+        })
+
+        return screanWidthStatus;
+    } ,
+
+
+    //---------------------------------------------------------------------------
+
+
+    getZIndex(zIndexName , zIndexDefault=1){
+        let value = null
+        Object.keys(tools_css.standardZIndex).forEach(key=>{
+            itemZIndex = tools_css.standardZIndex[key];
+            if(itemZIndex.name == zIndexName){
+                value = itemFont.val;
+                return;
+            }
+        });
+        return value != null ? value : zIndexDefault ;
+    }
 }
 
 
@@ -485,11 +584,12 @@ tools_component = {
 tools_submit = {
 
     fetcth: async function(url='' , args={}){
-        let data                  = args.hasOwnProperty("data") ? args.data: {} ;
-        let callback              = args.hasOwnProperty("callback") ? args.callback: null ;
-        let componentMessagesData = args.hasOwnProperty("componentMessagesData") ? args.componentMessagesData: null ;
-        let componentLoadingData  = args.hasOwnProperty("componentLoadingData") ? args.componentLoadingData: null ;
-        let component404Data      = args.hasOwnProperty("component404Data") ? args.component404Data: null ;
+        let data                  = args.hasOwnProperty("data")                    ? args.data                     : {} ;
+        let callback              = args.hasOwnProperty("callback")                ? args.callback                 : null ;
+        let componentMessagesData = args.hasOwnProperty("componentMessagesData")   ? args.componentMessagesData    : null ;
+        let componentLoadingData  = args.hasOwnProperty("componentLoadingData")    ? args.componentLoadingData     : null ;
+        let component404Data      = args.hasOwnProperty("component404Data")        ? args.component404Data         : null ;
+        let prop_size             = args.hasOwnProperty("prop_size")               ? args.prop_size                : tools_css.standardSizes.m.name ;
         if (component404Data != null){
             component404Data["prop_structureClass"] = ["position-absolute"];
             component404Data["prop_structureStyles"] = {
@@ -595,14 +695,13 @@ tools_submit = {
                     /// set messages
                     if (componentMessagesData != null) {
                         componentMessagesData.prop_messages = response.hasOwnProperty("messages") ? response.messages : [];
-
+                        componentMessagesData.prop_size = prop_size;
 
                         let messageType = "success";
                         if (response.hasOwnProperty("status")){
                             messageType = response.status ? "success" : "error";
                         }
                         componentMessagesData.prop_type = messageType;
-
 
                         tools_component.control("ComponentMessages" , componentMessagesData);
                     }
@@ -1432,10 +1531,13 @@ tools_svg = {
 
 tools_validtor = {
 
-    validtor_checkList(input , listRules , directionRtl) {
+    validtor_checkList(input , listRules , directionRtl=true , prop_size=tools_css.standardSizes.m.name) {
         let messages = [];
         let rulesHtml = "";
         let isInputCurrect = true;
+
+        const elIconHeight = tools_css.getIconSize(prop_size);
+        const elfontSize = tools_css.getFontSize(prop_size);
 
         for (let i = 0; i < listRules.length; i++) {
             const itemRule = listRules[i];
@@ -1474,14 +1576,16 @@ tools_validtor = {
                     isInputCurrect = false;
                 }
 
-                const icon = isTrue ? tools_icons.icon_is_true() : tools_icons.icon_is_false();
-                const color = isTrue ? "text-success" : "text-danger";
+                const iconColorError = component_props.errorColor1;
+                const iconColorSuccess = component_props.successColor1;
+                const icon = isTrue ? tools_icons.icon_is_true(elIconHeight , iconColorSuccess) : tools_icons.icon_is_false(elIconHeight , iconColorError);
 
                 rulesHtml +=
                     `
-                    <div style="display: flow-root"  class="item_country_code pt-1 border-bottom mx-1 line-height-30px font-12pt ${color}" >
-                        <span class="icon-rule  ${directionRtl ? "float-end" : "float-start"}"   ms-1">${icon}</span>
-                        <span class="ms-3 ${directionRtl ? "float-end" : "float-start"}"> - ${description}</span>
+                    <div style="display: flow-root;font-size: ${elfontSize}; color: ${isTrue ? iconColorSuccess : iconColorError} ;direction: ${directionRtl ? "rtl" : "ltr"}" 
+                         class="item_country_code pt-1 ${i < listRules.length-1 ? "border-bottom ": ""}  mx-1 line-height-30px " >
+                        <span class="icon-rule "  ms-1">${icon}</span>
+                        <span class="ms-3 " > - ${description}</span>
                     </div>
                     `;
 
@@ -1578,8 +1682,10 @@ tools_icons = {
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
      viewBox="0 0 24 24" 
+     aria-label="visit" 
      stroke="${color}" 
      width="${size}" height="${size}">
+  <title>visit</title>
   <path stroke-linecap="round" 
         stroke-linejoin="round" 
         stroke-width="2" 
@@ -1595,8 +1701,10 @@ tools_icons = {
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
      viewBox="0 0 24 24" 
+     aria-label="un visit" 
      stroke="${color}" 
      width="${size}" height="${size}">
+  <title>un visit</title>
   <path stroke-linecap="round" 
         stroke-linejoin="round" 
         stroke-width="2" 
@@ -1615,9 +1723,11 @@ tools_icons = {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
-     viewBox="0 0 24 24" 
+     viewBox="0 0 24 24"
+     aria-label="is true" 
      stroke="${color}" 
      width="${size}" height="${size}">
+  <title>is true</title>
   <path stroke-linecap="round" 
         stroke-linejoin="round" 
         stroke-width="2" 
@@ -1633,8 +1743,10 @@ tools_icons = {
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
      viewBox="0 0 24 24" 
+     aria-label="is false"
      stroke="${color}" 
      width="${size}" height="${size}">
+  <title>is false</title>
   <path stroke-linecap="round" 
         stroke-linejoin="round" 
         stroke-width="2" 
@@ -1651,9 +1763,10 @@ tools_icons = {
      width="${size}" height="${size}" 
      viewBox="0 0 24 24" 
      fill="none" 
+     aria-label="email"
      xmlns="http://www.w3.org/2000/svg" 
      role="img" aria-hidden="false">
-  <title>ایمیل</title>
+  <title>Email</title>
   <rect x="2" y="5" width="20" height="14" rx="2" 
         stroke="${bg_color}" 
         stroke-width="1.5" 
@@ -1675,8 +1788,10 @@ tools_icons = {
      width="${size}" height="${size}" 
      viewBox="0 0 24 24" 
      fill="none"
+     aria-label="lock"
      xmlns="http://www.w3.org/2000/svg" 
      aria-hidden="true">
+  <title>lock</title>
   <rect x="5" y="10" width="14" height="10" rx="2" 
         stroke="${bg_color}" 
         stroke-width="1.5"/>
@@ -1696,25 +1811,22 @@ tools_icons = {
      width="${size}" height="${size}" 
      viewBox="0 0 24 24" 
      fill="none" 
+     aria-label="tik"
      xmlns="http://www.w3.org/2000/svg" 
      role="img" aria-hidden="false" 
      style="padding:2px;">
-     
-  <title>selected</title>
- 
+  <title>tik</title>
   <defs>
     <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
       <feDropShadow dx="0" dy="-1.5" stdDeviation="1" flood-color="rgba(0,0,0,0.35)" />
     </filter>
   </defs>
-
   <path d="M20 6L9 17l-5-5" 
         stroke="${bg_color}" 
         stroke-width="2.2" 
         stroke-linecap="round" 
         stroke-linejoin="round"
         filter="url(#shadow)" />
-        
 </svg>
 `;
     } ,
@@ -1723,8 +1835,9 @@ tools_icons = {
 
     icon_plus_badge(size = 28 ,bg_color = "#fff") {
         return `
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="add"
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="plus badge"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>plus badge</title>
     <path d="M12 8v8M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     } ,
@@ -1733,8 +1846,9 @@ tools_icons = {
 
     icon_minus_badge(size = 28 , bg_color = "#fff") {
         return `
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="remove"
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="minus badge"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>minus badge</title>
     <path d="M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     } ,
@@ -1742,8 +1856,9 @@ tools_icons = {
 
     icon_arrow_down(size = 18 , bg_color = "#000") {
         return `
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow-down"
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow down"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>arrow down</title>
     <path d="M6 9l6 6 6-6" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     }  ,
@@ -1751,8 +1866,9 @@ tools_icons = {
 
     icon_arrow_up(size = 18 , bg_color = "#000" ) {
         return `
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow-up"
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow up"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>arrow up</title>
     <path d="M18 15l-6-6-6 6" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     },
@@ -1762,6 +1878,19 @@ tools_icons = {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="clear"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>clear</title>
+    <path d="M6 6l12 12M6 18L18 6" 
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    },
+
+
+
+    icon_close(size = 18 , bg_color = "#8e8e8e") {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="close"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+      <title>close</title>
     <path d="M6 6l12 12M6 18L18 6" 
         stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
@@ -1770,8 +1899,9 @@ tools_icons = {
 
     icon_exclamation_square(size = 18, color = "#000") {
         return `
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="warning" 
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="exclamation square" 
      width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+     <title>exclamation square</title>
   <rect x="2" y="2" width="20" height="20" rx="3" ry="3" fill="${color}"/>
   <path d="M12 7v6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M12 16h.01" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1784,6 +1914,7 @@ tools_icons = {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img"  aria-label="password" 
       width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+      <title>password</title>
   <rect x="5" y="10" width="14" height="10" rx="2" stroke="${color}" stroke-width="1.5"/>
   <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
 </svg>
@@ -1795,6 +1926,7 @@ tools_icons = {
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="search"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>search</title>
     <circle cx="11" cy="11" r="7" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <line x1="16.65" y1="16.65" x2="21" y2="21" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
