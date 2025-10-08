@@ -180,6 +180,13 @@ tools_init = {
                 color_itemSelected:                     component_props.shanColor1
             },
 
+            draggableOrder: {
+                color_border:                          component_props.primaryColor1 ,
+                color_borderHover:                     component_props.secondaryColor1 ,
+                color_icon:                            component_props.primaryColor1 ,
+            } ,
+
+
             elementLink: {
                 normal:{
                     backgroundColor: component_props.shanColor1 ,
@@ -216,8 +223,6 @@ tools_init = {
                 boderColorHover : component_props.secondaryColor1 ,
                 textColor : component_props.primaryColor1 ,
             } ,
-
-
 
             window: {
                 backgroundColor_blur : component_props.shadowColor1 ,
@@ -265,6 +270,8 @@ tools_init = {
                 backgroundColor: component_props.errorColor1 ,
                 color: component_props.shanColor1,
             } ,
+
+
         };
     }
 }
@@ -1930,9 +1937,28 @@ tools_icons = {
     <circle cx="11" cy="11" r="7" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <line x1="16.65" y1="16.65" x2="21" y2="21" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
-    }
+    } ,
 
 
+    icon_pin_close(size = 18 , color = "#000") {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" aria-label="pin closed"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <title>pin closed</title>
+  <path d="M16 3v4l2 2-4 4 2 2v4H8v-4l2-2-4-4 2-2V3h8z"/>
+</svg>`;
+    } ,
+
+
+    icon_pin_open(size = 18 , color = "#000") {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" aria-label="pin open"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <title>pin open</title>
+  <path d="M16 3v4l2 2-4 4 2 2v4H8v-4l2-2-4-4 2-2V3h8z"/>
+  <line x1="4" y1="20" x2="20" y2="4"/>
+</svg>`;
+    } ,
 
 }
 

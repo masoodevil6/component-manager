@@ -99,6 +99,8 @@
 
                 <component-check-box  id="check_box"></component-check-box>
 
+                <component-accept-terms id="accept_terms"></component-accept-terms>
+
                 <component-input-color  id="input-color"></component-input-color>
 
                 <component-input-size  id="input-size"></component-input-size>
@@ -254,7 +256,14 @@
         <component-body>
 
             <section class="row p-0 m-0">
-                <component-draggable-orders    id="draggable_orders"></component-draggable-orders>
+                <component-draggable-orders    id="draggable_orders">
+                    <component-body>
+                        <span> item 1 </span>
+                        <span> item 2 </span>
+                        <span> item 3 </span>
+                        <span> item 4 </span>
+                    </component-body>
+                </component-draggable-orders>
 
 
             </section>
@@ -896,6 +905,23 @@
         }
     )
 
+    /*-------------------------------------
+      03-011) Component check box
+    -------------------------------------*/
+    new window.ComponentAcceptTerms(
+        "accept_terms" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_checkBoxes: [
+                "item 1" ,
+                "item 2",
+                "item 3",
+                "item 4"
+            ],
+        }
+    )
+
 
     /*-------------------------------------
       03-012) Component validate
@@ -1517,20 +1543,20 @@
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_items: [
-                {
-                    "id" : "item_1" ,
-                    "name" : "item 1" ,
-                } ,
-                {
-                    "id" : "item_2" ,
-                    "name" : "item 2" ,
-                },
-                {
-                    "id" : "item_3" ,
-                    "name" : "item 3" ,
-                }
-            ]
+           /* prop_items: [
+                "item 1" ,
+                "item 2",
+                "item 3",
+                "item 4"
+            ],*/
+
+            fn_startComponent(order){
+                console.log(order)
+            } ,
+
+            fn_callback(order){
+                console.log(order)
+            }
 
         }
     );
@@ -1684,7 +1710,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [03] Button And Inputs" ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(
@@ -1779,7 +1805,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [99] el_specials" ,
-            prop_bodyShow: tree
+            prop_bodyShow: false
         }
     )
 

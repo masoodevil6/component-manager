@@ -65,6 +65,7 @@ if (typeof listComponent === 'undefined') {
 
         // [014] Inputs for check box
         ComponentCheckBox:                   "component-check-box" ,                      //014-01
+        ComponentAcceptTerms:                "component-accept-terms" ,                   //014-02
 
         // [015] Inputs Validator
         ComponentValidate:                   "component-validate" ,                       //015-01
@@ -72,8 +73,6 @@ if (typeof listComponent === 'undefined') {
         // [016] tooltips for Inputs
         ComponentTooltipDescription:         "component-tooltip-description" ,            //016-01
 
-        // [017] accept terms
-        ComponentAcceptTerms:               "component-accept-terms" ,                    //17-01
 
 
         // [020] Tables
@@ -209,6 +208,9 @@ class ComponentBase{
             }
             if (!props.part_label.hasOwnProperty("prop_labelSize")){
                 props["part_label"].push( {prop: "prop_labelSize"                    , default: tools_css.standardSizes.m.name});
+            }
+            if (!props.part_label.hasOwnProperty("prop_labelShow")){
+                props["part_label"].push( {prop: "prop_labelShow"                    , default:true});
             }
         }
 
@@ -1441,6 +1443,10 @@ class ComponentLabelBase extends ComponentBase{
             prop: "prop_labelStyles" ,
             default: {}
         } ,
+        prop_labelShow : {
+            prop: "prop_labelShow" ,
+            default: true
+        } ,
         prop_labelBackgroundColor : {
             prop: "prop_labelBackgroundColor" ,
             default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("backgroundColor")   ? tools_const.styles.label.backgroundColor : ""
@@ -1484,6 +1490,7 @@ class ComponentLabelBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_labelStyles ,
             this._COMPONENT_PATTERN.prop_labelBackgroundColor ,
             this._COMPONENT_PATTERN.prop_lableSize ,
+            this._COMPONENT_PATTERN.prop_labelShow ,
         ] ,
         part_label: [
             this._COMPONENT_PATTERN.prop_title ,
@@ -1580,11 +1587,13 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
             const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
             const prop_labelColor   =   data.hasOwnProperty("prop_labelColor")                            ?  data.prop_labelColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")   ? tools_const.styles.label.color : "";
             const prop_lableSize    =   data.hasOwnProperty("prop_lableSize")                             ?  data.prop_lableSize    :  null;
+            const prop_labelShow    =   data.hasOwnProperty("prop_labelShow")                             ?  data.prop_labelShow    :  true;
 
             const elHeight = tools_css.getHeightSize(prop_lableSize);
             const elfontsize = tools_css.getFontSize(prop_lableSize);
 
-            return `
+            if (prop_labelShow){
+                return `
 <label data-part-name="${partName}"   
          id="component-label-label-${this._COMPONENT_RANDOM_ID}" 
          class=" d-block" 
@@ -1606,6 +1615,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
        
 </label>
             `;
+            }
         }
 
         return `
@@ -13744,6 +13754,10 @@ class ComponentCheckBoxBase extends ComponentBase{
          PROPERTYs Pattern
     --------------------------------------------- */
     _COMPONENT_PATTERN = {
+        prop_labelShow : {
+            prop: "prop_labelShow" ,
+            default: true
+        } ,
         prop_size: {
             prop: "prop_size",
             default: tools_css.standardSizes.m.name,
@@ -13837,7 +13851,8 @@ class ComponentCheckBoxBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_title,
             this._COMPONENT_PATTERN.prop_labelClass,
             this._COMPONENT_PATTERN.prop_labelStyles,
-            this._COMPONENT_PATTERN.prop_labelHoverStyles
+            this._COMPONENT_PATTERN.prop_labelHoverStyles ,
+            this._COMPONENT_PATTERN.prop_labelShow ,
         ],
 
         part_form: [
@@ -14180,11 +14195,402 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
         if (data.hasOwnProperty("prop_isDisable") && !data.prop_isDisable){
             const prop_isSelected = data != null && data.hasOwnProperty("prop_isSelected") ? data.prop_isSelected : false;
             this.set("prop_isSelected" , !prop_isSelected);
+
+            if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+                data.fn_callback(event , !prop_isSelected);
+            }
+        }
+    }
+
+    call_setValue(status){
+        this.set("prop_isSelected" , status )
+    }
+
+    call_getValue(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_isDisable") && !data.prop_isDisable){
+            return this.get("prop_isSelected" );
+        }
+        return null;
+    }
+
+}
+
+
+
+/*-------------------------------------
+ 03-012) Component check box
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+@prop_name
+@prop_isSelected
+
+@prop_title
+@prop_labelClass
+@prop_labelStyles
+@prop_labelHoverStyles
+
+@prop_borderColor
+@prop_backgroundColor_unSelected
+@prop_backgroundColor_selected
+@prop_backgroundColor_disable
+@prop_formClass
+@prop_formStyles
+@prop_isDisable
+
+@prop_icon
+
+@prop_isAbsoluteRule
+@prop_listRules
+
+-------------------------------------*/
+class ComponentAcceptTermsBase extends ComponentBase{
+
+
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name,
+        },
+        prop_titleAll: {
+            prop: "prop_titleAll",
+            default: "select all",
+        },
+        prop_checkBoxes: {
+            prop: "prop_checkBoxes",
+            default: [],
+        },
+
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_formAll: [
+
+        ],
+
+        part_formAll_checkBoxAll: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_titleAll
+        ],
+
+        part_checkBoxsList: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_checkBoxes
+        ],
+
+        part_checkBoxsList_dragableRender: [
+
+        ],
+
+        part_checkBoxsList_checkBoxRender: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_checkBoxes
+        ],
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_formAll: {
+                part_formAll_checkBoxAll: {} ,
+            } ,
+            part_checkBoxsList: {
+                part_checkBoxsList_dragableRender: {
+                    part_checkBoxsList_checkBoxRender: {}
+                } ,
+            } ,
+        } ,
+
+    }
+
+}
+window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAcceptTermsBase {
+
+    _COMPONENT_CHECK_BOX_ALL = null;
+    _LIST_COMPONENT_CHECK_BOX_ITEMS = [];
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentAcceptTerms.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(screanWidthType){
+        this.templateFn("part_formAll_checkBoxAll");
+        this.templateFn("part_checkBoxsList_checkBoxRender");
+        this.templateFn("part_checkBoxsList_dragableRender");
+
+
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_formAll":
+                return this.template_render_formAll(partName);
+            case "part_formAll_checkBoxAll":
+                return this.componentFn_render_formAll_checkBoxAll(partName);
+            case "part_checkBoxsList":
+                return this.template_render_checkBoxsList(partName);
+            case "part_checkBoxsList_checkBoxRender":
+                return this.componentFn_render_checkBoxsList_checkBoxRender(partName);
+            case "part_checkBoxsList_dragableRender":
+                return this.componentFn_render_checkBoxsList_dragableRender(partName);
+            default:
+                return this.templateBasic_render();
         }
     }
 
 
+
+
+    template_render_structure(partName ) {
+        const content = `
+           ${this.templateFn("part_formAll") ?? ""}
+           ${this.templateFn("part_checkBoxsList") ?? ""}
+        `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_formAll(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-accept-tems-check-box-all-form-${ this._COMPONENT_RANDOM_ID}" 
+         class="border-bottom mx-2 pb-2" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-accept-tems-check-box-all-form-${ this._COMPONENT_RANDOM_ID}{
+             display: flow-root;
+         }
+     </style>
+     
+     <component-check-box id="component-accept-tems-check-box-all-${this._COMPONENT_RANDOM_ID}">  </component-check-box> 
+             
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_formAll_checkBoxAll(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_size               =   data.hasOwnProperty("prop_size")                ?  data.prop_size                 :  null;
+            const prop_titleAll           =   data.hasOwnProperty("prop_titleAll")            ?  data.prop_titleAll             : "";
+
+            this._COMPONENT_CHECK_BOX_ALL = new window.ComponentCheckBox(
+                `component-accept-tems-check-box-all-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: "col-md-3 col-12 mt-2"  ,
+
+                    prop_title: prop_titleAll ,
+                    prop_size: prop_size ,
+                    prop_isSelected:false ,
+                    prop_labelShow:false ,
+                    fn_callback: (event , status) =>{
+                        this.fn_onCheckBoxAll(event , status)
+                    }
+                }
+            )
+        }
+
+    }
+
+
+
+    template_render_checkBoxsList(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_size               =   data.hasOwnProperty("prop_size")                ?  data.prop_size                 :  null;
+            const prop_checkBoxes         =   data.hasOwnProperty("prop_checkBoxes")          ?  data.prop_checkBoxes           : [];
+
+            let listCheckBoxesHtml = "";
+            if (prop_checkBoxes != null && Array.isArray(prop_checkBoxes)){
+                for (let i=0; i<prop_checkBoxes.length; i++) {
+                    listCheckBoxesHtml += `    <component-check-box id="component-accept-tems-check-box-item-term-${this._COMPONENT_RANDOM_ID}-${i}">  </component-check-box> `
+                }
+            }
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-accept-tems-check-boxes-list-${ this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-accept-tems-check-boxes-list-${ this._COMPONENT_RANDOM_ID}{
+             
+         }
+     </style>
+     
+      <component-draggable-orders
+             id="component-accept-tems-check-boxes-list-terms-${ this._COMPONENT_RANDOM_ID}">
+                    <component-body>
+                        ${listCheckBoxesHtml}
+                    </component-body>
+      </component-draggable-orders>
+             
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_checkBoxsList_checkBoxRender(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_size               =   data.hasOwnProperty("prop_size")                ?  data.prop_size                 :  null;
+            const prop_checkBoxes         =   data.hasOwnProperty("prop_checkBoxes")          ?  data.prop_checkBoxes           : [];
+
+            if (prop_checkBoxes != null && Array.isArray(prop_checkBoxes)){
+                for (let i=0; i< prop_checkBoxes.length; i++) {
+
+                    const componentItem = new window.ComponentCheckBox(
+                        `component-accept-tems-check-box-item-term-${this._COMPONENT_RANDOM_ID}-${i}` ,
+                        {
+                            classList: " col-12 mx-2"  ,
+                            styles: {
+                                "display": "flow-root"
+                            } ,
+
+                            prop_title: prop_checkBoxes[i] ,
+                            prop_size: prop_size ,
+                            prop_isSelected:false ,
+                            prop_labelShow:false ,
+                            fn_callback: (event , status) =>{
+                                console.log("item" , status)
+                            }
+                        }
+                    );
+
+                    this._LIST_COMPONENT_CHECK_BOX_ITEMS.push(componentItem);
+
+                }
+            }
+        }
+
+    }
+
+    componentFn_render_checkBoxsList_dragableRender(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            new window.ComponentDraggableOrders(
+                `component-accept-tems-check-boxes-list-terms-${ this._COMPONENT_RANDOM_ID}`,
+                {
+                    classList: "col-md-3 col-12 mt-2"  ,
+                    prop_height: 45 ,
+
+                    fn_startComponent: (order) => {
+                        this.fn_syncListCheckBoxes(order);
+                    } ,
+                    fn_callback: (order) =>{
+                        this.fn_syncListCheckBoxes(order , false);
+                    }
+                }
+            );
+        }
+
+    }
+
+
+
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+     --------------------------------------------- */
+
+    fn_syncListCheckBoxes(order , isfirst=true){
+        let listExp = [];
+        if (order != null && Array.isArray(order)){
+            for (let i = 0; i < order.length ; i++) {
+                const itemOrder = order[i];
+
+                for (let j = 0; j < this._LIST_COMPONENT_CHECK_BOX_ITEMS.length ; j++) {
+                    const itemComponent = this._LIST_COMPONENT_CHECK_BOX_ITEMS[j];
+
+                    if (isfirst && i == j){
+                        itemOrder.component = isfirst ? itemComponent : itemComponent.component;
+                        break;
+                    }
+                }
+                listExp.push(itemOrder)
+            }
+        }
+        this._LIST_COMPONENT_CHECK_BOX_ITEMS = listExp;
+    }
+
+    fn_onCheckBoxAll(event , status){
+        for (let j = 0; j < this._LIST_COMPONENT_CHECK_BOX_ITEMS.length ; j++) {
+            const itemComponent = this._LIST_COMPONENT_CHECK_BOX_ITEMS[j];
+            console.log(itemComponent);
+            itemComponent.component.call_setValue(status)
+        }
+    }
+
 }
+
+
+
+
+
+
+
 
 
 /*-------------------------------------
@@ -21069,9 +21475,33 @@ class ComponentDraggableOrdersBase extends ComponentBase{
         PROPERTYs Pattern
      --------------------------------------------- */
     _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_height: {
+            prop: "prop_height",
+            default: 80
+        },
+        prop_draggable: {
+            prop: "prop_draggable",
+            default: true
+        },
+        prop_boderColor: {
+            prop: "prop_boderColor",
+            default: tools_const?.styles?.draggableOrder?.color_border ?? ""
+        },
+        prop_boderColorHover: {
+            prop: "prop_boderColorHover",
+            default: tools_const?.styles?.draggableOrder?.color_borderHover ?? ""
+        },
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.draggableOrder?.color_icon ?? ""
+        },
         prop_items: {
             prop: "prop_items",
-            default: []
+            default: null
         },
         prop_itemClass: {
             prop: "prop_itemClass",
@@ -21088,12 +21518,20 @@ class ComponentDraggableOrdersBase extends ComponentBase{
            PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
-        part_structure: [],
+        part_structure: [
+            this._COMPONENT_PATTERN.prop_height,
+            this._COMPONENT_PATTERN.prop_itemStyles,
+            this._COMPONENT_PATTERN.prop_boderColor,
+            this._COMPONENT_PATTERN.prop_boderColorHover,
+            this._COMPONENT_PATTERN.prop_draggable,
+        ],
 
         part_items: [
             this._COMPONENT_PATTERN.prop_items,
             this._COMPONENT_PATTERN.prop_itemClass,
-            this._COMPONENT_PATTERN.prop_itemStyles,
+            this._COMPONENT_PATTERN.prop_draggable,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_colorIcon,
         ],
 
     };
@@ -21115,6 +21553,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
 
     _DRAGED_ITEM = null;
     _OFFSET_Y = 0;
+    _ITEM_ORDERS = [];
 
     /* ---------------------------------------------
        SETUP
@@ -21139,7 +21578,9 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
        TEMPLATEs
     --------------------------------------------- */
     componentFn(){
-
+        requestAnimationFrame(() => {
+            this.fn_readyTemplateItems();
+        });
     }
 
     templateFn(partName = null){
@@ -21154,7 +21595,61 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
     }
 
     template_render_structure(partName) {
+        const data = this.getPartProps(partName)
+        const prop_itemStyles           =  data.hasOwnProperty("prop_itemStyles")         ?  data.prop_itemStyles           : {} ;
+        const prop_height               =  data.hasOwnProperty("prop_height")             ?  data.prop_height               : 50 ;
+        const prop_boderColor           =  data.hasOwnProperty("prop_boderColor")         ?  data.prop_boderColor           : "" ;
+        const prop_boderColorHover      =  data.hasOwnProperty("prop_boderColorHover")    ?  data.prop_boderColorHover      : "" ;
+        const prop_draggable            =  data.hasOwnProperty("prop_draggable")          ?  data.prop_draggable            : false ;
+        const directionRtl              = data.hasOwnProperty("directionRtl")             ? data.directionRtl               : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+
+
+
         const content = `
+              
+     <style>
+         #${this._COMPONENT_ID} #component-draggable-orders-${this._COMPONENT_RANDOM_ID}{
+             overflow: hidden;
+         }
+         #${this._COMPONENT_ID} #item-daragble-orders-${this._COMPONENT_RANDOM_ID}{
+            ${tools_public.renderListStyle(prop_itemStyles)}
+         }
+        
+         #${this._COMPONENT_ID} .item-daragble-orders-${this._COMPONENT_RANDOM_ID} {
+            height: ${prop_height}px;
+            width: 100%;
+            position: absolute;
+            cursor: pointer;
+            user-select: none;
+            width: 100%;
+         }
+         #${this._COMPONENT_ID} .item-daragble-orders-${this._COMPONENT_RANDOM_ID}:hover{
+            ${prop_draggable ? `border: 1px dashed ${prop_boderColorHover}`: ""};
+         }
+         .dragging {
+            cursor: move !important;
+            border-radius: 5px;
+            border: 1px dashed ${prop_boderColor} !important;
+         }
+         
+         
+          #${this._COMPONENT_ID} .item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}{
+            position:absolute;
+            display: none;
+            top: 10px;
+            ${directionRtl ? "left" : "right"} : 10px;
+         }
+
+         #${this._COMPONENT_ID} .item-daragble-orders-${this._COMPONENT_RANDOM_ID}:hover .item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}{
+            display: block;
+        }
+         #${this._COMPONENT_ID} .item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}-active{
+            display: block!important;
+        }
+         
+     </style>
+        
            ${this.templateFn("part_items") ?? ""}
                 `;
         return this.templateBasic_render_structure(content);
@@ -21164,34 +21659,33 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_items                =  data.hasOwnProperty("prop_items")         ?  data.prop_items            : [] ;
-            const prop_itemClass            =  data.hasOwnProperty("prop_itemClass")     ?  data.prop_itemClass        : [] ;
-            const prop_itemStyles           =  data.hasOwnProperty("prop_itemStyles")    ?  data.prop_itemStyles       : {} ;
 
-            const temp = this.fn_readyTemplateItems(prop_items , prop_itemClass);
+            let prop_items = [];
+            if (data.hasOwnProperty("prop_items") && data.prop_items != null ){
+                prop_items = data.prop_items
+            }
+            else{
+                const listItems =
+                    this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body")
+                        ? this._COMPONENT_SLOTS.body
+                        : '';
+
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(listItems, "text/html");
+                prop_items = Array.from(doc.body.children).map(el => el.outerHTML);
+            }
+
+            for (const propItem of prop_items) {
+                this._ITEM_ORDERS.push({
+                    content: propItem
+                }) ;
+            }
+
             return `
 <section data-part-name="${partName}" 
          id="component-draggable-orders-${this._COMPONENT_RANDOM_ID}"
          class="position-relative">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-draggable-orders-${this._COMPONENT_RANDOM_ID}{
-        
-         }
-         #${this._COMPONENT_ID} .item-daragble-orders-${this._COMPONENT_RANDOM_ID}{
-            cursor: pointer;
-            user-select: none;
-            ${tools_public.renderListStyle(prop_itemStyles)}
-         }
-         #${this._COMPONENT_ID} .item-daragble-orders-${this._COMPONENT_RANDOM_ID}.dragging {
-            cursor: move;
-            position: absolute;
-            border: 1px dashed #55e555;
-         }
-     </style>
-     
-    ${temp}
-    
+      
 </section>
         `;
         }
@@ -21207,84 +21701,198 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
        FUNCTIONs
     --------------------------------------------- */
 
-    fn_getListItemsDraggable(){
+    fn_getFormOrder(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-draggable-orders-${this._COMPONENT_RANDOM_ID}`)
+    }
+    fn_getElementsOrder(){
         return document.querySelectorAll(`#${this._COMPONENT_ID} .item-daragble-orders-${this._COMPONENT_RANDOM_ID}`)
     }
 
 
-    fn_readyTemplateItems(prop_items , prop_itemClass){
-        let html = "";
-        if (prop_items != null && Array.isArray(prop_items)){
-            for (let i=0; i<prop_items.length; i++){
-                const item = prop_items[i];
-                if (item.hasOwnProperty("id") && item.hasOwnProperty("name")){
-                    html += `
-<section class="item-daragble-orders-${this._COMPONENT_RANDOM_ID} ${tools_public.renderListClass(prop_itemClass)}" 
-         onmousedown="${this.getFn("fn_onElementMouseDown" , "event" , `'${item.id}'`)}"
-         
-         onmousemove="${this.getFn("fn_onElementMouseMove" , "event")}"
-         ondragend="${this.getFn("fn_onElementDragEnd" , "event")}" 
-         ondragover="${this.getFn("fn_onElementDragOver" , "event")}">
-         
-     ${item.name}
-</section>
-                    `;
+    fn_readyTemplateItems(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_itemClass            =  data.hasOwnProperty("prop_itemClass")     ?  data.prop_itemClass        : [] ;
+        const prop_height               =  data.hasOwnProperty("prop_height")        ?  data.prop_height           : 50 ;
+        const prop_draggable            =  data.hasOwnProperty("prop_draggable")     ?  data.prop_draggable        : false ;
+        const prop_size                 =  data.hasOwnProperty("prop_size")          ?  data.prop_size             : null ;
+        const prop_colorIcon            =  data.hasOwnProperty("prop_colorIcon")     ?  data.prop_colorIcon        : "" ;
+        const elIconHeight = tools_css.getIconSize(prop_size);
+        const form = this.fn_getFormOrder();
+
+        if (this._ITEM_ORDERS != null && Array.isArray(this._ITEM_ORDERS)){
+            for (let i=0; i<this._ITEM_ORDERS.length; i++){
+                const item = this._ITEM_ORDERS[i];
+                if (item != null && item.hasOwnProperty("content")){
+
+                    const section = document.createElement('section');
+                    section.innerHTML = item.content;
+                    section.setAttribute("class" , `item-daragble-orders-${this._COMPONENT_RANDOM_ID}`);
+                    section.setAttribute("data-order" , i);
+                    section.setAttribute("style" , `top:${i*prop_height}px`);
+                    if (prop_draggable){
+                        section.addEventListener('mousedown', this.fn_onElementMouseDown.bind(this , section));
+
+                        const icon = document.createElement('span');
+                        icon.setAttribute("class" , `item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}`);
+                        icon.innerHTML = tools_icons.icon_pin_open(elIconHeight , prop_colorIcon);
+                        icon.addEventListener('click', this.fn_onClickPinDraggable.bind(this , icon));
+                        section.appendChild(icon);
+                    }
+                    form.appendChild(section);
+
+                    this._ITEM_ORDERS[i].el = section;
+                    this._ITEM_ORDERS[i].isPin = false;
                 }
             }
+
+            form.style.height = prop_height * this._ITEM_ORDERS.length+10;
         }
-        return html;
+
+        if (data.hasOwnProperty("fn_startComponent") && typeof data.fn_startComponent != null){
+            data.fn_startComponent(this._ITEM_ORDERS );
+        }
+
     }
 
 
 
-    fn_onElementMouseDown(event , itemId){
-        this._DRAGED_ITEM = event.target;
+    fn_onElementMouseDown(section , e){
+        const ref = parseInt(section.getAttribute("data-order"));
+        if (this._ITEM_ORDERS != null && Array.isArray(this._ITEM_ORDERS)) {
+            const item = this._ITEM_ORDERS[ref];
+            if (item.hasOwnProperty("isPin") && item.isPin){
+                return;
+            }
+        }
 
-        const rect = this._DRAGED_ITEM.getBoundingClientRect();
-        this._OFFSET_Y = event.clientY - rect.top;
-
+        this._DRAGED_ITEM = section;
         this._DRAGED_ITEM.classList.add('dragging');
-        this._DRAGED_ITEM.style.top = `${rect.top + window.scrollY}px`;
-        this._DRAGED_ITEM.style.left = `${rect.left}px`;
+        const rect = this._DRAGED_ITEM.getBoundingClientRect();
+        this._OFFSET_Y = e.clientY - rect.top;
 
-        document.addEventListener('mousemove', this.fn_onElementMouseMove);
-        document.addEventListener('mouseup', this.fn_onElementMouseUp);
+        document.addEventListener('mousemove', this.fn_onElementMouseMove.bind(this));
+        document.addEventListener('mouseup', this.fn_onElementMouseUp.bind(this));
     }
 
-    fn_onElementMouseMove(event){
+    fn_onElementMouseMove(e){
         if (!this._DRAGED_ITEM) return;
-        const newY = event.clientY -  this._OFFSET_Y  + window.scrollY;
-        this._DRAGED_ITEM.style.top = `${newY}px`;
+
+        const componentRect = this.fn_getFormOrder().getBoundingClientRect();
+        const min = 0;
+        const max = componentRect.height - this._DRAGED_ITEM.getBoundingClientRect().height;
+        let newY = e.clientY - componentRect.top  ;
+
+        if (newY < min){
+            newY = min
+        }
+        else if (newY > max){
+            newY = max
+        }
+
+        this._DRAGED_ITEM.style.top = newY + 'px';
+
+        this.fn_onChangeOrderElement(newY)
     }
 
     fn_onElementMouseUp(event){
         if (!this._DRAGED_ITEM) return;
 
         this._DRAGED_ITEM.classList.remove('dragging');
-        this._DRAGED_ITEM.style.position = 'relative';
-        this._DRAGED_ITEM.style.top = '';
-        this._DRAGED_ITEM.style.left = '';
-
         this._DRAGED_ITEM = null;
-        document.removeEventListener('mousemove', this.fn_onElementMouseMove);
-        document.removeEventListener('mouseup', this.fn_onElementMouseUp);
+        this._OFFSET_Y = 0;
+        document.removeEventListener('mousemove',  this.fn_onElementMouseMove.bind(this));
+        document.removeEventListener('mouseup', this.fn_onElementMouseUp.bind(this));
+        this.fn_setPositinOrder();
     }
 
 
 
-    fn_onElementDragStart(event){
-        const el = event.target;
 
+    fn_onChangeOrderElement(newY){
+        const ref = parseInt(this._DRAGED_ITEM.getAttribute("data-order"));
+        const itemBefore = ref > 0 ? this._ITEM_ORDERS[ref-1] : null;
+        const itemAfter = ref < this._ITEM_ORDERS.length-1 ? this._ITEM_ORDERS[ref+1] : null;
+
+        if (itemBefore != null && itemBefore.hasOwnProperty("el")){
+            const itemBeforeRectTop =  parseInt(itemBefore.el.style.top);
+            if (newY <= itemBeforeRectTop ){
+                this.fn_setChangeOrder(this._DRAGED_ITEM , itemBefore.el , false);
+            }
+        }
+
+        if (itemAfter != null  && itemAfter.hasOwnProperty("el")){
+            const itemAfterRect = itemAfter.el.getBoundingClientRect();
+            const itemAfterRectBottom = parseInt(itemAfter.el.style.top) /////- itemAfterRect.height/2
+            if (newY >= itemAfterRectBottom){
+                 this.fn_setChangeOrder(this._DRAGED_ITEM , itemAfter.el , true);
+            }
+        }
     }
-    fn_onElementDragEnd(event){
-        const el = event.target;
 
+    fn_setChangeOrder(elReference , elDestination , isBefore=true){
+        const ref = parseInt(elReference.getAttribute("data-order"));
+        const des = parseInt(elDestination.getAttribute("data-order"));
+
+        if(isBefore){
+            [this._ITEM_ORDERS[ref], this._ITEM_ORDERS[des]] = [this._ITEM_ORDERS[des], this._ITEM_ORDERS[ref]];
+        }
+        else{
+            [this._ITEM_ORDERS[des], this._ITEM_ORDERS[ref]] = [this._ITEM_ORDERS[ref], this._ITEM_ORDERS[des]];
+        }
+
+        this.fn_setPositinOrder();
     }
-    fn_onElementDragOver(event){
-        const el = event.target;
 
+    fn_setPositinOrder(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_height               =  data.hasOwnProperty("prop_height")        ?  data.prop_height           : 50 ;
+
+        if (this._ITEM_ORDERS != null && Array.isArray(this._ITEM_ORDERS)) {
+            for (let i = 0; i < this._ITEM_ORDERS.length; i++) {
+                const item = this._ITEM_ORDERS[i];
+                if (item.hasOwnProperty("el")){
+                    item.el.style.top = i*prop_height
+                    item.el.setAttribute("data-order" , i);
+                }
+            }
+        }
+
+        this.fn_onCLickOrder();
     }
 
+    fn_onClickPinDraggable(element , e ){
+        e.stopPropagation();
+
+        const data = this._COMPONENT_CONFIG;
+        const prop_size                 =  data.hasOwnProperty("prop_size")          ?  data.prop_size             : null ;
+        const prop_colorIcon            =  data.hasOwnProperty("prop_colorIcon")     ?  data.prop_colorIcon        : "" ;
+        const elIconHeight = tools_css.getIconSize(prop_size);
+
+        const ref = parseInt(element.parentElement.getAttribute("data-order"));
+
+        if (this._ITEM_ORDERS != null && Array.isArray(this._ITEM_ORDERS)) {
+            const item = this._ITEM_ORDERS[ref];
+
+            const isPin = item.hasOwnProperty("isPin") ? !item.isPin : true;
+            this._ITEM_ORDERS[ref].isPin = isPin;
+
+            element.innerHTML = isPin ? tools_icons.icon_pin_close(elIconHeight , prop_colorIcon) : tools_icons.icon_pin_open(elIconHeight , prop_colorIcon) ;
+
+            if (!isPin){
+                element.classList.remove(`item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}-active`)
+            }
+            else{
+                element.classList.add(`item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}-active`)
+            }
+        }
+    }
+
+    fn_onCLickOrder(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(this._ITEM_ORDERS);
+        }
+    }
 }
 
 
