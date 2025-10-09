@@ -66,6 +66,7 @@ if (typeof listComponent === 'undefined') {
         // [014] Inputs for check box
         ComponentCheckBox:                   "component-check-box" ,                      //014-01
         ComponentAcceptTerms:                "component-accept-terms" ,                   //014-02
+        ComponentSelectColumns:              "component-select-columns" ,                 //014-03
 
         // [015] Inputs Validator
         ComponentValidate:                   "component-validate" ,                       //015-01
@@ -623,6 +624,7 @@ class ComponentBase{
 
 
 
+
 /* ===============================================================================================================
  [01] TEXT
 =============================================================================================================== */
@@ -883,6 +885,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
         this.getComponentElement().querySelector(`#component-messages-item-${this._COMPONENT_RANDOM_ID}-${indexMessage}`).remove()
     }
 }
+
 
 
 
@@ -1203,6 +1206,8 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
 }
 
 
+
+
 /*-------------------------------------
  01-03) Component Header
 -------------------------------------
@@ -1405,6 +1410,8 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
     }
 
 }
+
+
 
 
 /*-------------------------------------
@@ -1700,6 +1707,8 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
     }
 
 }
+
+
 
 
 /*-------------------------------------
@@ -2085,6 +2094,8 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
 }
 
 
+
+
 /*-------------------------------------
  01-06) Component Description
 -------------------------------------
@@ -2461,6 +2472,8 @@ window.ComponentDescription = class ComponentDescription extends ComponentDescri
 }
 
 
+
+
 /*-------------------------------------
  01-07) Component Info
 -------------------------------------
@@ -2662,6 +2675,8 @@ window.ComponentInfo = class ComponentInfo extends ComponentInfoBase{
 
 
 }
+
+
 
 
 /*-------------------------------------
@@ -3090,6 +3105,8 @@ window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
 }
 
 
+
+
 /*-------------------------------------
  02-02) Component 404
 -------------------------------------
@@ -3462,6 +3479,7 @@ window.Component404 = class Component404 extends Component404Base{
     }
 
 }
+
 
 
 /*-------------------------------------
@@ -3877,6 +3895,7 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
         }
     }
 }
+
 
 
 /*-------------------------------------
@@ -8928,9 +8947,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
     }
 
     componentFn_render_bodyValidate(partName) {
-
         const data = this.getPartProps(partName)
-        console.log("data" , data)
         if (data != null){
 
             const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
@@ -8955,7 +8972,6 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
                     }
                 );
             }
-
         }
     }
 
@@ -11580,7 +11596,6 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
 
     }
 
-
     componentFn_render_bodyHeader_year_btnPrevious(partName) {
         const data = this.getPartProps(partName)
         if (data != null){
@@ -11682,7 +11697,6 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
 
         }
     }
-
 
     componentFn_render_bodyHeader_month_btnPrevious(partName) {
         const data = this.getPartProps(partName)
@@ -11802,7 +11816,6 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
         }
     }
 
-
     componentFn_render_bodyWeeks_table(partName) {
         const data = this.getPartProps(partName)
         if (data != null){
@@ -11892,7 +11905,6 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
 
         }
     }
-
 
     componentFn_render_bodyFooter_btnAccept(partName) {
         const data = this.getPartProps(partName)
@@ -14225,27 +14237,6 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
 @prop_structureClass
 @prop_structureStyles
 
-@prop_name
-@prop_isSelected
-
-@prop_title
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_borderColor
-@prop_backgroundColor_unSelected
-@prop_backgroundColor_selected
-@prop_backgroundColor_disable
-@prop_formClass
-@prop_formStyles
-@prop_isDisable
-
-@prop_icon
-
-@prop_isAbsoluteRule
-@prop_listRules
-
 -------------------------------------*/
 class ComponentAcceptTermsBase extends ComponentBase{
 
@@ -14254,6 +14245,18 @@ class ComponentAcceptTermsBase extends ComponentBase{
          PROPERTYs Pattern
     --------------------------------------------- */
     _COMPONENT_PATTERN = {
+        prop_draggable: {
+            prop: "prop_draggable",
+            default: false
+        },
+        prop_heightForm: {
+            prop: "prop_heightForm",
+            default: 150
+        },
+        prop_heightItems: {
+            prop: "prop_heightItems",
+            default: 45
+        },
         prop_size: {
             prop: "prop_size",
             default: tools_css.standardSizes.m.name,
@@ -14284,16 +14287,18 @@ class ComponentAcceptTermsBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_titleAll
         ],
 
-        part_checkBoxsList: [
+        part_checkBoxesList: [
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_checkBoxes
+            this._COMPONENT_PATTERN.prop_checkBoxes,
+            this._COMPONENT_PATTERN.prop_heightForm,
         ],
 
-        part_checkBoxsList_dragableRender: [
-
+        part_checkBoxesList_draggableRender: [
+            this._COMPONENT_PATTERN.prop_draggable,
+            this._COMPONENT_PATTERN.prop_heightItems,
         ],
 
-        part_checkBoxsList_checkBoxRender: [
+        part_checkBoxesList_checkBoxRender: [
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_checkBoxes
         ],
@@ -14309,9 +14314,9 @@ class ComponentAcceptTermsBase extends ComponentBase{
             part_formAll: {
                 part_formAll_checkBoxAll: {} ,
             } ,
-            part_checkBoxsList: {
-                part_checkBoxsList_dragableRender: {
-                    part_checkBoxsList_checkBoxRender: {}
+            part_checkBoxesList: {
+                part_checkBoxesList_draggableRender: {
+                    part_checkBoxesList_checkBoxRender: {}
                 } ,
             } ,
         } ,
@@ -14347,10 +14352,12 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
     --------------------------------------------- */
     componentFn(screanWidthType){
         this.templateFn("part_formAll_checkBoxAll");
-        this.templateFn("part_checkBoxsList_checkBoxRender");
-        this.templateFn("part_checkBoxsList_dragableRender");
+        this.templateFn("part_checkBoxesList_checkBoxRender");
+        this.templateFn("part_checkBoxesList_draggableRender");
 
-
+        requestAnimationFrame(() => {
+            this.fn_onCheckBoxItem();
+        });
     }
 
     templateFn(partName = null){
@@ -14361,12 +14368,12 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
                 return this.template_render_formAll(partName);
             case "part_formAll_checkBoxAll":
                 return this.componentFn_render_formAll_checkBoxAll(partName);
-            case "part_checkBoxsList":
-                return this.template_render_checkBoxsList(partName);
-            case "part_checkBoxsList_checkBoxRender":
-                return this.componentFn_render_checkBoxsList_checkBoxRender(partName);
-            case "part_checkBoxsList_dragableRender":
-                return this.componentFn_render_checkBoxsList_dragableRender(partName);
+            case "part_checkBoxesList":
+                return this.template_render_checkBoxesList(partName);
+            case "part_checkBoxesList_checkBoxRender":
+                return this.componentFn_render_checkBoxesList_checkBoxRender(partName);
+            case "part_checkBoxesList_draggableRender":
+                return this.componentFn_render_checkBoxesList_draggableRender(partName);
             default:
                 return this.templateBasic_render();
         }
@@ -14378,7 +14385,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
     template_render_structure(partName ) {
         const content = `
            ${this.templateFn("part_formAll") ?? ""}
-           ${this.templateFn("part_checkBoxsList") ?? ""}
+           ${this.templateFn("part_checkBoxesList") ?? ""}
         `;
         return this.templateBasic_render_structure(content);
     }
@@ -14400,7 +14407,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
          }
      </style>
      
-     <component-check-box id="component-accept-tems-check-box-all-${this._COMPONENT_RANDOM_ID}">  </component-check-box> 
+     <component-check-box id="component-accept-terms-check-box-all-${this._COMPONENT_RANDOM_ID}">  </component-check-box> 
              
 </section>
         `;
@@ -14421,7 +14428,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
             const prop_titleAll           =   data.hasOwnProperty("prop_titleAll")            ?  data.prop_titleAll             : "";
 
             this._COMPONENT_CHECK_BOX_ALL = new window.ComponentCheckBox(
-                `component-accept-tems-check-box-all-${this._COMPONENT_RANDOM_ID}` ,
+                `component-accept-terms-check-box-all-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList: "col-md-3 col-12 mt-2"  ,
 
@@ -14438,9 +14445,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
 
     }
 
-
-
-    template_render_checkBoxsList(partName) {
+    template_render_checkBoxesList(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -14448,6 +14453,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
 
             const prop_size               =   data.hasOwnProperty("prop_size")                ?  data.prop_size                 :  null;
             const prop_checkBoxes         =   data.hasOwnProperty("prop_checkBoxes")          ?  data.prop_checkBoxes           : [];
+            const prop_heightForm         =   data.hasOwnProperty("prop_heightForm")          ?  data.prop_heightForm           : 150;
 
             let listCheckBoxesHtml = "";
             if (prop_checkBoxes != null && Array.isArray(prop_checkBoxes)){
@@ -14459,12 +14465,13 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
 
             return `
 <section data-part-name="${partName}" 
-         id="component-accept-tems-check-boxes-list-${ this._COMPONENT_RANDOM_ID}" 
+         id="component-accept-terms-check-boxes-list-${ this._COMPONENT_RANDOM_ID}" 
          class="" >
          
      <style>
-         #${this._COMPONENT_ID} #component-accept-tems-check-boxes-list-${ this._COMPONENT_RANDOM_ID}{
-             
+         #${this._COMPONENT_ID} #component-accept-terms-check-boxes-list-${ this._COMPONENT_RANDOM_ID}{
+             overflow: auto;
+             height: ${prop_heightForm}px;
          }
      </style>
      
@@ -14484,7 +14491,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
         `;
     }
 
-    componentFn_render_checkBoxsList_checkBoxRender(partName) {
+    componentFn_render_checkBoxesList_checkBoxRender(partName) {
 
         const data = this.getPartProps(partName)
 
@@ -14504,12 +14511,13 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
                                 "display": "flow-root"
                             } ,
 
-                            prop_title: prop_checkBoxes[i] ,
+                            prop_name: prop_checkBoxes[i].name ,
+                            prop_title: prop_checkBoxes[i].title ,
                             prop_size: prop_size ,
-                            prop_isSelected:false ,
+                            prop_isSelected:prop_checkBoxes[i].selected ,
                             prop_labelShow:false ,
                             fn_callback: (event , status) =>{
-                                console.log("item" , status)
+                                this.fn_onCheckBoxItem(event , status);
                             }
                         }
                     );
@@ -14522,17 +14530,20 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
 
     }
 
-    componentFn_render_checkBoxsList_dragableRender(partName) {
+    componentFn_render_checkBoxesList_draggableRender(partName) {
 
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const prop_draggable               =   data.hasOwnProperty("prop_draggable")                ?  data.prop_draggable                 :  true;
+            const prop_heightItems             =   data.hasOwnProperty("prop_heightItems")              ?  data.prop_heightItems               :  45;
 
             new window.ComponentDraggableOrders(
                 `component-accept-tems-check-boxes-list-terms-${ this._COMPONENT_RANDOM_ID}`,
                 {
                     classList: "col-md-3 col-12 mt-2"  ,
-                    prop_height: 45 ,
+                    prop_height: prop_heightItems ,
+                    prop_draggable: prop_draggable ,
 
                     fn_startComponent: (order) => {
                         this.fn_syncListCheckBoxes(order);
@@ -14564,7 +14575,18 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
                 for (let j = 0; j < this._LIST_COMPONENT_CHECK_BOX_ITEMS.length ; j++) {
                     const itemComponent = this._LIST_COMPONENT_CHECK_BOX_ITEMS[j];
 
-                    if (isfirst && i == j){
+                    let itemSelector = null;
+                    if (isfirst){
+                        itemSelector = itemComponent._COMPONENT_SELECTOR;
+                    }
+                    else{
+                        itemSelector = itemComponent.component._COMPONENT_SELECTOR;
+                    }
+
+                    const itemElement = document.querySelector(itemSelector)
+                    const itemParent = itemElement.parentElement;
+
+                    if (itemParent == itemOrder.el){
                         itemOrder.component = isfirst ? itemComponent : itemComponent.component;
                         break;
                     }
@@ -14573,23 +14595,356 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
             }
         }
         this._LIST_COMPONENT_CHECK_BOX_ITEMS = listExp;
+        this.fn_callback();
     }
 
     fn_onCheckBoxAll(event , status){
         for (let j = 0; j < this._LIST_COMPONENT_CHECK_BOX_ITEMS.length ; j++) {
             const itemComponent = this._LIST_COMPONENT_CHECK_BOX_ITEMS[j];
-            console.log(itemComponent);
             itemComponent.component.call_setValue(status)
         }
+        this.fn_callback();
     }
+
+    fn_onCheckBoxItem(event , status){
+        let isCompleteTrue = true;
+        for (let j = 0; j < this._LIST_COMPONENT_CHECK_BOX_ITEMS.length ; j++) {
+            const itemComponent = this._LIST_COMPONENT_CHECK_BOX_ITEMS[j];
+            const itemStatus = itemComponent.component.call_getValue();
+            if (!itemStatus){
+                isCompleteTrue = false;
+                break;
+            }
+        }
+
+        this._COMPONENT_CHECK_BOX_ALL.call_setValue(isCompleteTrue);
+
+        this.fn_callback();
+    }
+
+    fn_callback(event){
+        let listExp = [];
+        let isCompleteTrue = true;
+        if (this._LIST_COMPONENT_CHECK_BOX_ITEMS != null && Array.isArray(this._LIST_COMPONENT_CHECK_BOX_ITEMS)){
+            for (let j = 0; j < this._LIST_COMPONENT_CHECK_BOX_ITEMS.length ; j++) {
+                const itemComponent = this._LIST_COMPONENT_CHECK_BOX_ITEMS[j];
+
+                const itemName = itemComponent.component.get("prop_name");
+                const itemIsSelected = itemComponent.component.call_getValue();
+
+                if(itemIsSelected){
+                    listExp.push(itemName)
+                }
+                else{
+                    isCompleteTrue = false;
+                }
+            }
+        }
+
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , listExp , isCompleteTrue);
+        }
+    }
+
 
 }
 
 
 
+/*-------------------------------------
+ 03-012) Component check box
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+-------------------------------------*/
+class ComponentSelectColumnsBase extends ComponentBase{
 
 
 
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_widthBody: {
+            prop: "prop_widthBody",
+            default: 300
+        },
+        prop_heightBody: {
+            prop: "prop_heightBody",
+            default: 200
+        },
+        prop_heightItems: {
+            prop: "prop_heightItems",
+            default: 45
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: tools_icons.icon_select_columns
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name,
+        },
+        prop_titleAll: {
+            prop: "prop_titleAll",
+            default: "select all",
+        },
+        prop_columns: {
+            prop: "prop_columns",
+            default: [],
+        },
+
+        prop_backgroundColorIcon: {
+            prop: "prop_backgroundColorIcon",
+            default: tools_const?.styles?.selectColumn?.backgroundColor_icon ?? ""
+        },
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.selectColumn?.color_icon ?? ""
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_icon: [
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_backgroundColorIcon ,
+            this._COMPONENT_PATTERN.prop_colorIcon ,
+        ],
+
+        part_positionElement: [
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_widthBody ,
+            this._COMPONENT_PATTERN.prop_heightBody ,
+        ],
+
+        part_positionElement_selector: [
+            this._COMPONENT_PATTERN.prop_columns ,
+            this._COMPONENT_PATTERN.prop_titleAll ,
+            this._COMPONENT_PATTERN.prop_heightItems ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_heightBody ,
+        ]
+
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_icon: {} ,
+            part_positionElement: {
+                part_positionElement_selector: {}
+            } ,
+        }
+    }
+
+}
+window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSelectColumnsBase {
+
+    _SHOW_BODY = false;
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentSelectColumns.name] ,
+            elId
+        );
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
+    }
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(screanWidthType){
+        this.templateFn("part_icon");
+        this.templateFn("part_positionElement_selector");
+        this.templateFn("part_positionElement");
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
+            case "part_positionElement":
+                return this.componentFn_render_positionElement(partName);
+            case "part_positionElement_selector":
+                return this.componentFn_render_positionElement_selector(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+
+
+
+    template_render_structure(partName ) {
+        const content = `
+             <component-icon id="component-select-columns-icon-${ this._COMPONENT_RANDOM_ID}"></component-icon>
+             
+             <section class="position-relative">
+                  <component-position-element id="component-select-columns-position-element-${ this._COMPONENT_RANDOM_ID}">
+                       <component-body>
+                          <component-accept-terms id="component-select-columns-selector-${ this._COMPONENT_RANDOM_ID}"></component-accept-terms>
+                       </component-body>
+                  </component-position-element>
+             </section>
+        `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+    componentFn_render_icon(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_icon                    =   data.hasOwnProperty("prop_icon")                      ?  data.prop_icon                    :  null;
+            const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
+            const prop_backgroundColorIcon     =   data.hasOwnProperty("prop_backgroundColorIcon")       ?  data.prop_backgroundColorIcon     :  "";
+            const prop_colorIcon               =   data.hasOwnProperty("prop_colorIcon")                 ?  data.prop_colorIcon               :  "";
+
+            const elIconHeight = tools_css.getIconSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            if (prop_icon != null){
+                new window.ComponentIcon(
+                    `component-select-columns-icon-${ this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(elIconHeight , prop_colorIcon) : prop_icon) : "" ,
+
+                        classList : [ "position-relative" , "border" , "shadow-sm" , "d-block"] ,
+                        styles: {
+                            "cursor" : "pointer" ,
+                            "width" : elHeight+"px" ,
+                            "height" : elHeight+"px" ,
+                            "background-color": prop_backgroundColorIcon,
+                        } ,
+
+                        prop_iconClass : [ "position-absolute" ] ,
+                        prop_iconStyles : {
+                            "top": "50%" ,
+                            "left": "50%" ,
+                            "transform": "translate(-50% , -50%)" ,
+                            "color": prop_colorIcon,
+                        } ,
+
+                        fn_callback: (event)=>{
+                            this.fn_onClickIcon(event)
+                        } ,
+                    }
+                )
+            }
+
+        }
+    }
+
+    componentFn_render_positionElement(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
+            const prop_heightBody              =   data.hasOwnProperty("prop_heightBody")                ?  data.prop_heightBody              :  250;
+            const prop_widthBody               =   data.hasOwnProperty("prop_widthBody")                 ?  data.prop_widthBody               :  300;
+
+            new window.ComponentPositionElement(
+                `component-select-columns-position-element-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList :             ["d-none" ] ,
+                    prop_elementClass:      ["border", "shadow-sm", "bg-white", "px-2", "py-1", "rounded-0" , "overflow-hidden"] ,
+                    prop_positionTop :      "5px" ,
+                    prop_width :            prop_widthBody+"px",
+                    prop_height :           prop_heightBody+"px" ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_positionElement_selector(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
+            const prop_columns                 =   data.hasOwnProperty("prop_columns")                   ?  data.prop_columns                 :  [];
+            const prop_titleAll                =   data.hasOwnProperty("prop_titleAll")                  ?  data.prop_titleAll                :  "";
+            const prop_heightItems             =   data.hasOwnProperty("prop_heightItems")               ?  data.prop_heightItems             :  45;
+            const prop_heightBody              =   data.hasOwnProperty("prop_heightBody")                ?  data.prop_heightBody              :  250;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            new window.ComponentAcceptTerms(
+                `component-select-columns-selector-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_checkBoxes:    prop_columns,
+                    prop_size:          prop_size,
+                    prop_titleAll:      prop_titleAll,
+                    prop_heightForm:    prop_heightBody - elHeight - 25,
+                    prop_heightItems:   prop_heightItems,
+                    prop_draggable:     true,
+
+                    fn_callback: (event , order , isCompleteTrue)=>{
+                        this.fn_callback(event , order )
+                    }
+                }
+            )
+        }
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+     --------------------------------------------- */
+
+    fn_getPositionElement(){
+        return document.querySelector(`#component-select-columns-position-element-${ this._COMPONENT_RANDOM_ID}`)
+    }
+
+    fn_onClickIcon(event){
+        const el = this.fn_getPositionElement();
+        this._SHOW_BODY = !this._SHOW_BODY;
+        if(this._SHOW_BODY){
+            el.classList.remove("d-none");
+        }
+        else{
+            el.classList.add("d-none");
+        }
+    }
+
+    fn_callback(event , order){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , order);
+        }
+    }
+
+
+}
 
 
 
@@ -14610,7 +14965,7 @@ class ComponentValidateBase extends ComponentBase{
 
     /* ---------------------------------------------
       PROPERTYs Pattern
- --------------------------------------------- */
+    --------------------------------------------- */
     _COMPONENT_PATTERN = {
         prop_size: {
             prop: "prop_size",
@@ -15294,6 +15649,10 @@ class ComponentTableBase extends ComponentBase{
             prop: "prop_size" ,
             default: tools_css.standardSizes.m.name
         } ,
+        prop_hasColSelector : {
+            prop: "prop_hasColSelector" ,
+            default: true
+        } ,
         prop_tableClass: {
             prop: "prop_tableClass",
             default: ["table"]
@@ -15412,7 +15771,8 @@ class ComponentTableBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_tableItemHeadStyles,
             this._COMPONENT_PATTERN.prop_order,
             this._COMPONENT_PATTERN.prop_header,
-            this._COMPONENT_PATTERN.prop_size
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_hasColSelector
         ],
 
         part_table_body: [
@@ -15428,7 +15788,8 @@ class ComponentTableBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_valueRow_backgroundColor,
             this._COMPONENT_PATTERN.prop_valueCol_backgroundColor,
             this._COMPONENT_PATTERN.prop_valueCol_textColor,
-            this._COMPONENT_PATTERN.prop_size
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_hasColSelector
         ],
 
         part_table_footer: [
@@ -15481,7 +15842,9 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
        TEMPLATEs
     --------------------------------------------- */
     componentFn(){
-
+        requestAnimationFrame(() => {
+            this.fn_createColumnsSelector();
+        });
     }
 
     templateFn(partName = null){
@@ -15599,12 +15962,14 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
 
             const prop_order                      =   data.hasOwnProperty("prop_order")                      ?  data.prop_order                       : [];
             const prop_header                     =   data.hasOwnProperty("prop_header")                     ?  data.prop_header                      : [];
-            const prop_size                =   data.hasOwnProperty("prop_size")               ?  data.prop_size                        : null;
+            const prop_size                       =   data.hasOwnProperty("prop_size")                       ?  data.prop_size                        : null;
+
+            const prop_hasColSelector             =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elFontSize = tools_css.getFontSize(prop_size);
 
-            const htmlHeader = this.fn_onGetHtmlHeader(prop_order , prop_header , prop_tableItemHeadClass)
+            const htmlHeader = this.fn_onGetHtmlHeader(prop_order , prop_header , prop_tableItemHeadClass , prop_hasColSelector)
 
             return `
 
@@ -15659,12 +16024,13 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
 
             let   prop_valueRow                   =   data.hasOwnProperty("prop_valueRow")                   ?  data.prop_valueRow                    :  null;
             let   prop_valueCol                   =   data.hasOwnProperty("prop_valueCol")                   ?  data.prop_valueCol                    :  null;
-            const prop_size                =   data.hasOwnProperty("prop_size")               ?  data.prop_size                        : null;
+            const prop_size                       =   data.hasOwnProperty("prop_size")                       ?  data.prop_size                        : null;
+            const prop_hasColSelector             =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elFontSize = tools_css.getFontSize(prop_size);
 
-            const htmlBody = this.fn_onGetHtmlBody(prop_order , prop_header  , prop_data , prop_valueType  , prop_valueRow , prop_valueCol , prop_tableItemBodyClass );
+            const htmlBody = this.fn_onGetHtmlBody(prop_order , prop_header  , prop_data , prop_valueType  , prop_valueRow , prop_valueCol , prop_tableItemBodyClass , prop_hasColSelector);
 
             return `
 <tbody data-part-name="${partName}" 
@@ -15728,10 +16094,28 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
+    fn_createColumnsSelector(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_hasColSelector             =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
 
-    fn_onGetHtmlHeader(prop_order , prop_header , prop_tableItemHeadClass){
+        prop_hasColSelector
+
+    }
+
+
+
+    fn_onGetHtmlHeader(prop_order , prop_header , prop_tableItemHeadClass , prop_hasColSelector){
         let htmlHeader = "";
         if (prop_header != null && Array.isArray(prop_header)){
+
+            if (prop_hasColSelector){
+                htmlHeader += `
+<th class="component-table-header-item-${this._COMPONENT_RANDOM_ID} ${tools_public.renderListClass(prop_tableItemHeadClass)} p-0 text-center" 
+   scope="col" style="width: 40px">
+     <component-select-columns id="component-table-header-select-columns-${this._COMPONENT_RANDOM_ID}"></component-select-columns>
+</th>`
+            }
+
             let orderHedar = [];
             for (const orderIndex in prop_order) {
                 const orderKey = prop_order[orderIndex]
@@ -15755,7 +16139,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
         return htmlHeader;
     }
 
-    fn_onGetHtmlBody(prop_order , prop_header  , prop_data , prop_valueType , prop_valueRow , prop_valueCol  , prop_tableItemBodyClass){
+    fn_onGetHtmlBody(prop_order , prop_header  , prop_data , prop_valueType , prop_valueRow , prop_valueCol  , prop_tableItemBodyClass , prop_hasColSelector){
 
         let htmlBody = "";
 
@@ -15808,6 +16192,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
                         classSelected = "selected_table_row"
                     }
 
+
                     let hasRow = false;
                     let rowsHtml = "";
                     for (const headerIndex in orderHedar) {
@@ -15830,7 +16215,19 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
                     }
 
                     if (hasRow){
-                        htmlBody += `<tr class="${classSelected} rounded"> ${rowsHtml} </tr>`
+                        let itemRow = rowsHtml;
+                        if (prop_hasColSelector){
+                            itemRow = `
+<td class="component-table-body-item-${this._COMPONENT_RANDOM_ID} p-0 text-center" >
+    <span class="${tools_public.renderListClass(prop_tableItemBodyClass)}" >
+        ${parseInt(bodyIndex)+1}
+    </span>
+</td>
+${rowsHtml}
+`
+                        }
+
+                        htmlBody += `<tr class="${classSelected} rounded"> ${itemRow} </tr>`
                     }
 
                 }

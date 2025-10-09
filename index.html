@@ -101,6 +101,8 @@
 
                 <component-accept-terms id="accept_terms"></component-accept-terms>
 
+                <component-select-columns id="select_columns"></component-select-columns>
+
                 <component-input-color  id="input-color"></component-input-color>
 
                 <component-input-size  id="input-size"></component-input-size>
@@ -914,13 +916,71 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_checkBoxes: [
-                "item 1" ,
-                "item 2",
-                "item 3",
-                "item 4"
+                {
+                    name: "item_1" ,
+                    title: "item 1" ,
+                    selected: true ,
+                } ,
+                {
+                    name: "item_2" ,
+                    title: "item 2" ,
+                    selected: true ,
+                },
+                {
+                    name: "item_3" ,
+                    title: "item 3" ,
+                    selected: true ,
+                },
+                {
+                    name: "item_4" ,
+                    title: "item 4" ,
+                    selected: true ,
+                }
             ],
+            fn_callback: (event , order , isCompleteTrue)=>{
+                console.log(order , isCompleteTrue)
+            }
         }
     )
+
+    /*-------------------------------------
+      03-011) Component check box
+    -------------------------------------*/
+    new window.ComponentSelectColumns(
+        "select_columns" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_columns: [
+                {
+                    name: "item_1" ,
+                    title: "item 1" ,
+                    selected: true ,
+                } ,
+                {
+                    name: "item_2" ,
+                    title: "item 2" ,
+                    selected: true ,
+                },
+                {
+                    name: "item_3" ,
+                    title: "item 3" ,
+                    selected: true ,
+                },
+                {
+                    name: "item_4" ,
+                    title: "item 4" ,
+                    selected: true ,
+                }
+            ],
+            fn_callback: (event , order)=>{
+                console.log(order)
+            }
+        }
+    )
+
+
+
 
 
     /*-------------------------------------
@@ -999,9 +1059,9 @@
             prop_header : [
                 {id:"id" , content: "id" , width:"10%"},
 
-                {id:"has" , content: "has" , width:"30%"},
-                {id:"name" , content: "name" , width:"30%"},
-                {id:"family" , content: "family" , width:"30%"},
+                {id:"has" , content: "has" , width:"25%"},
+                {id:"name" , content: "name" , width:"25%"},
+                {id:"family" , content: "family" , width:"25%"},
             ] ,
             prop_data : [
                 {id:1 , name:"mehdi" , family:"marefiyan" , has:false} ,
@@ -1710,7 +1770,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [03] Button And Inputs" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
     new window.ComponentCollapse(
@@ -1731,7 +1791,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [10] Table " ,
-            prop_bodyShow: false
+            prop_bodyShow: true
         }
     )
     new window.ComponentCollapse(

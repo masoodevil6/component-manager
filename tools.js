@@ -8,7 +8,7 @@ Version: 0.1
 
 if (typeof component_props === 'undefined') {
     component_props = {
-        directionRtl: true,
+        directionRtl: false,
 
 
         // -----------------------
@@ -184,6 +184,11 @@ tools_init = {
                 color_border:                          component_props.primaryColor1 ,
                 color_borderHover:                     component_props.secondaryColor1 ,
                 color_icon:                            component_props.primaryColor1 ,
+            } ,
+
+            selectColumn: {
+                backgroundColor_icon:                 component_props.primaryColor1 ,
+                color_icon:                           component_props.shanColor1,
             } ,
 
 
@@ -1958,6 +1963,26 @@ tools_icons = {
   <path d="M16 3v4l2 2-4 4 2 2v4H8v-4l2-2-4-4 2-2V3h8z"/>
   <line x1="4" y1="20" x2="20" y2="4"/>
 </svg>`;
+    } ,
+
+
+
+    icon_select_columns(size = 18 , color = "#000" ) {
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="select column"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <title>select columns</title>
+  
+  <rect x="3"  y="4" width="4" height="16" rx="0.8" fill="none" />
+  <rect x="10" y="3" width="4" height="18" rx="0.8" fill="${color}" opacity="0.12"/> <!-- ستون انتخاب‌شده -->
+
+  
+  <rect x="3"  y="4" width="4" height="16" rx="0.8" stroke="${color}" fill="none"/>
+  <rect x="10" y="3" width="4" height="18" rx="0.8" stroke="${color}" fill="none"/>
+  <rect x="17" y="4" width="4" height="16" rx="0.8" stroke="${color}" fill="none"/>
+</svg>`;
+
+
     } ,
 
 }
