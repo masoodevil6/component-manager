@@ -117,6 +117,7 @@ if (typeof listComponent === 'undefined') {
 
         // [080] elements spicals
         ComponentDraggableOrders:           "component-draggable-orders" ,              //080-01
+        ComponentChangePage:                "component-change-page" ,                   //080-02
 
 
         // [99] Others
@@ -169,6 +170,17 @@ class ComponentBase{
         this._COMPONENT_NAME = componentName;
         this._COMPONENT_ID = elId;
         this._COMPONENT_SELECTOR = this._COMPONENT_NAME+"#"+this._COMPONENT_ID;
+    }
+
+
+    renderComponent(config){
+        this.onCreate(
+            config ,
+            this._COMPONENT_PROPS ,
+            this._COMPONENT_SCHEMA
+        )
+        this.onTemplateComplete();
+        this.onRegister();
     }
 
 
@@ -314,6 +326,12 @@ class ComponentBase{
     }
 
 
+    getElementData(el){
+        return {
+            html:  el.innerHTML ,
+            attrs: Object.fromEntries([...el.attributes].map(a => [a.name, a.value]))
+        }
+    }
 
     getAllComponentSluts(){
         const component = this.getComponentElement();
@@ -326,13 +344,39 @@ class ComponentBase{
                 this._COMPONENT_SLOTS[slotName ?? "body"] = slotContent;
             }*/
 
-            const componentSlotNames = [...component.children].filter(
-                el => el.tagName.toLowerCase().startsWith('component-')
+
+            const componentSlotNames= Object.values(
+                [...component.children]
+                    .filter(el => el.tagName.toLowerCase().startsWith('component-'))
+                    .reduce((acc, el) => {
+                        const tag = el.tagName.toLowerCase();
+                        if (!acc[tag]) acc[tag] = { el, list: [] };
+                        acc[tag].list.push(el);
+                        return acc;
+                    }, {})
             );
 
-            if (componentSlotNames != null && Array.isArray(componentSlotNames)){
+
+            if (Array.isArray(componentSlotNames)) {
                 for (const componentTag of componentSlotNames) {
-                    this._COMPONENT_SLOTS[componentTag.tagName.toLowerCase().replace(/^component-/, '')] = componentTag.innerHTML;
+
+                    if(componentTag.hasOwnProperty("list") && componentTag.hasOwnProperty("el")){
+                        const list = componentTag.list;
+
+                        if(list != null && Array.isArray(list)){
+                            if (list.length > 1){
+                                const listExp = {};
+                                for (const itemComponent of list) {
+                                    const name = itemComponent.getAttribute("name")
+                                    listExp[name] = this.getElementData(itemComponent);
+                                }
+                                this._COMPONENT_SLOTS[componentTag.el.tagName.toLowerCase().replace(/^component-/, '')] = listExp
+                            }
+                            else if (list.length == 1){
+                                this._COMPONENT_SLOTS[list[0].tagName.toLowerCase().replace(/^component-/, '')] = this.getElementData(list[0]);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -714,18 +758,12 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
-    constructor(elId , config) {
+      constructor(elId , config) {
         super(
             listComponent[ComponentMessages.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+          this.renderComponent(config);
     }
 
 
@@ -1010,18 +1048,12 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentIsEmpty.name] ,
-            elId
+      constructor(elId , config) {
+       super(
+           listComponent[ComponentIsEmpty.name] ,
+           elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+          this.renderComponent(config);
     }
 
 
@@ -1290,18 +1322,11 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
-            listComponent[ComponentHeader.name] ,
-            elId
+       super(
+           listComponent[ComponentHeader.name] ,
+           elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+        this.renderComponent(config);
     }
 
 
@@ -1354,7 +1379,7 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
 
         if (data != null){
             const prop_size =      data.hasOwnProperty("prop_size")        ?  data.prop_size       : 5;
-            const prop_title =     data.hasOwnProperty("prop_title")       ?  data.prop_title      : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_title =     data.hasOwnProperty("prop_title")       ?  data.prop_title      :  this._COMPONENT_SLOTS?.body?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -1532,18 +1557,11 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
-            listComponent[ComponentLabel.name] ,
-            elId
+       super(
+           listComponent[ComponentLabel.name] ,
+           elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+        this.renderComponent(config);
     }
 
 
@@ -1591,7 +1609,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
         if (data != null){
 
             const prop_for          =   data.hasOwnProperty("prop_for")                                   ?  data.prop_for          : "";
-            const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  this._COMPONENT_SLOTS?.body?.html ?? "";
             const prop_labelColor   =   data.hasOwnProperty("prop_labelColor")                            ?  data.prop_labelColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")   ? tools_const.styles.label.color : "";
             const prop_lableSize    =   data.hasOwnProperty("prop_lableSize")                             ?  data.prop_lableSize    :  null;
             const prop_labelShow    =   data.hasOwnProperty("prop_labelShow")                             ?  data.prop_labelShow    :  true;
@@ -1660,7 +1678,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
 
         if (data != null){
 
-            const prop_tooltipDescription        =   data.hasOwnProperty("prop_tooltipDescription") && data.prop_tooltipDescription !=null       ?  data.prop_tooltipDescription        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("description") ? this._COMPONENT_SLOTS.description : null);
+            const prop_tooltipDescription        =   data.hasOwnProperty("prop_tooltipDescription") && data.prop_tooltipDescription !=null       ?  data.prop_tooltipDescription        : this._COMPONENT_SLOTS?.description?.html ?? "";
             const prop_tooltipIcon               =   data.hasOwnProperty("prop_tooltipIcon")                                                     ?  data.prop_tooltipIcon               : "";
             const prop_lableSize                 =   data.hasOwnProperty("prop_lableSize")                                                       ?  data.prop_lableSize                 : null;
 
@@ -1881,17 +1899,11 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentLink.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+        this.renderComponent(config);
     }
 
 
@@ -2230,17 +2242,11 @@ window.ComponentDescription = class ComponentDescription extends ComponentDescri
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
-            listComponent[ComponentDescription.name] ,
-            elId
+       super(
+           listComponent[ComponentDescription.name] ,
+           elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+        this.renderComponent(config);
     }
 
 
@@ -2568,17 +2574,11 @@ window.ComponentInfo = class ComponentInfo extends ComponentInfoBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentInfo.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -2778,17 +2778,11 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
        SETUP
     --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentCard.name],
+       super(
+            listComponent[ComponentCard.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -2854,7 +2848,7 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
         const data = this.getPartProps(partName)
 
         if (data != null) {
-            const prop_header                    =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header                     :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("header") ? this._COMPONENT_SLOTS.header : '');
+            const prop_header                    =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header                     :  this._COMPONENT_SLOTS?.header?.html ?? "";
             const prop_cardHeaderClassBackground = data.hasOwnProperty("prop_cardHeaderClassBackground")                 ? data.prop_cardHeaderClassBackground   : "";
             const prop_cardHeaderClassColor      = data.hasOwnProperty("prop_cardHeaderClassColor")                      ? data.prop_cardHeaderClassColor        : "";
 
@@ -2881,7 +2875,7 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
 
         if (data != null) {
 
-            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     : this._COMPONENT_SLOTS?.body?.html ?? "";
             const prop_cardBodyClassBackground = data.hasOwnProperty("prop_cardBodyClassBackground")               ? data.prop_cardBodyClassBackground   : "";
             const prop_cardBodyClassColor      = data.hasOwnProperty("prop_cardBodyClassColor")                    ? data.prop_cardBodyClassColor        : "";
 
@@ -2972,17 +2966,11 @@ window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentLoading.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -3187,17 +3175,11 @@ window.Component404 = class Component404 extends Component404Base{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[Component404.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -3601,17 +3583,11 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentForm.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -3674,7 +3650,7 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
 
         if (data != null){
 
-            const prop_forms =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_forms =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : this._COMPONENT_SLOTS?.body?.html ?? "";
 
             return `
 <section data-part-name="${partName}">
@@ -3986,19 +3962,12 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
-    constructor(elId , config)
-    {
-        super(
+    constructor(elId , config) {
+       super(
             listComponent[ComponentWidget.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -4297,19 +4266,12 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
-    constructor(elId , config)
-    {
-        super(
+    constructor(elId , config) {
+       super(
             listComponent[ComponentIframe.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -4440,7 +4402,7 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
 @prop_structureClass
 @prop_structureStyles
 
-@prop_type   // cancel  //submit //null
+@prop_type   // cancel  //submit   //back //null
 @prop_title
 @prop_size
 
@@ -4539,21 +4501,12 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
         SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentButton.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
-
-
-
 
 
     /* ---------------------------------------------
@@ -4583,7 +4536,7 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
         if (data != null){
 
             const prop_type             =   data.hasOwnProperty("prop_type")                 ?  data.prop_type               :  null;
-            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  this._COMPONENT_SLOTS?.body?.html ?? "";
 
             const prop_btnClass         =   data.hasOwnProperty("prop_btnClass")             ?  data.prop_btnClass           : "w-100"
             const prop_size             =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               : 0;
@@ -4595,15 +4548,20 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
             let btnColor =            null;
 
             switch (prop_type){
-                case "cancel" :
-                    btnBackgroundColor       = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.error.backgroundColor : "" ;
-                    btnBackgroundColor_hover = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.error.backgroundColorHover : "" ;
-                    btnColor                 = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("error") && tools_const.styles.button.error.hasOwnProperty("color")                  ? tools_const.styles.button.error.color : ""  ;
-                    break;
                 case "submit" :
-                    btnBackgroundColor       = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.default.backgroundColor : "" ;
-                    btnBackgroundColor_hover = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.default.backgroundColorHover : "" ;
-                    btnColor                 = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("default") && tools_const.styles.button.default.hasOwnProperty("color")                  ? tools_const.styles.button.default.color : ""  ;
+                    btnBackgroundColor       = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("submit") && tools_const.styles.button.submit.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.submit.backgroundColor : "" ;
+                    btnBackgroundColor_hover = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("submit") && tools_const.styles.button.submit.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.submit.backgroundColorHover : "" ;
+                    btnColor                 = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("submit") && tools_const.styles.button.submit.hasOwnProperty("color")                  ? tools_const.styles.button.submit.color : ""  ;
+                    break;
+                case "cancel" :
+                    btnBackgroundColor       = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("cancel") && tools_const.styles.button.cancel.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.cancel.backgroundColor : "" ;
+                    btnBackgroundColor_hover = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("cancel") && tools_const.styles.button.cancel.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.cancel.backgroundColorHover : "" ;
+                    btnColor                 = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("cancel") && tools_const.styles.button.cancel.hasOwnProperty("color")                  ? tools_const.styles.button.cancel.color : ""  ;
+                    break;
+                case "back" :
+                    btnBackgroundColor       = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("back") && tools_const.styles.button.back.hasOwnProperty("backgroundColor")        ? tools_const.styles.button.back.backgroundColor : "" ;
+                    btnBackgroundColor_hover = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("back") && tools_const.styles.button.back.hasOwnProperty("backgroundColorHover")   ? tools_const.styles.button.back.backgroundColorHover : "" ;
+                    btnColor                 = tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("button") && tools_const.styles.button.hasOwnProperty("back") && tools_const.styles.button.back.hasOwnProperty("color")                  ? tools_const.styles.button.back.color : ""  ;
                     break;
                 default:
                     btnBackgroundColor       = data.hasOwnProperty("prop_btnBackgroundColor")         ?  data.prop_btnBackgroundColor          : "";
@@ -4791,17 +4749,11 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentOtp.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -5373,18 +5325,11 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentInput.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -6012,18 +5957,11 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentInputPrice.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -6780,18 +6718,11 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentInputColor.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -7835,17 +7766,11 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentInputSize.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -8587,18 +8512,11 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentInputPassword.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -8635,7 +8553,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
 
             case "part_body_icon_visit":
                 return this.componentFn_render_bodyIconVisit(partName);
-                  
+
             case "part_body_validate":
                 return this.componentFn_render_bodyValidate(partName);
 
@@ -9234,18 +9152,11 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentInputEmail.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -9877,18 +9788,11 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentInputFile.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -10837,18 +10741,11 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentDate.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -11838,10 +11735,13 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                 var_selected_date != null && var_selected_date.hasOwnProperty("total") && var_selected_date.total.toString("month") ?   parseInt(var_selected_date.total.month)   : -1
             );
 
+
             new window.ComponentTable(
                 `component-input-date-body-weeks-table-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList: "row p-0 m-0"  ,
+                    prop_hasColNumber:false ,
+                    prop_hasColSelector:false ,
 
                     prop_structureClass : ["h-100"] ,
                     prop_structureStyles : {
@@ -12812,17 +12712,11 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentSelectOption.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -13592,17 +13486,11 @@ window.ComponentSelectIcon = class ComponentSelectIcon extends ComponentSelectIc
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentSelectIcon.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -13930,17 +13818,11 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentCheckBox.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -14333,17 +14215,11 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentAcceptTerms.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -14378,9 +14254,6 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
                 return this.templateBasic_render();
         }
     }
-
-
-
 
     template_render_structure(partName ) {
         const content = `
@@ -14517,7 +14390,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
                             prop_isSelected:prop_checkBoxes[i].selected ,
                             prop_labelShow:false ,
                             fn_callback: (event , status) =>{
-                                this.fn_onCheckBoxItem(event , status);
+                                this.fn_onCheckBoxItem(event , status , false);
                             }
                         }
                     );
@@ -14595,7 +14468,9 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
             }
         }
         this._LIST_COMPONENT_CHECK_BOX_ITEMS = listExp;
-        this.fn_callback();
+        if (!isfirst){
+            this.fn_callback();
+        }
     }
 
     fn_onCheckBoxAll(event , status){
@@ -14606,7 +14481,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
         this.fn_callback();
     }
 
-    fn_onCheckBoxItem(event , status){
+    fn_onCheckBoxItem(event , status , isfirst=true){
         let isCompleteTrue = true;
         for (let j = 0; j < this._LIST_COMPONENT_CHECK_BOX_ITEMS.length ; j++) {
             const itemComponent = this._LIST_COMPONENT_CHECK_BOX_ITEMS[j];
@@ -14616,10 +14491,11 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
                 break;
             }
         }
-
         this._COMPONENT_CHECK_BOX_ALL.call_setValue(isCompleteTrue);
 
-        this.fn_callback();
+        if (!isfirst){
+            this.fn_callback();
+        }
     }
 
     fn_callback(event){
@@ -14674,7 +14550,7 @@ class ComponentSelectColumnsBase extends ComponentBase{
         },
         prop_heightBody: {
             prop: "prop_heightBody",
-            default: 200
+            default: 300
         },
         prop_heightItems: {
             prop: "prop_heightItems",
@@ -14732,6 +14608,14 @@ class ComponentSelectColumnsBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_heightItems ,
             this._COMPONENT_PATTERN.prop_size ,
             this._COMPONENT_PATTERN.prop_heightBody ,
+        ],
+
+        part_positionElement_btnAccept: [
+            this._COMPONENT_PATTERN.prop_size ,
+        ],
+
+        part_positionElement_btnCancel: [
+            this._COMPONENT_PATTERN.prop_size ,
         ]
 
     };
@@ -14745,7 +14629,9 @@ class ComponentSelectColumnsBase extends ComponentBase{
         part_structure: {
             part_icon: {} ,
             part_positionElement: {
-                part_positionElement_selector: {}
+                part_positionElement_selector: {} ,
+                part_positionElement_btnAccept: {} ,
+                part_positionElement_btnCancel: {} ,
             } ,
         }
     }
@@ -14754,22 +14640,18 @@ class ComponentSelectColumnsBase extends ComponentBase{
 window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSelectColumnsBase {
 
     _SHOW_BODY = false;
+    _TALBE_LIST_COLUMNS = [];
+    _TALBE_LIST_COLUMNS_TEMPLATE = [];
 
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentSelectColumns.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -14778,8 +14660,15 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
     --------------------------------------------- */
     componentFn(screanWidthType){
         this.templateFn("part_icon");
-        this.templateFn("part_positionElement_selector");
+
         this.templateFn("part_positionElement");
+        this.templateFn("part_positionElement_btnAccept");
+        this.templateFn("part_positionElement_btnCancel");
+
+
+        requestAnimationFrame(() => {
+            this.readyListColumns();
+        });
     }
 
     templateFn(partName = null){
@@ -14792,13 +14681,14 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
                 return this.componentFn_render_positionElement(partName);
             case "part_positionElement_selector":
                 return this.componentFn_render_positionElement_selector(partName);
+            case "part_positionElement_btnAccept":
+                return this.componentFn_render_positionElement_btnAccept(partName);
+            case "part_positionElement_btnCancel":
+                return this.componentFn_render_positionElement_btnCancel(partName);
             default:
-                return this.templateBasic_render();
+                return this.templateBasic_render("");
         }
     }
-
-
-
 
     template_render_structure(partName ) {
         const content = `
@@ -14807,14 +14697,21 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
              <section class="position-relative">
                   <component-position-element id="component-select-columns-position-element-${ this._COMPONENT_RANDOM_ID}">
                        <component-body>
-                          <component-accept-terms id="component-select-columns-selector-${ this._COMPONENT_RANDOM_ID}"></component-accept-terms>
+                       
+              <component-accept-terms id="component-select-columns-selector-${ this._COMPONENT_RANDOM_ID}"></component-accept-terms>
+                                  
+             <section class="border-top mx-1 row">
+                  <component-button id="component-select-columns-btn-accept-${ this._COMPONENT_RANDOM_ID}"></component-button>
+                  <component-button id="component-select-columns-btn-cancel-${ this._COMPONENT_RANDOM_ID}"></component-button>
+             </section>
+             
                        </component-body>
                   </component-position-element>
              </section>
+            
         `;
         return this.templateBasic_render_structure(content);
     }
-
 
     componentFn_render_icon(partName){
         const data = this.getPartProps(partName)
@@ -14888,7 +14785,7 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
 
         if (data != null){
             const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
-            const prop_columns                 =   data.hasOwnProperty("prop_columns")                   ?  data.prop_columns                 :  [];
+            //const prop_columns                 =   data.hasOwnProperty("prop_columns")                   ?  data.prop_columns                 :  [];
             const prop_titleAll                =   data.hasOwnProperty("prop_titleAll")                  ?  data.prop_titleAll                :  "";
             const prop_heightItems             =   data.hasOwnProperty("prop_heightItems")               ?  data.prop_heightItems             :  45;
             const prop_heightBody              =   data.hasOwnProperty("prop_heightBody")                ?  data.prop_heightBody              :  250;
@@ -14898,23 +14795,107 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
             new window.ComponentAcceptTerms(
                 `component-select-columns-selector-${ this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_checkBoxes:    prop_columns,
+                    prop_checkBoxes:    this._TALBE_LIST_COLUMNS,
                     prop_size:          prop_size,
                     prop_titleAll:      prop_titleAll,
-                    prop_heightForm:    prop_heightBody - elHeight - 25,
+                    prop_heightForm:    prop_heightBody - elHeight - 75,
                     prop_heightItems:   prop_heightItems,
                     prop_draggable:     true,
 
                     fn_callback: (event , order , isCompleteTrue)=>{
-                        this.fn_callback(event , order )
+                        this._TALBE_LIST_COLUMNS_TEMPLATE = order;
+                       // this.fn_callback(event , order )
                     }
                 }
             )
         }
     }
 
+    componentFn_render_positionElement_btnAccept(partName){
 
+        const data = this.getPartProps(partName)
 
+        if (data != null){
+            const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elFontSize = tools_css.getFontSize(prop_size);
+
+            new window.ComponentButton(
+                `component-select-columns-btn-accept-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList:  ["col-6" , "px-2"] ,
+
+                    prop_structureClass:  [] ,
+                    prop_structureStyles: {
+
+                    } ,
+
+                    prop_btnClass: [
+
+                    ],
+                    prop_btnStyles: {
+                        "margin-top": "10px" ,
+                        "width": "100%" ,
+                        "line-height": elHeight+"px" ,
+                        "height": elHeight+"px" ,
+                        "font-size": elFontSize+"px" ,
+                    },
+
+                    prop_title: `<b>accept</b>` ,
+
+                    fn_callback: (event) => {
+                        this.fn_onClickBtnAccept(event)
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_positionElement_btnCancel(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elFontSize = tools_css.getFontSize(prop_size);
+
+            new window.ComponentButton(
+                `component-select-columns-btn-cancel-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+
+                    classList:  ["col-6" , "px-2"] ,
+
+                    prop_structureClass:  [] ,
+                    prop_structureStyles: {
+
+                    } ,
+
+                    prop_btnClass: [
+
+                    ],
+                    prop_btnStyles: {
+                        "margin-top": "10px" ,
+                        "width": "100%" ,
+                        "line-height": elHeight+"px" ,
+                        "height": elHeight+"px" ,
+                        "font-size": elFontSize+"px" ,
+                    },
+                    prop_type: "back",
+
+                    prop_title: `<b>cancel</b>` ,
+
+                    fn_callback: (event) => {
+                        this.fn_onClickBtnCancel(event)
+                    }
+                }
+            )
+
+        }
+    }
 
 
     /* ---------------------------------------------
@@ -14925,21 +14906,113 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
         return document.querySelector(`#component-select-columns-position-element-${ this._COMPONENT_RANDOM_ID}`)
     }
 
-    fn_onClickIcon(event){
+    readyListColumns(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_columns                 =   data.hasOwnProperty("prop_columns")                   ?  data.prop_columns                 :  [];
+
+        this._TALBE_LIST_COLUMNS = prop_columns;
+    }
+
+    fn_onClickIcon(event , show=null){
+        if (show == null){
+            this._SHOW_BODY = !this._SHOW_BODY;
+        }
+        else{
+            this._SHOW_BODY = show;
+        }
+
         const el = this.fn_getPositionElement();
-        this._SHOW_BODY = !this._SHOW_BODY;
+
         if(this._SHOW_BODY){
             el.classList.remove("d-none");
+
+            let listOrder = [];
+            if (this._TALBE_LIST_COLUMNS != null && Array.isArray(this._TALBE_LIST_COLUMNS)) {
+                for (let i = 0; i < this._TALBE_LIST_COLUMNS.length; i++) {
+                    const itemCol = this._TALBE_LIST_COLUMNS[i];
+
+                    if (itemCol.hasOwnProperty("name") && itemCol.hasOwnProperty("selected") && itemCol.selected){
+                        listOrder.push(itemCol.name);
+                    }
+                }
+            }
+
+            this._TALBE_LIST_COLUMNS_TEMPLATE = listOrder;
+            this.templateFn("part_positionElement_selector");
         }
         else{
             el.classList.add("d-none");
         }
     }
 
-    fn_callback(event , order){
+    fn_onClickBtnAccept(event){
+        let listOrder = [];
+        if (this._TALBE_LIST_COLUMNS_TEMPLATE != null && Array.isArray(this._TALBE_LIST_COLUMNS_TEMPLATE)){
+            for (let i = 0; i < this._TALBE_LIST_COLUMNS_TEMPLATE.length; i++) {
+                const itemOrder = this._TALBE_LIST_COLUMNS_TEMPLATE[i];
+
+                if (this._TALBE_LIST_COLUMNS != null && Array.isArray(this._TALBE_LIST_COLUMNS)){
+                    for (let j = 0; j < this._TALBE_LIST_COLUMNS.length ; j++) {
+                        const itemCol = this._TALBE_LIST_COLUMNS[j];
+
+                        if (itemCol.hasOwnProperty("name") && itemCol.hasOwnProperty("title") && itemCol.name == itemOrder){
+                            listOrder.push({
+                                name: itemCol.name ,
+                                title: itemCol.title ,
+                                selected: true ,
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        if (this._TALBE_LIST_COLUMNS != null && Array.isArray(this._TALBE_LIST_COLUMNS)){
+            for (let j = 0; j < this._TALBE_LIST_COLUMNS.length ; j++) {
+                const itemCol = this._TALBE_LIST_COLUMNS[j];
+
+                if (itemCol.hasOwnProperty("name") && itemCol.hasOwnProperty("title")){
+
+                    let existOrder = false;
+                    if (this._TALBE_LIST_COLUMNS_TEMPLATE != null && Array.isArray(this._TALBE_LIST_COLUMNS_TEMPLATE)) {
+                        for (let i = 0; i < this._TALBE_LIST_COLUMNS_TEMPLATE.length; i++) {
+                            const itemOrder = this._TALBE_LIST_COLUMNS_TEMPLATE[i];
+
+                            if (itemCol.name == itemOrder){
+                                existOrder = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!existOrder){
+                        listOrder.push({
+                            name: itemCol.name ,
+                            title: itemCol.title ,
+                            selected: false ,
+                        })
+                    }
+                }
+            }
+        }
+
+
+
+        this._TALBE_LIST_COLUMNS =  listOrder;
+
+        this._TALBE_LIST_COLUMNS_TEMPLATE =  [];
+        this.fn_callback(event);
+        this.fn_onClickIcon(event , false );
+    }
+
+    fn_onClickBtnCancel(event){
+        this.fn_onClickIcon(event , false );
+    }
+
+    fn_callback(event){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(event , order);
+            data.fn_callback(event , this._TALBE_LIST_COLUMNS);
         }
     }
 
@@ -15047,17 +15120,11 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentValidate.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -15431,18 +15498,11 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentTooltipDescription.name],
+       super(
+            listComponent[ComponentTooltipDescription.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -15487,7 +15547,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
 
         if (data != null){
 
-            const prop_description                 =   data.hasOwnProperty("prop_description")                ?  data.prop_description                   :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_description                 =   data.hasOwnProperty("prop_description")                ?  data.prop_description                   : this._COMPONENT_SLOTS?.body?.html ?? "";
             const prop_descriptionColor            =   data.hasOwnProperty("prop_descriptionColor")           ?  data.prop_descriptionColor              :  "";
             const prop_descriptionBackground       =   data.hasOwnProperty("prop_descriptionBackground")      ?  data.prop_descriptionBackground         :  "";
             const prop_descriptionWidth            =   data.hasOwnProperty("prop_descriptionWidth")           ?  data.prop_descriptionWidth              :  "";
@@ -15640,7 +15700,6 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
 class ComponentTableBase extends ComponentBase{
 
 
-
     /* ---------------------------------------------
      PROPERTYs Pattern
      --------------------------------------------- */
@@ -15648,6 +15707,10 @@ class ComponentTableBase extends ComponentBase{
         prop_size : {
             prop: "prop_size" ,
             default: tools_css.standardSizes.m.name
+        } ,
+        prop_hasColNumber : {
+            prop: "prop_hasColNumber" ,
+            default: true
         } ,
         prop_hasColSelector : {
             prop: "prop_hasColSelector" ,
@@ -15772,7 +15835,14 @@ class ComponentTableBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_order,
             this._COMPONENT_PATTERN.prop_header,
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_hasColSelector
+            this._COMPONENT_PATTERN.prop_hasColSelector,
+            this._COMPONENT_PATTERN.prop_hasColNumber
+        ],
+
+        part_table_header_colSelector: [
+            this._COMPONENT_PATTERN.prop_hasColSelector,
+            this._COMPONENT_PATTERN.prop_header,
+            this._COMPONENT_PATTERN.prop_order,
         ],
 
         part_table_body: [
@@ -15789,7 +15859,7 @@ class ComponentTableBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_valueCol_backgroundColor,
             this._COMPONENT_PATTERN.prop_valueCol_textColor,
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_hasColSelector
+            this._COMPONENT_PATTERN.prop_hasColNumber
         ],
 
         part_table_footer: [
@@ -15805,7 +15875,9 @@ class ComponentTableBase extends ComponentBase{
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_table : {
-                part_table_header: {},
+                part_table_header: {
+                    part_table_header_colSelector: {},
+                },
                 part_table_columns: {},
             }
         }
@@ -15823,17 +15895,11 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentTable.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -15842,9 +15908,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
        TEMPLATEs
     --------------------------------------------- */
     componentFn(){
-        requestAnimationFrame(() => {
-            this.fn_createColumnsSelector();
-        });
+        this.templateFn("part_table_header_colSelector");
     }
 
     templateFn(partName = null){
@@ -15859,6 +15923,8 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
                 return this.template_render_tableBody(partName);
             case "part_table_footer":
                 return this.template_render_tableFooter(partName);
+            case "part_table_header_colSelector":
+                return this.componentFn_render_tableHeader_colSelecter(partName);
             default:
                 return this.templateBasic_render();
         }
@@ -15872,7 +15938,6 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
         return this.templateBasic_render_structure(content);
 
     }
-
 
     template_render_table(partName) {
         const data = this.getPartProps(partName)
@@ -15912,7 +15977,6 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
                 case 7: tableBordered += "table-bordered  border-info"; break;
                 case 8: tableBordered += "table-bordered  border-light"; break;
             }
-
 
             return `
 <section data-part-name="${partName}" class="row h-100">
@@ -15964,12 +16028,13 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
             const prop_header                     =   data.hasOwnProperty("prop_header")                     ?  data.prop_header                      : [];
             const prop_size                       =   data.hasOwnProperty("prop_size")                       ?  data.prop_size                        : null;
 
+            const prop_hasColNumber               =   data.hasOwnProperty("prop_hasColNumber")               ?  data.prop_hasColNumber                : true;
             const prop_hasColSelector             =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elFontSize = tools_css.getFontSize(prop_size);
 
-            const htmlHeader = this.fn_onGetHtmlHeader(prop_order , prop_header , prop_tableItemHeadClass , prop_hasColSelector)
+            const htmlHeader = this.fn_onGetHtmlHeader();
 
             return `
 
@@ -15979,17 +16044,16 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
      <style>
          #${this._COMPONENT_ID} #component-table-header-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_tableHeadStyles)};
-            height:  ${elHeight}px;
+             height:  ${elHeight}px;
          }
          #${this._COMPONENT_ID} .component-table-header-item-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_tableItemHeadStyles)};
              font-size:  ${elFontSize}px;
-      
              line-height:  ${elHeight}px;
          }
      </style>
     <tr>
-        ${htmlHeader}
+    ${htmlHeader}
     </tr>
 </thead>
             `;
@@ -16025,12 +16089,13 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
             let   prop_valueRow                   =   data.hasOwnProperty("prop_valueRow")                   ?  data.prop_valueRow                    :  null;
             let   prop_valueCol                   =   data.hasOwnProperty("prop_valueCol")                   ?  data.prop_valueCol                    :  null;
             const prop_size                       =   data.hasOwnProperty("prop_size")                       ?  data.prop_size                        : null;
-            const prop_hasColSelector             =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
+
+            const prop_hasColNumber               =   data.hasOwnProperty("prop_hasColNumber")               ?  data.prop_hasColNumber                : true;
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elFontSize = tools_css.getFontSize(prop_size);
 
-            const htmlBody = this.fn_onGetHtmlBody(prop_order , prop_header  , prop_data , prop_valueType  , prop_valueRow , prop_valueCol , prop_tableItemBodyClass , prop_hasColSelector);
+            const htmlBody = this.fn_onGetHtmlBody();
 
             return `
 <tbody data-part-name="${partName}" 
@@ -16063,7 +16128,9 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
              color: ${prop_valueCol_textColor}!important;
          }
      </style>
+    
     ${htmlBody}
+    
 </tbody>
 
             `;
@@ -16089,28 +16156,91 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
         `;
     }
 
+    componentFn_render_tableHeader_colSelecter(partName) {
+        const data = this.getPartProps(partName)
 
+        if (data != null) {
+            const prop_hasColSelector         =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
+            const prop_order                  =   data.hasOwnProperty("prop_order")                      ?  data.prop_order                       : [];
+            const prop_header                 =   data.hasOwnProperty("prop_header")                     ?  data.prop_header                      : [];
 
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-    fn_createColumnsSelector(){
-        const data = this._COMPONENT_CONFIG;
-        const prop_hasColSelector             =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
+            if (prop_hasColSelector){
 
-        prop_hasColSelector
+                const ordersSelector  =this.fn_onGetColumnsSelector(prop_order , prop_header);
+
+                new window.ComponentSelectColumns(
+                    `component-table-header-select-columns-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList: "position-absolute"  ,
+                        styles: {
+                            "top":        "50%" ,
+                            "left" :      "50%" ,
+                            "transform" : "translate(-50% , -50%)" ,
+                            "z-index" :    tools_css.getZIndex(tools_css.standardZIndex.popup.name)
+                        } ,
+
+                        prop_columns: ordersSelector,
+                        fn_callback: (event , order , isCompleteTrue)=>{
+                            this.fn_renderDataTable(order);
+                        }
+                    }
+                )
+
+            }
+
+        }
 
     }
 
 
 
-    fn_onGetHtmlHeader(prop_order , prop_header , prop_tableItemHeadClass , prop_hasColSelector){
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getElementHeader(){
+        return document.querySelector(`#component-table-header-${this._COMPONENT_RANDOM_ID} `);
+    }
+    fn_getElementBody(){
+        return document.querySelector(`#component-table-body-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_getElementFooter(){
+        return document.querySelector(`#component-table-footer-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+
+    fn_renderDataTable(order){
+        let listOrder = [];
+        const data = this._COMPONENT_CONFIG;
+
+        if (order!=null && Array.isArray(order)){
+            for (let i = 0; i < order.length; i++) {
+                let itemOrder = order[i];
+                if (itemOrder.hasOwnProperty("name") && itemOrder.hasOwnProperty("selected") && itemOrder.selected){
+                    listOrder.push(itemOrder.name);
+                }
+            }
+        }
+        data["prop_order"] = listOrder;
+        this.renderComponent(data);
+    }
+
+
+
+    fn_onGetHtmlHeader(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_order                      =   data.hasOwnProperty("prop_order")                      ?  data.prop_order                       : [];
+        const prop_header                     =   data.hasOwnProperty("prop_header")                     ?  data.prop_header                      : [];
+        const prop_tableItemHeadClass         =   data.hasOwnProperty("prop_tableItemHeadClass")         ?  data.prop_tableItemHeadClass           : [];
+        const prop_hasColNumber               =   data.hasOwnProperty("prop_hasColNumber")               ?  data.prop_hasColNumber                : true;
+        const prop_hasColSelector             =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
+
         let htmlHeader = "";
         if (prop_header != null && Array.isArray(prop_header)){
 
-            if (prop_hasColSelector){
+            if (prop_hasColNumber || prop_hasColSelector){
                 htmlHeader += `
-<th class="component-table-header-item-${this._COMPONENT_RANDOM_ID} ${tools_public.renderListClass(prop_tableItemHeadClass)} p-0 text-center" 
+<th class="component-table-header-item-${this._COMPONENT_RANDOM_ID} ${tools_public.renderListClass(prop_tableItemHeadClass)} p-0 text-center position-relative" 
    scope="col" style="width: 40px">
      <component-select-columns id="component-table-header-select-columns-${this._COMPONENT_RANDOM_ID}"></component-select-columns>
 </th>`
@@ -16139,7 +16269,16 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
         return htmlHeader;
     }
 
-    fn_onGetHtmlBody(prop_order , prop_header  , prop_data , prop_valueType , prop_valueRow , prop_valueCol  , prop_tableItemBodyClass , prop_hasColSelector){
+    fn_onGetHtmlBody(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_order                      =   data.hasOwnProperty("prop_order")                      ?  data.prop_order                       : [];
+        const prop_header                     =   data.hasOwnProperty("prop_header")                     ?  data.prop_header                      : [];
+        const prop_data                       =   data.hasOwnProperty("prop_data")                       ?  data.prop_data                        : [];
+        const prop_valueType                  =   data.hasOwnProperty("prop_valueType")                  ?  data.prop_valueType                    : this.TYPE_SELECTED_NONE;
+        let   prop_valueRow                   =   data.hasOwnProperty("prop_valueRow")                   ?  data.prop_valueRow                    :  null;
+        let   prop_valueCol                   =   data.hasOwnProperty("prop_valueCol")                   ?  data.prop_valueCol                    :  null;
+        const prop_tableItemBodyClass         =   data.hasOwnProperty("prop_tableItemBodyClass")         ?  data.prop_tableItemBodyClass           : [];
+        const prop_hasColNumber               =   data.hasOwnProperty("prop_hasColNumber")               ?  data.prop_hasColNumber                : true;
 
         let htmlBody = "";
 
@@ -16216,7 +16355,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
 
                     if (hasRow){
                         let itemRow = rowsHtml;
-                        if (prop_hasColSelector){
+                        if (prop_hasColNumber){
                             itemRow = `
 <td class="component-table-body-item-${this._COMPONENT_RANDOM_ID} p-0 text-center" >
     <span class="${tools_public.renderListClass(prop_tableItemBodyClass)}" >
@@ -16235,6 +16374,58 @@ ${rowsHtml}
         }
 
         return htmlBody;
+    }
+
+    fn_onGetColumnsSelector(prop_order , prop_header){
+        let listColSelector = [];
+
+        if (prop_order != null && Array.isArray(prop_order)){
+            for (let j = 0; j <prop_order.length; j++) {
+                const itemOrder = prop_order[j];
+                if (prop_header != null && Array.isArray(prop_header)){
+                    for (let i = 0; i < prop_header.length; i++) {
+                        const itemCol = prop_header[i];
+                        if (itemOrder != null && itemOrder == itemCol.id){
+                            listColSelector.push({
+                                name: itemCol.id ,
+                                title: itemCol.content ,
+                                selected: true ,
+                            });
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (prop_header != null && Array.isArray(prop_header)){
+            for (let i = 0; i < prop_header.length; i++) {
+                const itemCol = prop_header[i];
+                if (itemCol.hasOwnProperty("id") && itemCol.hasOwnProperty("content")){
+                    let itemColSelector = {
+                        name: itemCol.id ,
+                        title: itemCol.content ,
+                        selected: false ,
+                    }
+
+                    let exist =false
+                    if (prop_order != null && Array.isArray(prop_order)){
+                        for (let j = 0; j <prop_order.length; j++) {
+                            const itemOrder = prop_order[j];
+                            if (itemOrder != null && itemOrder == itemCol.id){
+                                exist = true;
+                            }
+                        }
+                    }
+
+                    if (!exist){
+                        listColSelector.push(itemColSelector);
+                    }
+                }
+            }
+        }
+        return listColSelector;
     }
 
     fn_onSelectCol(event , key  , colIndex, rowIndex){
@@ -16334,17 +16525,11 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentTabs.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -16609,17 +16794,11 @@ window.ComponentTree = class ComponentTree extends ComponentTreeBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentTree.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -16920,17 +17099,11 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentCollapse.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -17005,7 +17178,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
 
             const prop_bodyBackgroundColor  = data.hasOwnProperty("prop_bodyBackgroundColor")                     ?  data.prop_bodyBackgroundColor  : "";
             const prop_bodyShow             = data.hasOwnProperty("prop_bodyShow")                                ?  data.prop_bodyShow             : false;
-            const prop_body                 = data.hasOwnProperty("prop_body") && data.prop_body != null          ?  data.prop_body                 :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_body                 = data.hasOwnProperty("prop_body") && data.prop_body != null          ?  data.prop_body                 : this._COMPONENT_SLOTS?.body?.html ?? "";
 
 
             return `
@@ -17252,17 +17425,11 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentWindow.name],
+       super(
+            listComponent[ComponentWindow.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
     /* ---------------------------------------------
@@ -17513,7 +17680,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 
         if (data != null){
 
-            const prop_header        =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header       :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("header") ? this._COMPONENT_SLOTS.header : '');
+            const prop_header        =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header       : this._COMPONENT_SLOTS?.header?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -17571,7 +17738,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 
         if (data != null){
 
-            const prop_body        =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_body        =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body        : this._COMPONENT_SLOTS?.body?.html ?? "";
 
 
             return `
@@ -17601,7 +17768,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 
         if (data != null){
 
-            const prop_footer        =   data.hasOwnProperty("prop_footer") && data.prop_footer !=null       ?  data.prop_footer        :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("footer") ? this._COMPONENT_SLOTS.footer : '');
+            const prop_footer        =   data.hasOwnProperty("prop_footer") && data.prop_footer !=null       ?  data.prop_footer        :  this._COMPONENT_SLOTS?.footer?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -17923,17 +18090,11 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWi
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentWindowConfirm.name],
+       super(
+            listComponent[ComponentWindowConfirm.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -17993,7 +18154,7 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWi
 
         if (data != null) {
 
-            const prop_header = data.hasOwnProperty("prop_header") && data.prop_header != null ? data.prop_header : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("header") ? this._COMPONENT_SLOTS.header : '');
+            const prop_header = data.hasOwnProperty("prop_header") && data.prop_header != null ? data.prop_header :  this._COMPONENT_SLOTS?.header?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -18023,7 +18184,7 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWi
 
         if (data != null) {
 
-            const prop_body = data.hasOwnProperty("prop_body") && data.prop_body != null ? data.prop_body : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_body = data.hasOwnProperty("prop_body") && data.prop_body != null ? data.prop_body : this._COMPONENT_SLOTS?.body?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -18302,17 +18463,11 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentSliderShowOverlapping.name],
+       super(
+            listComponent[ComponentSliderShowOverlapping.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -18767,17 +18922,11 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentBreadcrumb.name],
+       super(
+            listComponent[ComponentBreadcrumb.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -19204,17 +19353,11 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentBreadcrumbWithArrow.name],
+       super(
+            listComponent[ComponentBreadcrumbWithArrow.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -19810,17 +19953,11 @@ window.ComponentChart = class ComponentChart extends ComponentChartBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentChart.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
     /* ---------------------------------------------
@@ -20120,17 +20257,11 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentChartTre
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentChartTreeY.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
     /* ---------------------------------------------
@@ -20676,17 +20807,11 @@ window.ComponentQrCode = class ComponentQrCode extends ComponentQrCodeBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentQrCode.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
     /* ---------------------------------------------
@@ -21023,17 +21148,11 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentCameraQrCodeReader.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -21363,17 +21482,11 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentUploadQrCodeReader.name],
+       super(
+            listComponent[ComponentUploadQrCodeReader.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -21616,17 +21729,11 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCo
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-        super(
-            listComponent[ComponentQrCodeReader.name],
+       super(
+            listComponent[ComponentQrCodeReader.name] ,
             elId
         );
-        this.onCreate(
-            config,
-            this._COMPONENT_PROPS,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -21956,18 +22063,11 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentDraggableOrders.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -22062,10 +22162,11 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
                 prop_items = data.prop_items
             }
             else{
-                const listItems =
+                const listItems =  this._COMPONENT_SLOTS?.body?.html ?? "";
+              /*  const listItems =
                     this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body")
                         ? this._COMPONENT_SLOTS.body
-                        : '';
+                        : '';*/
 
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(listItems, "text/html");
@@ -22293,6 +22394,309 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
 }
 
 
+class ComponentChangePageBase extends ComponentBase{
+
+    _EFFECT_TOP =       0;
+    _EFFECT_RIGHT =     1;
+    _EFFECT_BOTTOM =    2;
+    _EFFECT_LEFT=       3;
+    _EFFECT_VERTICAL=   4;
+    _EFFECT_HORIZONTAL= 5;
+
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+
+        prop_effect: {
+            prop: "prop_effect",
+            default: this._EFFECT_LEFT
+        },
+        prop_duration: {
+            prop: "prop_duration",
+            default: 100
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+
+        prop_formWidth: {
+            prop: "prop_formWidth",
+            default: "100%"
+        },
+        prop_formHeight: {
+            prop: "prop_formHeight",
+            default: "100%"
+        },
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: [ "border" , "shadow-sm"]
+        },
+        prop_formtSyles: {
+            prop: "prop_formtSyles",
+            default: {}
+        },
+        prop_body: {
+            prop: "prop_body",
+            default: null
+        },
+        prop_pages: {
+            prop: "prop_pages",
+            default: null
+        },
+    }
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_formWidth,
+            this._COMPONENT_PATTERN.prop_formHeight,
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formtSyles,
+        ],
+
+        part_form_body: [
+            this._COMPONENT_PATTERN.prop_body,
+        ],
+
+        part_form_pages: [
+            this._COMPONENT_PATTERN.prop_pages,
+            this._COMPONENT_PATTERN.prop_effect,
+            this._COMPONENT_PATTERN.prop_duration,
+        ],
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form:{
+                part_form_body:{} ,
+                part_form_pages:{} ,
+            } ,
+        }
+    }
+
+}
+window.ComponentChangePage  = class ComponentChangePage extends ComponentChangePageBase{
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+       super(
+            listComponent[ComponentChangePage.name] ,
+            elId
+        );
+       super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure( partName );
+            case "part_form":
+                return this.template_render_form( partName );
+            case "part_form_body":
+                return this.template_render_form_body( partName );
+            case "part_form_pages":
+                return this.template_render_form_pages( partName );
+            default:
+                return this.templateBasic_render([]);
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+       ${this.templateFn("part_form") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_formWidth        =   data.hasOwnProperty("prop_formWidth")        ?  data.prop_formWidth                :  "";
+            const prop_formHeight       =   data.hasOwnProperty("prop_formHeight")       ?  data.prop_formHeight               :  "";
+            const prop_formClass        =   data.hasOwnProperty("prop_formClass")        ?  data.prop_formClass                :  [];
+            const prop_formtSyles       =   data.hasOwnProperty("prop_formtSyles")       ?  data.prop_formtSyles               : {};
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-change-page-form-${this._COMPONENT_RANDOM_ID}"
+         class="overflow-hidden position-relative ${tools_public.renderListClass(prop_formClass)}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-change-page-form-${this._COMPONENT_RANDOM_ID}{
+             width: ${prop_formWidth};
+             height: ${prop_formHeight};
+             ${tools_public.renderListStyle(prop_formtSyles)}
+         }
+     </style>
+     
+       ${this.templateFn("part_form_body") ?? ""}
+       ${this.templateFn("part_form_pages") ?? ""}
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    template_render_form_body(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+               const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :   this._COMPONENT_SLOTS?.body?.html ?? "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-change-page-form-body-${this._COMPONENT_RANDOM_ID}"
+         class="w-100 h-100">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-change-page-form-body-${this._COMPONENT_RANDOM_ID}{
+        
+         }
+     </style>
+     
+     ${prop_body}
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+
+    template_render_form_pages(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_pages     =   data.hasOwnProperty("prop_pages") && data.prop_pages !=null      ?  data.prop_pages                      :  this._COMPONENT_SLOTS?.pages ?? [];
+
+            const directionRtl   = data.hasOwnProperty("directionRtl")                                ? data.directionRtl                     : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+            const prop_effect    = data.hasOwnProperty("prop_effect")                                 ?  data.prop_effect                     :  null;
+
+            let left= "0";
+            let right= "0";
+            let top= "0";
+            let bottom= "0";
+            switch (prop_effect){
+                case this._EFFECT_TOP:
+                    top= "-100%"
+                    break;
+                case this._EFFECT_RIGHT:
+                    right= "-100%"
+                    break;
+                case this._EFFECT_BOTTOM:
+                    bottom= "-100%"
+                    break;
+                case this._EFFECT_LEFT:
+                    left= "-100%"
+                    break;
+                case this._EFFECT_VERTICAL:
+                    right= "-100%"
+                    break;
+                case this._EFFECT_HORIZONTAL:
+                    top= "-100%"
+                    break;
+                default:
+                    if (directionRtl){
+                        right= "-100%"
+                    }
+                    else{
+                        left= "-100%"
+                    }
+                    break;
+            }
+
+            const html = this.fn_getTemplatePages(prop_pages)
+
+            return `
+<section data-part-name="${partName}" 
+         id="ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}"
+         class="w-100 h-100 position-absolute">
+         
+     <style>
+         #${this._COMPONENT_ID} #ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}{
+             left: ${left};
+             top: ${top};
+             right: ${right};
+             bottom: ${bottom};
+         }
+     </style>
+     
+     ${html}
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getPageSelected(pageName){
+        return document.querySelector(`.ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page[page-name="${pageName}"]`);
+    }
+
+
+    fn_getTemplatePages(prop_pages){
+        let html = "";
+        if(prop_pages != null ){
+            Object.keys(prop_pages).forEach(key => {
+                const itemPage = prop_pages[key];
+                html += `
+                <section class="ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page" data-page-name="${key}">
+                   ${itemPage?.html ?? ""}
+                </section>
+                `
+            })
+        }
+
+        return html;
+    }
+}
+
+
 
 /* ===============================================================================================================
  [99] OTHERs
@@ -22382,18 +22786,11 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentIcon.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
-
+       super.renderComponent(config);
     }
 
 
@@ -22597,17 +22994,11 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentPositionElement.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -22702,7 +23093,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_content  =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content     :  (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_content  =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content     : this._COMPONENT_SLOTS?.body?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -22825,17 +23216,11 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentBorder.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -22885,7 +23270,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
 
             const prop_borderClass      =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass   : [];
             const prop_borderStyles     =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles  : {};
-            const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content       : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content       : this._COMPONENT_SLOTS?.body?.html ?? "";
 
             prop_content
             return `
@@ -23054,17 +23439,11 @@ window.ComponentImage = class ComponentImage extends ComponentImageBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentImage.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -23218,17 +23597,11 @@ window.ComponentLayout = class ComponentLayout extends ComponentLayoutBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentLayout.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -23262,7 +23635,7 @@ window.ComponentLayout = class ComponentLayout extends ComponentLayoutBase{
         if (data != null){
             const prop_layoutClass     =  data.hasOwnProperty("prop_layoutClass")                                        ?  data.prop_layoutClass     : [];
             const prop_layoutStyles    =  data.hasOwnProperty("prop_layoutStyles")                                       ?  data.prop_layoutStyles    : {};
-            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : this._COMPONENT_SLOTS?.body?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -23547,17 +23920,11 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-        super(
+       super(
             listComponent[ComponentMouseScroller.name] ,
             elId
         );
-        this.onCreate(
-            config ,
-            this._COMPONENT_PROPS ,
-            this._COMPONENT_SCHEMA
-        )
-        this.onTemplateComplete();
-        this.onRegister();
+       super.renderComponent(config);
     }
 
 
@@ -23789,7 +24156,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : (this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body") ? this._COMPONENT_SLOTS.body : '');
+            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : this._COMPONENT_SLOTS?.body?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 

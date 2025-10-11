@@ -108,15 +108,20 @@ tools_init = {
             },
 
             button: {
-                default:{
+                submit:{
                     backgroundColor:       component_props.primaryColor1,
                     backgroundColorHover:  component_props.primaryColor2,
                     color:                 component_props.shanColor1,
                 } ,
-                error:{
+                cancel:{
                     backgroundColor:       component_props.errorColor1,
                     backgroundColorHover:  component_props.errorColor2,
                     color:                 component_props.shanColor1,
+                } ,
+                back:{
+                    backgroundColor:       component_props.secondaryColor1,
+                    backgroundColorHover:  component_props.secondaryColor2,
+                    color:                 component_props.darkColor1,
                 }
             },
 
@@ -1827,12 +1832,7 @@ tools_icons = {
      xmlns="http://www.w3.org/2000/svg" 
      role="img" aria-hidden="false" 
      style="padding:2px;">
-  <title>tik</title>
-  <defs>
-    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feDropShadow dx="0" dy="-1.5" stdDeviation="1" flood-color="rgba(0,0,0,0.35)" />
-    </filter>
-  </defs>
+  <title>tik</title> 
   <path d="M20 6L9 17l-5-5" 
         stroke="${bg_color}" 
         stroke-width="2.2" 
