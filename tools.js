@@ -14,6 +14,8 @@ if (typeof component_props === 'undefined') {
         // -----------------------
         primaryColor1: "#15244b",
         primaryColor2: "#334783",
+        primaryColor3: "#7887b2",
+        primaryColor4: "#e4e9ed",
 
         secondaryColor1: "#fab01b",
         secondaryColor2: "#f5bf53",
@@ -34,7 +36,9 @@ if (typeof component_props === 'undefined') {
         darkColor2: "rgb(157,157,157)",
 
         shanColor1: "#ffffff",
-        shanColor2: "#f3f3f3",
+        shanColor2: "#f4f4f4",
+        shanColor3: "#f1f1f1",
+        shanColor4: "#e8e8e8",
         // -----------------------
 
     }
@@ -125,12 +129,6 @@ tools_init = {
                 }
             },
 
-            table: {
-                backgroundColor: component_props.shanColor1 ,
-                backgroundColor_rowSelected: component_props.primaryColor1 ,
-                backgroundColor_columnSelected: component_props.secondaryColor1 ,
-                backgroundColor_textSelected: component_props.shanColor1 ,
-            },
 
             otp: {
 
@@ -176,10 +174,27 @@ tools_init = {
             } ,
 
 
+            table: {
+                backgroundColor:                       component_props.shanColor1 ,
+                backgroundColor_rowSelected:           component_props.primaryColor1 ,
+                backgroundColor_columnSelected:        component_props.secondaryColor1 ,
+                backgroundColor_textSelected:          component_props.shanColor1 ,
+            },
+
+            tableResposible: {
+                backgroundColor_header:                component_props.primaryColor4 ,
+                color_header:                          component_props.primaryColor1 ,
+                backgroundColor_body:                  component_props.shanColor2 ,
+                color_body:                            component_props.darkColor1 ,
+                backgroundColor_bodyHover:             component_props.shanColor4 ,
+                color_bodyHover:                       component_props.primaryColor1 ,
+            },
+
+
             selectOption: {
                 backgroundColor_form:                   component_props.primaryColor1 ,
                 color_icon:                             component_props.shanColor1 ,
-                backgroundColor_itemNotSelected:        component_props.shanColor2 ,
+                backgroundColor_itemNotSelected:        component_props.shanColor1 ,
                 backgroundColor_itemHover:              component_props.primaryColor2 ,
                 backgroundColor_itemSelected:           component_props.primaryColor2 ,
                 color_itemSelected:                     component_props.shanColor1
@@ -197,12 +212,22 @@ tools_init = {
             } ,
 
 
+            cardInfo: {
+                backgroundColor_hover:                 component_props.shadowColor2 ,
+                backgroundColor_options:               component_props.primaryColor1 ,
+                backgroundColor_optionItem:            component_props.primaryColor2 ,
+                color_optionItem:                      component_props.shanColor1 ,
+                color_optionHover:                     component_props.shanColor2 ,
+                backgroundColor_optionHover:           component_props.primaryColor2 ,
+            } ,
+
+
             elementLink: {
                 normal:{
                     backgroundColor: component_props.shanColor1 ,
                 },
                 hover:{
-                    backgroundColor: component_props.shanColor2 ,
+                    backgroundColor: component_props.shanColor1 ,
                 }
             } ,
 
@@ -268,7 +293,7 @@ tools_init = {
 
             mosuseScroller: {
                 backgroundColor_dark : component_props.darkColor2 ,
-                backgroundColor_light: component_props.shanColor2 ,
+                backgroundColor_light: component_props.shanColor1 ,
                 backgroundColor_tools: component_props.darkColor1 ,
             } ,
 
