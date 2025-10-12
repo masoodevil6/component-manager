@@ -237,8 +237,8 @@ tools_init = {
             } ,
 
             label: {
-                backgroundColor : component_props.shadowColor2 ,
-                color : component_props.darkColor1 ,
+                backgroundColor : component_props.primaryColor1 ,
+                color : component_props.shanColor1 ,
             } ,
 
             inputDate: {
