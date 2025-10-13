@@ -595,8 +595,9 @@
             "form" ,
             {
                 classList: "col-md-6 col-12 mt-2"  ,
-                prop_title: "test Form"  ,
+               // prop_title: "test Form"  ,
                 prop_size: "xx-l" ,
+                prop_showErrorStepper: true ,
                 prop_formStyles: {
                   //  "min-height" : "200px"
                 },
@@ -815,10 +816,13 @@
 
                 prop_hasRules: true ,
                 prop_isAbsoluteRule: false ,
+                prop_labelSize: tools_css.standardSizes.xxl.name ,
+                prop_msgRules: "this is a test for message validate" ,
                 prop_listRules : [
                     {
                         description: "تعداد کاراکترها باید {{min}} باشد",
                         rule : "_char_length" ,
+
                         params: {
                             min:4
                         }
@@ -1189,20 +1193,33 @@
         new window.ComponentTableResponsible(
             "table-responsible" ,
             {
-                classList: "col-md-6 col-12 mt-2 row p-0 m-0"  ,
+                classList: "col-lg-6 col-12 mt-2 row p-0 m-0"  ,
+                styles: {
+                    "margin-top" : "45px !important"
+                },
 
 
                 prop_order : ["id" , "name" , "family" , "has"] ,
+                prop_headerIconSize: 45 ,
                 prop_header : [
                     {id:"id" , content: "id" },
 
-                    {id:"has" , content: "has"        },
-                    {id:"name" , content: "name"      , inMobile: true },
-                    {id:"family" , content: "family"  , inMobile: true  },
+                    {id:"has"     , content: "has"     , icon: tools_icons.icon_email             ,    },
+                    {id:"name"    , content: "name"    , icon: tools_icons.icon_lock              , inMobile: true },
+                    {id:"family"  , content: "family"  , icon: tools_icons.icon_select_columns    , inMobile: true  },
                 ] ,
                 prop_data : [
                     {id:1 , name:"mehdi" , family:"marefiyan" , has:false} ,
                     {id:2 , name:"ali"   , family:"sadegi"    , has:true} ,
+                ] ,
+                prop_options : [
+                    {
+                        html :  tools_icons.icon_tik() ,
+                        name:   "option_a" ,
+                        title:  "option a",
+                        id:     "id"
+                    } ,
+
                 ] ,
             }
         )

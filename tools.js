@@ -9,6 +9,7 @@ Version: 0.1
 if (typeof component_props === 'undefined') {
     component_props = {
         directionRtl: false,
+        elementSizes: "m",
 
 
         // -----------------------
@@ -20,14 +21,20 @@ if (typeof component_props === 'undefined') {
         secondaryColor1: "#fab01b",
         secondaryColor2: "#f5bf53",
 
-        errorColor1: "#dc3545",
-        errorColor2: "#e8616f",
+        errorColor1: "#691d21",
+        errorColor2: "#ab5258",
+        errorColor3: "#f6b1b7",
+        errorColor4: "#f8d7da",
 
-        warningColor1: "#f47920",
-        warningColor2: "#fd9248",
+        warningColor1: "#b4500c",
+        warningColor2: "#f47920",
+        warningColor3: "#eca574",
+        warningColor4: "#efc5a7",
 
-        successColor1: "#198754",
-        successColor2: "#56c08f",
+        successColor1: "#06502d",
+        successColor2: "#2e9f6b",
+        successColor3: "#64c598",
+        successColor4: "#ceefe0",
 
         shadowColor1: "rgba(98,98,98,0.30)",
         shadowColor2: "rgba(98,98,98,0.10)",
@@ -79,18 +86,23 @@ tools_init = {
 
         tools_const.styles =  {
             message: {
-                color_icon:          component_props.shanColor1 ,
                 success: {
-                    backgroundColor: component_props.successColor1 ,
-                    color:           component_props.darkColor1 ,
+                    backgroundColor: component_props.successColor4 ,
+                    color:           component_props.successColor1 ,
+                    icon:            component_props.successColor1 ,
+                    border:          component_props.successColor1 ,
                 } ,
                 error: {
-                    backgroundColor: component_props.errorColor1 ,
-                    color:           component_props.shanColor1 ,
+                    backgroundColor: component_props.errorColor4 ,
+                    color:           component_props.errorColor1 ,
+                    icon:            component_props.errorColor1 ,
+                    border:          component_props.errorColor1 ,
                 } ,
                 warning: {
-                    backgroundColor: component_props.warningColor1 ,
-                    color:           component_props.darkColor1 ,
+                    backgroundColor: component_props.warningColor4 ,
+                    color:           component_props.warningColor1 ,
+                    icon:            component_props.warningColor1 ,
+                    border:          component_props.warningColor1 ,
                 }
             },
 
@@ -103,12 +115,19 @@ tools_init = {
                 backgroundColor_shadow:  component_props.shadowColor1 ,
             },
 
+            form: {
+                backgroundColor_title:          component_props.secondaryColor1 ,
+            },
+
             title: {
                 backgroundColor: component_props.shanColor1
             },
 
             collapse: {
-                backgroundColor: component_props.shanColor1
+                backgroundColor_title:          component_props.primaryColor4 ,
+                color_title:                    component_props.darkColor1 ,
+                backgroundColor_body:           component_props.shanColor1 ,
+
             },
 
             button: {
@@ -135,28 +154,28 @@ tools_init = {
             },
 
             input: {
-                backgroundColor_form:                  component_props.primaryColor1 ,
-                color_icon:                            component_props.shanColor1 ,
+                backgroundColor_form:                  component_props.secondaryColor1 ,
+                color_icon:                            component_props.darkColor1 ,
             },
 
             inputPassword: {
-                backgroundColor_form:                  component_props.primaryColor1 ,
-                color_icon:                            component_props.shanColor1 ,
+                backgroundColor_form:                  component_props.secondaryColor1 ,
+                color_icon:                            component_props.darkColor1 ,
             },
 
             inputEmail: {
-                backgroundColor_form:                  component_props.primaryColor1 ,
-                color_icon:                            component_props.shanColor1 ,
+                backgroundColor_form:                  component_props.secondaryColor1 ,
+                color_icon:                            component_props.darkColor1 ,
             },
 
             inputPrice: {
-                backgroundColor_form:                  component_props.primaryColor1 ,
-                color_icon:                            component_props.shanColor1 ,
+                backgroundColor_form:                  component_props.secondaryColor1 ,
+                color_icon:                            component_props.darkColor1 ,
             },
 
             inputSize: {
-                backgroundColor_form:                  component_props.primaryColor1 ,
-                color_icon:                            component_props.shanColor1 ,
+                backgroundColor_form:                  component_props.secondaryColor1 ,
+                color_icon:                            component_props.darkColor1 ,
             },
 
             inputColor: {
@@ -166,34 +185,53 @@ tools_init = {
             } ,
 
             inputCheckBox: {
-                color_icon:                            component_props.shanColor1 ,
+                color_icon:                            component_props.darkColor1 ,
                 boderColor :                           component_props.darkColor2 ,
                 backgroundColor_unSelected :           component_props.shadowColor1 ,
-                backgroundColor_selected :             component_props.primaryColor1 ,
+                backgroundColor_selected :             component_props.secondaryColor1 ,
                 backgroundColor_disable :              component_props.darkColor2 ,
             } ,
 
 
             table: {
                 backgroundColor:                       component_props.shanColor1 ,
+                backgroundColor_headerIcon:            component_props.primaryColor1 ,
+                color_headerIcon:                      component_props.shanColor1 ,
                 backgroundColor_rowSelected:           component_props.primaryColor1 ,
                 backgroundColor_columnSelected:        component_props.secondaryColor1 ,
                 backgroundColor_textSelected:          component_props.shanColor1 ,
+
+                bacKgroundColor_rowOptions:            component_props.secondaryColor1 ,
+                color_rowOptions:                      component_props.shanColor2 ,
+                bacKgroundColor_rowOptionsItem:        component_props.secondaryColor1 ,
+                color_rowOptionsItem:                  component_props.shanColor2 ,
+                bacKgroundColor_rowOptionsItemHover:   component_props.secondaryColor1 ,
+                color_rowOptionsItemHover:             component_props.darkColor1 ,
             },
 
             tableResposible: {
-                backgroundColor_header:                component_props.primaryColor4 ,
-                color_header:                          component_props.primaryColor1 ,
+                backgroundColor_header:                component_props.primaryColor1 ,
+                color_header:                          component_props.shanColor4 ,
                 backgroundColor_body:                  component_props.shanColor2 ,
                 color_body:                            component_props.darkColor1 ,
                 backgroundColor_bodyHover:             component_props.shanColor4 ,
                 color_bodyHover:                       component_props.primaryColor1 ,
             },
 
+            cardInfo: {
+                backgroundColor_options:               component_props.primaryColor4 ,
+
+                backgroundColor_optionItem:            component_props.primaryColor4 ,
+                color_optionItem:                      component_props.darkColor1 ,
+
+                backgroundColor_optionHover:           component_props.primaryColor3 ,
+                color_optionHover:                     component_props.shanColor2 ,
+            } ,
+
 
             selectOption: {
-                backgroundColor_form:                   component_props.primaryColor1 ,
-                color_icon:                             component_props.shanColor1 ,
+                backgroundColor_form:                   component_props.secondaryColor1 ,
+                color_icon:                             component_props.darkColor1 ,
                 backgroundColor_itemNotSelected:        component_props.shanColor1 ,
                 backgroundColor_itemHover:              component_props.primaryColor2 ,
                 backgroundColor_itemSelected:           component_props.primaryColor2 ,
@@ -207,19 +245,10 @@ tools_init = {
             } ,
 
             selectColumn: {
-                backgroundColor_icon:                 component_props.primaryColor1 ,
-                color_icon:                           component_props.shanColor1,
+                backgroundColor_icon:                 component_props.secondaryColor1 ,
+                color_icon:                           component_props.darkColor1,
             } ,
 
-
-            cardInfo: {
-                backgroundColor_hover:                 component_props.shadowColor2 ,
-                backgroundColor_options:               component_props.primaryColor1 ,
-                backgroundColor_optionItem:            component_props.primaryColor2 ,
-                color_optionItem:                      component_props.shanColor1 ,
-                color_optionHover:                     component_props.shanColor2 ,
-                backgroundColor_optionHover:           component_props.primaryColor2 ,
-            } ,
 
 
             elementLink: {
@@ -345,7 +374,7 @@ tools_css = {
             height: 30,
             icon: 19
         } ,
-        xll: {
+        xxl: {
             name: "xx-l",
             fontSize: 15 ,
             height: 34,
@@ -354,19 +383,19 @@ tools_css = {
     } ,
 
     standardScreanWidth : {
-        XS   : {name:"xs" ,max:576             } ,
-        S    : {name:"s"  ,min:576   , max:768 } ,  /// is for mobile
-        M    : {name:"m"  ,min:768   , max:992 } ,  /// is for tablet
-        L    : {name:"l"  ,min:992   , max:1200} ,
-        XL   : {name:"xl" ,min:1200  , max:1450} ,  /// is for pc
-        XXL  : {name:"xxl" ,min:1450           } ,
+        xs   : {name:"x-s" ,max:576             } ,
+        s    : {name:"s"  ,min:576   , max:768 } ,  /// is for mobile
+        m    : {name:"m"  ,min:768   , max:992 } ,  /// is for tablet
+        l    : {name:"l"  ,min:992   , max:1200} ,
+        xl   : {name:"x-l" ,min:1200  , max:1450} ,  /// is for pc
+        xxl  : {name:"xx-l" ,min:1450           } ,
     } ,
 
     standardZIndex:{
         basic:       {name:"basic"       ,val:1             } ,
         menu_main:   {name:"menu_main"   ,val:2             } ,
-        tools:       {name:"tools"       ,val:3             } ,
-        icon_attach: {name:"icon_attach" ,val:4             } ,
+        icon_attach: {name:"icon_attach" ,val:3             } ,
+        tools:       {name:"tools"       ,val:4             } ,
         tools_btn:   {name:"tools_btn"   ,val:5             } ,
         blur_popup:  {name:"blur_popup"  ,val:6             } ,
         popup:       {name:"popup"       ,val:7             } ,
@@ -400,12 +429,14 @@ tools_css = {
     },
 
 
-    getIconSize(sizeName){
-        let val = 10;
+    getIconSize(sizeName , defaultSize = 16){
+        let val = defaultSize;
+
         Object.keys(tools_css.standardSizes).forEach(key=>{
-            itemFont = tools_css.standardSizes[key];
-            if(itemFont.name == sizeName){
+            itemIcon = tools_css.standardSizes[key];
+            if(itemIcon.name == sizeName){
                 val = itemFont.icon;
+
                 return;
             }
         });
@@ -1573,8 +1604,9 @@ tools_svg = {
 
 tools_validtor = {
 
-    validtor_checkList(input , listRules , directionRtl=true , prop_size=tools_css.standardSizes.m.name) {
+    validtor_checkList(input , listRules , prop_msgRules=null , directionRtl=true , prop_size=tools_css.standardSizes.m.name) {
         let messages = [];
+        let messagesForm = [];
         let rulesHtml = "";
         let isInputCurrect = true;
 
@@ -1614,8 +1646,15 @@ tools_validtor = {
                 }
 
                 if (!isTrue) {
-                    messages.push(description)
                     isInputCurrect = false;
+                    messages.push(description);
+
+                    if (prop_msgRules != null && messagesForm.length != 0 ){
+                        messagesForm.push(prop_msgRules)
+                    }
+                    else if (prop_msgRules == null){
+                        messagesForm.push(description)
+                    }
                 }
 
                 const iconColorError = component_props.errorColor1;
@@ -1634,7 +1673,7 @@ tools_validtor = {
             }
         }
 
-        return [messages , rulesHtml , isInputCurrect]
+        return [messages , messagesForm , rulesHtml , isInputCurrect]
     } ,
 
     validtor_checkIsEmail(input , params , description) {
@@ -1719,7 +1758,8 @@ tools_validtor = {
 
 tools_icons = {
 
-    icon_visit( size = 24 , color = "#ffffff") {
+    icon_visit(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1738,7 +1778,8 @@ tools_icons = {
 
 
 
-    icon_un_visit( size = 24 , color = "#ffffff",) {
+    icon_un_visit(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1761,7 +1802,8 @@ tools_icons = {
 
 
 
-    icon_is_true( size = 24 , color = "#4caf50",) {
+    icon_is_true(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1780,7 +1822,8 @@ tools_icons = {
 
 
 
-    icon_is_false( size = 24 , color = "#f44336") {
+    icon_is_false(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1799,7 +1842,8 @@ tools_icons = {
 
 
 
-    icon_email( size = 24 , bg_color = "#e7e7e7") {
+    icon_email(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-email outline" 
      width="${size}" height="${size}" 
@@ -1810,11 +1854,11 @@ tools_icons = {
      role="img" aria-hidden="false">
   <title>Email</title>
   <rect x="2" y="5" width="20" height="14" rx="2" 
-        stroke="${bg_color}" 
+        stroke="${color}" 
         stroke-width="1.5" 
         fill="none"/>
   <path d="M3 7.5L12 13L21 7.5" 
-        stroke="${bg_color}" 
+        stroke="${color}" 
         stroke-width="1.5" 
         stroke-linecap="round" 
         stroke-linejoin="round"/>
@@ -1824,7 +1868,8 @@ tools_icons = {
 
 
 
-    icon_lock( size = 24  , bg_color = "#e7e7e7") {
+    icon_lock(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-password lock" 
      width="${size}" height="${size}" 
@@ -1835,10 +1880,10 @@ tools_icons = {
      aria-hidden="true">
   <title>lock</title>
   <rect x="5" y="10" width="14" height="10" rx="2" 
-        stroke="${bg_color}" 
+        stroke="${color}" 
         stroke-width="1.5"/>
   <path d="M8 10V7a4 4 0 0 1 8 0v3" 
-        stroke="${bg_color}" 
+        stroke="${color}" 
         stroke-width="1.5" 
         stroke-linecap="round"/>
 </svg>
@@ -1847,7 +1892,8 @@ tools_icons = {
 
 
 
-    icon_tik(size = 20 ,bg_color = "#e7e7e7") {
+    icon_tik(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-selected-check" 
      width="${size}" height="${size}" 
@@ -1859,7 +1905,7 @@ tools_icons = {
      style="padding:2px;">
   <title>tik</title> 
   <path d="M20 6L9 17l-5-5" 
-        stroke="${bg_color}" 
+        stroke="${color}" 
         stroke-width="2.2" 
         stroke-linecap="round" 
         stroke-linejoin="round"
@@ -1870,71 +1916,109 @@ tools_icons = {
 
 
 
-    icon_plus_badge(size = 28 ,bg_color = "#fff") {
+    icon_plus_badge(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="plus badge"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>plus badge</title>
-    <path d="M12 8v8M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 8v8M8 12h8" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     } ,
 
 
 
-    icon_minus_badge(size = 28 , bg_color = "#fff") {
+    icon_minus_badge(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="minus badge"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>minus badge</title>
-    <path d="M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 12h8" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     } ,
 
 
-    icon_arrow_down(size = 18 , bg_color = "#000") {
+    icon_arrow_down(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow down"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>arrow down</title>
-    <path d="M6 9l6 6 6-6" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6 9l6 6 6-6" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     }  ,
 
 
-    icon_arrow_up(size = 18 , bg_color = "#000" ) {
+    icon_arrow_up(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow up"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>arrow up</title>
-    <path d="M18 15l-6-6-6 6" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 15l-6-6-6 6" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     },
 
 
-    icon_clear(size = 18 , bg_color = "#8e8e8e") {
+
+    icon_arrow_right(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow right"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>arrow right</title>
+    <path d="M9 6l6 6-6 6" 
+        stroke="${color}" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+</svg>`;
+    },
+
+
+    icon_arrow_left(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow left"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>arrow left</title>
+    <path d="M15 6l-6 6 6 6" 
+        stroke="${color}" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+</svg>`;
+    },
+
+
+    icon_clear(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="clear"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>clear</title>
     <path d="M6 6l12 12M6 18L18 6" 
-        stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     },
 
 
 
-    icon_close(size = 18 , bg_color = "#8e8e8e") {
+    icon_close(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="close"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
       <title>close</title>
     <path d="M6 6l12 12M6 18L18 6" 
-        stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     },
 
 
-    icon_exclamation_square(size = 18, color = "#000") {
+    icon_exclamation_square(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="exclamation square" 
      width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -1947,7 +2031,8 @@ tools_icons = {
 
 
 
-    icon_password(size = 18 , color="#e7e7e7"){
+    icon_password(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img"  aria-label="password" 
       width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -1959,7 +2044,8 @@ tools_icons = {
 `;
     } ,
 
-    icon_search(size = 18 , color = "#8e8e8e" ) {
+    icon_search(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="search"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -1970,7 +2056,8 @@ tools_icons = {
     } ,
 
 
-    icon_pin_close(size = 18 , color = "#000") {
+    icon_pin_close(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" aria-label="pin closed"
      width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1980,7 +2067,8 @@ tools_icons = {
     } ,
 
 
-    icon_pin_open(size = 18 , color = "#000") {
+    icon_pin_open(sizeName = component_props.elementSizes , color = "#000" ) {
+              const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" aria-label="pin open"
      width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1992,7 +2080,9 @@ tools_icons = {
 
 
 
-    icon_select_columns(size = 18 , color = "#000" ) {
+    icon_select_columns(sizeName = component_props.elementSizes , color = "#000" ) {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="select column"
      width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
