@@ -20,6 +20,8 @@ if (typeof component_props === 'undefined') {
 
         secondaryColor1: "#fab01b",
         secondaryColor2: "#f5bf53",
+        secondaryColor3: "#f6d086",
+        secondaryColor4: "#efdcb3",
 
         errorColor1: "#691d21",
         errorColor2: "#ab5258",
@@ -190,13 +192,17 @@ tools_init = {
                 backgroundColor_unSelected :           component_props.shadowColor1 ,
                 backgroundColor_selected :             component_props.secondaryColor1 ,
                 backgroundColor_disable :              component_props.darkColor2 ,
+                color_unSelected :                     component_props.shadowColor1 ,
+                color_selected :                       component_props.primaryColor1 ,
+                color_disable :                        component_props.darkColor2 ,
             } ,
 
 
             table: {
                 backgroundColor:                       component_props.shanColor1 ,
-                backgroundColor_headerIcon:            component_props.primaryColor1 ,
-                color_headerIcon:                      component_props.shanColor1 ,
+                backgroundColor_headerIcon:            component_props.secondaryColor1 ,
+                borderColor_headerIcon:                component_props.primaryColor1 ,
+                color_headerIcon:                      component_props.primaryColor1 ,
                 backgroundColor_rowSelected:           component_props.primaryColor1 ,
                 backgroundColor_columnSelected:        component_props.secondaryColor1 ,
                 backgroundColor_textSelected:          component_props.shanColor1 ,
@@ -207,6 +213,9 @@ tools_init = {
                 color_rowOptionsItem:                  component_props.shanColor2 ,
                 bacKgroundColor_rowOptionsItemHover:   component_props.secondaryColor1 ,
                 color_rowOptionsItemHover:             component_props.darkColor1 ,
+
+                backgroundColor_iconColumnSelector:    component_props.secondaryColor1 ,
+                color_iconColumnSelecto:               component_props.darkColor1,
             },
 
             tableResposible: {
@@ -216,19 +225,41 @@ tools_init = {
                 color_body:                            component_props.darkColor1 ,
                 backgroundColor_bodyHover:             component_props.shanColor4 ,
                 color_bodyHover:                       component_props.primaryColor1 ,
+
+                backgroundColor_iconColumnSelector:    component_props.shanColor1,
+                color_iconColumnSelector:              component_props.shanColor1,
+
+                backgroundColor_iconCardView:          component_props.secondaryColor1,
+                color_iconCardView:                    component_props.primaryColor1,
+                borderColor_iconCardView:              component_props.primaryColor1,
+            },
+
+            pageNumber: {
+                backgroundColor_form:                  component_props.primaryColor1 ,
+
+                backgroundColor_unselected:            component_props.primaryColor1 ,
+                backgroundColor_unselected2:           component_props.primaryColor3 ,
+                color_unselected:                      component_props.shanColor1 ,
+
+                backgroundColor_selected:              component_props.secondaryColor1 ,
+                backgroundColor_selected2:             component_props.secondaryColor3 ,
+                color_selected:                        component_props.darkColor1 ,
+
+                backgroundColor_icon:                  component_props.secondaryColor1 ,
+                backgroundColor_icon2:                 component_props.secondaryColor3 ,
+                color_icon:                            component_props.darkColor1 ,
             },
 
             cardInfo: {
-                backgroundColor_options:               component_props.primaryColor4 ,
+                backgroundColor_options:               component_props.secondaryColor3 ,
 
-                backgroundColor_optionItem:            component_props.primaryColor4 ,
+                backgroundColor_optionItem:            component_props.secondaryColor3 ,
                 color_optionItem:                      component_props.darkColor1 ,
 
-                backgroundColor_optionHover:           component_props.primaryColor3 ,
+                backgroundColor_optionHover:           component_props.secondaryColor2 ,
                 color_optionHover:                     component_props.shanColor2 ,
             } ,
-
-
+            
             selectOption: {
                 backgroundColor_form:                   component_props.secondaryColor1 ,
                 color_icon:                             component_props.darkColor1 ,
@@ -586,6 +617,7 @@ tools_component = {
 
     widgetRender: function(element , fetchData=[] , insert=true){
         const closestComponent = element.closest("component-widget");
+        console.log(closestComponent)
 
         if (closestComponent != null){
             const componentRandomId = closestComponent.getAttribute("data-component-id");

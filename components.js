@@ -81,39 +81,39 @@ if (typeof listComponent === 'undefined') {
         ComponentTable:                      "component-table" ,                          //020-01
         ComponentTableResponsible:           "component-table-responsible" ,              //020-02
 
-
-        // [021] Tabs
-        ComponentTabs:                       "component-tabs" ,                           //021-01
-        ComponentTree:                       "component-tree" ,                           //021-02
-
-        // [022] Collapse
-        ComponentCollapse:                   "component-collapse" ,                       //022-01
-
-        // [023] Window
-        ComponentWindow:                     "component-window" ,                         //023-01
-        ComponentWindowConfirm:              "component-window-confirm" ,                 //023-02
-
-
-        // [024] Slider Shows
-        ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //024-01
-
-
-        // [025] Breadcrumb
-        ComponentBreadcrumb :                "component-breadcrumb" ,                     //025-01
-        ComponentBreadcrumbWithArrow :       "component-breadcrumb-with-arrow" ,          //025-01
+        // [021] page number
+        ComponentPageNumber:                "component-page-number" ,                     //021-01
 
 
 
+        // [030] Tabs
+        ComponentTabs:                       "component-tabs" ,                           //030-01
+        ComponentTree:                       "component-tree" ,                           //030-02
 
-        // [026] Charts
-        ComponentChart:                      "component-chart" ,                          //026-01
-        ComponentChartTreeY:                 "component-chart-tree-y" ,                   //20-02
+        // [031] Collapse
+        ComponentCollapse:                   "component-collapse" ,                       //031-01
 
-        // [027] QR CODE
-        ComponentQrCode:                     "component-qr-code" ,                        //027-01
-        ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //027-02
-        ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //027-03
-        ComponentQrCodeReader:               "component-qr-code-reader" ,                 //027-04
+        // [032] Window
+        ComponentWindow:                     "component-window" ,                         //032-01
+        ComponentWindowConfirm:              "component-window-confirm" ,                 //032-02
+
+        // [033] Slider Shows
+        ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //033-01
+
+        // [034] Breadcrumb
+        ComponentBreadcrumb :                "component-breadcrumb" ,                     //034-01
+        ComponentBreadcrumbWithArrow :       "component-breadcrumb-with-arrow" ,          //034-01
+
+        // [035] Charts
+        ComponentChart:                      "component-chart" ,                          //035-01
+        ComponentChartTreeY:                 "component-chart-tree-y" ,                   //035-02
+
+        // [036] QR CODE
+        ComponentQrCode:                     "component-qr-code" ,                        //036-01
+        ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //036-02
+        ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //036-03
+        ComponentQrCodeReader:               "component-qr-code-reader" ,                 //036-04
+
 
 
 
@@ -121,6 +121,9 @@ if (typeof listComponent === 'undefined') {
         ComponentDraggableOrders:           "component-draggable-orders" ,               //080-01
         ComponentChangePage:                "component-change-page" ,                    //080-02
         ComponentRecyclerView:              "component-recycler-view" ,                  //080-03
+
+
+
 
         // [99] Others
         ComponentIcon:                       "component-icon" ,                           //99-01
@@ -2961,7 +2964,7 @@ class ComponentCardInfoBase extends ComponentBase{
         },
         prop_borderClass: {
             prop: "prop_borderClass",
-            default: ["border" , "rounded" , "shadow-sm" , "p-1"]
+            default: ["border" , "rounded" , "shadow-sm" ]
         },
         prop_borderStyles: {
             prop: "prop_borderStyles",
@@ -3107,11 +3110,11 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
             return `
 <section data-part-name="${partName}"
          id="component-card-info-border-body-${this._COMPONENT_RANDOM_ID}"
-          class="position-relative p-2">
+          class="position-relative ">
 
    <style>
       #${this._COMPONENT_ID} #component-card-info-border-body-${this._COMPONENT_RANDOM_ID}{
-           
+           display: flow-root;
       }
 
    </style>
@@ -14117,6 +14120,18 @@ class ComponentCheckBoxBase extends ComponentBase{
             prop: "prop_backgroundColor_disable",
             default: tools_const?.styles?.inputCheckBox?.backgroundColor_disable ?? ""
         },
+        prop_color_unSelected: {
+            prop: "prop_color_unSelected",
+            default: tools_const?.styles?.inputCheckBox?.color_unSelected ?? ""
+        },
+        prop_color_selected: {
+            prop: "prop_color_selected",
+            default: tools_const?.styles?.inputCheckBox?.color_selected ?? ""
+        },
+        prop_color_disable: {
+            prop: "prop_color_disable",
+            default: tools_const?.styles?.inputCheckBox?.color_disable ?? ""
+        },
         prop_formClass: {
             prop: "prop_formClass",
             default: ["rounded"]
@@ -14177,9 +14192,9 @@ class ComponentCheckBoxBase extends ComponentBase{
 
         part_form_title: [
             this._COMPONENT_PATTERN.prop_showTitleFront,
-            this._COMPONENT_PATTERN.prop_backgroundColor_unSelected,
-            this._COMPONENT_PATTERN.prop_backgroundColor_selected,
-            this._COMPONENT_PATTERN.prop_backgroundColor_disable,
+            this._COMPONENT_PATTERN.prop_color_unSelected,
+            this._COMPONENT_PATTERN.prop_color_selected,
+            this._COMPONENT_PATTERN.prop_color_unSelected,
             this._COMPONENT_PATTERN.prop_title,
             this._COMPONENT_PATTERN.prop_isDisable,
             this._COMPONENT_PATTERN.prop_isSelected,
@@ -14399,9 +14414,9 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
 
         if (data != null){
 
-            const prop_backgroundColor_unSelected            =   data.hasOwnProperty("prop_backgroundColor_unSelected")             ?  data.prop_backgroundColor_unSelected               : "";
-            const prop_backgroundColor_selected              =   data.hasOwnProperty("prop_backgroundColor_selected")               ?  data.prop_backgroundColor_selected                 : "";
-            const prop_backgroundColor_disable               =   data.hasOwnProperty("prop_backgroundColor_disable")                ?  data.prop_backgroundColor_disable                  : "";
+            const prop_color_unSelected                      =   data.hasOwnProperty("prop_color_unSelected")                       ?  data.prop_color_unSelected                         : "";
+            const prop_color_selected                        =   data.hasOwnProperty("prop_color_selected")                         ?  data.prop_color_selected                           : "";
+            const prop_color_disable                         =   data.hasOwnProperty("prop_color_disable")                          ?  data.prop_color_disable                            : "";
             const prop_title                                 =   data.hasOwnProperty("prop_title")                                  ?  data.prop_title                                    : "";
             const prop_showTitleFront                        =   data.hasOwnProperty("prop_showTitleFront")                         ?  data.prop_showTitleFront                           : false;
             const prop_isDisable                             =   data.hasOwnProperty("prop_isDisable")                              ?  data.prop_isDisable                                : false;
@@ -14425,7 +14440,7 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
              float: ${directionRtl ? "right" : "left" };
              height: ${elHeight}px;
              font-size: ${elFontSize}px;
-             color: ${prop_isDisable ? prop_backgroundColor_disable : (prop_isSelected ? prop_backgroundColor_selected : prop_backgroundColor_unSelected)};
+             color: ${prop_isDisable ? prop_color_disable : (prop_isSelected ? prop_color_selected : prop_color_unSelected)};
          }
      </style>
      
@@ -15790,8 +15805,6 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
         const prop_msgRules       =   data.hasOwnProperty("prop_msgRules")        ?  data.prop_msgRules       :  null;
         const directionRtl        =   data.hasOwnProperty("directionRtl")         ? data.directionRtl         : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
 
-        console.log(prop_msgRules)
-
         const input = this.fn_getInputValueReference();
 
         let [messages=[] , messagesForm=[] , rulesHtml="" , isInputCurrect=true] = tools_validtor.validtor_checkList(input , prop_listRules , prop_msgRules , directionRtl , prop_size);
@@ -16186,11 +16199,15 @@ class ComponentTableBase extends ComponentBase{
         },
         prop_headerIconSize: {
             prop: "prop_headerIconSize",
-            default: 45
+            default: 20
         },
         prop_headerIconBackgroundColor: {
             prop: "prop_headerIconBackgroundColor",
             default: tools_const?.styles?.table?.backgroundColor_headerIcon
+        },
+        prop_headerIconBorderColor: {
+            prop: "prop_headerIconBorderColor",
+            default: tools_const?.styles?.table?.borderColor_headerIcon
         },
         prop_headerIconColor: {
             prop: "prop_headerIconColor",
@@ -16272,7 +16289,16 @@ class ComponentTableBase extends ComponentBase{
         prop_rowOptions: {
             prop: "prop_rowOptions",
             default: []
-        }
+        },
+
+        prop_backgroundColorIconColumnSelector: {
+            prop: "prop_backgroundColorIconColumnSelector",
+            default: tools_const?.styles?.table?.backgroundColor_iconColumnSelector ?? ""
+        },
+        prop_colorIconColumnSelector: {
+            prop: "prop_colorIconColumnSelector",
+            default: tools_const?.styles?.table?.color_iconColumnSelecto ?? ""
+        },
     };
 
 
@@ -16308,13 +16334,16 @@ class ComponentTableBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_hasColNumber,
             this._COMPONENT_PATTERN.prop_headerIconSize,
             this._COMPONENT_PATTERN.prop_headerIconColor,
-            this._COMPONENT_PATTERN.prop_headerIconBackgroundColor
+            this._COMPONENT_PATTERN.prop_headerIconBackgroundColor,
+            this._COMPONENT_PATTERN.prop_headerIconBorderColor
         ],
 
         part_table_header_colSelector: [
             this._COMPONENT_PATTERN.prop_hasColSelector,
             this._COMPONENT_PATTERN.prop_header,
             this._COMPONENT_PATTERN.prop_order,
+            this._COMPONENT_PATTERN.prop_backgroundColorIconColumnSelector,
+            this._COMPONENT_PATTERN.prop_colorIconColumnSelector,
         ],
 
         part_table_body: [
@@ -16527,6 +16556,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
 
             const prop_headerIconSize             =   data.hasOwnProperty("prop_headerIconSize")             ?  data.prop_headerIconSize              : "";
             const prop_headerIconBackgroundColor  =   data.hasOwnProperty("prop_headerIconBackgroundColor")  ?  data.prop_headerIconBackgroundColor   : "";
+            const prop_headerIconBorderColor      =   data.hasOwnProperty("prop_headerIconBorderColor")  ?  data.prop_headerIconBorderColor   : "";
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elFontSize = tools_css.getFontSize(prop_size);
@@ -16553,8 +16583,9 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
              top: -${prop_headerIconSize/2}px;
              transform: translate(-50% , -50%);
              background-color: ${prop_headerIconBackgroundColor};
-             padding: 10px;
+             padding: 5px;
              border-radius: 100%;
+             border: 3px solid ${prop_headerIconBorderColor};
          }
      </style>
     <tr>
@@ -16714,9 +16745,12 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
         const data = this.getPartProps(partName)
 
         if (data != null) {
-            const prop_hasColSelector         =   data.hasOwnProperty("prop_hasColSelector")             ?  data.prop_hasColSelector              : true;
-            const prop_order                  =   data.hasOwnProperty("prop_order")                      ?  data.prop_order                       : [];
-            const prop_header                 =   data.hasOwnProperty("prop_header")                     ?  data.prop_header                      : [];
+            const prop_hasColSelector                                    =   data.hasOwnProperty("prop_hasColSelector")                                        ?  data.prop_hasColSelector                                         : true;
+            const prop_order                                             =   data.hasOwnProperty("prop_order")                                                 ?  data.prop_order                                                  : [];
+            const prop_header                                            =   data.hasOwnProperty("prop_header")                                                ?  data.prop_header                                                 : [];
+            const prop_backgroundColorIconColumnSelector                 =   data.hasOwnProperty("prop_backgroundColorIconColumnSelector")                     ?  data.prop_backgroundColorIconColumnSelector                      : "";
+            const prop_colorIconColumnSelector                           =   data.hasOwnProperty("prop_colorIconColumnSelector")                               ?  data.prop_colorIconColumnSelector                                : "";
+
 
             if (prop_hasColSelector){
 
@@ -16732,6 +16766,9 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
                             "transform" : "translate(-50% , -50%)" ,
                             "z-index" :    tools_css.getZIndex(tools_css.standardZIndex.popup.name)
                         } ,
+
+                        prop_backgroundColorIcon : prop_backgroundColorIconColumnSelector ,
+                        prop_colorIcon : prop_colorIconColumnSelector ,
 
                         prop_columns: ordersSelector,
                         fn_callback: (event , order , isCompleteTrue)=>{
@@ -16962,20 +16999,21 @@ ${itemRowOptions}
             for (let i = 0; i < prop_rowOptions.length ; i++) {
                 let itemOption = prop_rowOptions[i];
 
-                if (itemOption.hasOwnProperty("html") && itemOption.hasOwnProperty("id") && typeof itemBody[itemOption.id] !== "undefined"){
+                if (itemOption.hasOwnProperty("html") &&
+                    itemOption.hasOwnProperty("attrs") && itemOption.attrs.hasOwnProperty("id") && typeof itemBody[itemOption.attrs.id] !== "undefined"){
+
                     htmlOptions += `
                <div class="component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID}-item rounded text-center float-start mx-1 " 
-                    title="${itemOption?.title ?? ""}" 
-                    onclick="${this.getFn("fn_onclickOtiponCard" , "event" , `'${itemOption?.name ?? ""}'` , `'${itemBody[itemOption.id]}'` )}">
+                    title="${itemOption?.attrs?.title ?? ""}" 
+                    onclick="${this.getFn("fn_onclickOtiponCard" , "event" , `'${itemOption?.attrs?.name ?? ""}'` , `'${itemBody[itemOption.attrs.id]?.content ?? "" }'` )}">
                    ${itemOption.html}
                </div>
             `
+
                 }
 
             }
-            /* <div class="component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID} rounded position-absolute py-1 px-2">
-                                    ${htmlOptions}
-                                </div>*/
+
             html = `<td class="component-table-body-item-option-${this._COMPONENT_RANDOM_ID} position-absolute ">
 
                     <div class="component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID} rounded position-absolute py-1 px-2">
@@ -17064,6 +17102,14 @@ ${itemRowOptions}
     }
 
 
+    fn_onclickOtiponCard(event , optionName , optionId){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , optionName , optionId != null && optionId != "" ? parseInt(optionId) : null );
+        }
+    }
+
+
 }
 
 
@@ -17134,6 +17180,28 @@ class ComponentTableResponsibleBase extends ComponentBase{
             prop: "prop_options",
             default: []
         },
+
+        prop_backgroundColorIconColumnSelector: {
+            prop: "prop_backgroundColorIconColumnSelector",
+            default: tools_const?.styles?.tableResposible?.backgroundColor_iconColumnSelector ?? ""
+        },
+        prop_colorIconColumnSelector: {
+            prop: "prop_colorIconColumnSelector",
+            default: tools_const?.styles?.tableResposible?.color_iconColumnSelector ?? ""
+        },
+
+        prop_colorIconCardvView: {
+            prop: "prop_colorIconCardvView",
+            default: tools_const?.styles?.tableResposible?.color_iconCardView ?? ""
+        },
+        prop_backgroundColorIconCardvView: {
+            prop: "prop_backgroundColorIconCardvView",
+            default: tools_const?.styles?.tableResposible?.backgroundColor_iconCardView ?? ""
+        },
+        prop_borderColorIconCardvView: {
+            prop: "prop_borderColorIconCardvView",
+            default: tools_const?.styles?.tableResposible?.borderColor_iconCardView ?? ""
+        },
     };
 
 
@@ -17146,6 +17214,7 @@ class ComponentTableResponsibleBase extends ComponentBase{
         ],
 
         part_form: [
+            this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_formClass,
             this._COMPONENT_PATTERN.prop_order,
             this._COMPONENT_PATTERN.prop_header,
@@ -17157,6 +17226,12 @@ class ComponentTableResponsibleBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_backgroundcolorBodyHover,
             this._COMPONENT_PATTERN.prop_colorBodyHover,
             this._COMPONENT_PATTERN.prop_options,
+            this._COMPONENT_PATTERN.prop_backgroundColorIconColumnSelector,
+            this._COMPONENT_PATTERN.prop_colorIconColumnSelector,
+
+            this._COMPONENT_PATTERN.prop_colorIconCardvView,
+            this._COMPONENT_PATTERN.prop_backgroundColorIconCardvView,
+            this._COMPONENT_PATTERN.prop_borderColorIconCardvView,
         ],
     };
 
@@ -17258,7 +17333,6 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         return document.querySelector(`#${this._COMPONENT_ID} #component-table-responsible-${ this._COMPONENT_RANDOM_ID}`);
     }
 
-
     fn_renderTable(){
         window.addEventListener('resize', this.fn_renderTable_resize.bind(this));
         this.fn_renderTable_resize();
@@ -17289,11 +17363,12 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
             const prop_backgroundcolorBody       =   data.hasOwnProperty("prop_backgroundcolorBody")                ?  data.prop_backgroundcolorBody                : "";
             const prop_colorBody                 =   data.hasOwnProperty("prop_colorBody")                          ?  data.prop_colorBody                          : "";
 
-            const prop_backgroundcolorBodyHover  =   data.hasOwnProperty("prop_backgroundcolorBodyHover")           ?  data.prop_backgroundcolorBodyHover           : "";
-            const prop_colorBodyHover            =   data.hasOwnProperty("prop_colorBodyHover")                     ?  data.prop_colorBodyHover                     : "";
+            const prop_backgroundcolorBodyHover      =   data.hasOwnProperty("prop_backgroundcolorBodyHover")           ?  data.prop_backgroundcolorBodyHover           : "";
+            const prop_colorBodyHover                =   data.hasOwnProperty("prop_colorBodyHover")                     ?  data.prop_colorBodyHover                     : "";
 
-            const prop_options                   =   data.hasOwnProperty("prop_options")                            ?  data.prop_options                            : [];
-
+            const prop_options                              =   data.hasOwnProperty("prop_options")                                ?  data.prop_options                                      : [];
+            const prop_backgroundColorIconColumnSelector    =   data.hasOwnProperty("ckgroundColorIconColumnSelector")             ?  data.ckgroundColorIconColumnSelector                   : "";
+            const prop_colorIconColumnSelector              =   data.hasOwnProperty("prop_backgroundColorIconColumnSelector")      ?  data.prop_backgroundColorIconColumnSelector            : "";
 
             formEl.innerHTML = `<component-table id="component-table-responsible-${ this._COMPONENT_RANDOM_ID}-table"></component-table>`
 
@@ -17301,6 +17376,8 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                 `component-table-responsible-${ this._COMPONENT_RANDOM_ID}-table` ,
                 {
                     prop_order , prop_header ,  prop_data ,
+                    prop_backgroundColorIconColumnSelector ,  prop_colorIconColumnSelector ,
+
                     prop_tableItemHeadStyles: {
                         "background-color" : prop_backgroundcolorHeader ,
                         "color" : prop_colorHeader ,
@@ -17325,7 +17402,10 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                         "color" : prop_colorBodyHover ,
                     },
                     prop_tableType: 0 ,
-                    prop_rowOptions: prop_options
+                    prop_rowOptions: prop_options,
+                    fn_callback: (event , optionName , optionId) => {
+                        this.fn_onclickOtiponCard(event , optionName , optionId)
+                    }
                 }
             );
 
@@ -17344,6 +17424,8 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
             const prop_header                    =   data.hasOwnProperty("prop_header")                             ?  data.prop_header                             : {};
             const prop_data                      =   data.hasOwnProperty("prop_data")                               ?  data.prop_data                               : [];
 
+
+
             let props = [];
             if (prop_data != null && Array.isArray(prop_data)){
                 for (let i = 0; i < prop_data.length ; i++) {
@@ -17353,6 +17435,12 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                         prop_optionsOpacity: 100 ,
                         prop_backgroundHover: "" ,
                         prop_options: this.fn_getListOptions(itemData) ,
+                        fn_callback:  (event , optionName , optionId) => {
+                            this.fn_onclickOtiponCard(event , optionName , optionId)
+                        } ,
+                        prop_borderStyles: {
+                            "display" : "flow-root"
+                        }
                     };
 
                     if (itemData != null && prop_order != null && Array.isArray(prop_order)){
@@ -17366,9 +17454,9 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
 
                                     if (itemHeader!= null && itemHeader.hasOwnProperty("id") && itemHeader.id == itemOrder
                                         &&  itemHeader.hasOwnProperty("inMobile") && itemHeader.inMobile
-                                        && itemHeader.hasOwnProperty("content") ){
+                                        && itemHeader.hasOwnProperty("content") ) {
 
-                                        itempProp.prop_body += `<b>${itemHeader.content}</b> : <span>${itemData[itemOrder]}</span> </br>`;
+                                        itempProp.prop_body += this.fn_getCardInfoHtml(itemHeader, itemData , itemOrder );
                                     }
 
                                 })
@@ -17384,45 +17472,103 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
             let ComponentRecycleView = new window.ComponentRecyclerView(
                 `component-table-responsible-${ this._COMPONENT_RANDOM_ID}-recylect-view` ,
                 {
-
                     prop_componentsName : "component-card-info" ,
                     prop_componentsParams : props
-
-                       /* [
-                        {
-                            prop_body : `asd` ,
-                            prop_options: [{
-                                html: "a" ,
-                                attrs: {
-                                    id: 1 ,
-                                    name: "item_a" ,
-                                    title: "item a" ,
-                                }
-                            }] ,
-                            fn_callback: (e , name , id) => {
-                                console.log(name , id)
-                            } ,
-                        } ,
-                        {
-                            prop_body : `asd` ,
-                            prop_options: [{
-                                html: "a" ,
-                                attrs: {
-                                    id: 2 ,
-                                    name: "item_b" ,
-                                    title: "item b" ,
-                                }
-                            }],
-                            fn_callback: (e , name , id) => {
-                                console.log(name , id)
-                            } ,
-                        }
-                    ]*/
                 }
             );
 
 
         }
+    }
+
+    fn_getCardInfoHtml(itemHeader , itemData , itemOrder , hasIcon){
+        const data = this._COMPONENT_CONFIG;
+        const prop_colorIconCardvView              =   data.hasOwnProperty("prop_colorIconCardvView")                ?  data.prop_colorIconCardvView                  : "";
+        const prop_backgroundColorIconCardvView    =   data.hasOwnProperty("prop_backgroundColorIconCardvView")      ?  data.prop_backgroundColorIconCardvView        : "";
+        const prop_borderColorIconCardvView        =   data.hasOwnProperty("prop_borderColorIconCardvView")          ?  data.prop_borderColorIconCardvView            : "";
+        const prop_size                            =   data.hasOwnProperty("prop_size")                              ?  data.prop_size                                : null;
+        const directionRtl                         =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")         ? this._COMPONENT_CONFIG.directionRtl            : false;
+
+        const elHeight = tools_css.getHeightSize(prop_size);
+        const elFontSize = tools_css.getFontSize(prop_size);
+        const elIconSize = tools_css.getIconSize(prop_size);
+        
+        
+        let iconHtml="";
+        if (itemHeader!= null && itemHeader.hasOwnProperty("icon") ){
+            iconHtml = `
+              <div class="component-table-responsible-card-view-form-icon-el-${ this._COMPONENT_RANDOM_ID}  position-absolute">
+                   ${(typeof itemHeader.icon == "function" ? itemHeader.icon(prop_size , prop_colorIconCardvView) : itemHeader.icon)}
+              </div>
+            `
+        }
+
+        let html = `
+<div class="component-table-responsible-card-view-form-${ this._COMPONENT_RANDOM_ID} p-0 m-0 ">
+
+     <style>
+          .component-table-responsible-card-view-form-${ this._COMPONENT_RANDOM_ID}{
+                height: ${elHeight+10}px;        
+          }
+          .component-table-responsible-card-view-form-icon-${ this._COMPONENT_RANDOM_ID}{
+              background-color: ${prop_borderColorIconCardvView};
+              width: 150px;
+              float: ${directionRtl ? "right" : "left"};
+              border-bottom: 3px solid ${prop_borderColorIconCardvView};
+          }
+          .component-table-responsible-card-view-form-icon-el-${ this._COMPONENT_RANDOM_ID}{
+               background-color: ${prop_backgroundColorIconCardvView};
+               border: 3px solid ${prop_borderColorIconCardvView};
+               border-radius: 100%;
+               width: ${elIconSize+15}px;
+               height: ${elIconSize+15}px;
+               padding: 5px;
+               top: 50%;
+               ${directionRtl ? "right" : "left"} : -${elIconSize/2}px;
+               transform: translate(0 , -50%);
+          }
+          .component-table-responsible-card-view-form-icon-${ this._COMPONENT_RANDOM_ID} b{
+              color: ${prop_backgroundColorIconCardvView};
+              font-size: ${elFontSize}px;
+              height: ${elHeight}px;
+              line-height: ${elHeight}px;
+              display: block;
+              ${directionRtl ? "margin-right" : "margin-left"} : ${elIconSize + 25}px;
+          }
+          .component-table-responsible-card-view-form-info-${ this._COMPONENT_RANDOM_ID}{
+              width: calc(100% - 150px);
+              float: ${directionRtl ? "right" : "left"};
+              font-size: ${elFontSize}px;
+              height: ${elHeight}px;
+              line-height: ${elHeight}px;
+               color: ${prop_colorIconCardvView};
+          }
+     </style>
+     
+     <div class="component-table-responsible-card-view-form-icon-${ this._COMPONENT_RANDOM_ID}  h-100 position-relative rounded">
+         ${iconHtml}
+         <b>${itemHeader.content}</b>
+     </div>
+   
+     <div class="component-table-responsible-card-view-form-info-${ this._COMPONENT_RANDOM_ID} px-2 h-100">
+        <b>${itemData[itemOrder]}</b>
+     </div>
+      
+     
+</div>
+
+`;
+
+        //  : <span></span> </br>
+
+        this._COMPONENT_PATTERN.prop_colorIconCardvView,
+            this._COMPONENT_PATTERN.prop_backgroundColorIconCardvView,
+            this._COMPONENT_PATTERN.prop_borderColorIconCardvView,
+
+
+        console.log(itemHeader , itemData , itemOrder);
+
+        return html;
     }
 
     fn_getListOptions(itemRow){
@@ -17435,13 +17581,13 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         if (prop_options != null && Array.isArray(prop_options)){
             for (let i = 0; i < prop_options.length; i++) {
                 const itemOption = prop_options[i];
-                if (itemOption.hasOwnProperty("html") && itemOption.hasOwnProperty("id") && typeof itemRow[itemOption.id] !== "undefined"){
+                if (itemOption.hasOwnProperty("html") && itemOption.hasOwnProperty("attrs") && itemOption.attrs.hasOwnProperty("id") && typeof itemRow[itemOption.attrs.id] !== "undefined"){
                     listOption.push({
                         html: itemOption.html ,
                         attrs: {
-                            id: itemRow[itemOption.id] ,
-                            name: itemOption?.name ?? "" ,
-                            title: itemOption?.title ?? "" ,
+                            id: itemRow[itemOption.attrs.id] ,
+                            name: itemOption?.attrs?.name ?? "" ,
+                            title: itemOption?.attrs?.title ?? "" ,
                         }
                     })
                 }
@@ -17451,6 +17597,546 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         return listOption;
     }
 
+    fn_onclickOtiponCard(event , optionName , optionId){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , optionName , optionId != null && optionId != "" ? parseInt(optionId) : null );
+        }
+    }
+
+}
+
+
+
+
+/*-------------------------------------
+ 10-02) Component page number
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+-------------------------------------*/
+class ComponentPageNumberBase extends ComponentBase{
+
+
+    /* ---------------------------------------------
+     PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size : {
+            prop: "prop_size" ,
+            default: tools_css.standardSizes.m.name
+        } ,
+
+        prop_backgroundColorForm : {
+            prop: "prop_backgroundColorForm" ,
+            default: tools_const?.styles?.pageNumber?.backgroundColor_form
+        } ,
+        prop_backgroundColorUnSelected2 : {
+            prop: "prop_backgroundColorUnSelected2" ,
+            default: tools_const?.styles?.pageNumber?.backgroundColor_unselected2
+        } ,
+        prop_backgroundColorUnSelected : {
+            prop: "prop_backgroundColorUnSelected" ,
+            default: tools_const?.styles?.pageNumber?.backgroundColor_unselected
+        } ,
+        prop_backgroundColorSelected : {
+            prop: "prop_backgroundColorSelected" ,
+            default: tools_const?.styles?.pageNumber?.backgroundColor_selected
+        } ,
+        prop_backgroundColorSelected2 : {
+            prop: "prop_backgroundColorSelected2" ,
+            default: tools_const?.styles?.pageNumber?.backgroundColor_selected2
+        } ,
+        prop_colorUnSelected : {
+            prop: "prop_colorUnSelected" ,
+            default: tools_const?.styles?.pageNumber?.color_unselected
+        } ,
+        prop_colorSelected : {
+            prop: "prop_colorSelected" ,
+            default: tools_const?.styles?.pageNumber?.color_selected
+        } ,
+
+        prop_colorIcon : {
+            prop: "prop_colorIcon" ,
+            default: tools_const?.styles?.pageNumber?.color_icon
+        } ,
+        prop_backgroundColorIcon : {
+            prop: "prop_backgroundColorIcon" ,
+            default: tools_const?.styles?.pageNumber?.backgroundColor_icon
+        } ,
+        prop_backgroundColorIcon2 : {
+            prop: "prop_backgroundColorIcon2" ,
+            default: tools_const?.styles?.pageNumber?.backgroundColor_icon2
+        } ,
+
+        prop_pageSelected: {
+            prop: "prop_pageSelected" ,
+            default: 0
+        } ,
+        prop_pageTotal: {
+            prop: "prop_pageTotal" ,
+            default: 0
+        } ,
+        prop_pageGap: {
+            prop: "prop_pageGap" ,
+            default: 2
+        } ,
+
+    };
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_backgroundColorForm,
+        ],
+
+
+        part_form_btn_prevous: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+        part_form_btn_prevous_icon: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_pageSelected,
+            this._COMPONENT_PATTERN.prop_pageTotal,
+            this._COMPONENT_PATTERN.prop_colorIcon,
+            this._COMPONENT_PATTERN.prop_backgroundColorIcon,
+            this._COMPONENT_PATTERN.prop_backgroundColorIcon2,
+        ],
+
+
+        part_form_numbers: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_pageSelected,
+            this._COMPONENT_PATTERN.prop_pageTotal,
+            this._COMPONENT_PATTERN.prop_pageGap,
+            this._COMPONENT_PATTERN.prop_backgroundColorUnSelected,
+            this._COMPONENT_PATTERN.prop_backgroundColorUnSelected2,
+            this._COMPONENT_PATTERN.prop_backgroundColorSelected,
+            this._COMPONENT_PATTERN.prop_backgroundColorSelected2,
+            this._COMPONENT_PATTERN.prop_colorUnSelected,
+            this._COMPONENT_PATTERN.prop_colorSelected,
+        ],
+
+
+        part_form_btn_next: [
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+        part_form_btn_next_icon: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_pageSelected,
+            this._COMPONENT_PATTERN.prop_pageTotal,
+            this._COMPONENT_PATTERN.prop_colorIcon,
+            this._COMPONENT_PATTERN.prop_backgroundColorIcon,
+            this._COMPONENT_PATTERN.prop_backgroundColorIcon2,
+        ],
+
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form:{
+                part_form_btn_prevous:{} ,
+                part_form_numbers:{} ,
+                part_form_btn_next:{} ,
+            }
+        }
+    }
+
+}
+window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumberBase{
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+       super(
+            listComponent[ComponentPageNumber.name] ,
+            elId
+        );
+       super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_form_btn_prevous_icon");
+        this.templateFn("part_form_btn_next_icon");
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_form":
+                return this.template_render_form(partName);
+            case "part_form_btn_prevous":
+                return this.template_render_form_btn_prevous(partName);
+            case "part_form_numbers":
+                return this.template_render_form_numbers(partName);
+            case "part_form_btn_next":
+                return this.template_render_form_btn_next(partName);
+            case "part_form_btn_prevous_icon":
+                return this.componentFn_render_form_btn_prevous_icon(partName);
+            case "part_form_btn_next_icon":
+                return this.componentFn_render_form_btn_next_icon(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+
+    template_render_structure(partName) {
+        const content = `
+            ${this.templateFn("part_form") ?? ""}
+        `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                 = data.hasOwnProperty("prop_size")                    ?  data.prop_size                    :  null;
+            const prop_backgroundColorForm  = data.hasOwnProperty("prop_backgroundColorForm")     ?  data.prop_backgroundColorForm     :  null;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            let {min , max} = this.fn_getMinAndMax();
+            let length = max - min + 1;
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-page-number-from-${this._COMPONENT_RANDOM_ID}"
+         class="shadow-sm mx-auto d-block overflow-hidden" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-page-number-from-${this._COMPONENT_RANDOM_ID}{
+            background-color: ${prop_backgroundColorForm};
+            width:            ${this.fn_getWidthParts(length + 2) + this.fn_getWidthBorderNumber(length-2)}px;;
+            height:           ${elHeight}px;
+            border-radius:    ${elHeight}px;
+       }
+    </style>
+    
+       ${this.templateFn("part_form_btn_prevous") ?? ""}
+       ${this.templateFn("part_form_numbers") ?? ""}
+       ${this.templateFn("part_form_btn_next") ?? ""}
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form_btn_prevous(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                 = data.hasOwnProperty("prop_size")                             ?  data.prop_size                                 :  null;
+            const directionRtl              =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl             : false;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-page-number-form-btn-prevous-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-page-number-form-btn-prevous-${this._COMPONENT_RANDOM_ID}{
+           width:                                             ${this.fn_getWidthParts()}px;  
+           height:                                            ${elHeight}px;
+           float:                                             ${directionRtl ? "left" : "right"};
+           cursor:                                            pointer;
+        }
+    </style>
+    
+    <component-icon id="component-page-number-form-btn-prevous-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form_numbers(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                             = data.hasOwnProperty("prop_size")                             ?  data.prop_size                                 :  null;
+            const prop_pageTotal                        =   data.hasOwnProperty("prop_pageTotal")                      ?  data.prop_pageTotal                            :  0;
+            const prop_pageSelected                     =   data.hasOwnProperty("prop_pageSelected")                   ?  data.prop_pageSelected                         :  0;
+            const prop_pageGap                          =   data.hasOwnProperty("prop_pageGap")                        ?  data.prop_pageGap                              :  0;
+            const prop_backgroundColorUnSelected        =   data.hasOwnProperty("prop_backgroundColorUnSelected")      ?  data.prop_backgroundColorUnSelected            :  "";
+            const prop_backgroundColorUnSelected2       =   data.hasOwnProperty("prop_backgroundColorUnSelected2")     ?  data.prop_backgroundColorUnSelected2           :  "";
+            const prop_backgroundColorSelected          =   data.hasOwnProperty("prop_backgroundColorSelected")        ?  data.prop_backgroundColorSelected              :  "";
+            const prop_backgroundColorSelected2         =   data.hasOwnProperty("prop_backgroundColorSelected2")       ?  data.prop_backgroundColorSelected2             :  "";
+            const prop_colorUnSelected                  =   data.hasOwnProperty("prop_colorUnSelected")                ?  data.prop_colorUnSelected                      :  "";
+            const prop_colorSelected                    =   data.hasOwnProperty("prop_colorSelected")                  ?  data.prop_colorSelected                        :  "";
+            const directionRtl                          =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl             : false;
+
+            let {min , max} = this.fn_getMinAndMax();
+            let pagesHtml = "";
+            for (let i = min; i <= max ; i++) {
+                pagesHtml += `
+                    <b class="component-page-number-form-numbers-items-${this._COMPONENT_RANDOM_ID} 
+                              component-page-number-form-numbers-items-${this._COMPONENT_RANDOM_ID}-${ prop_pageSelected == i ? "selected" : "unselected"}" 
+                       onclick="${this.getFn("fn_onClickPage" , "event" , i)}" >
+                        ${i}
+                    </b>
+                `;
+            }
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elFontSize = tools_css.getFontSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-page-number-form-numbers-${this._COMPONENT_RANDOM_ID}"
+         class="" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-page-number-form-numbers-${this._COMPONENT_RANDOM_ID}{
+            width:               calc(100% - ${this.fn_getWidthParts(2)}px);
+            height:              ${elHeight}px;
+            float:               ${directionRtl ? "left" : "right"};
+            ${directionRtl ? "border-right" : "border-left"}:  ${this.fn_getWidthBorder()}px solid white;
+        }
+        #${this._COMPONENT_ID} .component-page-number-form-numbers-items-${this._COMPONENT_RANDOM_ID}{
+            width:               ${this.fn_getWidthParts()}px;
+            font-size:           ${elFontSize}px;
+            height:              ${elHeight}px;
+            line-height:         ${elHeight}px;
+            float:               ${directionRtl ? "left" : "right"};
+            cursor:              pointer;
+            ${directionRtl ? "border-left" : "border-right"}:  ${this.fn_getWidthBorder()}px solid white;
+            text-align:          center;
+        }
+        
+        #${this._COMPONENT_ID} .component-page-number-form-numbers-items-${this._COMPONENT_RANDOM_ID}-unselected{
+            background-image:   linear-gradient(to bottom, ${prop_backgroundColorUnSelected}, ${prop_backgroundColorUnSelected2})   ;
+            color:              ${prop_colorUnSelected};
+        }
+        #${this._COMPONENT_ID} .component-page-number-form-numbers-items-${this._COMPONENT_RANDOM_ID}-selected{
+            background-image:   linear-gradient(to bottom, ${prop_backgroundColorSelected}, ${prop_backgroundColorSelected2})   ;
+            color:              ${prop_colorSelected};
+        }
+    </style>
+    
+    ${pagesHtml}
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form_btn_next(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                 = data.hasOwnProperty("prop_size")                             ?  data.prop_size                                 :  null;
+            const directionRtl              =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl             : false;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-page-number-form-btn-next-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative" >
+         
+    <style>
+        #${this._COMPONENT_ID} #component-page-number-form-btn-next-${this._COMPONENT_RANDOM_ID}{
+            width:                                             ${this.fn_getWidthParts()}px;
+            height:                                            ${elHeight}px;
+            float:                                             ${directionRtl ? "left" : "right"};
+            cursor:                                            pointer;
+        }
+    </style>
+    
+    <component-icon id="component-page-number-form-btn-next-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_form_btn_prevous_icon(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_size                    =   data.hasOwnProperty("prop_size")                            ?  data.prop_size                                 :  null;
+            const prop_colorIcon               =   data.hasOwnProperty("prop_colorIcon")                       ?  data.prop_colorIcon                            :  null;
+            const prop_backgroundColorIcon     =   data.hasOwnProperty("prop_backgroundColorIcon")             ?  data.prop_backgroundColorIcon                  :  null;
+            const prop_backgroundColorIcon2    =   data.hasOwnProperty("prop_backgroundColorIcon2")            ?  data.prop_backgroundColorIcon2                 :  null;
+            const prop_pageTotal               =   data.hasOwnProperty("prop_pageTotal")                       ?  data.prop_pageTotal                            :  0;
+            const prop_pageSelected            =   data.hasOwnProperty("prop_pageSelected")                    ?  data.prop_pageSelected                         :  0;
+            const directionRtl                 =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")       ? this._COMPONENT_CONFIG.directionRtl             : false;
+
+            const elIconHeight = tools_css.getIconSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            if (prop_pageSelected  > 1 && prop_pageTotal > 1){
+                new window.ComponentIcon(
+                    `component-page-number-form-btn-prevous-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: directionRtl ? tools_icons.icon_arrow_left(prop_size , prop_colorIcon) : tools_icons.icon_arrow_right(prop_size , prop_colorIcon) ,
+
+                        classList : [  , "d-block"  ] ,
+                        styles: {
+                            "cursor" :             "pointer" ,
+                            "width" :              this.fn_getWidthParts() +"px" ,
+                            "background-image" :   `linear-gradient(to bottom, ${prop_backgroundColorIcon}, ${prop_backgroundColorIcon2})`,
+                            "height" :             elHeight+"px" ,
+                        } ,
+
+                        prop_iconClass : [ "position-absolute" ] ,
+                        prop_iconStyles : {
+                            "top": "50%" ,
+                            "left": "50%" ,
+                            "transform": "translate(-50% , -50%)" ,
+                            "color": prop_colorIcon,
+                        } ,
+
+                        fn_callback: (event)=>{
+                            this.fn_onClickPageIcon(event , false);
+                        } ,
+                    }
+                )
+            }
+
+        }
+    }
+
+    componentFn_render_form_btn_next_icon(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_size                    =   data.hasOwnProperty("prop_size")                            ?  data.prop_size                                 :  null;
+            const prop_backgroundColorIcon     =   data.hasOwnProperty("prop_backgroundColorIcon")             ?  data.prop_backgroundColorIcon                  :  null;
+            const prop_backgroundColorIcon2    =   data.hasOwnProperty("prop_backgroundColorIcon2")            ?  data.prop_backgroundColorIcon2                 :  null;
+            const prop_colorIcon               =   data.hasOwnProperty("prop_colorIcon")                       ?  data.prop_colorIcon                            :  null;
+            const prop_pageTotal               =   data.hasOwnProperty("prop_pageTotal")                       ?  data.prop_pageTotal                            :  0;
+            const prop_pageSelected            =   data.hasOwnProperty("prop_pageSelected")                    ?  data.prop_pageSelected                         :  0;
+            const directionRtl                 =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")       ? this._COMPONENT_CONFIG.directionRtl             : false;
+
+            const elIconHeight = tools_css.getIconSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            if (prop_pageSelected < prop_pageTotal ){
+                new window.ComponentIcon(
+                    `component-page-number-form-btn-next-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: directionRtl ? tools_icons.icon_arrow_right(prop_size , prop_colorIcon)  : tools_icons.icon_arrow_left(prop_size , prop_colorIcon) ,
+
+                        classList : [ "position-relative" , "d-block"  ] ,
+                        styles: {
+                            "cursor" :             "pointer" ,
+                            "width" :              this.fn_getWidthParts()+"px" ,
+                            "background-image" :   `linear-gradient(to bottom, ${prop_backgroundColorIcon}, ${prop_backgroundColorIcon2})`,
+                            "height" :             elHeight+"px" ,
+                        } ,
+
+                        prop_iconClass : [ "position-absolute" ] ,
+                        prop_iconStyles : {
+                            "top": "50%" ,
+                            "left": "50%" ,
+                            "transform": "translate(-50% , -50%)" ,
+                            "color": prop_colorIcon,
+                        } ,
+
+                        fn_callback: (event)=>{
+                            this.fn_onClickPageIcon(event , true);
+                        } ,
+                    }
+                )
+            }
+
+        }
+    }
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getWidthParts(number=1){
+        const data = this._COMPONENT_CONFIG;
+        const prop_size  = data.hasOwnProperty("prop_size")      ?  data.prop_size      :  null;
+        return (tools_css.getHeightSize(prop_size) + 10) * number;
+    }
+    fn_getWidthBorder(){
+        return 1;
+    }
+    fn_getWidthBorderNumber(number=1){
+        return number * this.fn_getWidthBorder();
+    }
+    fn_getMinAndMax(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_pageTotal                        =   data.hasOwnProperty("prop_pageTotal")                      ?  data.prop_pageTotal                            :  0;
+        const prop_pageSelected                     =   data.hasOwnProperty("prop_pageSelected")                   ?  data.prop_pageSelected                         :  0;
+        const prop_pageGap                          =   data.hasOwnProperty("prop_pageGap")                        ?  data.prop_pageGap                              :  0;
+        let min = prop_pageSelected - prop_pageGap   >= 1                   ? prop_pageSelected - prop_pageGap      : 1;
+        let max = prop_pageSelected + prop_pageGap   <= prop_pageTotal      ? prop_pageSelected + prop_pageGap      : prop_pageTotal;
+
+        return {min , max}
+    }
+
+    fn_onClickPageIcon(event , isNext=true){
+        const data = this._COMPONENT_CONFIG;
+        const prop_pageTotal                        =   data.hasOwnProperty("prop_pageTotal")                      ?  data.prop_pageTotal                            :  0;
+        const prop_pageSelected                     =   data.hasOwnProperty("prop_pageSelected")                   ?  data.prop_pageSelected                         :  0;
+
+        if ( (isNext && prop_pageSelected+1 <= prop_pageTotal) ||  (!isNext && prop_pageSelected-1 >= 1)){
+            this.fn_onClickPage(event , (isNext && prop_pageSelected+1 <= prop_pageTotal) ? prop_pageSelected+1 : prop_pageSelected-1)
+        }
+    }
+
+    fn_onClickPage(event , pageNumber){
+        const data = this._COMPONENT_CONFIG;
+        data.prop_pageSelected = pageNumber;
+        this.renderComponent(data);
+        if (data.hasOwnProperty("fn_onBackClick") && typeof data.fn_onBackClick != null){
+            data.fn_onBackClick(event , pageNumber);
+        }
+    }
 
 }
 
@@ -24422,7 +25108,9 @@ class ComponentBorderBase extends ComponentBase{
         },
         prop_borderStyles: {
             prop: "prop_borderStyles",
-            default: {}
+            default: {
+                "display" : "flow-root"
+            }
         },
         prop_content: {
             prop: "prop_content",

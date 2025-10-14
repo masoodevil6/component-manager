@@ -162,6 +162,18 @@
         </component-body>
     </component-collapse>
 
+    <component-collapse  id="pagernumbers">
+        <component-body>
+
+            <section class="row p-0 m-0">
+
+                <component-page-number  id="page-number"></component-page-number>
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
     <component-collapse  id="tabs">
         <component-body>
 
@@ -1115,7 +1127,7 @@
                 prop_tableBordered: 1 ,
 
                 //prop_tableStriped: true ,
-                //prop_tableHover: true ,
+                //prop_tableHover: true ,`
                 //prop_tableBorderless: true ,
 
                 prop_order : ["id" , "name" , "family" , "has"] ,
@@ -1215,12 +1227,33 @@
                 prop_options : [
                     {
                         html :  tools_icons.icon_tik() ,
-                        name:   "option_a" ,
-                        title:  "option a",
-                        id:     "id"
+                        attrs: {
+                            name:   "option_a" ,
+                            title:  "option a",
+                            id:     "id"
+                        }
                     } ,
 
                 ] ,
+                fn_callback: (event , optionName , optionId) =>{
+                    console.log(optionName , optionId)
+                }
+            }
+        )
+
+
+
+        new window.ComponentPageNumber(
+            "page-number" ,
+            {
+                classList: "col-lg-6 col-12 mt-2 row p-0 m-0"  ,
+                prop_pageSelected: 2 ,
+                prop_pageTotal: 10 ,
+                prop_pageGap: 2 ,
+
+                fn_onBackClick: (e , page)=>{
+                    console.log(page)
+                }
             }
         )
 
@@ -1961,12 +1994,25 @@
                 prop_bodyShow: true
             }
         )
+
+        new window.ComponentCollapse(
+            "pagernumbers" ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_title: " [11] page number " ,
+                prop_bodyShow: true
+            }
+        )
+
+
+
         new window.ComponentCollapse(
             "tabs" ,
             {
                 classList: "col-md-3 col-12 mt-2"  ,
 
-                prop_title: " [11] Tabs " ,
+                prop_title: " [12] Tabs " ,
                 prop_bodyShow: false
             }
         )
@@ -1975,7 +2021,7 @@
             {
                 classList: "col-md-3 col-12 mt-2"  ,
 
-                prop_title: " [12] Collapses " ,
+                prop_title: " [13] Collapses " ,
                 prop_bodyShow: false
             }
         )
@@ -1984,7 +2030,7 @@
             {
                 classList: "col-md-3 col-12 mt-2"  ,
 
-                prop_title: " [13] Window " ,
+                prop_title: " [14] Window " ,
                 prop_bodyShow: false
             }
         )
@@ -1993,7 +2039,7 @@
             {
                 classList: "col-md-3 col-12 mt-2"  ,
 
-                prop_title: " [14] Slider Show " ,
+                prop_title: " [15] Slider Show " ,
                 prop_bodyShow: false
             }
         )
@@ -2002,7 +2048,7 @@
             {
                 classList: "col-md-3 col-12 mt-2"  ,
 
-                prop_title: " [15] breadcrumbs " ,
+                prop_title: " [16] breadcrumbs " ,
                 prop_bodyShow: false
             }
         )
