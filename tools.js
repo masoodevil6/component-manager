@@ -17,6 +17,7 @@ if (typeof component_props === 'undefined') {
         primaryColor2: "#334783",
         primaryColor3: "#7887b2",
         primaryColor4: "#e4e9ed",
+        primaryColor5: "#ededef",
 
         secondaryColor1: "#fab01b",
         secondaryColor2: "#f5bf53",
@@ -89,75 +90,80 @@ tools_init = {
         tools_const.styles =  {
             message: {
                 success: {
-                    backgroundColor: component_props.successColor4 ,
-                    color:           component_props.successColor1 ,
-                    icon:            component_props.successColor1 ,
-                    border:          component_props.successColor1 ,
+                    backgroundColor:                   component_props.successColor4 ,
+                    color:                             component_props.successColor1 ,
+                    icon:                              component_props.successColor1 ,
+                    border:                            component_props.successColor1 ,
                 } ,
                 error: {
-                    backgroundColor: component_props.errorColor4 ,
-                    color:           component_props.errorColor1 ,
-                    icon:            component_props.errorColor1 ,
-                    border:          component_props.errorColor1 ,
+                    backgroundColor:                   component_props.errorColor4 ,
+                    color:                             component_props.errorColor1 ,
+                    icon:                              component_props.errorColor1 ,
+                    border:                            component_props.errorColor1 ,
                 } ,
                 warning: {
-                    backgroundColor: component_props.warningColor4 ,
-                    color:           component_props.warningColor1 ,
-                    icon:            component_props.warningColor1 ,
-                    border:          component_props.warningColor1 ,
+                    backgroundColor:                   component_props.warningColor4 ,
+                    color:                             component_props.warningColor1 ,
+                    icon:                              component_props.warningColor1 ,
+                    border:                            component_props.warningColor1 ,
                 }
             },
 
             loading: {
-                backgroundColor_loading:  component_props.primaryColor1 ,
-                backgroundColor_shadow:   component_props.shadowColor1
+                backgroundColor_loading:               component_props.primaryColor1 ,
+                backgroundColor_shadow:                component_props.shadowColor1
             },
 
             state404: {
-                backgroundColor_shadow:  component_props.shadowColor1 ,
+                backgroundColor_shadow:                component_props.shadowColor1 ,
             },
 
             form: {
-                backgroundColor_title:          component_props.secondaryColor1 ,
+                backgroundColor_title:                 component_props.secondaryColor1 ,
             },
 
             title: {
-                backgroundColor: component_props.shanColor1
+                backgroundColor:                       component_props.shanColor1
+            },
+
+            pageHeader: {
+                backgroundColor_form:                  component_props.primaryColor1 ,
+                color_icon:                            component_props.shanColor1 ,
+                color_header:                          component_props.shanColor1 ,
             },
 
             collapse: {
-                backgroundColor_title:          component_props.primaryColor4 ,
-                color_title:                    component_props.darkColor1 ,
-                backgroundColor_body:           component_props.shanColor1 ,
+                backgroundColor_title:                 component_props.primaryColor1 ,
+                color_title:                           component_props.shanColor1 ,
+                backgroundColor_body:                  component_props.shanColor1 ,
 
             },
 
             button: {
                 submit:{
-                    backgroundColor:       component_props.primaryColor1,
-                    backgroundColorHover:  component_props.primaryColor2,
-                    color:                 component_props.shanColor1,
+                    backgroundColor:                   component_props.primaryColor1,
+                    backgroundColorHover:              component_props.primaryColor2,
+                    color:                             component_props.shanColor1,
                 } ,
                 cancel:{
-                    backgroundColor:       component_props.errorColor1,
-                    backgroundColorHover:  component_props.errorColor2,
-                    color:                 component_props.shanColor1,
+                    backgroundColor:                   component_props.errorColor1,
+                    backgroundColorHover:              component_props.errorColor2,
+                    color:                             component_props.shanColor1,
                 } ,
                 back:{
-                    backgroundColor:       component_props.secondaryColor1,
-                    backgroundColorHover:  component_props.secondaryColor2,
-                    color:                 component_props.darkColor1,
+                    backgroundColor:                   component_props.secondaryColor1,
+                    backgroundColorHover:              component_props.secondaryColor2,
+                    color:                             component_props.darkColor1,
                 }
-            },
-
-
-            otp: {
-
             },
 
             input: {
                 backgroundColor_form:                  component_props.secondaryColor1 ,
                 color_icon:                            component_props.darkColor1 ,
+            },
+
+            inputOtp: {
+
             },
 
             inputPassword: {
@@ -196,6 +202,25 @@ tools_init = {
                 color_selected :                       component_props.primaryColor1 ,
                 color_disable :                        component_props.darkColor2 ,
             } ,
+
+            inputDate: {
+                backgroundColor_header :               component_props.secondaryColor1 ,
+                color_icon:                            component_props.primaryColor1 ,
+
+                backgroundColor_main :                 component_props.primaryColor1 ,
+                color_iconArrow:                       component_props.shanColor1 ,
+
+                backgroundColor_rowSelected  :         component_props.primaryColor4 ,
+                backgroundColor_colSelected :          component_props.secondaryColor2 ,
+                color_columnSelected  :                component_props.darkColor1 ,
+            } ,
+
+            inputFile: {
+                boderColor :                           component_props.primaryColor1 ,
+                boderColorHover :                      component_props.secondaryColor1 ,
+                textColor :                            component_props.primaryColor1 ,
+            } ,
+
 
 
             table: {
@@ -245,9 +270,9 @@ tools_init = {
                 backgroundColor_selected2:             component_props.secondaryColor3 ,
                 color_selected:                        component_props.darkColor1 ,
 
-                backgroundColor_icon:                  component_props.secondaryColor1 ,
-                backgroundColor_icon2:                 component_props.secondaryColor3 ,
-                color_icon:                            component_props.darkColor1 ,
+                backgroundColor_icon:                  component_props.primaryColor1 ,
+                backgroundColor_icon2:                 component_props.darkColor1 ,
+                color_icon:                            component_props.shanColor1 ,
             },
 
             cardInfo: {
@@ -284,86 +309,75 @@ tools_init = {
 
             elementLink: {
                 normal:{
-                    backgroundColor: component_props.shanColor1 ,
+                    backgroundColor:                  component_props.shanColor1 ,
                 },
                 hover:{
-                    backgroundColor: component_props.shanColor1 ,
+                    backgroundColor:                  component_props.shanColor1 ,
                 }
             } ,
 
             elementBorder: {
-                btnMore_backgroundColor : component_props.primaryColor1 ,
-                btnMore_color : component_props.shanColor1 ,
+                btnMore_backgroundColor :             component_props.primaryColor1 ,
+                btnMore_color :                       component_props.shanColor1 ,
             } ,
 
             label: {
-                backgroundColor : component_props.primaryColor1 ,
-                color : component_props.shanColor1 ,
-            } ,
-
-            inputDate: {
-                backgroundColor_main : component_props.primaryColor2 ,
-
-                backgroundColor_btn  : component_props.secondaryColor1 ,
-                backgroundColor_btnHover  : component_props.secondaryColor2 ,
-                color_btn  : component_props.darkColor1 ,
-
-                backgroundColor_rowSelected  : component_props.secondaryColor1 ,
-                backgroundColor_colSelected : component_props.secondaryColor2 ,
-                color_columnSelected  : component_props.darkColor1 ,
-            } ,
-
-            inputFile: {
-                boderColor : component_props.primaryColor1 ,
-                boderColorHover : component_props.secondaryColor1 ,
-                textColor : component_props.primaryColor1 ,
+                backgroundColor :                     component_props.primaryColor1 ,
+                color :                               component_props.shanColor1 ,
             } ,
 
             window: {
-                backgroundColor_blur : component_props.shadowColor1 ,
-                backgroundColor_window : component_props.shanColor1 ,
+                backgroundColor_blur :                component_props.shadowColor1 ,
+                backgroundColor_window :              component_props.shanColor1 ,
             } ,
 
             tooltipDescription: {
-                backgroundColor_description : component_props.secondaryColor1 ,
-                color_description : component_props.darkColor1 ,
+                backgroundColor_description :          component_props.secondaryColor1 ,
+                color_description :                    component_props.darkColor1 ,
             } ,
 
 
             breadcrumb: {
-                backgroundColor_unactive : component_props.primaryColor1 ,
-                color_unactive : component_props.shanColor1 ,
-                backgroundColor_active : component_props.secondaryColor1 ,
-                color_active : component_props.darkColor1 ,
+                backgroundColor_unactive :             component_props.primaryColor1 ,
+                color_unactive :                       component_props.shanColor1 ,
+                backgroundColor_active :               component_props.secondaryColor1 ,
+                color_active :                         component_props.darkColor1 ,
             } ,
 
             breadcrumbWithArrow: {
-                backgroundColor_unactive : component_props.primaryColor1 ,
-                color_unactive : component_props.darkColor1 ,
-                backgroundColor_active : component_props.secondaryColor1 ,
-                color_active : component_props.shanColor1 ,
-                color_shadow : component_props.shadowColor1 ,
+                backgroundColor_unactive :             component_props.primaryColor1 ,
+                color_unactive :                       component_props.darkColor1 ,
+                backgroundColor_active :               component_props.secondaryColor1 ,
+                color_active :                         component_props.shanColor1 ,
+                color_shadow :                         component_props.shadowColor1 ,
             } ,
 
 
             tree: {
-                backgroundColor_unSelected : component_props.shadowColor1 ,
-                backgroundColor_selected : component_props.secondaryColor1 ,
+                backgroundColor_unSelected :           component_props.shadowColor1 ,
+                backgroundColor_selected :             component_props.secondaryColor1 ,
             } ,
 
             mosuseScroller: {
-                backgroundColor_dark : component_props.darkColor2 ,
-                backgroundColor_light: component_props.shanColor1 ,
-                backgroundColor_tools: component_props.darkColor1 ,
+                backgroundColor_dark :                 component_props.darkColor2 ,
+                backgroundColor_light:                 component_props.shanColor1 ,
+                backgroundColor_tools:                 component_props.darkColor1 ,
             } ,
 
 
             backShadow: {
-                backgroundColor: component_props.shadowColor1
+                backgroundColor:                       component_props.shadowColor1
             },
             buttonError: {
-                backgroundColor: component_props.errorColor1 ,
-                color: component_props.shanColor1,
+                backgroundColor:                       component_props.errorColor1 ,
+                color:                                 component_props.shanColor1,
+            } ,
+
+
+            report: {
+                backgroundColor_page:                  component_props.primaryColor5 ,
+                color_iconPage:                        component_props.darkColor1 ,
+                color_iconBtnNewPage:                  component_props.darkColor1 ,
             } ,
 
 
@@ -379,37 +393,37 @@ tools_css = {
             name: "x-s",
             fontSize: 8,
             height: 18,
-            icon: 12
+            icon: 14
         } ,
         s: {
             name: "s" ,
             fontSize: 10 ,
             height: 22,
-            icon: 14
+            icon: 16
         } ,
         m: {
             name: "m" ,
             fontSize: 12,
             height: 26,
-            icon: 16
+            icon: 18
         } ,
         l: {
             name:  "l"  ,
             fontSize: 13,
             height: 28,
-            icon: 18
+            icon: 20
         } ,
         xl: {
             name:  "x-l" ,
             fontSize: 14,
             height: 30,
-            icon: 19
+            icon: 24
         } ,
         xxl: {
             name: "xx-l",
             fontSize: 15 ,
             height: 34,
-            icon: 20
+            icon: 28
         }
     } ,
 
@@ -466,8 +480,7 @@ tools_css = {
         Object.keys(tools_css.standardSizes).forEach(key=>{
             itemIcon = tools_css.standardSizes[key];
             if(itemIcon.name == sizeName){
-                val = itemFont.icon;
-
+                val = itemIcon.icon;
                 return;
             }
         });
@@ -995,12 +1008,15 @@ tools_converter = {
 
 
     numPersianToEnglish: function (str, isInt=false){
-        const val = str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+        if (typeof str == "string"){
+            const val = str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
 
-        if (isInt){
-            return parseInt(val);
+            if (isInt){
+                return parseInt(val);
+            }
+            return val;
         }
-        return val;
+        return str;
     } ,
 
 
@@ -2132,5 +2148,85 @@ tools_icons = {
 
     } ,
 
+
+    icon_calendar(sizeName =  component_props.elementSizes, bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="calendar"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <line x1="16" y1="2" x2="16" y2="6" 
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round"/>
+  <line x1="8" y1="2" x2="8" y2="6" 
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round"/>
+  <line x1="3" y1="10" x2="21" y2="10" 
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round"/>
+</svg>`;
+    },
+
+
+    icon_back_left(sizeName =  component_props.elementSizes, bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow left"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>arrow left</title>
+  <path d="M14 6 L8 12 L14 18 Z" fill="${bg_color}"/>
+  <line x1="16" y1="12" x2="22" y2="12"
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round"/>
+</svg>`;
+    },
+
+
+    icon_back_right(sizeName =  component_props.elementSizes,  bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow right"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>arrow right</title>
+  <path d="M10 6 L16 12 L10 18 Z" fill="${bg_color}"/>
+  <line x1="2" y1="12" x2="8" y2="12"
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round"/>
+</svg>`;
+    },
+
+
+
+    icon_excel(sizeName = component_props.elementSizes, bg_color = "#107C41") {
+        const size = tools_css.getIconSize(sizeName, sizeName);
+
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="excel file"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>excel file with folded corner</title>
+
+  <!-- قاب فایل با گوشه تاخورده -->
+  <path d="M3 3 H17 L21 7 V21 H3 V3 Z M17 3 V7 H21"
+        stroke="${bg_color}" stroke-width="1.8" fill="none"/>
+
+  <!-- X وسط فایل -->
+  <path d="M7 8 L12 16 M12 8 L7 16"
+        stroke="${bg_color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    } ,
+
+    icon_print(sizeName =  component_props.elementSizes, bg_color = "#107C41") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="print"
+    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>print</title>
+  <path d="M6 9V4h12v5" stroke="${bg_color}" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="4" y="9" width="16" height="8" rx="2" stroke="${bg_color}" stroke-width="2"/>
+  <rect x="7" y="13" width="10" height="7" stroke="${bg_color}" stroke-width="2"/>
+  <circle cx="17" cy="12" r="1" fill="${bg_color}"/>
+</svg>`;
+    },
 }
 

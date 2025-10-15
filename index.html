@@ -60,6 +60,9 @@
                     </component-options>
                 </component-card-info>
 
+
+                <component-page-header id="page_header"></component-page-header>
+
             </section>
 
         </component-body>
@@ -109,6 +112,7 @@
                 <component-input-price  id="input_price"></component-input-price>
 
                 <component-date  id="input_date"></component-date>
+                <component-date  id="input_date2"></component-date>
 
                 <component-input-file  id="input_file"></component-input-file>
 
@@ -533,6 +537,44 @@
 
 
         /*-------------------------------------
+           01-010) Component page header
+        -------------------------------------*/
+        new window.ComponentPageHeader(
+            "page_header" ,
+            {
+                classList: "col-12 mt-2"  ,
+
+                prop_pageTitle: "Page Title Sample" ,
+
+                prop_optionsList:[
+                    {
+                        html: tools_icons.icon_excel ,
+                        attrs: {
+                            title: "Excel" ,
+                            name: "excel" ,
+                        }
+                    } ,
+                    {
+                        html: tools_icons.icon_print ,
+                        attrs: {
+                            title: "Print" ,
+                            name: "print" ,
+                        }
+                    }
+                ] ,
+
+                fn_onBackClick: (event)=>{
+                    console.log(event)
+                },
+
+                fn_onOptionClick: (event , optionName)=>{
+                    console.log(event , optionName)
+                }
+            }
+        );
+
+
+        /*-------------------------------------
            01-08) Component card
         -------------------------------------*/
         new window.ComponentCard(
@@ -893,6 +935,19 @@
 
                 prop_title: "input date" ,
                 prop_type: 0,
+                prop_dateType: 0,
+                prop_langSelected: "fa",
+            }
+        )
+        new window.ComponentDate(
+            "input_date2" ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_title: "input date" ,
+                prop_type: 0,
+                prop_dateType: 1,
+                prop_langSelected: "en",
             }
         )
 
@@ -1952,7 +2007,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [01] text " ,
-                prop_bodyShow: false
+                prop_bodyShow: true
             }
         )
         new window.ComponentCollapse(
@@ -1991,7 +2046,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [10] Table " ,
-                prop_bodyShow: true
+                prop_bodyShow: false
             }
         )
 
@@ -2001,7 +2056,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [11] page number " ,
-                prop_bodyShow: true
+                prop_bodyShow: false
             }
         )
 

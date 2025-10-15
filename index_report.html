@@ -1,0 +1,40 @@
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+
+<section id="template-main" class="">
+
+  <component-report id="report"></component-report>
+
+</section>
+
+
+<script src="./html5-qrcode.min.js"></script>
+<script src="./qrcode.js"></script>
+<script src="./jalali.js"></script>
+<script src="./highcharts.js"></script>
+<script src="./components.js"></script>
+<script src="./tools.js"></script>
+
+
+<script>
+
+  tools_init.renderToolsConst()
+
+  new window.ComponentReport(
+          "report" ,
+          {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_iconPage: tools_icons.icon_select_columns
+          }
+  );
+
+
+</script>
