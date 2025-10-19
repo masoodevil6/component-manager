@@ -161,6 +161,8 @@
 
                 <component-table-responsible  id="table-responsible"></component-table-responsible>
 
+
+
             </section>
 
         </component-body>
@@ -172,6 +174,8 @@
             <section class="row p-0 m-0">
 
                 <component-page-number  id="page-number"></component-page-number>
+
+                <component-page-data  id="page-data"></component-page-data>
 
             </section>
 
@@ -333,6 +337,21 @@
         </component-body>
     </component-collapse>
 
+    <component-collapse  id="el_tools">
+        <component-body>
+
+            <section class="row p-0 m-0">
+
+                <component-tools-table-config  id="tools-table-config"></component-tools-table-config>
+
+                <component-tools-table-to-excel    id="tools-table-to-excel"></component-tools-table-to-excel>
+
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
 
     <component-collapse  id="others">
         <component-body>
@@ -471,7 +490,7 @@
                 prop_title: "test text" ,
                 prop_for: "test" ,
 
-                prop_tooltipDescription: "test description" ,
+                prop_labelTooltipDescription: "test description" ,
 
                 fn_callback: (event , prop_for) => {
                     console.log(event , prop_for)
@@ -1080,7 +1099,8 @@
             "select_columns" ,
             {
                 classList: "col-md-3 col-12 mt-2"  ,
-
+                prop_name:"select_columns" ,
+                prop_title:"select Columns" ,
                 prop_columns: [
                     {
                         name: "item_1" ,
@@ -1298,6 +1318,13 @@
 
 
 
+
+
+
+
+
+
+
         new window.ComponentPageNumber(
             "page-number" ,
             {
@@ -1309,6 +1336,14 @@
                 fn_onBackClick: (e , page)=>{
                     console.log(page)
                 }
+            }
+        )
+
+        new window.ComponentPageData(
+            "page-data" ,
+            {
+                classList: "col-lg-6 col-12 mt-2 row p-0 m-0"  ,
+
             }
         )
 
@@ -1879,6 +1914,32 @@
     );
 
 
+
+
+
+    /* ====================
+       [081] tools
+       =========================================== */
+
+    new window.ComponentToolsTableConfig(
+        "tools-table-config" ,
+        {
+            classList: " col-12 mt-2 row p-0 m-0"  ,
+
+        }
+    )
+
+
+
+    new window.ComponentToolsTableToExcel(
+        "tools-table-to-excel" ,
+        {
+            classList: " col-12 mt-2"  ,
+
+        }
+    );
+
+
         /* ====================
         [99] OTHERs
         =========================================== */
@@ -2007,7 +2068,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [01] text " ,
-                prop_bodyShow: true
+                prop_bodyShow: false
             }
         )
         new window.ComponentCollapse(
@@ -2134,6 +2195,16 @@
 
                 prop_title: " [99] el_specials" ,
                 prop_bodyShow: false
+            }
+        )
+
+        new window.ComponentCollapse(
+            "el_tools" ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_title: " [99] tools" ,
+                prop_bodyShow: true
             }
         )
 

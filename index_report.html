@@ -10,7 +10,21 @@
 
 <section id="template-main" class="">
 
-  <component-report id="report"></component-report>
+  <component-report id="report">
+      <component-filter>
+             <component-select-option  id="select-option-1"></component-select-option>
+             <component-date  id="input_date1"></component-date>
+             <component-date  id="input_date2"></component-date>
+      </component-filter>
+
+      <component-pages name="test_1">
+          test 1
+      </component-pages>
+      <component-pages name="test_2">
+          test 2
+      </component-pages>
+
+  </component-report>
 
 </section>
 
@@ -27,12 +41,100 @@
 
   tools_init.renderToolsConst()
 
-  new window.ComponentReport(
+
+  new window.ComponentSelectOption(
+          "select-option-1" ,
+          {
+            classList: "col-lg-4 col-12 mt-2"  ,
+
+            prop_name:"select_option" ,
+            // prop_size: "m" ,
+            prop_title:"select options" ,
+            prop_itemSelected: 1 ,
+            prop_options: [
+              {name: "default"} ,
+              {id:1 , name: "test 1"} ,
+              {id:2 , name: "test 2"} ,
+              {id:3 , name: "test 3"} ,
+              {id:4 , name: "test 4"} ,
+              {id:5 , name: "test 5"} ,
+              {id:6 , name: "test 6"} ,
+            ] ,
+
+            fn_callback:  (event , index)=>{
+              alert(index)
+            }
+          }
+  )
+
+
+  new window.ComponentDate(
+          "input_date1" ,
+          {
+            classList: "col-lg-4 col-12 mt-2"  ,
+
+              prop_name: "start_date" ,
+            prop_title: "input date" ,
+            prop_type: 0,
+          }
+  )
+
+
+  new window.ComponentDate(
+          "input_date2" ,
+          {
+            classList: "col-lg-4 col-12 mt-2"  ,
+              prop_name: "end_date" ,
+            prop_title: "input date" ,
+            prop_type: 0,
+          }
+  )
+
+
+  const report = new window.ComponentReport(
           "report" ,
           {
-            classList: "col-md-3 col-12 mt-2"  ,
+            classList: "mt-2"  ,
 
-            prop_iconPage: tools_icons.icon_select_columns
+            prop_iconPage: tools_icons.icon_select_columns ,
+
+              prop_order : ["id" , "name" , "family" , "age"] ,
+              prop_header : [
+                  {id:"id" , content: "id" },
+
+                  {id:"name"    , content: "name"    , icon: tools_icons.icon_lock              , inMobile: true },
+                  {id:"family"  , content: "family"  , icon: tools_icons.icon_select_columns    , inMobile: true  },
+                  {id:"age"     , content: "age"               },
+              ] ,
+              prop_options : [
+                  {
+                      html :  tools_icons.icon_tik() ,
+                      attrs: {
+                          name:   "test_1" ,
+                          title:  "test_1",
+                          id:     "id"
+                      }
+                  } ,
+
+              ] ,
+
+
+              prop_pageSelected: 2 ,
+              prop_pageTotal: 10 ,
+              prop_pageGap: 2 ,
+
+              prop_fromData: 1 ,
+              prop_toData: 2 ,
+              prop_totalData: 50 ,
+
+              prop_url: "http://127.0.0.1:8081/component/Requests/Report/report.php" ,
+
+              fn_onClickTableOption: (event , optionName , optionId) => {
+                  report.call_openOrClosePage(optionName , true);
+              } ,
+              fn_onClickNew: (event) => {
+                  report.call_openOrClosePage("test_2" , true);
+              }
           }
   );
 

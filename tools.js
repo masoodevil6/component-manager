@@ -8,7 +8,8 @@ Version: 0.1
 
 if (typeof component_props === 'undefined') {
     component_props = {
-        directionRtl: false,
+        directionRtl: false
+        ,
         elementSizes: "m",
 
 
@@ -135,6 +136,7 @@ tools_init = {
             collapse: {
                 backgroundColor_title:                 component_props.primaryColor1 ,
                 color_title:                           component_props.shanColor1 ,
+                color_icon:                            component_props.shanColor1 ,
                 backgroundColor_body:                  component_props.shanColor1 ,
 
             },
@@ -263,7 +265,7 @@ tools_init = {
                 backgroundColor_form:                  component_props.primaryColor1 ,
 
                 backgroundColor_unselected:            component_props.primaryColor1 ,
-                backgroundColor_unselected2:           component_props.primaryColor3 ,
+                backgroundColor_unselected2:           component_props.primaryColor2 ,
                 color_unselected:                      component_props.shanColor1 ,
 
                 backgroundColor_selected:              component_props.secondaryColor1 ,
@@ -273,6 +275,12 @@ tools_init = {
                 backgroundColor_icon:                  component_props.primaryColor1 ,
                 backgroundColor_icon2:                 component_props.darkColor1 ,
                 color_icon:                            component_props.shanColor1 ,
+            },
+
+
+            pageData: {
+                color_description:                     component_props.primaryColor1 ,
+                color_data:                            component_props.secondaryColor1 ,
             },
 
             cardInfo: {
@@ -444,6 +452,7 @@ tools_css = {
         tools_btn:   {name:"tools_btn"   ,val:5             } ,
         blur_popup:  {name:"blur_popup"  ,val:6             } ,
         popup:       {name:"popup"       ,val:7             } ,
+        new_page:    {name:"new_page"    ,val:8             } ,
     } ,
 
     //---------------------------------------------------------------------------
@@ -545,7 +554,7 @@ tools_css = {
         Object.keys(tools_css.standardZIndex).forEach(key=>{
             itemZIndex = tools_css.standardZIndex[key];
             if(itemZIndex.name == zIndexName){
-                value = itemFont.val;
+                value = itemZIndex.val;
                 return;
             }
         });
@@ -728,7 +737,8 @@ tools_submit = {
 
         let body = data.hasOwnProperty("data") ? data.data : [];
         if ( data.hasOwnProperty("formData") ){
-            body.push(...tools_converter.serializeArray(data.formData) )
+            //body.push(...tools_converter.serializeArray(data.formData) )
+            body = tools_public.mergeFormArray(body , tools_converter.serializeArray(data.formData))
         }
 
         if (body != null && Array.isArray(body)){
@@ -777,6 +787,7 @@ tools_submit = {
 
                             if (componentLoadingData != null) {
                                 tools_component.control("Component404" , component404Data);
+
                             }
                             if (componentLoadingData != null) {
                                 tools_component.control("ComponentLoading" , componentLoadingData , false);
@@ -800,6 +811,7 @@ tools_submit = {
 
                             break;
                     }
+                    return false;
                 }
             )
             .then(
@@ -845,6 +857,8 @@ tools_submit = {
 
                     /// log error
                     console.error("[FETCH]" , url , data , e);
+
+                    return false;
                 }
             )
     } ,
@@ -940,11 +954,13 @@ tools_converter = {
             if (field.type === 'select-multiple') {
                 for (let j = 0; j < field.options.length; j++) {
                     const option = field.options[j];
+
                     if (option.selected) {
                         result.push({ name: field.name, value: option.value });
                     }
                 }
             } else if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
+
                 result.push({ name: field.name, value: field.value , type: field.type });
             }
         }
@@ -1081,6 +1097,17 @@ tools_validate = {
 
 
 tools_public = {
+
+    mergeFormArray: function(base, incoming) {
+        const map = new Map(base.map(item => [item.name, item.value]));
+
+        for (const { name, value } of incoming) {
+            map.set(name, value); // اگر وجود داره → آپدیت میشه
+        }
+
+        return Array.from(map, ([name, value]) => ({ name, value }));
+    } ,
+
 
     renderListClass: function (data){
         let classes = "";
@@ -2228,5 +2255,26 @@ tools_icons = {
   <circle cx="17" cy="12" r="1" fill="${bg_color}"/>
 </svg>`;
     },
+
+
+    icon_filter(sizeName = component_props.elementSizes, bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" 
+     role="img" 
+     aria-label="filter"
+     width="${size}" height="${size}" 
+     viewBox="0 0 24 24" 
+     fill="none">
+  <title>filter</title>
+  <path d="M4 4h16l-6 7v6l-4 3v-9L4 4z"
+        stroke="${bg_color}" 
+        stroke-width="1.8" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+</svg>`;
+    }
 }
 
