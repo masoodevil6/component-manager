@@ -8,8 +8,7 @@ Version: 0.1
 
 if (typeof component_props === 'undefined') {
     component_props = {
-        directionRtl: false
-        ,
+        directionRtl: false,
         elementSizes: "m",
 
 
@@ -41,7 +40,8 @@ if (typeof component_props === 'undefined') {
         successColor4: "#ceefe0",
 
         shadowColor1: "rgba(98,98,98,0.30)",
-        shadowColor2: "rgba(98,98,98,0.10)",
+        shadowColor2: "rgba(98,98,98,0.25)",
+        shadowColor3: "rgba(98,98,98,0.15)",
 
         darkColor1: "rgb(30,30,30)",
         darkColor2: "rgb(157,157,157)",
@@ -127,6 +127,14 @@ tools_init = {
                 backgroundColor:                       component_props.shanColor1
             },
 
+            listSelectedScroller: {
+                borderdColor_form:                     component_props.shadowColor3 ,
+                borderdColor_formSelector_item:        component_props.shanColor1 ,
+                backgroundColor_formSelector_item:     component_props.primaryColor1 ,
+                color_formSelector_item:               component_props.shanColor1 ,
+                colorIcon_formSelector_item:           component_props.shanColor1 ,
+            },
+
             pageHeader: {
                 backgroundColor_form:                  component_props.primaryColor1 ,
                 color_icon:                            component_props.shanColor1 ,
@@ -192,6 +200,8 @@ tools_init = {
                 boderColor :                           component_props.shanColor1 ,
                 backgroundColor_body :                 component_props.darkColor1 ,
                 color_body :                           component_props.shanColor1 ,
+                color_iconClear :                      component_props.darkColor1 ,
+                color_iconEmpty :                      component_props.errorColor1 ,
             } ,
 
             inputCheckBox: {
@@ -243,6 +253,14 @@ tools_init = {
 
                 backgroundColor_iconColumnSelector:    component_props.secondaryColor1 ,
                 color_iconColumnSelecto:               component_props.darkColor1,
+            },
+
+
+            tabs: {
+                backgroundColor_unselected:            component_props.shadowColor1 ,
+                backgroundColor_itemBefore:            component_props.shadowColor3 ,
+                backgroundColor_itemAfter:             component_props.primaryColor1 ,
+                color_itemAfter:                       component_props.shanColor4 ,
             },
 
             tableResposible: {
@@ -330,8 +348,9 @@ tools_init = {
             } ,
 
             label: {
-                backgroundColor :                     component_props.primaryColor1 ,
-                color :                               component_props.shanColor1 ,
+                backgroundColor_label :                     component_props.primaryColor1 ,
+                color_label :                               component_props.shanColor1 ,
+                color_icon :                          component_props.shanColor1 ,
             } ,
 
             window: {
@@ -342,6 +361,7 @@ tools_init = {
             tooltipDescription: {
                 backgroundColor_description :          component_props.secondaryColor1 ,
                 color_description :                    component_props.darkColor1 ,
+                color_icon :                           component_props.shanColor1 ,
             } ,
 
 
@@ -386,6 +406,11 @@ tools_init = {
                 backgroundColor_page:                  component_props.primaryColor5 ,
                 color_iconPage:                        component_props.darkColor1 ,
                 color_iconBtnNewPage:                  component_props.darkColor1 ,
+            } ,
+
+
+            changePage: {
+                backgroundColor_shadow:                component_props.shadowColor1 ,
             } ,
 
 
@@ -450,9 +475,11 @@ tools_css = {
         icon_attach: {name:"icon_attach" ,val:3             } ,
         tools:       {name:"tools"       ,val:4             } ,
         tools_btn:   {name:"tools_btn"   ,val:5             } ,
-        blur_popup:  {name:"blur_popup"  ,val:6             } ,
-        popup:       {name:"popup"       ,val:7             } ,
-        new_page:    {name:"new_page"    ,val:8             } ,
+
+
+        new_page:    {name:"new_page"    ,val:10             } ,
+        blur_popup:  {name:"blur_popup"  ,val:19             } ,
+        popup:       {name:"popup"       ,val:20             } ,
     } ,
 
     //---------------------------------------------------------------------------
@@ -1173,6 +1200,25 @@ tools_public = {
         return template.replace(/{{(.*?)}}/g, (match, key) => {
             return params[key.trim()] ?? match;
         });
+    } ,
+
+    addExcelKeys(list, keyName = 'excelKey') {
+        if (!Array.isArray(list)) return [];
+
+        // تابع تبدیل عدد به نام ستون اکسل (A, B, ..., Z, AA, AB, ...)
+        const getExcelColumnName = (index) => {
+            let name = '';
+            while (index >= 0) {
+                name = String.fromCharCode((index % 26) + 65) + name;
+                index = Math.floor(index / 26) - 1;
+            }
+            return name;
+        };
+
+        return list.map((item, i) => ({
+            ...item,
+            [keyName]: getExcelColumnName(i)
+        }));
     }
 
 }
@@ -2092,15 +2138,15 @@ tools_icons = {
     },
 
 
-    icon_exclamation_square(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+    icon_exclamation_square(sizeName = component_props.elementSizes, color = "#000") {
+        const size = tools_css.getIconSize(sizeName, sizeName);
         return `
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="exclamation square" 
-     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
-     <title>exclamation square</title>
-  <rect x="2" y="2" width="20" height="20" rx="3" ry="3" fill="${color}"/>
-  <path d="M12 7v6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M12 16h.01" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="exclamation square"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <title>exclamation square</title>
+  <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+  <path d="M12 7v6M12 17h0"/>
 </svg>`;
     },
 
@@ -2274,6 +2320,78 @@ tools_icons = {
         stroke-linecap="round" 
         stroke-linejoin="round"
         fill="none"/>
+</svg>`;
+    },
+
+
+    icon_clear_broom(sizeName = component_props.elementSizes, bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="clear broom"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    <title>clear broom</title>
+  
+    <path d="M15 2L9 14" stroke="${bg_color}" stroke-width="2" stroke-linecap="round"/>
+
+    <path d="M8 14c-1 2-2 4-2 6h12c0-2-1-4-2-6H8z" 
+          stroke="${bg_color}" stroke-width="2" fill="none" stroke-linejoin="round"/>
+
+    <path d="M7 20h10" stroke="${bg_color}" stroke-width="1.5" stroke-linecap="round"/>
+</svg>`;
+    },
+
+
+    icon_empty(sizeName = component_props.elementSizes, bg_color = "#999") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="empty"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>empty</title>
+
+  <circle cx="12" cy="12" r="9" stroke="${bg_color}" stroke-width="1.8" fill="none"/>
+
+  <path d="M8 16L16 8" stroke="${bg_color}" stroke-width="1.8" stroke-linecap="round"/>
+</svg>`;
+    },
+
+
+    icon_inputText(sizeName = component_props.elementSizes, bg_color = "#555") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">
+  <title>input text</title>
+  <rect x="3" y="7" width="18" height="10" rx="2" stroke="${bg_color}" stroke-width="1.8"/>
+  <text x="7" y="14" font-size="8" fill="${bg_color}" font-family="Arial" font-weight="bold">A</text>
+</svg>`;
+    },
+
+    icon_selectOption(sizeName = component_props.elementSizes, bg_color = "#555") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">
+  <title>select option</title>
+  <rect x="3" y="7" width="18" height="10" rx="2" stroke="${bg_color}" stroke-width="1.8"/>
+  <path d="M9 11l3 3 3-3" stroke="${bg_color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    },
+
+    icon_inputColor(sizeName = component_props.elementSizes,  bg_color = "#555") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">
+  <title>input color</title>
+  <rect x="3" y="7" width="18" height="10" rx="2" stroke="${bg_color}" stroke-width="1.8"/>
+  <circle cx="12" cy="12" r="3" fill="${bg_color}"/>
+</svg>`;
+    },
+
+    icon_math(sizeName = component_props.elementSizes, bg_color = "#555") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">
+  <title>math</title>
+  <rect x="3" y="3" width="18" height="18" rx="3" stroke="${bg_color}" stroke-width="1.8"/>
+  <path d="M8 8l8 8M16 8l-8 8M12 6v4M12 14v4" stroke="${bg_color}" stroke-width="1.8" stroke-linecap="round"/>
 </svg>`;
     }
 }

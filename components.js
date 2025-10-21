@@ -20,6 +20,7 @@ if (typeof listComponent === 'undefined') {
         ComponentCard:                       "component-card" ,                           //01-08
         ComponentCardInfo:                   "component-card-info" ,                      //01-09
         ComponentPageHeader:                 "component-page-header" ,                    //01-010
+        ComponentListSelectedScroller:      "component-list-selected-scroller" ,          //01-011
 
         // [02] Fetch
         ComponentLoading:                    "component-loading" ,                        //02-01
@@ -128,6 +129,7 @@ if (typeof listComponent === 'undefined') {
         // [081] elements tools
         ComponentToolsTableConfig:          "component-tools-table-config" ,             //080-01
         ComponentToolsTableToExcel:         "component-tools-table-to-excel" ,           //080-02
+        ComponentToolsTableToPrint:         "component-tools-table-to-print" ,           //080-03
 
         // [99] Others
         ComponentIcon:                       "component-icon" ,                           //99-01
@@ -1524,7 +1526,7 @@ class ComponentLabelBase extends ComponentBase{
         } ,
         prop_labelBackgroundColor : {
             prop: "prop_labelBackgroundColor" ,
-            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("backgroundColor")   ? tools_const.styles.label.backgroundColor : ""
+            default: tools_const?.styles?.label?.backgroundColor_label ?? ""
         } ,
         prop_title : {
             prop: "prop_title" ,
@@ -1536,13 +1538,16 @@ class ComponentLabelBase extends ComponentBase{
         } ,
         prop_labelColor : {
             prop: "prop_labelColor" ,
-            default:  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")             ? tools_const.styles.label.color           : ""
+            default:  tools_const?.styles?.label?.color_label ?? ""
         } ,
         prop_tooltipIcon : {
             prop: "prop_tooltipIcon" ,
             default: tools_icons.icon_exclamation_square
         } ,
-
+        prop_TooltipIconColor : {
+            prop: "prop_TooltipIconColor" ,
+            default:  tools_const?.styles?.label?.color_icon ?? ""
+        } ,
     }
 
 
@@ -1570,6 +1575,7 @@ class ComponentLabelBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_tooltipIcon ,
             this._COMPONENT_PATTERN.prop_labelTooltipDescription ,
             this._COMPONENT_PATTERN.prop_labelSize ,
+            this._COMPONENT_PATTERN.prop_TooltipIconColor ,
         ]
     }
 
@@ -1714,18 +1720,18 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
 
         if (data != null){
 
-            const prop_labelTooltipDescription   =   data.hasOwnProperty("prop_labelTooltipDescription") && data.prop_labelTooltipDescription !=null       ?  data.prop_labelTooltipDescription        : this._COMPONENT_SLOTS?.description?.html ?? "";
-            const prop_tooltipIcon               =   data.hasOwnProperty("prop_tooltipIcon")                                                               ?  data.prop_tooltipIcon               : "";
-            const prop_labelSize                 =   data.hasOwnProperty("prop_labelSize")                                                                 ?  data.prop_labelSize                 : null;
-
-            const elHeight = tools_css.getHeightSize(prop_labelSize/2);
+            const prop_labelTooltipDescription   =   data.hasOwnProperty("prop_labelTooltipDescription") && data.prop_labelTooltipDescription !=null       ?  data.prop_labelTooltipDescription     : this._COMPONENT_SLOTS?.description?.html ?? "";
+            const prop_tooltipIcon               =   data.hasOwnProperty("prop_tooltipIcon")                                                               ?  data.prop_tooltipIcon                 : "";
+            const prop_labelSize                 =   data.hasOwnProperty("prop_labelSize")                                                                 ?  data.prop_labelSize                   : null;
+            const prop_TooltipIconColor          =   data.hasOwnProperty("prop_TooltipIconColor")                                                          ?  data.prop_TooltipIconColor            : null;
 
             if (prop_labelTooltipDescription != null && prop_labelTooltipDescription != ""){
 
                 const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
 
                 const styles = {
-                    "top" : "7.5px" ,
+                    "top" : "50%" ,
+                    "transform" : "translate(0 , -50%)" ,
                 };
                 styles[directionRtl ? "left" : "right"] = "10px"
 
@@ -1736,7 +1742,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
                         prop_structureClass: ["position-absolute"] ,
                         prop_structureStyles: styles,
 
-                        prop_icon: prop_tooltipIcon != null ? (typeof prop_tooltipIcon == "function" ? prop_tooltipIcon(elHeight) : prop_tooltipIcon) : ""  ,
+                        prop_icon: prop_tooltipIcon != null ? (typeof prop_tooltipIcon == "function" ? prop_tooltipIcon(prop_labelSize , prop_TooltipIconColor) : prop_tooltipIcon) : ""  ,
                         prop_description: prop_labelTooltipDescription ,
                     }
                 )
@@ -3143,13 +3149,14 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
             const prop_backgroundOptionHover =  data.hasOwnProperty("prop_backgroundOptionHover")                   ? data.prop_backgroundOptionHover          : "";
             const prop_colorItem             =  data.hasOwnProperty("prop_colorItem")                               ? data.prop_colorItem                      : "";
             const prop_colorHover            =  data.hasOwnProperty("prop_colorHover")                              ? data.prop_colorHover                     : "";
-            const prop_options               =  data.hasOwnProperty("prop_options") && data.prop_options != null    ? data.prop_options                        : this._COMPONENT_SLOTS?.options ?? [];
+            const prop_options               =  data.hasOwnProperty("prop_options") && data.prop_options != null    ? data.prop_options                        : this._COMPONENT_SLOTS?.options ?? null;
             const directionRtl               =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")               ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_optionsOpacity        =     data.hasOwnProperty("prop_optionsOpacity")             ? data.prop_optionsOpacity            : 20;
 
-            let optionHtml = this.fn_getHtmlOptions(prop_options);
+            if (prop_options != null){
+                let optionHtml = this.fn_getHtmlOptions(prop_options);
 
-            return `
+                return `
 <section data-part-name="${partName}"
          id="component-card-info-border-body-options-${this._COMPONENT_RANDOM_ID}"
          class="position-absolute rounded shadow-sm px-3 py-1 ">
@@ -3182,6 +3189,8 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
     
 </section>
             `;
+            }
+
         }
 
         return `
@@ -3678,6 +3687,380 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
         }
     }
 
+
+}
+
+
+/*-------------------------------------
+ 01-010) Component list selected
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+-------------------------------------*/
+class ComponentListSelectedScrollerBase extends ComponentBase{
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.xl.name
+        },
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: ["shadow-sm" , "rounded" , "border"]
+        },
+        prop_formStyles: {
+            prop: "prop_formStyles",
+            default: {}
+        },
+        prop_formBackgroundColor: {
+            prop: "prop_formBackgroundColor",
+            default: tools_const?.styles?.listSelectedScroller?.borderdColor_form ?? ""
+        },
+        prop_formSelectorItemBorderColor: {
+            prop: "prop_formSelectorItemBorderColor",
+            default: tools_const?.styles?.listSelectedScroller?.borderdColor_formSelector_item ?? ""
+        },
+        prop_formSelectorItemBackgroundColor: {
+            prop: "prop_formSelectorItemBackgroundColor",
+            default: tools_const?.styles?.listSelectedScroller?.backgroundColor_formSelector_item ?? ""
+        },
+        prop_formSelectorItemColor: {
+            prop: "prop_formSelectorItemColor",
+            default: tools_const?.styles?.listSelectedScroller?.color_formSelector_item ?? ""
+        },
+        prop_formSelectorItemColorIcon: {
+            prop: "prop_formSelectorItemColorIcon",
+            default: tools_const?.styles?.listSelectedScroller?.colorIcon_formSelector_item ?? ""
+        },
+
+        prop_listSelected: {
+            prop: "prop_listSelected",
+            default: []
+        },
+
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles,
+            this._COMPONENT_PATTERN.prop_formBackgroundColor,
+        ],
+
+
+        part_form_seletor: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_listSelected,
+            this._COMPONENT_PATTERN.prop_formSelectorItemBorderColor,
+            this._COMPONENT_PATTERN.prop_formSelectorItemBackgroundColor,
+            this._COMPONENT_PATTERN.prop_formSelectorItemColor,
+            this._COMPONENT_PATTERN.prop_formSelectorItemColorIcon,
+        ],
+
+    };
+
+    /* ---------------------------------------------
+     PROPERTYs Schema
+     --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form: {
+                part_form_seletor: {},
+            },
+        },
+    }
+
+}
+window.ComponentListSelectedScroller = class ComponentListSelectedScroller extends ComponentListSelectedScrollerBase {
+
+    _LIST_SELECTED = [];
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId, config) {
+       super(
+            listComponent[ComponentListSelectedScroller.name] ,
+            elId
+        );
+       super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+    TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+
+        requestAnimationFrame(() => {
+            this.fn_renderListItemsSelected();
+            this.fn_addScrollerWithMouse();
+        });
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_form":
+                return this.template_render_form(partName);
+            case "part_form_seletor":
+                return this.template_render_formSelector(partName);
+
+            default:
+                return this.templateBasic_render([]);
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+        
+        ${this.templateFn("part_form")}
+        
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_size                    =   data.hasOwnProperty("prop_size")                  ?  data.prop_size                    : null;
+            const prop_formClass               =   data.hasOwnProperty("prop_formClass")             ?  data.prop_formClass               : [];
+            const prop_formStyles              =   data.hasOwnProperty("prop_formStyles")            ?  data.prop_formStyles              : {};
+            const prop_formBackgroundColor     =   data.hasOwnProperty("prop_formBackgroundColor")   ?  data.prop_formBackgroundColor     : {};
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-list-selected-form-${this._COMPONENT_RANDOM_ID}"
+         class="${tools_public.renderListClass(prop_formClass)} position-relative ">
+    <style>
+        #${this._COMPONENT_ID} #component-list-selected-form-${this._COMPONENT_RANDOM_ID}{
+            height:               ${elHeight+10}px;
+            cursor:                pointer;
+            background-color:      ${prop_formBackgroundColor};
+            ${tools_public.renderListStyle(prop_formStyles)};
+        }
+    </style>
+    
+    
+    ${this.templateFn("part_form_seletor")}
+       
+</section>
+            `;
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_formSelector(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_size                                  =   data.hasOwnProperty("prop_size")                                 ?  data.prop_size                             : null;
+            const prop_formIcon                              =   data.hasOwnProperty("prop_formIcon")                             ?  data.prop_formIcon                         : [];
+            const prop_formSelectorItemBorderColor           =   data.hasOwnProperty("prop_formSelectorItemBorderColor")          ?  data.prop_formSelectorItemBorderColor      : "";
+            const prop_formSelectorItemBackgroundColor       =   data.hasOwnProperty("prop_formSelectorItemBackgroundColor")      ?  data.prop_formSelectorItemBackgroundColor  : "";
+            const prop_formSelectorItemColor                 =   data.hasOwnProperty("prop_formSelectorItemColor")                ?  data.prop_formSelectorItemColor            : "";
+            const directionRtl                               = this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")              ? this._COMPONENT_CONFIG.directionRtl         : false;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elFontSize = tools_css.getFontSize(prop_size);
+            const elIconSize = tools_css.getIconSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-list-selected-form-selector-${this._COMPONENT_RANDOM_ID}"
+         class=" h-100">
+    <style>
+        #${this._COMPONENT_ID} #component-list-selected-form-selector-${this._COMPONENT_RANDOM_ID}{
+           
+        }
+        
+        #${this._COMPONENT_ID} #component-list-selected-form-selector-list-${this._COMPONENT_RANDOM_ID}{
+            display:                                             flex;
+            overflow-x:                                          auto;    
+            gap:                                                 8px;            
+            scroll-behavior:                                     smooth; 
+            overflow:                                            auto;            
+            scrollbar-width:                                     none;     
+            -ms-overflow-style:                                  none;   
+        }
+        #${this._COMPONENT_ID} #component-list-selected-form-selector-list-${this._COMPONENT_RANDOM_ID}::-webkit-scrollbar{
+            display:                                             none;
+        }
+        
+        #${this._COMPONENT_ID} .component-list-selected-form-selector-list-item-${this._COMPONENT_RANDOM_ID}{
+            flex:                                                 0 0 auto; 
+            float:                                                ${directionRtl ? "right" : "left"};
+            background-color:                                     ${prop_formSelectorItemBackgroundColor};
+            color:                                                ${prop_formSelectorItemColor};
+            border:                                               1px solid ${prop_formSelectorItemBorderColor};
+            height:                                               ${elHeight}px;
+            line-height:                                          ${elHeight}px;
+            font-size:                                            ${elFontSize}px;
+            margin-top:                                           5px;
+            margin-bottom:                                        5px;
+            ${directionRtl ? "padding-right" : "padding-left"} :  5px;
+            ${directionRtl ? "padding-left" : "padding-right"} :  ${15 + elIconSize}px;
+            user-select:                                          none;
+        }
+    </style>
+    
+    <section id="component-list-selected-form-selector-list-${this._COMPONENT_RANDOM_ID}" 
+             class="w-100 h-100">
+        
+    </section>
+
+</section>
+            `;
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+    --------------------------------------------- */
+    fn_getFormListSelected(){
+        return document.querySelector(`#component-list-selected-form-selector-list-${this._COMPONENT_RANDOM_ID}`)
+    }
+    fn_getListItemSelected(){
+        return document.querySelectorAll(`.component-list-selected-form-selector-list-item-${this._COMPONENT_RANDOM_ID}`)
+    }
+
+    fn_renderListItemsSelected(){
+        const data = this._COMPONENT_CONFIG;
+        this._LIST_SELECTED                             =   data.hasOwnProperty("prop_listSelected")                         ?  data.prop_listSelected                     : [];
+        const prop_size                                  =   data.hasOwnProperty("prop_size")                                 ?        data.prop_size                       : 0;
+        const prop_formSelectorItemColorIcon             =   data.hasOwnProperty("prop_formSelectorItemColorIcon")            ?  data.prop_formSelectorItemColorIcon        : "";
+        const directionRtl                               = this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")              ? this._COMPONENT_CONFIG.directionRtl         : false;
+
+        const elForm = this.fn_getFormListSelected();
+
+        if (this._LIST_SELECTED  != null && Array.isArray(this._LIST_SELECTED )){
+            for (let i = 0; i < this._LIST_SELECTED.length; i++) {
+                const itemSelected = this._LIST_SELECTED[i];
+                if(itemSelected != null && itemSelected.hasOwnProperty("name") && itemSelected.hasOwnProperty("title")){
+
+                    elForm.innerHTML = elForm.innerHTML + `
+                        <div class="component-list-selected-form-selector-list-item-${this._COMPONENT_RANDOM_ID} mx-2 rounded shadow-sm position-relative"
+                             data-item-id="${itemSelected.name}">
+                            <b>${itemSelected.title}</b>
+                            <component-icon id="component-list-selected-form-selector-list-item-${this._COMPONENT_RANDOM_ID}-icon-${i}"></component-icon>
+                        </div>
+                    `;
+
+                    let styles = {
+                        "top": "50%",
+                    }
+                    if (directionRtl) {
+                        styles["left"] = "7.5px";
+                        styles["transform"] = "translate(0 , -50%)";
+                    }
+                    else {
+                        styles["right"] = "7.5px";
+                        styles["transform"] = "translate(0 , -50%)";
+                    }
+
+                    new window.ComponentIcon(
+                        `component-list-selected-form-selector-list-item-${this._COMPONENT_RANDOM_ID}-icon-${i}`,
+                        {
+                            prop_icon: tools_icons.icon_close(prop_size , prop_formSelectorItemColorIcon),
+
+                            prop_iconClass: ["position-absolute"],
+                            prop_iconStyles: styles,
+
+                            fn_callback: (event) => {
+                                this.fn_removeItemSelected(event , itemSelected.name);
+                            }
+                        }
+                    )
+
+                }
+            }
+        }
+    }
+
+    fn_addScrollerWithMouse(){
+        const container = this.fn_getFormListSelected();
+
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.classList.add('active');
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isDown = false;
+            container.classList.remove('active');
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+            container.classList.remove('active');
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 1; // سرعت حرکت
+            container.scrollLeft = scrollLeft - walk;
+        });
+    }
+
+    fn_removeItemSelected(event , itemName){
+        const data = this._COMPONENT_CONFIG;
+        const elItems = this.fn_getListItemSelected();
+
+        if (elItems != null){
+            for (let i = 0; i < elItems.length; i++) {
+                const itemSelected = elItems[i];
+                const itemSelectedId = itemSelected.getAttribute("data-item-id");
+                if (itemSelectedId != null && itemSelectedId == itemName.toString()){
+                    itemSelected.remove();
+                    this.fn_onCallbackDeletedItem(event , itemName);
+                    break;
+                }
+            }
+        }
+    }
+
+    fn_onCallbackDeletedItem(event , itemName){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onCallbackDeletedItem") && typeof data.fn_onCallbackDeletedItem != null){
+            this._LIST_SELECTED = this._LIST_SELECTED.filter(item => item.name !== itemName);
+            data.fn_onCallbackDeletedItem(event , this._LIST_SELECTED);
+        }
+    }
 
 }
 
@@ -6285,7 +6668,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
             font-size: ${elfontSize}px;
             position: absolute;
             top: 0;
-            ${tools_public.renderListStyle(prop_inputStyles)}
+            ${tools_public.renderListStyle(prop_inputStyles)};
          }
      </style>
      
@@ -7309,7 +7692,7 @@ class ComponentInputColorBase extends ComponentBase{
         },
         prop_colorSelected: {
             prop: "prop_colorSelected",
-            default: "#ff0000"
+            default: null
         },
         prop_isDisable: {
             prop: "prop_isDisable",
@@ -7351,6 +7734,10 @@ class ComponentInputColorBase extends ComponentBase{
             prop: "prop_colorBody",
             default: tools_const?.styles?.inputColor?.color_body ?? ""
         },
+        prop_colorIconClear: {
+            prop: "prop_colorIconClear",
+            default: tools_const?.styles?.inputColor?.color_iconClear ?? ""
+        },
         prop_hasRules: {
             prop: "prop_hasRules",
             default: true
@@ -7367,7 +7754,16 @@ class ComponentInputColorBase extends ComponentBase{
             prop: "prop_msgRules",
             default: null
         },
+        prop_colorIconEmpty: {
+            prop: "prop_colorIconEmpty",
+            default: tools_const?.styles?.inputColor?.color_iconEmpty ?? ""
+        },
+        var_isEmptyColor: {
+            prop: "var_isEmptyColor",
+            default: false
+        },
     };
+
 
     /* ---------------------------------------------
            PROPERTYs Props
@@ -7391,6 +7787,7 @@ class ComponentInputColorBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_formClass,
             this._COMPONENT_PATTERN.prop_formStyles,
             this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.var_isEmptyColor ,
         ],
 
         part_form_title: [
@@ -7434,9 +7831,20 @@ class ComponentInputColorBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_isDisable,
             this._COMPONENT_PATTERN.prop_title,
             this._COMPONENT_PATTERN.prop_msgRules
+        ],
+
+        part_form_icon_clear: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_colorIconClear ,
+        ],
+
+        part_form_color_icon_empty: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_colorIconEmpty ,
+            this._COMPONENT_PATTERN.var_isEmptyColor ,
         ]
     };
-
 
 
     /* ---------------------------------------------
@@ -7446,8 +7854,11 @@ class ComponentInputColorBase extends ComponentBase{
         part_structure: {
             part_value: {} ,
             part_label: {} ,
-            part_form_color: {} ,
+            part_form_color: {
+                part_form_color_icon_empty: {} ,
+            } ,
             part_form_title: {} ,
+            part_form_icon_clear: {} ,
             part_form_selector:{
                 part_form_selector_information_code:{},
                 part_form_selector_information_opacity:{},
@@ -7492,10 +7903,14 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         this.templateFn("part_label");
         this.templateFn("part_form_selector");
         this.templateFn("part_validate");
+        this.templateFn("part_form_icon_clear");
+        this.templateFn("part_form_color_icon_empty");
 
         requestAnimationFrame(() => {
             this.fn_connectToElementReference();
             this.fn_startCalcColorDefaultSelected();
+
+            this.fn_checkValueColor()
         });
     }
     templateFn(partName = null){
@@ -7524,6 +7939,10 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                 return this.componentFn_render_formSelector(partName);
             case "part_validate":
                 return this.componentFn_render_validate(partName);
+            case "part_form_icon_clear":
+                return this.componentFn_render_formIconClear(partName);
+            case "part_form_color_icon_empty":
+                return this.componentFn_render_formColorIconEmpty(partName);
             default:
                 return this.templateBasic_render();
         }
@@ -7535,10 +7954,12 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                
              ${this.templateFn("part_value") ?? ""}
              
-             <section style="display: flow-root">
+             <section class="position-relative" style="display: flow-root">
                  ${this.templateFn("part_form_color") ?? ""}
              
                  ${this.templateFn("part_form_title") ?? ""}
+             
+                 <component-icon id="component-input-color-icon-clear-${ this._COMPONENT_RANDOM_ID}"></component-icon>
              </section>
 
              <section class="position-relative">
@@ -7614,13 +8035,14 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
             const prop_colorSelected                    =   data.hasOwnProperty("prop_colorSelected")                     ?  data.prop_colorSelected                        : "";
             const prop_size                             =   data.hasOwnProperty("prop_size")                              ?  data.prop_size                                 : "";
             const directionRtl                          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")          ? this._COMPONENT_CONFIG.directionRtl             : false;
+            const var_isEmptyColor                      =  data.hasOwnProperty("var_isEmptyColor")                        ?  data.var_isEmptyColor                          : false;
 
             const elHeight = tools_css.getHeightSize(prop_size);
 
             return `
 <section data-part-name="${partName}" 
          id="component-input-color-form-color-${ this._COMPONENT_RANDOM_ID}" 
-         class="${tools_public.renderListClass(prop_formClass)}"
+         class="${tools_public.renderListClass(prop_formClass)} position-relative"
          onclick="${this.getFn("fn_onclickInputColor" , "event")}">
          
      <style>
@@ -7628,13 +8050,15 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
              cursor: ${prop_isDisable ? "not-allowed" : "pointer"};
              border: solid 1px ${prop_borderColor};
              box-shadow: #00000047 0px 0px 5px, inset 0 2px 4px #0000004d;
-             background-color: ${prop_colorSelected};
+             background-color:  ${var_isEmptyColor ? "" : prop_colorSelected};
              float: ${directionRtl ? "right" : "left"};
              width: ${elHeight}px;
              height: ${elHeight}px;
              ${tools_public.renderListStyle(prop_formStyles)}
          }
      </style>
+    
+     <component-icon id="component-input-color-icon-color-empty-${ this._COMPONENT_RANDOM_ID}"></component-icon>
     
 </section>`
 
@@ -7670,6 +8094,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
              cursor: pointer;
              float: ${directionRtl ? "right" : "left" };
              height: ${elHeight}px;
+             line-height: ${elHeight}px;
              font-size: ${elFontSize}px;
          }
      </style>
@@ -7941,6 +8366,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                     classList: this.var_showFormSelectOption ? "" : "d-none" ,
 
                     prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2"] ,
+
                     prop_elementStyles: prop_optionStyles ,
                     prop_width: prop_optionWidth,
                     prop_height: prop_optionHeight,
@@ -7985,10 +8411,98 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         }
     }
 
+    componentFn_render_formIconClear(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+
+            if (!prop_isDisable){
+                const prop_size              =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          : null;
+                const prop_colorIconClear    =  data.hasOwnProperty("prop_colorIconClear")            ?  data.prop_colorIconClear                : "";
+                const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                const elIconHeight = tools_css.getIconSize(prop_size);
+
+                let styles = {
+                    "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 5) }`,
+                    "cursor" : "pointer",
+                    "top" : "50%" ,
+                }
+                if (directionRtl){
+                    styles["left"]= "0";
+                    styles["transform"]= "translate(7.5px, -50%)";
+                }
+                else {
+                    styles["right"]= "0"
+                    styles["transform"]= "translate(-7.5px, -50%)";
+                }
+
+                new window.ComponentIcon(
+                    `component-input-color-icon-clear-${ this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon:          tools_icons.icon_clear_broom(prop_size , prop_colorIconClear),
+
+                        prop_iconClass :    ["position-absolute"] ,
+                        prop_iconStyles :   styles ,
+
+                        fn_callback: ()=>{
+                            this.fn_updateIndicators(true)
+                        }
+                    }
+                )
+
+            }
+
+        }
+    }
+
+    componentFn_render_formColorIconEmpty(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size              =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          : null;
+            const prop_colorIconEmpty    =  data.hasOwnProperty("prop_colorIconEmpty")            ?  data.prop_colorIconEmpty                : "";
+            const var_isEmptyColor       =  data.hasOwnProperty("var_isEmptyColor")               ?  data.var_isEmptyColor                   : false;
+
+            if(var_isEmptyColor){
+                const elIconHeight = tools_css.getIconSize(prop_size);
+
+                let styles = {
+                    "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 5) }`,
+                    "cursor" : "pointer",
+                    "top" : "50%" ,
+                    "left" : "50%" ,
+                    "transform" : "translate(-50%, -50%)" ,
+                }
+
+                new window.ComponentIcon(
+                    `component-input-color-icon-color-empty-${ this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon:          tools_icons.icon_empty(prop_size , prop_colorIconEmpty),
+
+                        prop_iconClass :    ["position-absolute"] ,
+                        prop_iconStyles :   styles
+                    }
+                )
+            }
+
+        }
+    }
+
 
     /* ---------------------------------------------
       FUNCTIONs
      --------------------------------------------- */
+
+    fn_checkValueColor(){
+        const data = this._COMPONENT_CONFIG;
+        const var_colorSelected   =   data.hasOwnProperty("var_colorSelected")      ?  data.var_colorSelected    :  null;
+        if (var_colorSelected == null || var_colorSelected == ""){
+            this.set("var_isEmptyColor" , true);
+        }
+    }
+
 
     // -------- get element selected--------
     fn_getFormColorElement(){
@@ -8199,6 +8713,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
     // -------- HEX to HSL --------
     fn_hexToHsl(hex) {
+        if (hex == null) return [0 , 0 , 0];
         hex = hex.replace(/^#/, "");
         if(hex.length === 3){
             hex = hex.split("").map(x=>x+x).join("");
@@ -8230,7 +8745,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
 
     // -------- Update Indicators and Inputs --------
-    fn_updateIndicators(){
+    fn_updateIndicators(clear=false){
         const slIndicator = this.fn_getSlIndicator();
         const slCanvas = this.fn_getSlCanvas();
         const hueIndicator = this.fn_getHueIndicator();
@@ -8241,16 +8756,23 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const formColor = this.fn_getFormColorElement();
         const formTitle= this.fn_getFormTitleElement();
 
-        slIndicator.style.left = (this.var_sat/100*slCanvas.width)+"px";
-        slIndicator.style.top = ((1-this.var_light/100)*slCanvas.height)+"px";
-        hueIndicator.style.top = (this.var_hue/360*hueCanvas.height)+"px";
-        opacityIndicator.style.left = (this.var_opacity*opacityCanvas.width)+"px";
+        if (clear){
+            this.var_hsl = null;
+            this.var_hex = null;
+            this.set("var_isEmptyColor" , true);
+        }
+        else{
+            slIndicator.style.left = (this.var_sat/100*slCanvas.width)+"px";
+            slIndicator.style.top = ((1-this.var_light/100)*slCanvas.height)+"px";
+            hueIndicator.style.top = (this.var_hue/360*hueCanvas.height)+"px";
+            opacityIndicator.style.left = (this.var_opacity*opacityCanvas.width)+"px";
 
-        this.var_hsl = `hsl(${Math.round(this.var_hue)},${Math.round(this.var_sat)}%,${Math.round(this.var_light)}%)`;
-        this.var_hex = this.fn_hslToHex(this.var_hue,this.var_sat,this.var_light);
+            this.var_hsl = `hsl(${Math.round(this.var_hue)},${Math.round(this.var_sat)}%,${Math.round(this.var_light)}%)`;
+            this.var_hex = this.fn_hslToHex(this.var_hue,this.var_sat,this.var_light);
+            this.set("var_isEmptyColor" , false);
+        }
 
         this.set("var_colorSelected" , this.var_hsl);
-
 
         txtColorCode.textContent = this.var_hex; // نمایش HEX
         formColor.style.backgroundColor =  this.var_hsl; // نمایش HEX
@@ -8260,6 +8782,8 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
         this.fn_drawSL();
         this.fn_drawOpacity();
+
+        this.fn_onChangeColor(this.var_hex);
     }
 
 
@@ -8317,6 +8841,15 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
     }
 
+
+
+
+    fn_onChangeColor( color){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onChangeColor") && typeof data.fn_onChangeColor != null){
+            data.fn_onChangeColor( color);
+        }
+    }
 }
 
 
@@ -15360,6 +15893,17 @@ class ComponentSelectColumnsBase extends ComponentBase{
             default: tools_const?.styles?.selectColumn?.color_icon ?? ""
         },
 
+
+        prop_draggable: {
+            prop: "prop_draggable",
+            default: true
+        },
+        prop_showListSelected: {
+            prop: "prop_showListSelected",
+            default: true
+        } ,
+
+
         prop_langSelected: {
             prop: "prop_langSelected",
             default: component_props.directionRtl ? "fa" : "en"
@@ -15397,12 +15941,14 @@ class ComponentSelectColumnsBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_icon ,
             this._COMPONENT_PATTERN.prop_backgroundColorIcon ,
             this._COMPONENT_PATTERN.prop_colorIcon ,
+            this._COMPONENT_PATTERN.prop_showListSelected ,
         ],
 
         part_positionElement: [
             this._COMPONENT_PATTERN.prop_size ,
             this._COMPONENT_PATTERN.prop_widthBody ,
             this._COMPONENT_PATTERN.prop_heightBody ,
+            this._COMPONENT_PATTERN.prop_showListSelected ,
         ],
 
         part_positionElement_selector: [
@@ -15413,6 +15959,7 @@ class ComponentSelectColumnsBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_heightBody ,
             this._COMPONENT_PATTERN.prop_langSelected ,
             this._COMPONENT_PATTERN.prop_langs ,
+            this._COMPONENT_PATTERN.prop_draggable ,
         ],
 
         part_positionElement_btnAccept: [
@@ -15425,6 +15972,12 @@ class ComponentSelectColumnsBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_size ,
             this._COMPONENT_PATTERN.prop_langSelected ,
             this._COMPONENT_PATTERN.prop_langs ,
+        ],
+
+        part_columnsSelected: [
+            this._COMPONENT_PATTERN.prop_columns ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_showListSelected ,
         ]
 
     };
@@ -15443,6 +15996,7 @@ class ComponentSelectColumnsBase extends ComponentBase{
                 part_positionElement_btnAccept: {} ,
                 part_positionElement_btnCancel: {} ,
             } ,
+            part_columnsSelected: {}
         }
     }
 
@@ -15477,6 +16031,8 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
         this.templateFn("part_positionElement_btnAccept");
         this.templateFn("part_positionElement_btnCancel");
 
+        this.templateFn("part_columnsSelected");
+
 
         requestAnimationFrame(() => {
             this.readyListColumns();
@@ -15499,6 +16055,8 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
                 return this.componentFn_render_positionElement_btnAccept(partName);
             case "part_positionElement_btnCancel":
                 return this.componentFn_render_positionElement_btnCancel(partName);
+            case "part_columnsSelected":
+                return this.componentFn_render_positionElement_columnsSelected(partName);
             default:
                 return this.templateBasic_render("");
         }
@@ -15506,10 +16064,19 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
 
     template_render_structure(partName ) {
         const content = `
+
+<style>
+    #component-component-select-columns-structure-${ this._COMPONENT_RANDOM_ID}{
+       display: flow-root;
+    }
+</style>
              <component-label id="component-select-columns-label-${ this._COMPONENT_RANDOM_ID}"></component-label>
              
              <component-icon id="component-select-columns-icon-${ this._COMPONENT_RANDOM_ID}"></component-icon>
-             
+          
+             <component-list-selected-scroller id="component-select-columns-list-selected-${ this._COMPONENT_RANDOM_ID}"></component-list-selected-scroller>
+            
+            
              <section class="position-relative">
                   <component-position-element id="component-select-columns-position-element-${ this._COMPONENT_RANDOM_ID}">
                        <component-body>
@@ -15524,11 +16091,11 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
                        </component-body>
                   </component-position-element>
              </section>
+             
             
         `;
-        return this.templateBasic_render_structure(content);
+        return this.templateBasic_render_structure(content , []);
     }
-
 
     componentFn_render_label(partName ) {
         this.componentFneBasic_render_structure(
@@ -15550,23 +16117,37 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
             const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
             const prop_backgroundColorIcon     =   data.hasOwnProperty("prop_backgroundColorIcon")       ?  data.prop_backgroundColorIcon     :  "";
             const prop_colorIcon               =   data.hasOwnProperty("prop_colorIcon")                 ?  data.prop_colorIcon               :  "";
+            const directionRtl                 =   data.hasOwnProperty("directionRtl")                   ? data.directionRtl                  : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+            const prop_showListSelected        =   data.hasOwnProperty("prop_showListSelected")          ?  data.prop_showListSelected        :  true;
 
             const elIconHeight = tools_css.getIconSize(prop_size);
             const elHeight = tools_css.getHeightSize(prop_size);
+
+            let styles = {
+                "cursor" : "pointer" ,
+                "background-color": prop_backgroundColorIcon,
+                "float" : directionRtl ? "right" : "left" ,
+            };
+            if (prop_showListSelected){
+                styles["width"] = elHeight+15+"px";
+                styles["height"] = elHeight+15+"px";
+            }
+            else{
+                styles["width"] = elHeight+"px";
+                styles["height"] = elHeight+"px";
+            }
+
 
             if (prop_icon != null){
                 new window.ComponentIcon(
                     `component-select-columns-icon-${ this._COMPONENT_RANDOM_ID}` ,
                     {
+                        classList : [ "position-relative" , "border" , "shadow-sm" , "d-block"  ,  "rounded"] ,
+
                         prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(elIconHeight , prop_colorIcon) : prop_icon) : "" ,
 
-                        classList : [ "position-relative" , "border" , "shadow-sm" , "d-block"  ,  "rounded"] ,
-                        styles: {
-                            "cursor" : "pointer" ,
-                            "width" : elHeight+"px" ,
-                            "height" : elHeight+"px" ,
-                            "background-color": prop_backgroundColorIcon,
-                        } ,
+
+                        styles: styles,
 
                         prop_iconClass : [ "position-absolute" ] ,
                         prop_iconStyles : {
@@ -15594,13 +16175,16 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
             const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
             const prop_heightBody              =   data.hasOwnProperty("prop_heightBody")                ?  data.prop_heightBody              :  250;
             const prop_widthBody               =   data.hasOwnProperty("prop_widthBody")                 ?  data.prop_widthBody               :  300;
+            const prop_showListSelected        =   data.hasOwnProperty("prop_showListSelected")          ?  data.prop_showListSelected        :  true;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
 
             new window.ComponentPositionElement(
                 `component-select-columns-position-element-${ this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList :             ["d-none" ] ,
                     prop_elementClass:      ["border", "shadow-sm", "bg-white", "px-2", "py-1", "rounded-0" , "overflow-hidden"] ,
-                    prop_positionTop :      "5px" ,
+                    prop_positionTop :      prop_showListSelected!=null ? elHeight+15+"px" : "5px" ,
                     prop_width :            prop_widthBody+"px",
                     prop_height :           prop_heightBody+"px" ,
                 }
@@ -15619,6 +16203,7 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
             const prop_heightBody              =   data.hasOwnProperty("prop_heightBody")                ?  data.prop_heightBody              :  250;
             const prop_langSelected            =   data.hasOwnProperty("prop_langSelected")              ?  data.prop_langSelected            :  "";
             const prop_langs                   =   data.hasOwnProperty("prop_langs")                     ?  data.prop_langs                   : {};
+            const prop_draggable               =   data.hasOwnProperty("prop_draggable")                 ?  data.prop_draggable               : true;
 
             let titleSelectAll = "";
             if (prop_langSelected != null && prop_langs != null && prop_langs.hasOwnProperty(prop_langSelected)){
@@ -15632,10 +16217,10 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
                 {
                     prop_checkBoxes:    this._TALBE_LIST_COLUMNS,
                     prop_size:          prop_size,
+                    prop_draggable:     prop_draggable,
                     prop_titleAll:      prop_titleAll,
                     prop_heightForm:    prop_heightBody - elHeight - 75,
                     prop_heightItems:   prop_heightItems,
-                    prop_draggable:     true,
                     prop_titleAll:      titleSelectAll ,
 
                     fn_callback: (event , order , isCompleteTrue)=>{
@@ -15750,6 +16335,75 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
         }
     }
 
+    componentFn_render_positionElement_columnsSelected(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                    =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                    :  null;
+            const prop_showListSelected        =   data.hasOwnProperty("prop_showListSelected")          ?  data.prop_showListSelected        :  true;
+            const prop_columns                 =   data.hasOwnProperty("prop_columns")                   ?  data.prop_columns                 :  [];
+            const directionRtl                 =   data.hasOwnProperty("directionRtl")                   ? data.directionRtl                  : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            if (prop_showListSelected){
+
+                let list = [];
+                if (prop_columns != null && Array.isArray(prop_columns)){
+                    for (let i = 0; i < prop_columns.length; i++) {
+                        const item = prop_columns[i];
+                        if (item != null && item.hasOwnProperty("name") && item.hasOwnProperty("title") && item.hasOwnProperty("selected") && item.selected){
+                            list.push({
+                                name: item.name ,
+                                title: item.title
+                            })
+                        }
+                    }
+                }
+
+                new window.ComponentListSelectedScroller(
+                    `component-select-columns-list-selected-${ this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        styles: {
+                            "float" : directionRtl ? "right" : "left" ,
+                            "width":  `calc(100% - ${elHeight+15}px)`
+                        }  ,
+
+                        prop_listSelected: list,
+
+                        fn_onCallbackDeletedItem: (event , list)=>{
+                            let listExp = [];
+                            if (this._TALBE_LIST_COLUMNS != null && Array.isArray(this._TALBE_LIST_COLUMNS)){
+                                for (let i = 0; i < this._TALBE_LIST_COLUMNS.length; i++) {
+                                    const itemSelected = this._TALBE_LIST_COLUMNS[i];
+
+                                    let selected = false;
+                                    if (itemSelected.hasOwnProperty("name") && list != null && Array.isArray(list)){
+                                        for (let x = 0; x < list.length; x++) {
+                                            const item = list[x];
+                                            if (item != null && item.hasOwnProperty("name") && item.name == itemSelected.name){
+                                                selected = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    itemSelected["selected"] = selected;
+                                    listExp.push(itemSelected);
+                                }
+                            }
+
+                            this._TALBE_LIST_COLUMNS = listExp;
+                            this.fn_callback(event);
+                        }
+                    }
+                );
+            }
+
+        }
+    }
+
 
     /* ---------------------------------------------
       FUNCTIONs
@@ -15810,8 +16464,7 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
 
                         if (itemCol.hasOwnProperty("name") && itemCol.hasOwnProperty("title") && itemCol.name == itemOrder){
                             listOrder.push({
-                                name: itemCol.name ,
-                                title: itemCol.title ,
+                                ...itemCol,
                                 selected: true ,
                             });
                         }
@@ -15840,8 +16493,7 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
 
                     if (!existOrder){
                         listOrder.push({
-                            name: itemCol.name ,
-                            title: itemCol.title ,
+                            ...itemCol ,
                             selected: false ,
                         })
                     }
@@ -15866,6 +16518,8 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
             data.fn_callback(event , this._TALBE_LIST_COLUMNS);
+            data.prop_columns =  this._TALBE_LIST_COLUMNS
+            super.renderComponent(data);
         }
     }
 
@@ -16299,11 +16953,15 @@ class ComponentTooltipDescriptionBase extends ComponentBase{
         },
         prop_descriptionBackground: {
             prop: "prop_descriptionBackground",
-            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("tooltipDescription") && tools_const.styles.tooltipDescription.hasOwnProperty("backgroundColor_description") ? tools_const.styles.tooltipDescription.backgroundColor_description : "black"
+            default:  tools_const?.styles?.tooltipDescription?.backgroundColor_description ?? "black"
         },
         prop_descriptionColor: {
             prop: "prop_descriptionColor",
             default:  tools_const?.styles?.tooltipDescription?.color_description ?? "black"
+        },
+        prop_iconColor: {
+            prop: "prop_iconColor",
+            default:  tools_const?.styles?.tooltipDescription?.color_icon ?? ""
         },
         prop_description: {
             prop: "prop_description",
@@ -16325,6 +16983,7 @@ class ComponentTooltipDescriptionBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_icon,
             this._COMPONENT_PATTERN.prop_iconClass,
             this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_iconColor,
             this._COMPONENT_PATTERN.prop_iconStyles
         ],
 
@@ -16363,9 +17022,6 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
         );
        super.renderComponent(config);
     }
-
-
-
 
 
     /* ---------------------------------------------
@@ -16411,7 +17067,10 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
             const prop_descriptionBackground       =   data.hasOwnProperty("prop_descriptionBackground")      ?  data.prop_descriptionBackground         :  "";
             const prop_descriptionWidth            =   data.hasOwnProperty("prop_descriptionWidth")           ?  data.prop_descriptionWidth              :  "";
             const directionRtl                     = data.hasOwnProperty("directionRtl")                      ? data.directionRtl                        : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+            const prop_size                        =   data.hasOwnProperty("prop_size")                       ?  data.prop_size                          :  null;
 
+            const elFontSize = tools_css.getFontSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
 
             return`
 <section  data-part-name="${partName}"
@@ -16426,8 +17085,8 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
              border: white solid 1px;
              top: 35px;
              ${directionRtl ? "left" : "right"} : -20px;
-             
-             font-size: 10pt;
+             line-height: ${elHeight}px;
+             font-size: ${elFontSize}px;
              z-index : ${tools_css.getZIndex(tools_css.standardZIndex.blur_popup.name, 11)};
          }
          #${this._COMPONENT_ID} #component-tooltip-description-description-${this._COMPONENT_RANDOM_ID}:after{
@@ -16466,9 +17125,8 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
             const prop_iconClass     =   data.hasOwnProperty("prop_iconClass")           ?  data.prop_iconClass          :  [];
             const prop_iconStyles    =   data.hasOwnProperty("prop_iconStyles")          ?  data.prop_iconStyles         :  {};
             const prop_size          =   data.hasOwnProperty("prop_size")                ?  data.prop_size               :  null;
+            const prop_iconColor     =   data.hasOwnProperty("prop_iconColor")           ?  data.prop_iconColor          :  null;
             const directionRtl       = data.hasOwnProperty("directionRtl")               ? data.directionRtl             : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
-
-            const elIconHeight = tools_css.getIconSize(prop_size);
 
             prop_iconStyles["float"] = directionRtl ? "left" : "right";
 
@@ -16476,7 +17134,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
                 new window.ComponentIcon(
                     `component-tooltip-description-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(elIconHeight) : prop_icon) : "" ,
+                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(prop_size , prop_iconColor) : prop_icon) : "" ,
 
                         prop_iconClass : prop_iconClass ,
                         prop_iconStyles : prop_iconStyles ,
@@ -17098,11 +17756,13 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
              font-size:  ${elFontSize}px;
              line-height:  ${elHeight}px;
          }
-         #${this._COMPONENT_ID} .component-table-body-item-${this._COMPONENT_RANDOM_ID} span{
+         #${this._COMPONENT_ID} .component-table-body-item-${this._COMPONENT_RANDOM_ID} .component-table-body-item-span-${this._COMPONENT_RANDOM_ID}{
              cursor: pointer;
              ${tools_public.renderListStyle(prop_tableItemBodyStyles)};
          }
-         #${this._COMPONENT_ID} .component-table-body-item-${this._COMPONENT_RANDOM_ID}:hover span{
+         #${this._COMPONENT_ID} .component-table-body-item-${this._COMPONENT_RANDOM_ID}:hover .component-table-body-item-span-${this._COMPONENT_RANDOM_ID}{
+             position: relative;
+             z-index: 1;
              ${tools_public.renderListStyle(prop_tableItemBodyHoverStyles)}
          }
          
@@ -17117,6 +17777,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
          .component-table-body-item-option-${this._COMPONENT_RANDOM_ID} {
              width: 0;
              border:    none;
+             z-index:   ${tools_css.getZIndex(tools_css.standardZIndex.tools.name , 4)}
          }
          
          .component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID} {
@@ -17202,11 +17863,12 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
                     `component-table-header-select-columns-${this._COMPONENT_RANDOM_ID}` ,
                     {
                         classList: ["position-absolute" , /*"h-100"*/]  ,
+                        prop_showListSelected: false ,
                         styles: {
                             "top":        "50%" ,
                             "left" :      "50%" ,
                             "transform" : "translate(-50% , -50%)" ,
-                            "z-index" :    tools_css.getZIndex(tools_css.standardZIndex.popup.name)
+                            "z-index" :    tools_css.getZIndex(tools_css.standardZIndex.tools.name , 4)
                         } ,
 
                         prop_labelShow: false ,
@@ -17244,7 +17906,6 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
     fn_getElementFooter(){
         return document.querySelector(`#component-table-footer-${this._COMPONENT_RANDOM_ID}`);
     }
-
 
     fn_renderDataTable(order){
         let listOrder = [];
@@ -17395,7 +18056,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
 
                             rowsHtml += `
 <td class="component-table-body-item-${this._COMPONENT_RANDOM_ID} p-0 text-center" >
-    <span class="${colClassSelected} ${tools_public.renderListClass(prop_tableItemBodyClass)}" onclick="${this.getFn('fn_onSelectCol' , "event" , `'${itemHeader.id }'`,  headerIndex , bodyIndex)}">
+    <span class="component-table-body-item-span-${this._COMPONENT_RANDOM_ID}  ${colClassSelected} ${tools_public.renderListClass(prop_tableItemBodyClass)}" onclick="${this.getFn('fn_onSelectCol' , "event" , `'${itemHeader.id }'`,  headerIndex , bodyIndex)}">
         ${itemBody[itemHeader.id].content}
     </span>
 </td>
@@ -17410,7 +18071,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
 
                             itemRow = `
 <td class="component-table-body-item-${this._COMPONENT_RANDOM_ID} p-0 text-center" >
-    <span class="${tools_public.renderListClass(prop_tableItemBodyClass)}" >
+    <span class="component-table-body-item-span-${this._COMPONENT_RANDOM_ID} ${tools_public.renderListClass(prop_tableItemBodyClass)}" >
         ${parseInt(bodyIndex)+1}
     </span>
 </td>
@@ -17453,7 +18114,6 @@ ${itemRowOptions}
                    ${itemOption.html}
                </div>
             `
-
                 }
 
             }
@@ -17482,8 +18142,6 @@ ${itemRowOptions}
     fn_onGetColumnsSelector(prop_order , prop_header){
         let listColSelector = [];
 
-
-
         if (prop_order != null && Array.isArray(prop_order)){
             for (let j = 0; j <prop_order.length; j++) {
                 const itemOrder = prop_order[j];
@@ -17502,7 +18160,6 @@ ${itemRowOptions}
                 }
             }
         }
-
 
         if (prop_header != null && Array.isArray(prop_header)){
             for (let i = 0; i < prop_header.length; i++) {
@@ -17546,7 +18203,6 @@ ${itemRowOptions}
             data.fn_callback(event , value , key , colIndex , rowIndex);
         }
     }
-
 
     fn_onclickOtiponCard(event , optionName , optionId){
         const data = this._COMPONENT_CONFIG;
@@ -17635,7 +18291,7 @@ class ComponentTableResponsibleBase extends ComponentBase{
         },
         prop_options: {
             prop: "prop_options",
-            default: []
+            default: null
         },
 
         prop_backgroundColorIconColumnSelector: {
@@ -17797,7 +18453,7 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         this.fn_renderTable_resize();
     }
 
-    fn_renderTable_resize(){
+    fn_renderTable_resize(event){
         const isWideScreen = tools_css.checkMoreThanScreanWidth(tools_css.standardScreanWidth.m.name);
         if (isWideScreen){
             this.fn_renderTable_resize_isForPc();
@@ -17805,6 +18461,7 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         else {
             this.fn_renderTable_resize_isForMobile();
         }
+        this.fn_onCallbackResizeTable(event)
     }
 
     fn_renderTable_resize_isForPc(){
@@ -17858,13 +18515,16 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                     },
                     prop_tableItemBodyClass: [] ,
                     prop_tableItemBodyHoverStyles: {
-                        "background-color" : prop_backgroundcolorBodyHover ,
-                        "color" : prop_colorBodyHover ,
+                       "background-color" : prop_backgroundcolorBodyHover ,
+                       "color" : prop_colorBodyHover ,
                     },
                     prop_tableType: 0 ,
                     prop_rowOptions: prop_options,
                     fn_callback: (event , optionName , optionId) => {
                         this.fn_onclickOtiponCard(event , optionName , optionId)
+                    } ,
+                    fn_onCallbackColSelector: (event , order , isCompleteTrue)=>{
+                        this.fn_onCallbackColSelector(event , order , isCompleteTrue)
                     }
                 }
             );
@@ -18025,12 +18685,13 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
 
     fn_getListOptions(itemRow){
 
-        let listOption = [];
+        let listOption = null;
 
         const data = this._COMPONENT_CONFIG;
         const prop_options                   =   data.hasOwnProperty("prop_options")                            ?  data.prop_options                            : [];
 
         if (prop_options != null && Array.isArray(prop_options)){
+            listOption = [];
             for (let i = 0; i < prop_options.length; i++) {
                 const itemOption = prop_options[i];
                 if (itemOption.hasOwnProperty("html") && itemOption.hasOwnProperty("attrs") && itemOption.attrs.hasOwnProperty("id") && typeof itemRow[itemOption.attrs.id] !== "undefined"){
@@ -18053,6 +18714,20 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
             data.fn_callback(event , optionName , optionId != null && optionId != "" ? parseInt(optionId) : null );
+        }
+    }
+
+    fn_onCallbackColSelector(event , order , isCompleteTrue){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onCallbackColSelector") && typeof data.fn_onCallbackColSelector != null){
+            data.fn_onCallbackColSelector(event , order , isCompleteTrue);
+        }
+    }
+
+    fn_onCallbackResizeTable(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onCallbackResizeTable") && typeof data.fn_onCallbackResizeTable != null){
+            data.fn_onCallbackResizeTable(event);
         }
     }
 
@@ -18904,6 +19579,10 @@ class ComponentTabsBase extends ComponentBase{
            PROPERTYs Pattern
     --------------------------------------------- */
     _COMPONENT_PATTERN = {
+        prop_size : {
+            prop: "prop_size" ,
+            default: tools_css.standardSizes.m.name
+        } ,
         prop_type: {
             prop: "prop_type",
             default: 0
@@ -18912,6 +19591,24 @@ class ComponentTabsBase extends ComponentBase{
             prop: "prop_tabs",
             default: []
         },
+
+        prop_backgroundUnselected: {
+            prop: "prop_backgroundUnselected" ,
+            default: tools_const?.styles?.tabs?.backgroundColor_unselected ?? ""
+        } ,
+        prop_backgroundIterBefore: {
+            prop: "prop_backgroundIterBefore" ,
+            default: tools_const?.styles?.tabs?.backgroundColor_itemBefore ?? ""
+        } ,
+        prop_backgroundIterAfter: {
+            prop: "prop_backgroundIterAfter" ,
+            default: tools_const?.styles?.tabs?.backgroundColor_itemAfter ?? ""
+        } ,
+        prop_colorIterAfter: {
+            prop: "prop_colorIterAfter" ,
+            default: tools_const?.styles?.tabs?.color_itemAfter ?? ""
+        } ,
+
         prop_tabSelected: {
             prop: "prop_tabSelected",
             default: null
@@ -18932,6 +19629,11 @@ class ComponentTabsBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_type,
             this._COMPONENT_PATTERN.prop_tabs,
             this._COMPONENT_PATTERN.prop_tabSelected,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_backgroundUnselected,
+            this._COMPONENT_PATTERN.prop_backgroundIterBefore,
+            this._COMPONENT_PATTERN.prop_backgroundIterAfter,
+            this._COMPONENT_PATTERN.prop_colorIterAfter,
             this._COMPONENT_PATTERN.prop_firstCallBack
         ]
     };
@@ -18960,10 +19662,6 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
         );
        super.renderComponent(config);
     }
-
-
-
-
 
 
     /* ---------------------------------------------
@@ -18999,10 +19697,15 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
 
         if (data != null){
 
-            const prop_type             =   data.hasOwnProperty("prop_type")             ?  data.prop_type             :  0;
-            const prop_tabs             =   data.hasOwnProperty("prop_tabs")             ?  data.prop_tabs             :  [];
-            const prop_tabSelected      =   data.hasOwnProperty("prop_tabSelected")      ?  data.prop_tabSelected      :  null;
-            const prop_firstCallBack    =   data.hasOwnProperty("prop_firstCallBack")    ?  data.prop_firstCallBack    :  true;
+            const prop_type                       =   data.hasOwnProperty("prop_type")                            ?  data.prop_type                            :  0;
+            const prop_tabs                       =   data.hasOwnProperty("prop_tabs")                            ?  data.prop_tabs                            :  [];
+            const prop_tabSelected                =   data.hasOwnProperty("prop_tabSelected")                     ?  data.prop_tabSelected                     :  null;
+            const prop_size                       =   data.hasOwnProperty("prop_size")                            ?  data.prop_size                            :  null;
+            const prop_backgroundUnselected       =   data.hasOwnProperty("prop_backgroundUnselected")            ?  data.prop_backgroundUnselected            :  "";
+            const prop_backgroundIterBefore       =   data.hasOwnProperty("prop_backgroundIterBefore")            ?  data.prop_backgroundIterBefore            :  "";
+            const prop_backgroundIterAfter        =   data.hasOwnProperty("prop_backgroundIterAfter")             ?  data.prop_backgroundIterAfter             :  "";
+            const prop_colorIterAfter             =   data.hasOwnProperty("prop_colorIterAfter")                  ?  data.prop_colorIterAfter                  :  "";
+
 
             let tabHtml = "";
             let tabClass = "";
@@ -19036,12 +19739,11 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
 
                             tabHtml += `
                       <div class="${tabClassCol} px-1 col-12 position-relative">
-                          <button type="button"
-                                onclick="${this.getFn("fn_onSelectTab" , "event" , tabId)}"
-                                class="${classActive} btn-tab-types btn btn-light w-100 border shadow-sm line-height-30px">
+                          <div  onclick="${this.getFn("fn_onSelectTab" , "event" , tabId)}"
+                                class="${classActive} btn-tab-types btn btn-light w-100 border shadow-sm ">
                             ${icon}
                             ${itemTab.title}
-                         </button>
+                         </div>
                      </div>
                 `;
                         }
@@ -19066,13 +19768,12 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
 
                             tabHtml += `
                       <div class="${tabClassCol} px-1  position-relative">
-                          <button type="button"
-                                onclick="${this.getFn("fn_onSelectTab" , "event" , tabId)}"
+                          <div  onclick="${this.getFn("fn_onSelectTab" , "event" , tabId)}"
                                 class="${classActive} btn-tab-types btn btn-light w-100 border shadow-sm line-height-30px" 
                                 title="${itemTab.title}">
                             ${icon}
                             ${itemTab.title}
-                         </button>
+                         </div>
                      </div>
                 `;
                         }
@@ -19084,6 +19785,9 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
             }
 
 
+            const elHeight =tools_css.getHeightSize(prop_size);
+            const elFontSize =tools_css.getFontSize(prop_size);
+
 
             return `
 <section data-part-name="${partName}" 
@@ -19092,12 +19796,17 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
          
      <style>
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID}{
-         
+            
          }
          
          
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types{
-               background-color: #c7c7c7;
+               height:            ${elHeight+10}px;
+               line-height:       ${elHeight}px;
+               font-size:         ${elFontSize}px;
+               padding:           5px 10px;
+               background-color:  ${prop_backgroundUnselected} ;
+               overflow:          hidden;
          }
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types:before{
                content: "";
@@ -19107,12 +19816,12 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
                position: absolute;
                top: 0;
                left: 0;
-               background-color: #ffffff29;
-               clip-path: ellipse(100% 50% at 50% 0);
+               background-color:  ${prop_backgroundIterBefore};
+               clip-path: ellipse(75% 50% at 50% 0);
          }
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types-active{
-               background-color:#0A1225 !important;
-               color :#ffffff !important;
+               background-color: ${prop_backgroundIterAfter} !important;
+               color :           ${prop_colorIterAfter} !important;
          }
      </style>
      
@@ -24941,6 +25650,10 @@ class ComponentChangePageBase extends ComponentBase{
             prop: "prop_duration",
             default: 500
         },
+        prop_backgroundColorShadow: {
+            prop: "prop_backgroundColorShadow",
+            default: tools_const?.styles?.changePage?.backgroundColor_shadow ?? ""
+        },
         prop_size: {
             prop: "prop_size",
             default: tools_css.standardSizes.m.name
@@ -24970,6 +25683,10 @@ class ComponentChangePageBase extends ComponentBase{
             prop: "prop_pages",
             default: null
         },
+        var_openAnyPage: {
+            prop: "var_openAnyPage",
+            default: false
+        },
     }
 
 
@@ -24992,6 +25709,11 @@ class ComponentChangePageBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_body,
         ],
 
+        part_form_shadow: [
+            this._COMPONENT_PATTERN.var_openAnyPage,
+            this._COMPONENT_PATTERN.prop_backgroundColorShadow,
+        ],
+
         part_form_pages: [
             this._COMPONENT_PATTERN.prop_pages,
             this._COMPONENT_PATTERN.prop_effect,
@@ -25007,6 +25729,7 @@ class ComponentChangePageBase extends ComponentBase{
         part_structure: {
             part_form:{
                 part_form_body:{} ,
+                part_form_shadow:{} ,
                 part_form_pages:{} ,
             } ,
         }
@@ -25042,6 +25765,8 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
                 return this.template_render_form( partName );
             case "part_form_body":
                 return this.template_render_form_body( partName );
+            case "part_form_shadow":
+                return this.template_render_form_shadow( partName );
             case "part_form_pages":
                 return this.template_render_form_pages( partName );
             default:
@@ -25079,6 +25804,7 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
      </style>
      
        ${this.templateFn("part_form_body") ?? ""}
+       ${this.templateFn("part_form_shadow") ?? ""}
        ${this.templateFn("part_form_pages") ?? ""}
 </section>
         `;
@@ -25187,6 +25913,38 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
         `;
     }
 
+    template_render_form_shadow(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const var_openAnyPage  =            data.hasOwnProperty("var_openAnyPage")                         ?  data.var_openAnyPage                   :  false;
+            const prop_backgroundColorShadow  = data.hasOwnProperty("prop_backgroundColorShadow")              ?  data.prop_backgroundColorShadow        :  "";
+
+            if (var_openAnyPage){
+                return `
+<section data-part-name="${partName}" 
+         id="ccomponent-change-page-form-shadow-${this._COMPONENT_RANDOM_ID}"
+         class="w-100 h-100 position-absolute">
+         
+     <style>
+         #${this._COMPONENT_ID} #ccomponent-change-page-form-shadow-${this._COMPONENT_RANDOM_ID}{
+             background-color: ${prop_backgroundColorShadow};
+             top: 0 ;
+             left: 0;
+         }
+     </style>
+     
+</section>
+        `;
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
 
 
     /* ---------------------------------------------
@@ -25195,6 +25953,9 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
 
     fn_getPageSelected(pageName){
         return document.querySelector(` #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page[data-page-name="${pageName}"]`);
+    }
+    fn_getAllPage(pageName){
+        return document.querySelectorAll(` #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page`);
     }
 
 
@@ -25251,7 +26012,26 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
         pageEl.style.top = top;
         pageEl.style.bottom = bottom;
 
-        pageEl.setAttribute("data-page-status" , status);
+        pageEl.setAttribute("data-page-status" , status ? 1 : 0);
+        this.fn_setStatusFormShadow();
+    }
+
+
+    fn_setStatusFormShadow(){
+        let status = false;
+        const pages = this.fn_getAllPage();
+        if (pages != null){
+            for (let i = 0; i < pages.length; i++) {
+                const itemPage = pages[i];
+                let pageStatusNumber = itemPage.getAttribute("data-page-status");
+                if (parseInt(pageStatusNumber) == 1){
+                    status = true;
+                    break;
+                }
+            }
+        }
+
+        this.set("var_openAnyPage" , status)
     }
 
     call_openOrClosePage(pageName , status = null){
@@ -25479,6 +26259,22 @@ window.ComponentRecyclerView  = class ComponentRecyclerView extends ComponentRec
 -------------------------------------*/
 class ComponentToolsTableConfigBase extends ComponentBase{
 
+    _DATA_TYPE_REAL = 0;
+    _DATA_TYPE_TEXT = 1;
+    _DATA_TYPE_NUMBER = 2;
+    _DATA_TYPE_DATE = 3;
+    _DATA_TYPE_DATE_TIME = 4;
+    _DATA_TYPE_TIME = 5;
+    _DATA_TYPE_HTML = 6;
+
+    _ACTION_NONE = 0;
+    _ACTION_SUM = 1;
+    _ACTION_AVG = 2;
+    _ACTION_MIN = 3;
+    _ACTION_MAX = 4;
+    _ACTION_COUNT_ALL = 5;
+    _ACTION_COUNT_DISTINCT = 6;
+    _ACTION_NUMBERS = 7;
 
     /* ---------------------------------------------
      PROPERTYs Pattern
@@ -25488,7 +26284,6 @@ class ComponentToolsTableConfigBase extends ComponentBase{
             prop: "prop_size" ,
             default: tools_css.standardSizes.m.name
         } ,
-
         prop_langSelected: {
             prop: "prop_langSelected",
             default: component_props.directionRtl ? "fa" : "en"
@@ -25497,14 +26292,74 @@ class ComponentToolsTableConfigBase extends ComponentBase{
             prop: "prop_langs",
             default: {
                 fa: {
-                    titleSelectColumns: "انتخاب ستون ها" ,
-                    toolstipSelectColumns: "با کمک فیلد زیر، ستونهایی که نیاز می باشد که در خروجی باشند، را انتخاب نمایید" ,
+                    titleSelectColumns:                   "انتخاب ستون ها" ,
+                    toolstipSelectColumns:                "با کمک فیلد زیر، ستونهایی که نیاز می باشد که در خروجی باشند، را انتخاب نمایید" ,
+
+                    headerCol_id:                         "شناسه" ,
+                    headerCol_headerName:                 "برچسب" ,
+                    headerCol_headerTitle:                "عنوان" ,
+                    headerCol_headerBackgroundColor:      "پس زمینه عنوان" ,
+                    headerCol_headerColor:                "زنگ عنوان" ,
+                    headerCol_headerDataType:             "نوع داده عنوان" ,
+                    headerCol_footerBackgroundColor:      "پس زمینه پاورقی" ,
+                    headerCol_footerColor:                "رنگ پاورقی" ,
+                    headerCol_footerAction:               "عملیات پاورقی" ,
+
+                    dataType_real:                        "اصلی" ,
+                    dataType_text:                        "متنی" ,
+                    dataType_number:                      "عدد" ,
+                    dataType_date:                        "تاریخ" ,
+                    dataType_date_time:                   "تاریخ - ساعت" ,
+                    dataType_time:                        "ساعت" ,
+                    dataType_html:                        "html" ,
+
+                    action_none:                          "بدون عملیات" ,
+                    action_sum:                           "جمع" ,
+                    action_avg:                           "میانگین" ,
+                    action_min:                           "حداقل" ,
+                    action_max:                           "حداکثر" ,
+                    action_countAll:                      "جمع کل" ,
+                    action_countDistinct:                 "جمع کل متمایز" ,
+                    action_numbers:                       "اعداد" ,
                 } ,
                 en: {
-                    titleSelectColumns: "Select Columns" ,
-                    toolstipSelectColumns: "Use the field below to select the columns that need to be in the output" ,
+                    titleSelectColumns:                   "Select Columns" ,
+                    toolstipSelectColumns:                "Use the field below to select the columns that need to be in the output" ,
+
+                    headerCol_id:                         "Id" ,
+                    headerCol_headerName:                 "Header Name" ,
+                    headerCol_headerTitle:                "Header Title" ,
+                    headerCol_headerBackgroundColor:      "Header BgColor" ,
+                    headerCol_headerColor:                "Header Color" ,
+                    headerCol_headerDataType:             "Header DataType" ,
+                    headerCol_footerBackgroundColor:      "Footer BgColor" ,
+                    headerCol_footerColor:                "Footer Color" ,
+                    headerCol_footerAction:               "Footer Color" ,
+
+                    dataType_real:                        "Real" ,
+                    dataType_text:                        "Text" ,
+                    dataType_number:                      "Numbers" ,
+                    dataType_date:                        "Date" ,
+                    dataType_date_time:                   "Date - Time" ,
+                    dataType_time:                        "Time" ,
+                    dataType_html:                        "Html" ,
+
+                    action_none:                          "None" ,
+                    action_sum:                           "Sum" ,
+                    action_avg:                           "Avg" ,
+                    action_min:                           "Min" ,
+                    action_max:                           "Max" ,
+                    action_countAll:                      "Count All" ,
+                    action_countDistinct:                 "Count Distinct" ,
+                    action_numbers:                       "Numbers" ,
+
                 }
             }
+        },
+
+        prop_columns: {
+            prop: "prop_columns",
+            default: []
         },
     };
 
@@ -25521,9 +26376,45 @@ class ComponentToolsTableConfigBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_columns,
         ],
 
         part_tableConfig: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_columns,
+        ],
+
+        part_tableConfig_headerTitle: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+        ],
+
+        part_tableConfig_headerBackgroundColor: [
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+
+        part_tableConfig_headerColor: [
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+
+        part_tableConfig_headerDataType: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+        ],
+
+        part_tableConfig_footerBackgroundColor: [
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+
+        part_tableConfig_footerColor: [
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+
+        part_tableConfig_footerAction: [
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
@@ -25538,13 +26429,23 @@ class ComponentToolsTableConfigBase extends ComponentBase{
     _COMPONENT_SCHEMA = {
         part_structure: {
             part_selectColumns:{} ,
-            part_tableConfig:{} ,
+            part_tableConfig:{
+                part_tableConfig_headerTitle: {},
+                part_tableConfig_headerBackgroundColor: {},
+                part_tableConfig_headerColor: {},
+                part_tableConfig_headerDataType: {},
+                part_tableConfig_footerBackgroundColor: {},
+                part_tableConfig_footerColor: {},
+                part_tableConfig_footerAction: {},
+            } ,
         }
     }
 
 }
 window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends ComponentToolsTableConfigBase{
 
+    _COLOMNS_SELECTED = [];
+    _COLOMNS_OREDER = [];
 
     /* ---------------------------------------------
        SETUP
@@ -25565,6 +26466,9 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
     componentFn(){
         this.templateFn("part_selectColumns");
         this.templateFn("part_tableConfig");
+
+        this.renderTableOptions();
+
     }
 
     templateFn(partName = null){
@@ -25575,6 +26479,20 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
                 return this.componentFn_render_selectColumns(partName);
             case "part_tableConfig":
                 return this.componentFn_render_tableConfig(partName);
+            case "part_tableConfig_headerTitle":
+                return this.componentFn_render_tableConfig_headerTitle(partName);
+            case "part_tableConfig_headerBackgroundColor":
+                return this.componentFn_render_tableConfig_headerBackgroundColor(partName);
+            case "part_tableConfig_headerColor":
+                return this.componentFn_render_tableConfig_headerColor(partName);
+            case "part_tableConfig_headerDataType":
+                return this.componentFn_render_tableConfig_headerDataType(partName);
+            case "part_tableConfig_footerBackgroundColor":
+                return this.componentFn_render_tableConfig_footerBackgroundColor(partName);
+            case "part_tableConfig_footerColor":
+                return this.componentFn_render_tableConfig_footerColor(partName);
+            case "part_tableConfig_footerAction":
+                return this.componentFn_render_tableConfig_footerAction(partName);
             default:
                 return this.templateBasic_render();
         }
@@ -25598,9 +26516,10 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_size             =  data.hasOwnProperty("prop_size")                                             ?  data.prop_size              : "";
-            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")                                     ?  data.prop_langSelected      : "";
-            const prop_langs            =  data.hasOwnProperty("prop_langs")                                            ?  data.prop_langs             : {};
+            const prop_size             =  data.hasOwnProperty("prop_size")                   ?  data.prop_size              : "";
+            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")           ?  data.prop_langSelected      : "";
+            const prop_langs            =  data.hasOwnProperty("prop_langs")                  ?  data.prop_langs             : {};
+            const prop_columns          =  data.hasOwnProperty("prop_columns")                ?  data.prop_columns           : [];
 
             let langTitleSelectColumns = "";
             let langToolstipSelectColumns = "";
@@ -25610,14 +26529,87 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
                 langToolstipSelectColumns = langs?.toolstipSelectColumns ?? "";
             }
 
+            if (prop_columns != null && Array.isArray(prop_columns)){
+                for (let i = 0; i < prop_columns.length; i++) {
+                    const itemCol = prop_columns[i];
+                    if (itemCol != null && itemCol.hasOwnProperty("name") && itemCol.hasOwnProperty("title"))
+                    {
+                        this._COLOMNS_SELECTED.push({
+                            name: itemCol.name ,
+                            title: itemCol.title ,
+                            selected: true ,
+
+                            id:                  "1" ,
+                            header_name:         `<b>${itemCol.name}</b>`,
+
+                            value: {
+                                header_title:        itemCol.title,
+                                header_background:   component_props.primaryColor1,
+                                header_color:        component_props.shanColor1,
+                                header_dataType:     0,
+                                footer_background:   component_props.primaryColor1,
+                                footer_color:         component_props.shanColor1,
+                                footer_action:       0,
+                            }
+                        })
+                    }
+                }
+            }
+            this._COLOMNS_SELECTED  = tools_public.addExcelKeys(this._COLOMNS_SELECTED , "id");
+            this._COLOMNS_OREDER = this._COLOMNS_SELECTED
+
+            for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                const item = this._COLOMNS_SELECTED[i];
+                const itemRow = item.id;
+
+                this._COLOMNS_SELECTED[i].header_title =      `<component-input id="component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-header-title-${itemRow}-${i}"></component-input>`
+                this._COLOMNS_SELECTED[i].header_background = `<component-input-color id="component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-header-background-${itemRow}-${i}"></component-input-color>`
+                this._COLOMNS_SELECTED[i].header_color =      `<component-input-color id="component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-header-color-${itemRow}-${i}"></component-input-color>`
+                this._COLOMNS_SELECTED[i].header_dataType =   `<component-select-option id="component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-header-data-type-${itemRow}-${i}"></component-select-option>`
+
+                this._COLOMNS_SELECTED[i].footer_background =  `<component-input-color id="component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-footer-background-${itemRow}-${i}"></component-input-color>`
+                this._COLOMNS_SELECTED[i].footer_color =       `<component-input-color id="component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-footer-color-${itemRow}-${i}"></component-input-color>`
+                this._COLOMNS_SELECTED[i].footer_action =      `<component-select-option id="component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-footer-action-${itemRow}-${i}"></component-select-option>`
+
+            }
+
+
             new window.ComponentSelectColumns(
                 `component-tools-table-config-select-columns-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList: "mt-2"  ,
                     prop_size ,
-                    prop_title:               langTitleSelectColumns  ,
+                    prop_title:                    langTitleSelectColumns  ,
                     prop_labelTooltipDescription:  langToolstipSelectColumns  ,
+                    prop_columns:                  this._COLOMNS_SELECTED   ,
+                    prop_draggable:                true  ,
+                    fn_callback: (event , order)=>{
 
+                        if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                            for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                                const itemCol = this._COLOMNS_SELECTED[i];
+
+                                let selected = false;
+                                if (itemCol != null && itemCol.hasOwnProperty("id") && order != null && Array.isArray(order) )
+                                {
+                                    for (let x = 0; x < order.length; x++) {
+                                        const item = order[x];
+
+                                        if (item != null && item.hasOwnProperty("id") && item.hasOwnProperty("selected") && item.id == itemCol.id){
+                                            selected = item.selected;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                this._COLOMNS_SELECTED[i].selected = selected;
+                            }
+                        }
+                        this._COLOMNS_OREDER = order;
+                        this.templateFn("part_tableConfig");
+                        this.renderTableOptions();
+                        this.fn_callback();
+                    }
                 }
             )
         }
@@ -25627,14 +26619,74 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_size             =  data.hasOwnProperty("prop_size")                                             ?  data.prop_size              : "";
+            const prop_size             =  data.hasOwnProperty("prop_size")               ?  data.prop_size              : "";
+            const prop_langs            =  data.hasOwnProperty("prop_langs")              ?  data.prop_langs             : [];
+            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")       ?  data.prop_langSelected      : "";
+            const directionRtl          = data.hasOwnProperty("directionRtl")             ? data.directionRtl            : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+            let columnsSelected = [];
+            if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                    const itemCol = this._COLOMNS_SELECTED[i];
+
+                    if (itemCol != null && itemCol.hasOwnProperty("selected") && itemCol.selected)
+                    {
+                        columnsSelected.push(itemCol)
+                    }
+                }
+            }
+
+            let headerCol_id = "";
+            let headerCol_headerName = "";
+            let headerCol_headertitle = "";
+            let headerCol_headerBackgroundColor = "";
+            let headerCol_headerColor = "";
+            let headerCol_headerDataType = "";
+            let headerCol_footerBackgroundColor = "";
+            let headerCol_footerColor = "";
+            let headerCol_footerAction = "";
+            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                const langs= prop_langs[prop_langSelected];
+                headerCol_id =                    langs?.headerCol_id                    ?? "Id";
+                headerCol_headerName =            langs?.headerCol_headerName            ??  "Header Name" ;
+                headerCol_headertitle =           langs?.headerCol_headerTitle           ?? "Header Title" ;
+                headerCol_headerBackgroundColor = langs?.headerCol_headerBackgroundColor ?? "Header BgColor";
+                headerCol_headerColor =           langs?.headerCol_headerColor           ?? "Header Color";
+                headerCol_headerDataType =        langs?.headerCol_headerDataType        ?? "Header DataType";
+                headerCol_footerBackgroundColor = langs?.headerCol_footerBackgroundColor ?? "Footer BgColor";
+                headerCol_footerColor =           langs?.headerCol_footerColor           ?? "Footer Color";
+                headerCol_footerAction =          langs?.headerCol_footerAction          ?? "Footer Color";
+            }
+
+
 
             new window.ComponentTableResponsible(
                 `component-tools-table-config-table-responsible-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    classList: "mt-2"  ,
+                    classList: [" col-12" ," row" , "mt-2" , "p-0" , directionRtl ? "me-0 ms-4" : "ms-0 me-4"]   ,
                     prop_size ,
 
+                    prop_order : ["id" , "header_name" , "header_title" , "header_background" , "header_color"  , "header_dataType" , "footer_background" , "footer_color" , "footer_action"] ,
+                    prop_headerIconSize: 45 ,
+                    prop_header : [
+                        {id:"id"                    , content: headerCol_id                                                                   ,  inMobile: true  },
+                        {id:"header_name"           , content: headerCol_headerName                                                          ,  inMobile: true  },
+                        {id:"header_title"          , content: headerCol_headertitle            , icon: tools_icons.icon_inputText           ,  inMobile: true  },
+                        {id:"header_background"     , content: headerCol_headerBackgroundColor  , icon: tools_icons.icon_inputColor          ,  inMobile: true  },
+                        {id:"header_color"          , content: headerCol_headerColor            , icon: tools_icons.icon_inputColor          ,  inMobile: true  },
+                        {id:"header_dataType"       , content: headerCol_headerDataType         , icon: tools_icons.icon_selectOption        ,  inMobile: true  },
+                        {id:"footer_background"     , content: headerCol_footerBackgroundColor  , icon: tools_icons.icon_inputColor          ,  inMobile: true  },
+                        {id:"footer_color"          , content: headerCol_footerColor            , icon: tools_icons.icon_inputColor          ,  inMobile: true  },
+                        {id:"footer_action"         , content: headerCol_footerAction           , icon: tools_icons.icon_math                ,  inMobile: true  },
+                    ] ,
+                    prop_data : columnsSelected,
+                    prop_options: null ,
+                    fn_onCallbackColSelector: (event , order , isCompleteTrue) =>{
+                        this.renderTableOptions();
+                    },
+                    fn_onCallbackResizeTable: (event) =>{
+                        this.renderTableOptions();
+                    }
                 }
             )
         }
@@ -25642,12 +26694,307 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
 
 
 
+    componentFn_render_tableConfig_headerTitle(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")        ?  data.prop_size              : "";
+
+            if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                    const item = this._COLOMNS_SELECTED[i];
+                    const itemRow = item.id;
+
+                    new window.ComponentInput(
+                        `component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-header-title-${itemRow}-${i}` ,
+                        {
+                            prop_structureClass: ["mx-2"]  ,
+                            prop_structureStyles: {
+                                //"margin-top" : "45px"
+                            } ,
+                            prop_labelShow: false ,
+                            prop_size: prop_size ,
+                            prop_value: item?.value?.header_title ?? "" ,
+                            fn_oninput: (event , value) => {
+                                this._COLOMNS_SELECTED[i].value.header_title = value;
+                                this.fn_callback();
+                            } ,
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    componentFn_render_tableConfig_headerBackgroundColor(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")        ?  data.prop_size              : "";
+
+            if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                    const item = this._COLOMNS_SELECTED[i];
+                    const itemRow = item.id;
+
+                    new window.ComponentInputColor(
+                        `component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-header-background-${itemRow}-${i}` ,
+                        {
+                            prop_structureClass:     ["mx-2"]  ,
+                            prop_labelShow:          false ,
+                            prop_size:               prop_size ,
+                            prop_colorSelected:      item?.value?.header_background ?? null ,
+                            fn_onChangeColor:        (color) => {
+                                this._COLOMNS_SELECTED[i].value.header_background = color;
+                                this.fn_callback();
+                            } ,
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    componentFn_render_tableConfig_headerColor(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")        ?  data.prop_size              : "";
+
+            if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                    const item = this._COLOMNS_SELECTED[i];
+                    const itemRow = item.id;
+
+                    new window.ComponentInputColor(
+                        `component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-header-color-${itemRow}-${i}` ,
+                        {
+                            prop_structureClass:     ["mx-2"]  ,
+                            prop_labelShow:          false ,
+                            prop_size:               prop_size ,
+                            prop_colorSelected:      item?.value?.header_color ?? null ,
+                            fn_onChangeColor:        (color) => {
+                                this._COLOMNS_SELECTED[i].value.header_color = color;
+                                this.fn_callback();
+                            } ,
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    componentFn_render_tableConfig_headerDataType(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")               ?  data.prop_size              : "";
+            const prop_langs            =  data.hasOwnProperty("prop_langs")              ?  data.prop_langs             : [];
+            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")       ?  data.prop_langSelected      : "";
+
+            let dataType_real = "";
+            let dataType_text = "";
+            let dataType_number = "";
+            let dataType_date = "";
+            let dataType_date_time = "";
+            let dataType_time = "";
+            let dataType_html = "";
+            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                const langs= prop_langs[prop_langSelected];
+                dataType_real =           langs?.dataType_real      ?? "Real";
+                dataType_text =           langs?.dataType_text      ??  "Text" ;
+                dataType_number =         langs?.dataType_number    ?? "Numbers";
+                dataType_date =           langs?.dataType_date      ?? "Date";
+                dataType_date_time =      langs?.dataType_date_time ?? "Date - Time";
+                dataType_time =           langs?.dataType_time      ?? "Time";
+                dataType_html =           langs?.dataType_html      ?? "Html";
+            }
+
+            if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                    const item = this._COLOMNS_SELECTED[i];
+                    const itemRow = item.id;
+
+                    new window.ComponentSelectOption(
+                        `component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-header-data-type-${itemRow}-${i}` ,
+                        {
+                            prop_structureClass:     ["mx-2"]  ,
+                            prop_labelShow:          false ,
+                            prop_size:               prop_size ,
+                            prop_itemSelected:       item?.value?.header_dataType ?? 0 ,
+
+                            prop_options: [
+                                {id:this._DATA_TYPE_REAL       , name: dataType_real} ,
+                                {id:this._DATA_TYPE_TEXT       , name: dataType_text} ,
+                                {id:this._DATA_TYPE_NUMBER     , name: dataType_number} ,
+                                {id:this._DATA_TYPE_DATE       , name: dataType_date} ,
+                                {id:this._DATA_TYPE_DATE_TIME  , name: dataType_date_time} ,
+                                {id:this._DATA_TYPE_TIME       , name: dataType_time} ,
+                                {id:this._DATA_TYPE_HTML       , name: dataType_html} ,
+                            ] ,
+
+                            fn_callback:  (event , index)=>{
+                                this._COLOMNS_SELECTED[i].value.header_dataType = index;
+                                this.fn_callback();
+                            } ,
+
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+
+    componentFn_render_tableConfig_footerBackgroundColor(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")        ?  data.prop_size              : "";
+
+            if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                    const item = this._COLOMNS_SELECTED[i];
+                    const itemRow = item.id;
+
+                    new window.ComponentInputColor(
+                        `component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-footer-background-${itemRow}-${i}` ,
+                        {
+                            prop_structureClass:     ["mx-2"]  ,
+                            prop_labelShow:          false ,
+                            prop_size:               prop_size ,
+                            prop_colorSelected:      item?.value?.footer_background ?? null ,
+                            fn_onChangeColor:        (color) => {
+                                this._COLOMNS_SELECTED[i].value.footer_background = color;
+                                this.fn_callback();
+                            } ,
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    componentFn_render_tableConfig_footerColor(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")        ?  data.prop_size              : "";
+
+            if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                    const item = this._COLOMNS_SELECTED[i];
+                    const itemRow = item.id;
+
+                    new window.ComponentInputColor(
+                        `component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-footer-color-${itemRow}-${i}` ,
+                        {
+                            prop_structureClass:     ["mx-2"]  ,
+                            prop_labelShow:          false ,
+                            prop_size:               prop_size ,
+                            prop_colorSelected:      item?.value?.footer_color ?? null ,
+                            fn_onChangeColor:        (color) => {
+                                this._COLOMNS_SELECTED[i].value.footer_color = color;
+                                this.fn_callback();
+                            } ,
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    componentFn_render_tableConfig_footerAction(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")        ?  data.prop_size              : "";
+            const prop_langs            =  data.hasOwnProperty("prop_langs")              ?  data.prop_langs             : [];
+            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")       ?  data.prop_langSelected      : "";
+
+            let action_none = "";
+            let action_sum = "";
+            let action_avg = "";
+            let action_min = "";
+            let action_max = "";
+            let action_countAll = "";
+            let action_countDistinct = "";
+            let action_numbers = "";
+            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                const langs= prop_langs[prop_langSelected];
+                action_none =                langs?.action_none            ?? "None";
+                action_sum =                 langs?.action_sum             ?? "Sum";
+                action_avg =                 langs?.action_avg             ?? "Avg";
+                action_min =                 langs?.action_min             ?? "Min";
+                action_max =                 langs?.action_max             ?? "Max";
+                action_countAll =            langs?.action_countAll        ?? "Count All";
+                action_countDistinct =       langs?.action_countDistinct   ?? "Count Distinct";
+                action_numbers =             langs?.action_numbers         ?? "Numbers";
+            }
+
+
+            if (this._COLOMNS_SELECTED != null && Array.isArray(this._COLOMNS_SELECTED)){
+                for (let i = 0; i < this._COLOMNS_SELECTED.length; i++) {
+                    const item = this._COLOMNS_SELECTED[i];
+                    const itemRow = item.id;
+
+                    new window.ComponentSelectOption(
+                        `component-tools-table-config-row-${this._COMPONENT_RANDOM_ID}-col-footer-action-${itemRow}-${i}` ,
+                        {
+                            prop_structureClass:     ["mx-2"]  ,
+                            prop_labelShow:          false ,
+                            prop_size:               prop_size ,
+                            prop_itemSelected:       item?.value?.footer_action ?? 0 ,
+
+                            prop_options: [
+                                {id:this._ACTION_NONE              , name: action_none} ,
+                                {id:this._ACTION_SUM               , name: action_sum} ,
+                                {id:this._ACTION_AVG               , name: action_avg} ,
+                                {id:this._ACTION_MIN               , name: action_min} ,
+                                {id:this._ACTION_MAX               , name: action_max} ,
+                                {id:this._ACTION_COUNT_ALL         , name: action_countAll} ,
+                                {id:this._ACTION_COUNT_DISTINCT    , name: action_countDistinct} ,
+                                {id:this._ACTION_NUMBERS           , name: action_numbers} ,
+                            ] ,
+
+                            fn_callback:  (event , index)=>{
+                                this._COLOMNS_SELECTED[i].value.footer_action = index;
+                                this.fn_callback();
+                            } ,
+
+
+                        }
+                    )
+                }
+            }
+        }
+    }
+
 
 
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
+    renderTableOptions(){
+        requestAnimationFrame(() => {
+            this.templateFn("part_tableConfig_headerTitle");
+            this.templateFn("part_tableConfig_headerBackgroundColor");
+            this.templateFn("part_tableConfig_headerColor");
+            this.templateFn("part_tableConfig_headerDataType");
+            this.templateFn("part_tableConfig_footerBackgroundColor");
+            this.templateFn("part_tableConfig_footerColor");
+            this.templateFn("part_tableConfig_footerAction");
+        });
+    }
 
+
+    fn_callback(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(this._COLOMNS_OREDER , this._COLOMNS_SELECTED);
+        }
+    }
 
 }
 
@@ -25680,10 +27027,18 @@ class ComponentToolsTableToExcelBase extends ComponentBase{
             prop: "prop_langs",
             default: {
                 fa: {
-                    stepTitleColumns: "ستون ها"
+                    stepTitleColumns:   "ستون ها" ,
+                    stepTitleInfo:      "اطلاعات اکسل" ,
+                    stepTitleCreation:  "ایجاد" ,
+
+                    errorForContinue:  "در حال حاضر استفاده از سرویس مد نظر امکان پذیر نمی باشد" ,
                 } ,
                 en: {
-                    stepTitleColumns: "Columns"
+                    stepTitleColumns:   "Columns" ,
+                    stepTitleInfo:      "Excel Info" ,
+                    stepTitleCreation:  "Creation" ,
+
+                    errorForContinue: "The requested service is currently unavailable"
                 }
             }
         },
@@ -25695,6 +27050,17 @@ class ComponentToolsTableToExcelBase extends ComponentBase{
         prop_stepStyles: {
             prop: "prop_stepStyles",
             default: {}
+        },
+
+        prop_columns: {
+            prop: "prop_columns",
+            default: []
+        },
+
+
+        var_stepSelected: {
+            prop: "var_stepSelected",
+            default: 0
         },
     }
 
@@ -25711,11 +27077,23 @@ class ComponentToolsTableToExcelBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.var_stepSelected,
         ],
 
         part_steps: [
             this._COMPONENT_PATTERN.prop_stepClass,
             this._COMPONENT_PATTERN.prop_stepStyles,
+            this._COMPONENT_PATTERN.var_stepSelected,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+        ],
+
+        part_step_columns: [
+        ],
+
+        part_step_columns_selector: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_columns,
         ],
     };
 
@@ -25727,7 +27105,9 @@ class ComponentToolsTableToExcelBase extends ComponentBase{
         part_structure: {
             part_breadcrumb: {} ,
             part_steps:{
-
+                part_step_columns: {
+                    part_step_columns_selector:{}
+                }
             }
         }
     }
@@ -25735,6 +27115,8 @@ class ComponentToolsTableToExcelBase extends ComponentBase{
 }
 window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends ComponentToolsTableToExcelBase{
 
+    _COLUMNS_ORDERS= [];
+    _COLUMNS_SELECTED= [];
 
     /* ---------------------------------------------
        SETUP
@@ -25753,7 +27135,8 @@ window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends Co
        TEMPLATEs
     --------------------------------------------- */
     componentFn(){
-        this.templateFn("part_breadcrumb")
+        this.templateFn("part_breadcrumb");
+        this.templateFn("part_step_columns_selector");
     }
 
     templateFn(partName = null){
@@ -25762,8 +27145,12 @@ window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends Co
                 return this.template_render_structure( partName );
             case "part_steps":
                 return this.template_render_steps( partName );
+            case "part_step_columns":
+                return this.template_render_stepColumns( partName );
             case "part_breadcrumb":
                 return this.componentFn_render_breadcrumb( partName );
+            case "part_step_columns_selector":
+                return this.componentFn_render_columnsSelector( partName );
             default:
                 return this.templateBasic_render([]);
         }
@@ -25784,8 +27171,26 @@ window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends Co
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_stepClass            =   data.hasOwnProperty("prop_stepClass")     ?  data.prop_stepClass        :  [];
-            const prop_stepStyles           =   data.hasOwnProperty("prop_stepStyles")    ?  data.prop_stepStyles       :  {};
+            const prop_stepClass        =   data.hasOwnProperty("prop_stepClass")              ?  data.prop_stepClass        :  [];
+            const prop_stepStyles       =   data.hasOwnProperty("prop_stepStyles")             ?  data.prop_stepStyles       :  {};
+            const var_stepSelected      =  data.hasOwnProperty("var_stepSelected")             ?  data.var_stepSelected      : 0;
+            const prop_langs            =  data.hasOwnProperty("prop_langs")                   ?  data.prop_langs             : {};
+            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")            ?  data.prop_langSelected      : "";
+
+
+            let errorForContinue = "";
+            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                const langs= prop_langs[prop_langSelected];
+                errorForContinue    = langs?.errorForContinue ??  "The requested service is currently unavailable";
+            }
+
+            let stepName = ""
+            switch (var_stepSelected){
+                case 0:
+                    stepName = "part_step_columns";
+                    break;
+            }
+
 
             return `
 <section data-part-name="${partName}" 
@@ -25793,12 +27198,43 @@ window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends Co
          class=" ${tools_public.renderListClass(prop_stepClass)}">
          
      <style>
-         #${this._COMPONENT_ID} #component-change-page-form-${this._COMPONENT_RANDOM_ID}{
+         #${this._COMPONENT_ID} #component-tools-table-to-excel-steps-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_stepStyles)}
          }
      </style>
      
-     3333
+     ${this.templateFn(stepName)}
+     
+     <b class="border border-danger m-2 p-2 rounded shadow-sm text-center text-danger d-block">
+        ${errorForContinue}
+     </b>
+</section>
+`;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_stepColumns(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-tools-table-to-excel-step-columns-${this._COMPONENT_RANDOM_ID}"
+         class="p-2">
+         
+     <style>
+         #${this._COMPONENT_ID} #omponent-tools-table-to-excel-step-columns-${this._COMPONENT_RANDOM_ID}{
+              
+         }
+     </style>
+     
+     <component-tools-table-config id="omponent-tools-table-to-excel-step-column-columns-selector-${this._COMPONENT_RANDOM_ID}"></component-tools-table-config>
      
 </section>
 `;
@@ -25814,26 +27250,40 @@ window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends Co
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_size             =  data.hasOwnProperty("prop_size")                                             ?  data.prop_size              : "";
-            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")                                     ?  data.prop_langSelected      : "";
-            const prop_langs            =  data.hasOwnProperty("prop_langs")                                            ?  data.prop_langs             : {};
+            const prop_size             =  data.hasOwnProperty("prop_size")                    ?  data.prop_size              : "";
+            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")            ?  data.prop_langSelected      : "";
+            const prop_langs            =  data.hasOwnProperty("prop_langs")                   ?  data.prop_langs             : {};
+            const var_stepSelected      =  data.hasOwnProperty("var_stepSelected")             ?  data.var_stepSelected       : 0;
 
-            let langstepTitleColumns = "";
+            let stepTitleColumns = "";
+            let stepTitleInfo = "";
+            let stepTitleCreation = "";
             if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
                 const langs= prop_langs[prop_langSelected];
-                langstepTitleColumns = langs?.stepTitleColumns ?? "Columns";
+                stepTitleColumns     = langs?.stepTitleColumns  ??   "Columns";
+                stepTitleInfo        = langs?.stepTitleInfo     ??  "Excel Info";
+                stepTitleCreation    = langs?.stepTitleCreation ??  "Creation";
             }
+
 
             new window.ComponentBreadcrumbWithArrow(
                 `component-tools-table-to-excel-breadcrumb-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     classList: "mt-2"  ,
                     prop_size ,
-                    prop_stepSelected : 1 ,
+                    prop_stepSelected : var_stepSelected ,
                     prop_breadcrumbs: [
                         {
+                            id: 0 ,
+                            title: stepTitleColumns
+                        } ,
+                        {
                             id: 1 ,
-                            title: langstepTitleColumns
+                            title: stepTitleInfo
+                        } ,
+                        {
+                            id: 2 ,
+                            title: stepTitleCreation
                         }
                     ],
 
@@ -25849,7 +27299,357 @@ window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends Co
         }
     }
 
+    componentFn_render_columnsSelector(partName) {
+        const data = this.getPartProps(partName)
 
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")                    ?  data.prop_size              : "";
+            const prop_columns          =  data.hasOwnProperty("prop_columns")                 ?  data.prop_columns           : [];
+
+            new window.ComponentToolsTableConfig(
+                `omponent-tools-table-to-excel-step-column-columns-selector-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: " "  ,
+                    prop_columns
+                }
+            )
+        }
+    }
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+
+}
+
+
+
+/*-------------------------------------
+ 081-02) Component tools Table to print
+-------------------------------------
+@prop_show
+@prop_structureClass
+@prop_structureStyles
+
+-------------------------------------*/
+class ComponentToolsTableToPrintBase extends ComponentBase{
+
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+
+        prop_langSelected: {
+            prop: "prop_langSelected",
+            default: component_props.directionRtl ? "fa" : "en"
+        } ,
+        prop_langs: {
+            prop: "prop_langs",
+            default: {
+                fa: {
+                    stepTitleColumns:   "ستون ها" ,
+                    stepTitleInfo:      "اطلاعات پرینت" ,
+                    stepTitleSample:    "نمونه" ,
+                    stepTitleCreation:  "ایجاد" ,
+
+                    errorForContinue:  "در حال حاضر استفاده از سرویس مد نظر امکان پذیر نمی باشد" ,
+                } ,
+                en: {
+                    stepTitleColumns:   "Columns" ,
+                    stepTitleInfo:      "Print Info" ,
+                    stepTitleSample:    "Sample" ,
+                    stepTitleCreation:  "Creation" ,
+
+                    errorForContinue: "The requested service is currently unavailable"
+                }
+            }
+        },
+
+        prop_stepClass: {
+            prop: "prop_stepClass",
+            default: ["bg-white" , "mx-2" , "border" , "shadow-sm"]
+        },
+        prop_stepStyles: {
+            prop: "prop_stepStyles",
+            default: {}
+        },
+
+        prop_columns: {
+            prop: "prop_columns",
+            default: []
+        },
+
+
+        var_stepSelected: {
+            prop: "var_stepSelected",
+            default: 0
+        },
+    }
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+
+        part_breadcrumb: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.var_stepSelected,
+        ],
+
+        part_steps: [
+            this._COMPONENT_PATTERN.prop_stepClass,
+            this._COMPONENT_PATTERN.prop_stepStyles,
+            this._COMPONENT_PATTERN.var_stepSelected,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+        ],
+
+        part_step_columns: [
+        ],
+
+        part_step_columns_selector: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_columns,
+        ],
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_breadcrumb: {} ,
+            part_steps:{
+                part_step_columns: {
+                    part_step_columns_selector:{}
+                }
+            }
+        }
+    }
+
+}
+window.ComponentToolsTableToPrint  = class ComponentToolsTableToPrint extends ComponentToolsTableToPrintBase{
+
+    _COLUMNS_ORDERS= [];
+    _COLUMNS_SELECTED= [];
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentToolsTableToPrint.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_breadcrumb");
+        this.templateFn("part_step_columns_selector");
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure( partName );
+            case "part_steps":
+                return this.template_render_steps( partName );
+            case "part_step_columns":
+                return this.template_render_stepColumns( partName );
+            case "part_breadcrumb":
+                return this.componentFn_render_breadcrumb( partName );
+            case "part_step_columns_selector":
+                return this.componentFn_render_columnsSelector( partName );
+            default:
+                return this.templateBasic_render([]);
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+        
+       <component-breadcrumb-with-arrow id="component-tools-table-to-print-breadcrumb-${this._COMPONENT_RANDOM_ID}"></component-breadcrumb-with-arrow>
+       
+       ${this.templateFn("part_steps")}
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_steps(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_stepClass        =   data.hasOwnProperty("prop_stepClass")              ?  data.prop_stepClass        :  [];
+            const prop_stepStyles       =   data.hasOwnProperty("prop_stepStyles")             ?  data.prop_stepStyles       :  {};
+            const var_stepSelected      =  data.hasOwnProperty("var_stepSelected")             ?  data.var_stepSelected      : 0;
+            const prop_langs            =  data.hasOwnProperty("prop_langs")                   ?  data.prop_langs             : {};
+            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")            ?  data.prop_langSelected      : "";
+
+
+            let errorForContinue = "";
+            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                const langs= prop_langs[prop_langSelected];
+                errorForContinue    = langs?.errorForContinue ??  "The requested service is currently unavailable";
+            }
+
+            let stepName = ""
+            switch (var_stepSelected){
+                case 0:
+                    stepName = "part_step_columns";
+                    break;
+            }
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-tools-table-to-print-steps-${this._COMPONENT_RANDOM_ID}"
+         class=" ${tools_public.renderListClass(prop_stepClass)}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-tools-table-to-print-steps-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_stepStyles)}
+         }
+     </style>
+     
+     ${this.templateFn(stepName)}
+     
+     <b class="border border-danger m-2 p-2 rounded shadow-sm text-center text-danger d-block">
+        ${errorForContinue}
+     </b>
+</section>
+`;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_stepColumns(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-tools-table-to-print-step-columns-${this._COMPONENT_RANDOM_ID}"
+         class="p-2">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-tools-table-to-print-step-columns-${this._COMPONENT_RANDOM_ID}{
+              
+         }
+     </style>
+     
+     <component-tools-table-config id="component-tools-table-to-print-step-columns-selector-${this._COMPONENT_RANDOM_ID}"></component-tools-table-config>
+     
+</section>
+`;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    componentFn_render_breadcrumb(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")                    ?  data.prop_size              : "";
+            const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")            ?  data.prop_langSelected      : "";
+            const prop_langs            =  data.hasOwnProperty("prop_langs")                   ?  data.prop_langs             : {};
+            const var_stepSelected      =  data.hasOwnProperty("var_stepSelected")             ?  data.var_stepSelected       : 0;
+
+            let stepTitleColumns = "";
+            let stepTitleInfo = "";
+            let stepTitleSample = "";
+            let stepTitleCreation = "";
+            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                const langs= prop_langs[prop_langSelected];
+                stepTitleColumns     = langs?.stepTitleColumns    ??   "Columns";
+                stepTitleInfo        = langs?.stepTitleInfo       ??  "Print Info";
+                stepTitleSample      = langs?.stepTitleSample     ??  "Sample";
+                stepTitleCreation    = langs?.stepTitleCreation   ??  "Creation";
+            }
+
+
+            new window.ComponentBreadcrumbWithArrow(
+                `component-tools-table-to-print-breadcrumb-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: "mt-2"  ,
+                    prop_size ,
+                    prop_stepSelected : var_stepSelected ,
+                    prop_breadcrumbs: [
+                        {
+                            id: 0 ,
+                            title: stepTitleColumns
+                        } ,
+                        {
+                            id: 1 ,
+                            title: stepTitleInfo
+                        } ,
+                        {
+                            id: 2 ,
+                            title: stepTitleSample
+                        } ,
+                        {
+                            id: 3 ,
+                            title: stepTitleCreation
+                        }
+                    ],
+
+                    fn_callback: (event , itemData)=>{
+
+                    } ,
+
+                    fn_onBackClick: (event)=>{
+
+                    }
+                }
+            )
+        }
+    }
+
+    componentFn_render_columnsSelector(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")                    ?  data.prop_size              : "";
+            const prop_columns          =  data.hasOwnProperty("prop_columns")                 ?  data.prop_columns           : [];
+
+            new window.ComponentToolsTableConfig(
+                `component-tools-table-to-print-step-columns-selector-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: " "  ,
+                    prop_columns
+                }
+            )
+        }
+    }
 
 
     /* ---------------------------------------------
@@ -25980,8 +27780,8 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
 
     template_render_structure(partName) {
         const content = `
-${this.templateFn_render_icon("part_icon")} 
-                `;
+           ${this.templateFn_render_icon("part_icon")} 
+        `;
         return this.templateBasic_render_structure(content);
     }
 
@@ -26198,7 +27998,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
       </component-body>
    </component-border>
                 `;
-        return this.templateBasic_render_structure(content);
+        return this.templateBasic_render_structure(content , ["overflow-hidden"]);
     }
 
     componentFn_render_border(partName) {
@@ -26218,7 +28018,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 
 
             //---------------
-            prop_elementStyles["z-index"] =  listComponent.hasOwnProperty("tools") ? listComponent.tools: 9 ;
+            prop_elementStyles["z-index"] =  tools_css.getZIndex(tools_css.standardZIndex.popup.name , 20);
             if (prop_positionType != null){
                 prop_elementStyles["position"] = prop_positionType;
             }
@@ -27778,6 +29578,12 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
 
 class ComponentReportBase extends ComponentBase{
 
+    _PER_PAGE_10 = 10;
+    _PER_PAGE_25 = 25;
+    _PER_PAGE_50 = 50;
+    _PER_PAGE_100 = 100;
+    _PER_PAGE_200 = 200;
+
 
     /* ---------------------------------------------
         PROPERTYs Pattern
@@ -27864,10 +29670,6 @@ class ComponentReportBase extends ComponentBase{
             prop: "prop_iconPage",
             default: ""
         },
-
-
-
-
 
 
         prop_order: {
@@ -27963,6 +29765,9 @@ class ComponentReportBase extends ComponentBase{
         part_pages_main_formTable_pageData: [
             this._COMPONENT_PATTERN.prop_size,
         ],
+        part_pages_main_formTable_pagePer: [
+            this._COMPONENT_PATTERN.prop_size,
+        ],
 
 
 
@@ -27978,6 +29783,7 @@ class ComponentReportBase extends ComponentBase{
         ],
         part_pages_excel_tool: [
             this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_header,
         ],
 
 
@@ -27990,7 +29796,10 @@ class ComponentReportBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
         ],
-
+        part_pages_print_tool: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_header,
+        ],
 
 
         part_other_pages_Header : [
@@ -28020,6 +29829,7 @@ class ComponentReportBase extends ComponentBase{
                         part_pages_main_formTable_table:{} ,
                         part_pages_main_formTable_pageNumber:{} ,
                         part_pages_main_formTable_pageData:{} ,
+                        part_pages_main_formTable_pagePer:{} ,
                     },
                 } ,
                 part_pages_excel:{
@@ -28043,11 +29853,19 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
     _PAGE_FILTER = null;
 
     _PAGE_REPORT=null;
-    _PAGE_SELECTED=null;
-    _PAGE_TOTAL=null;
-    _PAGE_FROM_DATA=null;
-    _PAGE_TO_DATA=null;
-    _PAGE_TOTAL_DATA=null;
+
+    _PAGE_SELECTED=    null;
+    _PAGE_TOTAL=       null;
+    _PAGE_FROM_DATA=   null;
+    _PAGE_TO_DATA=     null;
+    _PAGE_TOTAL_DATA=  null;
+    _PAGE_PER_DATA=    this._PER_PAGE_25;
+
+    _COLUMNS_ORDER_EXCEL = [];
+    _COLUMNS_SELECTED_EXCEL = [];
+
+    _COLUMNS_ORDER_PRINT = [];
+    _COLUMNS_SELECTED_PRINT = [];
 
 
 
@@ -28075,10 +29893,12 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         this.templateFn("part_pages_main_collapseFilter");
         this.templateFn("part_pages_main_collapseFilter_form");
 
+
         this.templateFn("part_pages_excel_header");
         this.templateFn("part_pages_excel_tool");
 
         this.templateFn("part_pages_print_header");
+        this.templateFn("part_pages_print_tool");
 
         this.templateFn("part_other_pages_Header");
 
@@ -28123,6 +29943,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                 return this.template_render_pageMain_fromTable_pageNumber(partName);
             case "part_pages_main_formTable_pageData":
                 return this.template_render_pageMain_fromTable_pageData(partName);
+            case "part_pages_main_formTable_pagePer":
+                return this.template_render_pageMain_fromTable_pagePear(partName);
 
             case "part_pages_excel_header":
                 return this.componentFn_render_pageExcel_header(partName);
@@ -28131,7 +29953,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
 
             case "part_pages_print_header":
                 return this.componentFn_render_pagePrint_header(partName);
-
+            case "part_pages_print_tool":
+                return this.componentFn_render_pagePrint_tool(partName);
 
             case "part_other_pages_Header":
                 return this.componentFn_render_pagesOther_header(partName);
@@ -28300,6 +30123,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
          <component-page-number  id="table-component-report-page-main-form-table-page-number-${this._COMPONENT_RANDOM_ID}"></component-page-number>
          
          <component-page-data  id="table-component-report-page-main-form-table-page-data-${this._COMPONENT_RANDOM_ID}"></component-page-data>
+         
+         <component-select-option id="table-component-report-page-main-form-table-page-per-${this._COMPONENT_RANDOM_ID}"></component-select-option>
 
     </div>
      
@@ -28498,6 +30323,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
 
             if (prop_formFilter != null){
                 prop_formFilter += `<input id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page" type="hidden" name="page" value="1"/>`
+                prop_formFilter += `<input id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page-per" type="hidden" name="per_page" value="${this._PER_PAGE_25}"/>`
             }
 
 
@@ -28532,19 +30358,26 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                                                 this._PAGE_REPORT = resultExp.data.report;
                                                 this.templateFn("part_pages_main_formTable_table");
                                             }
-                                            if (resultExp.data.hasOwnProperty("page_number")){
-                                                const page_number = resultExp.data.page_number;
-                                                this._PAGE_SELECTED=  page_number?.page ?? null;
-                                                this._PAGE_TOTAL=     page_number?.total ?? null;
-                                                this.templateFn("part_pages_main_formTable_pageNumber");
-                                            }
-                                            if (resultExp.data.hasOwnProperty("page_data")){
-                                                const page_data = resultExp.data.page_data;
-                                                this._PAGE_FROM_DATA=   page_data?.from ?? null;
-                                                this._PAGE_TO_DATA=     page_data?.to ?? null;
-                                                this._PAGE_TOTAL_DATA=  page_data?.total ?? null;
-                                                this.templateFn("part_pages_main_formTable_pageData");
-                                            }
+                                            this._PAGE_TOTAL_DATA = resultExp?.data?.totalData ?? 0;
+                                            this._PAGE_SELECTED = resultExp?.data?.page        ?? 1;
+                                            this._PAGE_PER_DATA = resultExp?.data?.perPage     ?? 25;
+
+                                            this._PAGE_TOTAL = Math.ceil( this._PAGE_TOTAL_DATA / this._PAGE_PER_DATA)
+                                            this._PAGE_FROM_DATA = ((this._PAGE_SELECTED-1)*this._PAGE_PER_DATA) + 1
+                                            this._PAGE_TO_DATA = (this._PAGE_SELECTED)*this._PAGE_PER_DATA < this._PAGE_TOTAL ? this._PAGE_TOTAL : (this._PAGE_SELECTED)*this._PAGE_PER_DATA
+
+                                            console.log("resultExp " , resultExp )
+                                            console.log("this._PAGE_TOTAL_DATA " , this._PAGE_TOTAL_DATA )
+                                            console.log("this._PAGE_SELECTED " , this._PAGE_SELECTED )
+                                            console.log("this._PAGE_PER_DATA " , this._PAGE_PER_DATA )
+                                            console.log("this._PAGE_TOTAL " , this._PAGE_TOTAL )
+                                            console.log("this._PAGE_FROM_DATA " , this._PAGE_FROM_DATA )
+                                            console.log("this._PAGE_TO_DATA " , this._PAGE_TO_DATA )
+
+                                            this.templateFn("part_pages_main_formTable_pageNumber");
+                                            this.templateFn("part_pages_main_formTable_pageData");
+                                            this.templateFn("part_pages_main_formTable_pagePer");
+
                                         }
                                     }
                                 });
@@ -28624,11 +30457,49 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             new window.ComponentPageData(
                 `table-component-report-page-main-form-table-page-data-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    classList: "col-lg-6 col-12"  ,
+                    classList: "col-lg-5 col-12"  ,
                     prop_size ,
                     prop_fromData:   this._PAGE_FROM_DATA ,
                     prop_toData:     this._PAGE_TO_DATA ,
                     prop_totalData:  this._PAGE_TOTAL_DATA ,
+                }
+            )
+        }
+    }
+
+    template_render_pageMain_fromTable_pagePear(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size             =  data.hasOwnProperty("prop_size")               ?  data.prop_size               : null;
+
+            new window.ComponentSelectOption(
+                `table-component-report-page-main-form-table-page-per-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: "col-lg-1 col-12"  ,
+
+                    prop_labelShow:          false ,
+                    prop_size:               prop_size ,
+                    prop_itemSelected:       this._PAGE_PER_DATA  ,
+
+                    prop_options: [
+                        {id: this._PER_PAGE_10 , name: this._PER_PAGE_10} ,
+                        {id: this._PER_PAGE_25 , name: this._PER_PAGE_25} ,
+                        {id: this._PER_PAGE_50 , name: this._PER_PAGE_50} ,
+                        {id: this._PER_PAGE_100 , name: this._PER_PAGE_100} ,
+                        {id: this._PER_PAGE_200 , name: this._PER_PAGE_200} ,
+                    ] ,
+
+                    fn_callback:  (event , index)=>{
+                        const elPage = this.fn_getInputHiddenPage();
+                        const elPagePer = this.fn_getInputHiddenPagePer();
+                        if (elPagePer != null && elPage != null){
+                            elPage.value = 1;
+                            elPagePer.value = index;
+                            this._PAGE_FILTER.call_onCLickBtnSubmit();
+                        }
+                    } ,
+
                 }
             )
         }
@@ -28714,18 +30585,35 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
 
         if (data != null){
             const prop_size                       =  data.hasOwnProperty("prop_size")                    ?  data.prop_size                       : "";
+            const prop_header                     =  data.hasOwnProperty("prop_header")                  ?  data.prop_header                     : "";
+
+            let columns=[];
+            if(prop_header != null && Array.isArray(prop_header)){
+                for (let i = 0; i < prop_header.length; i++) {
+                    const itemHeader = prop_header[i];
+                    if (itemHeader != null && itemHeader.hasOwnProperty("id") && itemHeader.hasOwnProperty("content")){
+                        columns.push({
+                            name: itemHeader.id,
+                            title: itemHeader.content
+                        })
+                    }
+                }
+            }
 
             new window.ComponentToolsTableToExcel(
                 `component-report-page-excel-tool-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_size ,
-
+                    prop_columns : columns ,
+                    fn_callback: (order , data) => {
+                        this._COLUMNS_ORDER_EXCEL = order;
+                        this._COLUMNS_SELECTED_EXCEL = data;
+                    } ,
                 }
             );
 
         }
     }
-
 
 
 
@@ -28754,9 +30642,9 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
      
      <component-page-header id="component-report-page-print-header-${this._COMPONENT_RANDOM_ID}"></component-page-header>
      
-     <div id="component-report-page-print-inside-${this._COMPONENT_RANDOM_ID}" class="h-100 overflow-auto mx-2">
+     <div id="component-report-page-print-inside-${this._COMPONENT_RANDOM_ID}" class="h-100 overflow-auto mx-2 mt-2">
      
-        print
+        <component-tools-table-to-print id="component-report-page-print-tool-${this._COMPONENT_RANDOM_ID}"> </component-tools-table-to-print>
           
      </div>
      
@@ -28795,6 +30683,41 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                     fn_onBackClick: (event)=>{
                         this.call_openOrClosePage("print" , false);
                     },
+                }
+            );
+
+        }
+    }
+
+    componentFn_render_pagePrint_tool(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                       =  data.hasOwnProperty("prop_size")                    ?  data.prop_size                       : "";
+            const prop_header                     =  data.hasOwnProperty("prop_header")                  ?  data.prop_header                     : "";
+
+            let columns=[];
+            if(prop_header != null && Array.isArray(prop_header)){
+                for (let i = 0; i < prop_header.length; i++) {
+                    const itemHeader = prop_header[i];
+                    if (itemHeader != null && itemHeader.hasOwnProperty("id") && itemHeader.hasOwnProperty("content")){
+                        columns.push({
+                            name: itemHeader.id,
+                            title: itemHeader.content
+                        })
+                    }
+                }
+            }
+
+            new window.ComponentToolsTableToPrint(
+                `component-report-page-print-tool-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_size ,
+                    prop_columns : columns ,
+                    fn_callback: (order , data) => {
+                        this._COLUMNS_ORDER_PRINT = order;
+                        this._COLUMNS_SELECTED_PRINT = data;
+                    } ,
                 }
             );
 
@@ -28849,6 +30772,9 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
 
     fn_getInputHiddenPage(){
         return document.querySelector(`#component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page`);
+    }
+    fn_getInputHiddenPagePer(){
+        return document.querySelector(`#component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page-per`);
     }
 
     fn_getHtmlPages(prop_pages , prop_backgroundColorPage){

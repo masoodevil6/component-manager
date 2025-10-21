@@ -63,6 +63,8 @@
 
                 <component-page-header id="page_header"></component-page-header>
 
+                <component-list-selected-scroller id="list-selected-scroller"></component-list-selected-scroller>
+
             </section>
 
         </component-body>
@@ -588,6 +590,29 @@
 
                 fn_onOptionClick: (event , optionName)=>{
                     console.log(event , optionName)
+                }
+            }
+        );
+
+        /*-------------------------------------
+           01-010) Component page header
+        -------------------------------------*/
+        new window.ComponentListSelectedScroller(
+            "list-selected-scroller" ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_listSelected: [
+                    {name:1 , title: "test 1"} ,
+                    {name:2 , title: "test 2"} ,
+                    {name:3 , title: "test 3"} ,
+                    {name:4 , title: "test 4"} ,
+                    {name:5 , title: "test 5"} ,
+                    {name:6 , title: "test 6"} ,
+                ],
+
+                fn_onCallbackDeletedItem: (event , list)=>{
+                    console.log(list)
                 }
             }
         );
@@ -1925,7 +1950,24 @@
         "tools-table-config" ,
         {
             classList: " col-12 mt-2 row p-0 m-0"  ,
+            prop_columns : [
+                {
+                    name: "name" ,
+                    title: "name" ,
+                } ,
+                {
+                    name: "family" ,
+                    title: "family" ,
+                } ,
+                {
+                    name: "has" ,
+                    title: "has" ,
+                }
+            ] ,
 
+            fn_callback: (order , data) => {
+                console.log(order , data)
+            } ,
         }
     )
 
@@ -1935,6 +1977,7 @@
         "tools-table-to-excel" ,
         {
             classList: " col-12 mt-2"  ,
+
 
         }
     );
@@ -2086,7 +2129,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [03] Button And Inputs" ,
-                prop_bodyShow: false
+                prop_bodyShow: true
             }
         )
         new window.ComponentCollapse(
