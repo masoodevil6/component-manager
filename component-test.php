@@ -1,14 +1,6 @@
-
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-
 <link href="./bootstrap.css" rel="stylesheet" type="text/css">
 
-
-<section id="template-main" class="row m-0 p-0">
+<section id="template-main" class="row p-0 m-0">
 
     <component-input-acl  id="input-acl"></component-input-acl>
 
@@ -29,6 +21,9 @@
 
 
 
+    /*-------------------------------------
+      03-010)  Component input acl
+    -------------------------------------*/
     new window.ComponentInputAcl(
         "input-acl" ,
         {
@@ -36,11 +31,13 @@
 
             prop_name:"acl" ,
             prop_title:"input-acl" ,
+
+            prop_requestUrl: "http://172.20.35.198:8081/component/Requests/Report/acl.php"
+
             //prop_iconSelected: "" ,
 
         }
     )
-
 
 
 </script>

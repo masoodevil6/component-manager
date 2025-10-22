@@ -135,6 +135,8 @@
 
                 <component-select-icon  id="select-icon"></component-select-icon>
 
+                <component-input-acl  id="input-acl"></component-input-acl>
+
 
             </section>
 
@@ -1057,6 +1059,23 @@
 
                 prop_name:"select_icon" ,
                 prop_title:"select icon" ,
+                //prop_iconSelected: "" ,
+
+            }
+        )
+
+
+
+        /*-------------------------------------
+          03-010)  Component input acl
+        -------------------------------------*/
+        new window.ComponentInputAcl(
+            "input-acl" ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_name:"acl" ,
+                prop_title:"input-acl" ,
                 //prop_iconSelected: "" ,
 
             }
@@ -2247,7 +2266,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [99] tools" ,
-                prop_bodyShow: true
+                prop_bodyShow: false
             }
         )
 
