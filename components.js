@@ -151,7 +151,7 @@ if (typeof listComponent === 'undefined') {
     }
 }
 if (typeof components === 'undefined') {
-   // var components = new WeakMap();
+    // var components = new WeakMap();
     var components = {};
 }
 
@@ -266,9 +266,9 @@ class ComponentBase{
 
         this.setComponents();
 
-       /* window.addEventListener('resize', (event)=>{
-            this.setComponents();
-        });*/
+        /* window.addEventListener('resize', (event)=>{
+             this.setComponents();
+         });*/
     }
 
 
@@ -472,7 +472,7 @@ class ComponentBase{
         let el = this._COMPONENT_ELEMENT;
         let isMain = true;
         if (partName != null){
-            el = this._COMPONENT_ELEMENT.querySelector(`[data-part-name="${partName}"]`);
+            el = this._COMPONENT_ELEMENT?.querySelector(`[data-part-name="${partName}"]`);
             isMain = false;
         }
 
@@ -497,20 +497,20 @@ class ComponentBase{
 
         const mainProps = this.getComponentProps();
 
-        this._COMPONENT_ELEMENT.style.display = ""
+        if (this._COMPONENT_ELEMENT != null)this._COMPONENT_ELEMENT.style.display = ""
 
         const directionRtl = mainProps.directionRtl;
-        this._COMPONENT_ELEMENT.style.setProperty('direction', directionRtl ? 'rtl' : 'ltr' , 'important');
-        this._COMPONENT_ELEMENT.style.setProperty('text-align', directionRtl ? 'right' : 'left' , 'important');
+        this._COMPONENT_ELEMENT?.style.setProperty('direction', directionRtl ? 'rtl' : 'ltr' , 'important');
+        this._COMPONENT_ELEMENT?.style.setProperty('text-align', directionRtl ? 'right' : 'left' , 'important');
 
-        this._COMPONENT_ELEMENT.classList = tools_public.renderListClass(mainProps.classList);
+        if (this._COMPONENT_ELEMENT != null)this._COMPONENT_ELEMENT.classList = tools_public.renderListClass(mainProps.classList);
 
         Object.entries(mainProps.styles).forEach(([key, value]) => {
             this._COMPONENT_ELEMENT.style[key] = value;
         });
 
 
-        this._COMPONENT_ELEMENT.setAttribute("data-component-id" , this._COMPONENT_RANDOM_ID);
+        if (this._COMPONENT_ELEMENT != null)this._COMPONENT_ELEMENT.setAttribute("data-component-id" , this._COMPONENT_RANDOM_ID);
 
         /*if (mainProps.prop_show){
 
@@ -595,7 +595,7 @@ class ComponentBase{
     }
 
     getFn(methodName , ...methodArgs ){
-       // return `components.get(document.querySelector('${this._COMPONENT_SELECTOR}')).${methodName}(${methodArgs})`;
+        // return `components.get(document.querySelector('${this._COMPONENT_SELECTOR}')).${methodName}(${methodArgs})`;
         return `components[${this._COMPONENT_RANDOM_ID}].${methodName}(${methodArgs})`;
     }
 
@@ -775,12 +775,12 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
-      constructor(elId , config) {
+    constructor(elId , config) {
         super(
             listComponent[ComponentMessages.name] ,
             elId
         );
-          this.renderComponent(config);
+        this.renderComponent(config);
     }
 
 
@@ -992,6 +992,10 @@ class ComponentIsEmptyBase extends ComponentBase{
        PROPERTYs Pattern
      --------------------------------------------- */
     _COMPONENT_PATTERN = {
+        prop_size : {
+            prop: "prop_size" ,
+            default: 5
+        } ,
         prop_borderClass : {
             prop: "prop_borderClass" ,
             default: ["border" , "border-danger" , "rounded" , "shadow-sm"]
@@ -1087,12 +1091,12 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
-      constructor(elId , config) {
-       super(
-           listComponent[ComponentIsEmpty.name] ,
-           elId
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentIsEmpty.name] ,
+            elId
         );
-          this.renderComponent(config);
+        this.renderComponent(config);
     }
 
 
@@ -1361,9 +1365,9 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
-           listComponent[ComponentHeader.name] ,
-           elId
+        super(
+            listComponent[ComponentHeader.name] ,
+            elId
         );
         this.renderComponent(config);
     }
@@ -1601,9 +1605,9 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
-           listComponent[ComponentLabel.name] ,
-           elId
+        super(
+            listComponent[ComponentLabel.name] ,
+            elId
         );
         this.renderComponent(config);
     }
@@ -1732,8 +1736,9 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
                 const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
 
                 const styles = {
-                    "top" : "50%" ,
-                    "transform" : "translate(0 , -50%)" ,
+                    "top" :        "50%" ,
+                    "transform" :  "translate(0 , -50%)" ,
+                    "z-index":     `${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }` ,
                 };
                 styles[directionRtl ? "left" : "right"] = "10px"
 
@@ -1819,7 +1824,7 @@ class ComponentLinkBase extends ComponentBase{
                 "cursor" : "pointer" ,
                 "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("normal") && tools_const.styles.elementLink.normal.hasOwnProperty("backgroundColor")  ? tools_const.styles.elementLink.normal.backgroundColor : ""
             }
-       } ,
+        } ,
         prop_borderHoverStyles: {
             prop : "prop_borderHoverStyles",
             default: {
@@ -1836,8 +1841,8 @@ class ComponentLinkBase extends ComponentBase{
             default: null
         } ,
         prop_imageTitle: {
-                prop : "prop_imageTitle",
-                default: null
+            prop : "prop_imageTitle",
+            default: null
         } ,
         prop_imageAlt: {
             prop : "prop_imageAlt",
@@ -1943,7 +1948,7 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentLink.name] ,
             elId
         );
@@ -2002,11 +2007,11 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
             const prop_title            =  data.hasOwnProperty("prop_title")               ?  data.prop_title            : [];
             const prop_titleClass       =  data.hasOwnProperty("prop_titleClass")          ?  data.prop_titleClass       : {};
             const prop_titleStyles      =  data.hasOwnProperty("prop_titleStyles")         ?  data.prop_titleStyles      : {};
-
+            /*col-8*/
             return `
 <b data-part-name="${partName}" 
          id="component-link-title-${this._COMPONENT_RANDOM_ID}"
-         class="${tools_public.renderListClass(prop_titleClass)} col-8">
+         class="${tools_public.renderListClass(prop_titleClass)} ">
          
      <style>
          #${this._COMPONENT_ID} #component-link-title-${this._COMPONENT_RANDOM_ID}{
@@ -2043,7 +2048,7 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
                     prop_structureStyles: prop_borderStyles ,
                     prop_structureHoverStyles: prop_borderHoverStyles ,
 
-                    prop_borderClass: ["row"],
+                    prop_borderClass: [/*"row"*/],
 
                     fn_callback  :  (event) => {
                         this.fn_callbackLink(event,  prop_linkHref)
@@ -2070,7 +2075,7 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
                 new window.ComponentImage(
                     `component-link-image-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        classList:  ["col-4" ] ,
+                        classList:  [/*"col-4"*/ ] ,
 
                         prop_structureClass:  [] ,
                         prop_structureStyles: {} ,
@@ -2110,7 +2115,7 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
                 new window.ComponentIcon(
                     `component-link-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        classList:  ["col-4" ] ,
+                        classList:  [/*"col-4" */] ,
 
                         prop_structureClass:  [] ,
                         prop_structureStyles: {} ,
@@ -2286,9 +2291,9 @@ window.ComponentDescription = class ComponentDescription extends ComponentDescri
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
-           listComponent[ComponentDescription.name] ,
-           elId
+        super(
+            listComponent[ComponentDescription.name] ,
+            elId
         );
         this.renderComponent(config);
     }
@@ -2618,11 +2623,11 @@ window.ComponentInfo = class ComponentInfo extends ComponentInfoBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInfo.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -2822,11 +2827,11 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
        SETUP
     --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentCard.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -3068,11 +3073,11 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
        SETUP
     --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentCardInfo.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -3125,7 +3130,8 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
 
    <style>
       #${this._COMPONENT_ID} #component-card-info-border-body-${this._COMPONENT_RANDOM_ID}{
-           display: flow-root;
+           display:  flow-root;
+           overflow: hidden;
       }
 
    </style>
@@ -3376,11 +3382,11 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
        SETUP
     --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentPageHeader.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -3514,7 +3520,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
             return `
 <b data-part-name="${partName}" 
          id="component-header-page-form-title-${this._COMPONENT_RANDOM_ID}"
-         class="position-relative ${prop_hasIconBack ? (directionRtl ? "border-end" : "border-start") : ""} px-2">
+         class="position-relative px-2">
          
      <style>
          #${this._COMPONENT_ID} #component-header-page-form-title-${this._COMPONENT_RANDOM_ID}{
@@ -3524,6 +3530,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
              float:            ${directionRtl ? "right" : "left"};
              font-size:        ${elFontSize}px;
              color:            ${prop_colorHeader};
+             ${prop_hasIconBack ? (directionRtl ? "border-right" : "border-left") : ""}:    1px solid white;
          }
      </style>
      
@@ -3791,11 +3798,11 @@ window.ComponentListSelectedScroller = class ComponentListSelectedScroller exten
        SETUP
     --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentListSelectedScroller.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -4134,11 +4141,11 @@ window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentLoading.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -4343,11 +4350,11 @@ window.Component404 = class Component404 extends Component404Base{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[Component404.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -4701,6 +4708,10 @@ class ComponentFormBase extends ComponentBase{
                 prop_title: "Submit",
                 prop_btnClass: ["w-100"]
             }
+        } ,
+        prop_runFetch: {
+            prop: "prop_runFetch",
+            default: true
         }
     };
 
@@ -4734,6 +4745,7 @@ class ComponentFormBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_data,
             this._COMPONENT_PATTERN.prop_showErrorStepper ,
             this._COMPONENT_PATTERN.prop_formsMinHeight ,
+            this._COMPONENT_PATTERN.prop_runFetch ,
         ],
 
         part_404: [],
@@ -4767,11 +4779,11 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentForm.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -5026,6 +5038,7 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
         if (data.hasOwnProperty("prop_url")){
             const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_size                 =  data.hasOwnProperty("prop_size")                       ?  data.prop_size                          : null;
+            const prop_runFetch             =  data.hasOwnProperty("prop_runFetch")                   ?  data.prop_runFetch                      : true;
 
             const formData =  this.fn_getFormElement();
 
@@ -5037,26 +5050,33 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
                     prop_messages: []
                 });
 
-                let fetchResponse = tools_submit.fetcth(
-                    data.prop_url,
-                    {
-                        //prop_size ,
-                        data: {
-                            formData: formData,
-                            data: data.hasOwnProperty("prop_data") ? data.prop_data : []
-                        },
-                        componentMessagesData: {elId: `component-form-messages-${this._COMPONENT_RANDOM_ID}`},
-                        componentLoadingData:  {elId: `component-form-loading-${this._COMPONENT_RANDOM_ID}`},
-                        component404Data: {
-                            elId: `component-form-404-${this._COMPONENT_RANDOM_ID}`,
-                            fn_callback: (event) => {
-                                this.call_onCLickBtnSubmit(event);
-                            }
-                        },
-                    });
+                if (prop_runFetch){
 
-                if (data.hasOwnProperty("fn_onGetResponse") && typeof data.fn_onGetResponse != null){
-                    data.fn_onGetResponse(event , fetchResponse);
+                    let fetchResponse = tools_submit.fetcth(
+                        data.prop_url,
+                        {
+                            //prop_size ,
+                            data: {
+                                formData: formData,
+                                data: data.hasOwnProperty("prop_data") ? data.prop_data : []
+                            },
+                            componentMessagesData: {elId: `component-form-messages-${this._COMPONENT_RANDOM_ID}`},
+                            componentLoadingData:  {elId: `component-form-loading-${this._COMPONENT_RANDOM_ID}`},
+                            component404Data: {
+                                elId: `component-form-404-${this._COMPONENT_RANDOM_ID}`,
+                                fn_callback: (event) => {
+                                    this.call_onCLickBtnSubmit(event);
+                                }
+                            },
+                        });
+
+                    if (data.hasOwnProperty("fn_onGetResponse") && typeof data.fn_onGetResponse != null){
+                        data.fn_onGetResponse(event , fetchResponse);
+                    }
+
+                }
+                else{
+                    this.fn_onClickSubmit(event , data.prop_url , formData , data.hasOwnProperty("prop_data") ? data.prop_data : []);
                 }
             }
             else{
@@ -5066,10 +5086,17 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
                     prop_messages: listValidateErrors
                 });
             }
-
-
         }
     }
+
+    fn_onClickSubmit(event , prop_url , formData , prop_data){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onClickSubmit") && typeof data.fn_onClickSubmit != null){
+            data.fn_onClickSubmit(event , prop_url, formData , prop_data);
+        }
+    }
+
+
 }
 
 
@@ -5163,11 +5190,11 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentWidget.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -5259,7 +5286,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
         )
     }
     fn_readyResponse = (response , request = {}) => {
-       // const el = document.querySelector(`section#response-widget-component-${this._COMPONENT_RANDOM_ID}`);
+        // const el = document.querySelector(`section#response-widget-component-${this._COMPONENT_RANDOM_ID}`);
 
         const params = response.hasOwnProperty("params") ? response.params : {};
 
@@ -5467,11 +5494,11 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentIframe.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -5706,11 +5733,11 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
         SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentButton.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -5956,11 +5983,11 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentOtp.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -6507,11 +6534,11 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInput.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -7117,11 +7144,11 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInputPrice.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -7890,11 +7917,11 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInputColor.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -8529,7 +8556,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         return document.querySelector(`#component-input-color-form-selector-hue-slider-${ this._COMPONENT_RANDOM_ID} .hue-canvas`);
     }
     fn_getHueCtx(){
-        return this.fn_getHueCanvas().getContext('2d');
+        return this.fn_getHueCanvas()?.getContext('2d');
     }
     fn_getHueIndicator(){
         return document.querySelector(`#component-input-color-form-selector-hue-slider-${ this._COMPONENT_RANDOM_ID} .hue-indicator`);
@@ -8539,7 +8566,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         return document.querySelector(`#component-input-color-form-selector-saturation-lightness-square-${ this._COMPONENT_RANDOM_ID} .sl-canvas`);
     }
     fn_getSlCtx(){
-        return this.fn_getSlCanvas().getContext('2d');
+        return this.fn_getSlCanvas()?.getContext('2d');
     }
     fn_getSlIndicator(){
         return document.querySelector(`#component-input-color-form-selector-saturation-lightness-square-${ this._COMPONENT_RANDOM_ID} .sl-indicator`);
@@ -8549,7 +8576,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         return document.querySelector(`#component-input-color-form-selector-opacity-slider-${ this._COMPONENT_RANDOM_ID} .opacity-canvas`);
     }
     fn_getOpacityCtx(){
-        return this.fn_getOpacityCanvas().getContext('2d');
+        return this.fn_getOpacityCanvas()?.getContext('2d');
     }
     fn_getOpacityIndicator(){
         return document.querySelector(`#component-input-color-form-selector-opacity-slider-${ this._COMPONENT_RANDOM_ID} .opacity-indicator`);
@@ -8564,15 +8591,15 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const hueCanvas = this.fn_getHueCanvas();
         const opacityCanvas = this.fn_getOpacityCanvas();
 
-        hueCanvas.addEventListener('mousedown', e=>{
+        hueCanvas?.addEventListener('mousedown', e=>{
             this.var_draggingHue=true;
             this.fn_moveHue(e);
         });
-        slCanvas.addEventListener('mousedown', e=>{
+        slCanvas?.addEventListener('mousedown', e=>{
             this.var_draggingSL=true;
             this.fn_moveSL(e);
         });
-        opacityCanvas.addEventListener('mousedown', e=>{
+        opacityCanvas?.addEventListener('mousedown', e=>{
             this.var_draggingOpacity=true;
             this.fn_moveOpacity(e);
         });
@@ -8643,16 +8670,16 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const hueCanvas = this.fn_getHueCanvas();
         const hueCtx = this.fn_getHueCtx();
 
-        const grad = hueCtx.createLinearGradient(0,0,0,hueCanvas.height);
-        grad.addColorStop(0,"red");
-        grad.addColorStop(0.17,"yellow");
-        grad.addColorStop(0.33,"lime");
-        grad.addColorStop(0.5,"cyan");
-        grad.addColorStop(0.67,"blue");
-        grad.addColorStop(0.83,"magenta");
-        grad.addColorStop(1,"red");
-        hueCtx.fillStyle = grad;
-        hueCtx.fillRect(0,0,hueCanvas.width,hueCanvas.height);
+        const grad = hueCtx?.createLinearGradient(0,0,0,hueCanvas.height);
+        grad?.addColorStop(0,"red");
+        grad?.addColorStop(0.17,"yellow");
+        grad?.addColorStop(0.33,"lime");
+        grad?.addColorStop(0.5,"cyan");
+        grad?.addColorStop(0.67,"blue");
+        grad?.addColorStop(0.83,"magenta");
+        grad?.addColorStop(1,"red");
+        if(hueCtx!=null) hueCtx.fillStyle = grad;
+        hueCtx?.fillRect(0,0,hueCanvas.width,hueCanvas.height);
     }
 
 
@@ -8661,24 +8688,25 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const slCanvas = this.fn_getSlCanvas();
         const slCtx = this.fn_getSlCtx();
 
-        const width = slCanvas.width;
-        const height = slCanvas.height;
-        const imageData = slCtx.createImageData(width,height);
-        const data = imageData.data;
+        const width = slCanvas?.width;
+        const height = slCanvas?.height;
+        const imageData = slCtx?.createImageData(width,height);
+        const data = imageData?.data;
 
-        for(let y=0;y<height;y++){
-            const l = 100 - (y/height*100);
-            for(let x=0;x<width;x++){
-                const s = x/width*100;
-                const rgb = this.fn_hslToRgb(this.var_hue,s,l);
-                const idx = (y*width + x)*4;
-                data[idx] = rgb[0];
-                data[idx+1] = rgb[1];
-                data[idx+2] = rgb[2];
-                data[idx+3] = 255;
+        if (height != null)
+            for(let y=0;y<height;y++){
+                const l = 100 - (y/height*100);
+                for(let x=0;x<width;x++){
+                    const s = x/width*100;
+                    const rgb = this.fn_hslToRgb(this.var_hue,s,l);
+                    const idx = (y*width + x)*4;
+                    data[idx] = rgb[0];
+                    data[idx+1] = rgb[1];
+                    data[idx+2] = rgb[2];
+                    data[idx+3] = 255;
+                }
             }
-        }
-        slCtx.putImageData(imageData,0,0);
+        slCtx?.putImageData(imageData,0,0);
     }
 
 
@@ -8687,19 +8715,19 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         const opacityCanvas = this.fn_getOpacityCanvas();
         const opacityCtx = this.fn_getOpacityCtx();
 
-        const width = opacityCanvas.width;
-        const height = opacityCanvas.height;
+        const width = opacityCanvas?.width;
+        const height = opacityCanvas?.height;
 
         // رنگ فعلی انتخاب شده (H, S, L)
         const rgb = this.fn_hslToRgb(this.var_hue, this.var_sat, this.var_light);
 
         // Gradient از شفاف تا رنگ کامل
-        const grad = opacityCtx.createLinearGradient(0,0,width,0);
-        grad.addColorStop(0, `rgba(${rgb.join(",")},0)`); // کاملاً شفاف
-        grad.addColorStop(1, `rgba(${rgb.join(",")},1)`); // کاملاً رنگی
+        const grad = opacityCtx?.createLinearGradient(0,0,width,0);
+        grad?.addColorStop(0, `rgba(${rgb.join(",")},0)`); // کاملاً شفاف
+        grad?.addColorStop(1, `rgba(${rgb.join(",")},1)`); // کاملاً رنگی
 
-        opacityCtx.fillStyle = grad;
-        opacityCtx.fillRect(0,0,width,height);
+        if(opacityCtx != null)opacityCtx.fillStyle = grad;
+        if(opacityCtx != null)opacityCtx.fillRect(0,0,width,height);
     }
 
 
@@ -8764,10 +8792,10 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
             this.set("var_isEmptyColor" , true);
         }
         else{
-            slIndicator.style.left = (this.var_sat/100*slCanvas.width)+"px";
-            slIndicator.style.top = ((1-this.var_light/100)*slCanvas.height)+"px";
-            hueIndicator.style.top = (this.var_hue/360*hueCanvas.height)+"px";
-            opacityIndicator.style.left = (this.var_opacity*opacityCanvas.width)+"px";
+            if(slIndicator != null)slIndicator.style.left = (this.var_sat/100*slCanvas.width)+"px";
+            if(slIndicator != null)slIndicator.style.top = ((1-this.var_light/100)*slCanvas.height)+"px";
+            if(hueIndicator != null)hueIndicator.style.top = (this.var_hue/360*hueCanvas.height)+"px";
+            if(opacityIndicator != null)opacityIndicator.style.left = (this.var_opacity*opacityCanvas.width)+"px";
 
             this.var_hsl = `hsl(${Math.round(this.var_hue)},${Math.round(this.var_sat)}%,${Math.round(this.var_light)}%)`;
             this.var_hex = this.fn_hslToHex(this.var_hue,this.var_sat,this.var_light);
@@ -8776,11 +8804,11 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 
         this.set("var_colorSelected" , this.var_hsl);
 
-        txtColorCode.textContent = this.var_hex; // نمایش HEX
-        formColor.style.backgroundColor =  this.var_hsl; // نمایش HEX
+        if(txtColorCode != null)txtColorCode.textContent = this.var_hex; // نمایش HEX
+        if(formColor != null)formColor.style.backgroundColor =  this.var_hsl; // نمایش HEX
 
-        formTitle.textContent =  this.var_hex; // نمایش HEX
-        formTitle.style.color =  this.var_hex; // نمایش HEX
+        if(formTitle != null)formTitle.textContent =  this.var_hex; // نمایش HEX
+        if(formTitle != null)formTitle.style.color =  this.var_hex; // نمایش HEX
 
         this.fn_drawSL();
         this.fn_drawOpacity();
@@ -9055,11 +9083,11 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInputSize.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -9288,7 +9316,7 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
                 const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
                 const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
 
-               let elHeight = tools_css.getHeightSize(prop_size);
+                let elHeight = tools_css.getHeightSize(prop_size);
 
                 let styles = {
                     "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 5) }`,
@@ -9834,6 +9862,7 @@ class ComponentInputAclBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_backgroundColorBodyFoter ,
             this._COMPONENT_PATTERN.prop_borderColorSelector ,
             this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_bodyHeight ,
         ],
 
         part_body_form_searcher: [
@@ -9933,11 +9962,11 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInputAcl.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -10035,7 +10064,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
          }
      </style>
      
-     <input id="component-input-color-value-${ this._COMPONENT_RANDOM_ID}-input-value" name="${prop_name}"  value="${prop_value != null ? JSON.stringify(prop_value) : '[]'}" type="hidden"/>
+     <input id="component-input-color-value-${ this._COMPONENT_RANDOM_ID}-input-value" name="${prop_name}"  value='${prop_value != null ? JSON.stringify(prop_value) : '[]'}' type="hidden"/>
 
 </section>
         `;
@@ -10113,7 +10142,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
      <style>
          #${this._COMPONENT_ID} #component-input-acl-header-list-${this._COMPONENT_RANDOM_ID}{
               ${directionRtl ? "margin-right" : "margin-left"} :     30px;
-              ${directionRtl ? "padding-right" : "padding-left"} :    10px;
+              ${directionRtl ? "padding-right" : "padding-left"} :   10px;
               ${directionRtl ? "padding-left" : "padding-right"} :   40px;
               height:                                                100%;
               font-size:                                             ${elFontSize}px;
@@ -10142,6 +10171,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             const prop_backgroundColorBodyFoter           =   data.hasOwnProperty("prop_backgroundColorBodyFoter")             ?  data.prop_backgroundColorBodyFoter          : "";
             const prop_borderColorSelector                =   data.hasOwnProperty("prop_borderColorSelector")                  ?  data.prop_borderColorSelector               : "";
             const prop_size                               =   data.hasOwnProperty("prop_size")                                 ?  data.prop_size                              : null;
+            const prop_bodyHeight                         =   data.hasOwnProperty("prop_bodyHeight")                           ?  data.prop_bodyHeight                        : 200;
 
             const elHeight = tools_css.getHeightSize(prop_size);
 
@@ -10152,7 +10182,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
           
      <style>
          #${this._COMPONENT_ID} #component-input-acl-header-body-form-${this._COMPONENT_RANDOM_ID}{
-              
+              height:           ${prop_bodyHeight}px;
          }
          #${this._COMPONENT_ID} #component-input-acl-header-body-form-header-${this._COMPONENT_RANDOM_ID}{
               height:           ${elHeight+15}px;
@@ -10351,7 +10381,6 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
         `;
     }
 
-
     componentFn_render_label(partName ) {
         this.componentFneBasic_render_structure(
             `component-input-acl-label-${ this._COMPONENT_RANDOM_ID}` ,
@@ -10469,7 +10498,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                         classList: this.var_showFormSelectOption ? "" : "d-none" ,
 
                         prop_elementClass: ["border", "shadow-sm", "bg-white", "p-0", "rounded-0"] ,
-                        prop_height: prop_bodyHeight,
+                        prop_height: prop_bodyHeight+"px",
                         prop_positionTop: prop_bodyTop,
                     }
                 )
@@ -10504,6 +10533,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                             this._REQUEST_FINISH = false;
                             if ( this._REQUEST_TIMEOUT != null) clearTimeout( this._REQUEST_TIMEOUT)
                             this._REQUEST_TIMEOUT = setTimeout(()=>{
+                                this.fn_clearListAcl()
                                 this.fn_sendRequestAcl(event);
                             } , prop_requestTimout)
                         } ,
@@ -10543,7 +10573,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                     prop_btnStyles : styles ,
 
                     fn_callback: (event)=>{
-
+                        this.fn_selectAllAcl();
                     }
                 }
             )
@@ -10577,7 +10607,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                     prop_btnStyles : styles ,
 
                     fn_callback: (event)=>{
-
+                        this.fn_clearAllAcl()
                     }
                 }
             )
@@ -10647,7 +10677,8 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                     prop_btnType: "button" ,
 
                     fn_callback: (event)=>{
-                        this.fn_setStatusShowBody(event);
+                        this.fn_cancelAclSelected(event);
+
                     }
                 }
             )
@@ -10664,13 +10695,14 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
     fn_getElBody(){
         return document.querySelector(`#component-input-acl-body-${ this._COMPONENT_RANDOM_ID}`)
     }
+
     fn_getElListAcl(){
         return document.querySelector(`#component-input-acl-header-body-form-list-acl-inside-${ this._COMPONENT_RANDOM_ID}`)
     }
+
     fn_getElListSelected(){
         return document.querySelector(`#component-input-acl-header-body-form-list-selected-inside-${ this._COMPONENT_RANDOM_ID}`)
     }
-
 
     fn_readyListStrAcls(prop_value){
         let resultExp = "";
@@ -10690,24 +10722,21 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
         return resultExp;
     }
 
-
     fn_clearAcl(event){
         this.set("prop_value" , []);
         this.fn_callback();
     }
 
-
     fn_acceptAclSelected(event){
         this.fn_setStatusShowBody(event , false);
         this.fn_callback();
 
-        this.set("prop_value" , this._LIST_VALUE_TEMPLATE);
-        this._LIST_VALUE_TEMPLATE = [];
-
-        this.setContent("part_value")
-        this.setContent("part_header_list")
+        this.set("prop_value" , this.fn_getListTempItemsSelected());
     }
-
+    fn_cancelAclSelected(event){
+        this.fn_setStatusShowBody(event);
+        this.fn_clearListSelected();
+    }
 
     fn_setStatusShowBody(event , status=null){
         const elBody = this.fn_getElBody();
@@ -10733,19 +10762,30 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             this.fn_startFormAcl();
         }
     }
-    fn_startFormAcl(){
-        const data = this._COMPONENT_CONFIG;
-        this._LIST_VALUE_TEMPLATE  =   data.hasOwnProperty("prop_value")         ?  data.prop_value      : [];
 
+    fn_startFormAcl(){
         this._LIST_ACL = [];
         this._REQUEST_ACL_PAGE = 1;
         this._REQUEST_FINISH = false;
         this.fn_clearListAcl();
         this.fn_sendRequestAcl(event);
+        this.fn_readyFirstTimeOpenSelected();
     }
 
-
-
+    fn_readyFirstTimeOpenSelected(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_value  =   data.hasOwnProperty("prop_value")         ?  data.prop_value      : [];
+        const listSelected = this.fn_getElListSelected();
+        if (prop_value != null){
+            for (let i = 0; i < prop_value.length; i++) {
+                const itemValue = prop_value[i];
+                if (itemValue != null && itemValue.hasOwnProperty("id") && itemValue.hasOwnProperty("name")){
+                    const elNew =  this.fn_createElSelected(itemValue);
+                    if(elNew != null) listSelected.innerHTML += elNew;
+                }
+            }
+        }
+    }
 
     fn_scrollListAcl(event){
         const container = event.target;
@@ -10754,7 +10794,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
         const scrollHeight = container.scrollHeight;
         const clientHeight = container.clientHeight;
 
-        if (scrollTop + clientHeight >= scrollHeight && !this._REQUEST_LOADING) {
+        if (scrollTop + clientHeight + 50 >= scrollHeight && !this._REQUEST_LOADING) {
             this.fn_sendRequestAcl(event);
         }
     }
@@ -10790,6 +10830,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                             this._LIST_ACL.push(...response);
                             this.fn_addToListAcl(response);
                         }
+
                     }
                 });
         }
@@ -10800,11 +10841,14 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
         const elList = this.fn_getElListAcl();
         elList.innerHTML = "";
     }
+
     fn_addToListAcl(newList){
         const data = this._COMPONENT_CONFIG;
         const directionRtl                            =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")              ? this._COMPONENT_CONFIG.directionRtl       : false;
         const prop_size                               =   data.hasOwnProperty("prop_size")                                  ?  data.prop_size                           : null;
         const prop_itemAclIconColorUnSelected         =   data.hasOwnProperty("prop_itemAclIconColorUnSelected")            ?  data.prop_itemAclIconColorUnSelected     : "";
+
+        const list = this.fn_getListTempItemsSelected();
 
         const elList = this.fn_getElListAcl();
         if (newList != null && Array.isArray(newList)){
@@ -10813,9 +10857,9 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                 if (item != null && item.hasOwnProperty("id") && item.hasOwnProperty("name")){
 
                     let isSelected = false;
-                    if ( this._LIST_VALUE_TEMPLATE  != null && Array.isArray( this._LIST_VALUE_TEMPLATE )){
-                        for (let j = 0; j <  this._LIST_VALUE_TEMPLATE.length; j++) {
-                            const itemSelected =  this._LIST_VALUE_TEMPLATE[j]
+                    if ( list != null && Array.isArray( list )){
+                        for (let j = 0; j <  list.length; j++) {
+                            const itemSelected =  list[j]
                             if (itemSelected != null && itemSelected.hasOwnProperty("id") && itemSelected.id == item.id){
                                 isSelected = true;
                                 break;
@@ -10834,7 +10878,6 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
         }
     }
 
-
     fn_onClickItemAcl(event , itemId){
         const itemSelected = event.target.closest('.item-acl');
 
@@ -10843,7 +10886,6 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                 const item = this._LIST_ACL[i];
 
                 if (item != null && item.hasOwnProperty("id") && item.hasOwnProperty("name") && item.id == itemId){
-                    this._LIST_VALUE_TEMPLATE.push(item);
                     itemSelected.remove();
                     const listSelected = this.fn_getElListSelected();
                     const elNew =  this.fn_createElSelected(item);
@@ -10854,6 +10896,11 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
         }
     }
 
+    fn_clearListSelected(){
+        const elList = this.fn_getElListSelected();
+        elList.innerHTML = "";
+    }
+
     fn_createElSelected(item){
         const data = this._COMPONENT_CONFIG;
         const prop_size                             =   data.hasOwnProperty("prop_size")                                ?  data.prop_size                         : null;
@@ -10861,7 +10908,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
 
         if (item != null && item.hasOwnProperty("id") && item.hasOwnProperty("name")){
             return `
-                <div class="item-selected position-relative" onClick="${this.getFn("fn_onClickRemoveAcl" , "event" , item.id)}">
+                <div class="item-selected position-relative" data-item-id="${item.id}"  data-item-name="${item.name}"  onClick="${this.getFn("fn_onClickRemoveAcl" , "event" , item.id)}">
                       ${item.name}
                       <i class="position-absolute">
                            ${tools_icons.icon_clear(prop_size , prop_itemAclIconColorSelected) }
@@ -10872,23 +10919,29 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
         return null;
     }
 
-    fn_onClickRemoveAcl(event , itemId){
+    fn_onClickRemoveAcl(event){
         const itemSelected = event.target.closest('.item-selected');
+        let itemId = itemSelected.getAttribute("data-item-id");
 
-        if (this._LIST_VALUE_TEMPLATE != null && Array.isArray(this._LIST_VALUE_TEMPLATE)){
-            for (let i = 0; i < this._LIST_VALUE_TEMPLATE.length; i++) {
-                const item = this._LIST_VALUE_TEMPLATE[i];
+        if (itemId != null){
+            itemId = parseInt(itemId);
 
-                if (item != null && item.hasOwnProperty("id") && item.hasOwnProperty("name") && item.id == itemId){
-                    this._LIST_VALUE_TEMPLATE.splice(i, 1);
-                    itemSelected.remove();
-                    const listAcl = this.fn_getElListAcl();
-                    const elNew =  this.fn_createElAcl(item);
-                    if(elNew != null) listAcl.innerHTML += elNew;
-                    break;
+            const list = this.fn_getListTempItemsSelected();
+            if (list != null && Array.isArray(list)){
+                for (let i = 0; i < list.length; i++) {
+                    const item = list[i];
+
+                    if (item != null && item.hasOwnProperty("id") && item.hasOwnProperty("name") && item.id == itemId){
+                        itemSelected.remove();
+                        const listAcl = this.fn_getElListAcl();
+                        const elNew =  this.fn_createElAcl(item);
+                        if(elNew != null) listAcl.innerHTML += elNew;
+                        break;
+                    }
                 }
             }
         }
+
     }
 
     fn_createElAcl(item){
@@ -10902,7 +10955,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                 <div class="item-acl position-relative" onClick="${this.getFn("fn_onClickItemAcl" , "event" , item.id)}">
                         ${item.name}
                         <i class="position-absolute">
-                                 ${directionRtl ? tools_icons.icon_arrow_right(prop_size , prop_itemAclIconColorUnSelected) : tools_icons.icon_arrow_right(prop_size , prop_itemAclIconColorUnSelected) }
+                                 ${directionRtl ? tools_icons.icon_arrow_left(prop_size , prop_itemAclIconColorUnSelected) : tools_icons.icon_arrow_right(prop_size , prop_itemAclIconColorUnSelected) }
                         </i>
                 </div>
             `
@@ -10910,6 +10963,66 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
         return null;
     }
 
+    fn_getListTempItemsSelected(){
+        let resultExp = [];
+        const list = this.fn_getElListSelected().querySelectorAll(".item-selected");
+
+        if (list != null){
+            for (let i = 0; i < list.length; i++) {
+                const item = list[i];
+                const itemId = item.getAttribute("data-item-id");
+                const itemName = item.getAttribute("data-item-name");
+                if (itemId != null && itemName != null){
+                    resultExp.push({
+                        id : parseInt(itemId),
+                        name : itemName,
+                    })
+                }
+            }
+        }
+        return resultExp;
+    }
+
+    fn_selectAllAcl(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_value  =   data.hasOwnProperty("prop_value")         ?  data.prop_value      : [];
+        const listSelected = this.fn_getElListSelected();
+
+        const list = this.fn_getListTempItemsSelected();
+
+        if (this._LIST_ACL != null && Array.isArray(this._LIST_ACL)){
+            for (let i = 0; i < this._LIST_ACL.length; i++) {
+                const item = this._LIST_ACL[i];
+
+                let isSelected = false;
+                if (list != null && Array.isArray(list) && item.hasOwnProperty("id")) {
+                    for (let j = 0; j < list.length; j++) {
+                        const itemSelected = list[i];
+
+                        if (itemSelected != null && itemSelected.hasOwnProperty("id")  && itemSelected.id == item.id) {
+                            isSelected = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isSelected){
+                    const elNew =  this.fn_createElSelected(item);
+                    if(elNew != null) listSelected.innerHTML += elNew;
+                }
+            }
+        }
+
+        this.fn_clearListAcl();
+        this.fn_sendRequestAcl();
+    }
+
+    fn_clearAllAcl(){
+        const list = this.fn_getListTempItemsSelected();
+        this.fn_clearListSelected();
+        this.fn_addToListAcl(list);
+        this.fn_sendRequestAcl();
+    }
 
     fn_callback(event){
         const data = this._COMPONENT_CONFIG;
@@ -11099,11 +11212,11 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInputPassword.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -11717,11 +11830,11 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInputEmail.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -12326,11 +12439,11 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentInputFile.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -13317,11 +13430,11 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentDate.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -15365,11 +15478,11 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentSelectOption.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -16122,11 +16235,11 @@ window.ComponentSelectIcon = class ComponentSelectIcon extends ComponentSelectIc
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentSelectIcon.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -16446,11 +16559,11 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentCheckBox.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -16667,7 +16780,7 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
         this.componentFneBasic_render_structure(
             `component-check-box-label-${ this._COMPONENT_RANDOM_ID}` ,
             {
-               // prop_for: `component-check-box-input-${ this._COMPONENT_RANDOM_ID}` ,
+                // prop_for: `component-check-box-input-${ this._COMPONENT_RANDOM_ID}` ,
                 fn_callback: (event)=>{
                     this.fn_onclickCheckBox(event);
                 }
@@ -16843,11 +16956,11 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentAcceptTerms.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -17330,11 +17443,11 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentSelectColumns.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -17544,7 +17657,7 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
 
                     fn_callback: (event , order , isCompleteTrue)=>{
                         this._TALBE_LIST_COLUMNS_TEMPLATE = order;
-                       // this.fn_callback(event , order )
+                        // this.fn_callback(event , order )
                     }
                 }
             )
@@ -17951,11 +18064,11 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentValidate.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -18216,8 +18329,8 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
         this.set("var_validation_msg", messagesForm);
 
         const inputEl = this.fn_getInputElementReference();
-        inputEl.classList.remove("border-danger", "border-success");
-        inputEl.classList.add(isInputCurrect ? "border-success" : "border-danger");
+        inputEl?.classList.remove("border-danger", "border-success");
+        inputEl?.classList.add(isInputCurrect ? "border-success" : "border-danger");
     }
 
 
@@ -18298,6 +18411,8 @@ class ComponentTooltipDescriptionBase extends ComponentBase{
     _COMPONENT_PROPS = {
         part_structure: [],
 
+        part_form: [],
+
         part_icon: [
             this._COMPONENT_PATTERN.prop_icon,
             this._COMPONENT_PATTERN.prop_iconClass,
@@ -18320,8 +18435,10 @@ class ComponentTooltipDescriptionBase extends ComponentBase{
    --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
-            part_icon:{},
-            part_description:{},
+            part_form: {
+                part_icon:{},
+                part_description:{},
+            }
         },
     }
 
@@ -18335,11 +18452,11 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentTooltipDescription.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -18354,6 +18471,8 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
         switch (partName){
             case "part_structure":
                 return this.template_render_structure(partName);
+            case "part_form":
+                return this.template_render_form(partName);
             case "part_icon":
                 return this.componentFn_render_icon(partName);
             case "part_description":
@@ -18365,14 +18484,38 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
     }
 
     template_render_structure(partName) {
-
         const content = `
-  
-     <component-icon id="component-tooltip-description-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-          
-     ${this.templateFn("part_description") ?? ""}
+    ${this.templateFn("part_form") ?? ""}
                 `;
-        return this.templateBasic_render_structure(content , ["position-relative"]);
+        return this.templateBasic_render_structure(content , []);
+    }
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            return `
+<section data-part-name="${partName}"
+        id="component-tooltip-description-from-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative">
+    <style>
+       #${this._COMPONENT_ID} #component-tooltip-description-from-${this._COMPONENT_RANDOM_ID}{
+         ;
+       }
+    </style>
+     
+    <component-icon id="component-tooltip-description-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+          
+    ${this.templateFn("part_description") ?? ""}
+          
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
     }
 
     template_render_description(partName){
@@ -18406,7 +18549,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
              ${directionRtl ? "left" : "right"} : -20px;
              line-height: ${elHeight}px;
              font-size: ${elFontSize}px;
-             z-index : ${tools_css.getZIndex(tools_css.standardZIndex.blur_popup.name, 11)};
+             z-index : ${tools_css.getZIndex(tools_css.standardZIndex.blur_popup.name, 11)}
          }
          #${this._COMPONENT_ID} #component-tooltip-description-description-${this._COMPONENT_RANDOM_ID}:after{
              content: "";
@@ -18821,11 +18964,11 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentTable.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -19003,6 +19146,8 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
              padding: 5px;
              border-radius: 100%;
              border: 3px solid ${prop_headerIconBorderColor};
+             width:  ${elHeight+15}px;
+             height:  ${elHeight+15}px;
          }
      </style>
     <tr>
@@ -19068,6 +19213,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
      <style>
          #${this._COMPONENT_ID} #component-table-body-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_tableBodyStyles)};
+             direction: ${directionRtl? "ltr" : "rtl"};
      
          }
          #${this._COMPONENT_ID} .component-table-body-item-${this._COMPONENT_RANDOM_ID} {
@@ -19104,7 +19250,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
              cursor:       pointer;
              top:          50%;
              ${directionRtl ? "left" : "right"} : 100%;
-             transform:    translate(${directionRtl ? "-15px" : "15px"}  , 0);
+             transform:    translate(${directionRtl ? "0px" : "0px"}  , 0);
              background:   ${prop_rowOptionsBackgroundColor} !important;
              color:        ${prop_rowOptionsColor} !important;
              display:      inline-flex;
@@ -19437,7 +19583,7 @@ ${itemRowOptions}
 
             }
 
-            html = `<td class="component-table-body-item-option-${this._COMPONENT_RANDOM_ID} position-absolute ">
+            html = `<td class="component-table-body-item-option-${this._COMPONENT_RANDOM_ID} position-absolute px-0 mx-0 ">
 
                     <div class="component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID} rounded position-absolute py-1 px-2">
                     
@@ -19688,11 +19834,11 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentTableResponsible.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -19834,8 +19980,8 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                     },
                     prop_tableItemBodyClass: [] ,
                     prop_tableItemBodyHoverStyles: {
-                       "background-color" : prop_backgroundcolorBodyHover ,
-                       "color" : prop_colorBodyHover ,
+                        "background-color" : prop_backgroundcolorBodyHover ,
+                        "color" : prop_colorBodyHover ,
                     },
                     prop_tableType: 0 ,
                     prop_rowOptions: prop_options,
@@ -19929,8 +20075,8 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         const elHeight = tools_css.getHeightSize(prop_size);
         const elFontSize = tools_css.getFontSize(prop_size);
         const elIconSize = tools_css.getIconSize(prop_size);
-        
-        
+
+
         let iconHtml="";
         if (itemHeader!= null && itemHeader.hasOwnProperty("icon") ){
             iconHtml = `
@@ -20220,11 +20366,11 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentPageNumber.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -20311,7 +20457,8 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_size                 = data.hasOwnProperty("prop_size")                             ?  data.prop_size                                 :  null;
+            const prop_size                = data.hasOwnProperty("prop_size")                              ?  data.prop_size                                 :  null;
+            const directionRtl             =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")       ? this._COMPONENT_CONFIG.directionRtl             : false;
 
             const elHeight = tools_css.getHeightSize(prop_size);
 
@@ -20324,7 +20471,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
         #${this._COMPONENT_ID} #component-page-number-form-btn-prevous-${this._COMPONENT_RANDOM_ID}{
            width:                                             ${this.fn_getWidthParts()}px;  
            height:                                            ${elHeight}px;
-           float:                                             left;
+           float:                                             ${directionRtl ? "right" : "left"};
            cursor:                                            pointer;
         }
     </style>
@@ -20354,6 +20501,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
             const prop_backgroundColorSelected2         =   data.hasOwnProperty("prop_backgroundColorSelected2")       ?  data.prop_backgroundColorSelected2             :  "";
             const prop_colorUnSelected                  =   data.hasOwnProperty("prop_colorUnSelected")                ?  data.prop_colorUnSelected                      :  "";
             const prop_colorSelected                    =   data.hasOwnProperty("prop_colorSelected")                  ?  data.prop_colorSelected                        :  "";
+            const directionRtl                          =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl             : false;
 
             let {min , max} = this.fn_getMinAndMax();
             let pagesHtml = "";
@@ -20379,7 +20527,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
         #${this._COMPONENT_ID} #component-page-number-form-numbers-${this._COMPONENT_RANDOM_ID}{
             width:               calc(100% - ${this.fn_getWidthParts(2)}px);
             height:              ${elHeight}px;
-            float:               left;
+            float:               ${directionRtl ? "right" : "left"} ;
             border-right:  ${this.fn_getWidthBorder()}px solid white;
         }
         #${this._COMPONENT_ID} .component-page-number-form-numbers-items-${this._COMPONENT_RANDOM_ID}{
@@ -20387,7 +20535,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
             font-size:           ${elFontSize}px;
             height:              ${elHeight}px;
             line-height:         ${elHeight}px;
-            float:               left;
+            float:               ${directionRtl ? "right" : "left"} ;
             cursor:              pointer;
             border-left:  ${this.fn_getWidthBorder()}px solid white;
             text-align:          center;
@@ -20419,6 +20567,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
 
         if (data != null){
             const prop_size                 = data.hasOwnProperty("prop_size")                             ?  data.prop_size                                 :  null;
+            const directionRtl              =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl             : false;
 
             const elHeight = tools_css.getHeightSize(prop_size);
 
@@ -20431,7 +20580,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
         #${this._COMPONENT_ID} #component-page-number-form-btn-next-${this._COMPONENT_RANDOM_ID}{
             width:                                             ${this.fn_getWidthParts()}px;
             height:                                            ${elHeight}px;
-            float:                                             left;
+            float:                                             ${directionRtl ? "right" : "left"} ;
             cursor:                                            pointer;
         }
     </style>
@@ -20458,6 +20607,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
             const prop_backgroundColorIcon2    =   data.hasOwnProperty("prop_backgroundColorIcon2")            ?  data.prop_backgroundColorIcon2                 :  null;
             const prop_pageTotal               =   data.hasOwnProperty("prop_pageTotal")                       ?  data.prop_pageTotal                            :  0;
             const prop_pageSelected            =   data.hasOwnProperty("prop_pageSelected")                    ?  data.prop_pageSelected                         :  0;
+            const directionRtl                 =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")       ? this._COMPONENT_CONFIG.directionRtl             : false;
 
             const elIconHeight = tools_css.getIconSize(prop_size);
             const elHeight = tools_css.getHeightSize(prop_size);
@@ -20466,7 +20616,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
                 new window.ComponentIcon(
                     `component-page-number-form-btn-prevous-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: tools_icons.icon_arrow_left(prop_size , prop_colorIcon)  ,
+                        prop_icon: directionRtl ?  tools_icons.icon_arrow_right(prop_size , prop_colorIcon)  :  tools_icons.icon_arrow_left(prop_size , prop_colorIcon)  ,
 
                         classList : [  , "d-block"  ] ,
                         styles: {
@@ -20505,6 +20655,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
             const prop_colorIcon               =   data.hasOwnProperty("prop_colorIcon")                       ?  data.prop_colorIcon                            :  null;
             const prop_pageTotal               =   data.hasOwnProperty("prop_pageTotal")                       ?  data.prop_pageTotal                            :  0;
             const prop_pageSelected            =   data.hasOwnProperty("prop_pageSelected")                    ?  data.prop_pageSelected                         :  0;
+            const directionRtl              =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl             : false;
 
             const elIconHeight = tools_css.getIconSize(prop_size);
             const elHeight = tools_css.getHeightSize(prop_size);
@@ -20513,7 +20664,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
                 new window.ComponentIcon(
                     `component-page-number-form-btn-next-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: tools_icons.icon_arrow_right(prop_size , prop_colorIcon)  ,
+                        prop_icon:  directionRtl ? tools_icons.icon_arrow_left(prop_size , prop_colorIcon)  :  tools_icons.icon_arrow_right(prop_size , prop_colorIcon)  ,
 
                         classList : [ "position-relative" , "d-block"  ] ,
                         styles: {
@@ -20707,11 +20858,11 @@ window.ComponentPageData = class ComponentPageData extends ComponentPageDataBase
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentPageData.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -20975,11 +21126,11 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentTabs.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -21251,11 +21402,11 @@ window.ComponentTree = class ComponentTree extends ComponentTreeBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentTree.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -21591,11 +21742,11 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentCollapse.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -21988,11 +22139,11 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentWindow.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
     /* ---------------------------------------------
@@ -22653,11 +22804,11 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWi
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentWindowConfirm.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -23017,11 +23168,11 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentSliderShowOverlapping.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -23476,11 +23627,11 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentBreadcrumb.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -23907,11 +24058,11 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentBreadcrumbWithArrow.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -24507,11 +24658,11 @@ window.ComponentChart = class ComponentChart extends ComponentChartBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentChart.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
     /* ---------------------------------------------
@@ -24811,11 +24962,11 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentChartTre
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentChartTreeY.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
     /* ---------------------------------------------
@@ -25361,11 +25512,11 @@ window.ComponentQrCode = class ComponentQrCode extends ComponentQrCodeBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentQrCode.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
     /* ---------------------------------------------
@@ -25702,11 +25853,11 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentCameraQrCodeReader.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -26036,11 +26187,11 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentUploadQrCodeReader.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -26283,11 +26434,11 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCo
        SETUP
    --------------------------------------------- */
     constructor(elId, config) {
-       super(
+        super(
             listComponent[ComponentQrCodeReader.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -26619,11 +26770,11 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentDraggableOrders.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -26719,10 +26870,10 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
             }
             else{
                 const listItems =  this._COMPONENT_SLOTS?.body?.html ?? "";
-              /*  const listItems =
-                    this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body")
-                        ? this._COMPONENT_SLOTS.body
-                        : '';*/
+                /*  const listItems =
+                      this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body")
+                          ? this._COMPONENT_SLOTS.body
+                          : '';*/
 
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(listItems, "text/html");
@@ -26877,7 +27028,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
             const itemAfterRect = itemAfter.el.getBoundingClientRect();
             const itemAfterRectBottom = parseInt(itemAfter.el.style.top) /////- itemAfterRect.height/2
             if (newY >= itemAfterRectBottom){
-                 this.fn_setChangeOrder(this._DRAGED_ITEM , itemAfter.el , true);
+                this.fn_setChangeOrder(this._DRAGED_ITEM , itemAfter.el , true);
             }
         }
     }
@@ -27062,11 +27213,11 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentChangePage.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -27138,7 +27289,7 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
         const data = this.getPartProps(partName)
 
         if (data != null){
-               const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :   this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :   this._COMPONENT_SLOTS?.body?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -27438,11 +27589,11 @@ window.ComponentRecyclerView  = class ComponentRecyclerView extends ComponentRec
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentRecyclerView.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -27982,7 +28133,7 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
             new window.ComponentTableResponsible(
                 `component-tools-table-config-table-responsible-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    classList: [" col-12" ," row" , "mt-2" , "p-0" , directionRtl ? "me-0 ms-4" : "ms-0 me-4"]   ,
+                    classList: [" col-12" ," row" , "mt-2" , "p-0" , "m-0"/*, directionRtl ? "me-0 ms-4" : "ms-0 me-4"*/]   ,
                     prop_size ,
 
                     prop_order : ["id" , "header_name" , "header_title" , "header_background" , "header_color"  , "header_dataType" , "footer_background" , "footer_color" , "footer_action"] ,
@@ -29071,11 +29222,11 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
        SETUP
    --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentIcon.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -29280,11 +29431,11 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentPositionElement.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -29363,8 +29514,9 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
             new window.ComponentBorder(
                 `component-position-element-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                   // prop_structureClass:  prop_elementClass ,
+                    // prop_structureClass:  prop_elementClass ,
                     prop_structureStyles: prop_elementStyles ,
+                    prop_minWidth: 160 ,
 
                     prop_structureClass:  prop_elementClass ,
                     //prop_borderStyles: prop_elementStyles ,
@@ -29387,7 +29539,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
          class=" ">
      <style>
          #${this._COMPONENT_ID} #component-position-element-content-${this._COMPONENT_RANDOM_ID}{
-
+            
          }
      </style>
        
@@ -29462,6 +29614,10 @@ class ComponentBorderBase extends ComponentBase{
         prop_btnMore_link: {
             prop: "prop_btnMore_link",
             default: null
+        } ,
+        prop_minWidth: {
+            prop: "prop_minWidth",
+            default: null
         }
     };
 
@@ -29476,7 +29632,8 @@ class ComponentBorderBase extends ComponentBase{
         part_border: [
             this._COMPONENT_PATTERN.prop_borderClass,
             this._COMPONENT_PATTERN.prop_borderStyles,
-            this._COMPONENT_PATTERN.prop_content
+            this._COMPONENT_PATTERN.prop_content ,
+            this._COMPONENT_PATTERN.prop_minWidth ,
         ],
         part_icon_more: [
             this._COMPONENT_PATTERN.prop_btnMore_icon,
@@ -29504,11 +29661,11 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentBorder.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -29558,6 +29715,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
 
             const prop_borderClass      =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass   : [];
             const prop_borderStyles     =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles  : {};
+            const prop_minWidth         =  data.hasOwnProperty("prop_minWidth")                                  ?  data.prop_minWidth      : null;
             const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content       : this._COMPONENT_SLOTS?.body?.html ?? "";
 
             prop_content
@@ -29570,6 +29728,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
      <style>
          #${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_borderStyles)}
+             ${prop_minWidth ? `min-width: ${prop_minWidth}`: ""};
          }
      </style>
      
@@ -29727,11 +29886,11 @@ window.ComponentImage = class ComponentImage extends ComponentImageBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentImage.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -29885,11 +30044,11 @@ window.ComponentLayout = class ComponentLayout extends ComponentLayoutBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentLayout.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -30200,11 +30359,11 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentMouseScroller.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -30955,6 +31114,10 @@ class ComponentReportBase extends ComponentBase{
         },
 
 
+        prop_hasFilter: {
+            prop: "prop_hasFilter",
+            default: false
+        },
         prop_formFilter: {
             prop: "prop_formFilter",
             default: null
@@ -31058,10 +31221,11 @@ class ComponentReportBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_formFilter,
         ],
         part_pages_main_collapseFilter_form: [
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_formFilter,
+            this._COMPONENT_PATTERN.prop_hasFilter,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
             this._COMPONENT_PATTERN.prop_url,
@@ -31087,9 +31251,9 @@ class ComponentReportBase extends ComponentBase{
         part_pages_main_formTable_pagePer: [
             this._COMPONENT_PATTERN.prop_size,
         ],
+        part_pages_main_formTable_errorNotExistRecord: [
 
-
-
+        ] ,
 
 
         part_pages_excel: [
@@ -31145,10 +31309,13 @@ class ComponentReportBase extends ComponentBase{
                         part_pages_main_collapseFilter_form: {},
                     },
                     part_pages_main_formTable: {
+
                         part_pages_main_formTable_table:{} ,
                         part_pages_main_formTable_pageNumber:{} ,
                         part_pages_main_formTable_pageData:{} ,
                         part_pages_main_formTable_pagePer:{} ,
+                        part_pages_main_formTable_errorNotExistRecord:{} ,
+
                     },
                 } ,
                 part_pages_excel:{
@@ -31192,11 +31359,11 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
        SETUP
     --------------------------------------------- */
     constructor(elId , config) {
-       super(
+        super(
             listComponent[ComponentReport.name] ,
             elId
         );
-       super.renderComponent(config);
+        super.renderComponent(config);
     }
 
 
@@ -31256,14 +31423,15 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                 return this.componentFn_render_pageMain_collapseFilter(partName);
             case "part_pages_main_collapseFilter_form":
                 return this.componentFn_render_pageMain_collapseFilter_form(partName);
+
             case "part_pages_main_formTable_table":
-                return this.template_render_pageMain_fromTable_table(partName);
+                return this.componentFn_render_pageMain_fromTable_table(partName);
             case "part_pages_main_formTable_pageNumber":
-                return this.template_render_pageMain_fromTable_pageNumber(partName);
+                return this.componentFn_render_pageMain_fromTable_pageNumber(partName);
             case "part_pages_main_formTable_pageData":
-                return this.template_render_pageMain_fromTable_pageData(partName);
+                return this.componentFn_render_pageMain_fromTable_pageData(partName);
             case "part_pages_main_formTable_pagePer":
-                return this.template_render_pageMain_fromTable_pagePear(partName);
+                return this.componentFn_render_pageMain_fromTable_pagePear(partName);
 
             case "part_pages_excel_header":
                 return this.componentFn_render_pageExcel_header(partName);
@@ -31386,7 +31554,6 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
          }
          #${this._COMPONENT_ID} #component-report-page-main-form-new-description-${this._COMPONENT_RANDOM_ID}{
             font-size:    ${elFontSize}px;
-            height:       ${elHeight}px;
             line-height:  ${elHeight}px;
          }
          
@@ -31425,7 +31592,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             return `
 <section data-part-name="${partName}" 
          id="component-report-page-main-form-table-${this._COMPONENT_RANDOM_ID}"
-         class="mt-2 border shadow-sm bg-white p-2" 
+         class="mt-2 border shadow-sm bg-white p-2 " 
          >
          
      <style>
@@ -31600,26 +31767,30 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             const prop_size                       =  data.hasOwnProperty("prop_size")                    ?  data.prop_size                       : "";
             const prop_langSelected               =  data.hasOwnProperty("prop_langSelected")            ?  data.prop_langSelected               : "";
             const prop_langs                      =  data.hasOwnProperty("prop_langs")                   ?  data.prop_langs                      : {};
+            const prop_hasFilter                  =  data.hasOwnProperty("prop_hasFilter")               ?  data.prop_hasFilter                  : true;
 
-            let langFilterTitle = "";
-            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
-                const langs= prop_langs[prop_langSelected];
-                langFilterTitle = langs?.filter_title ?? "Search";
-            }
+            if (prop_hasFilter){
 
-            new window.ComponentCollapse(
-                `component-report-page-main-collapse-filter-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_structureClass: ["mt-2"]  ,
-
-                    prop_size ,
-
-                    prop_icon: tools_icons.icon_filter ,
-                    prop_title: langFilterTitle ,
-                    prop_bodyShow: true
+                let langFilterTitle = "";
+                if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                    const langs= prop_langs[prop_langSelected];
+                    langFilterTitle = langs?.filter_title ?? "Search";
                 }
-            )
 
+                new window.ComponentCollapse(
+                    `component-report-page-main-collapse-filter-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_structureClass: ["mt-2"]  ,
+
+                        prop_size ,
+
+                        prop_icon: tools_icons.icon_filter ,
+                        prop_title: langFilterTitle ,
+                        prop_bodyShow: true
+                    }
+                )
+
+            }
         }
     }
 
@@ -31628,10 +31799,11 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
 
         if (data != null){
             const prop_size             =  data.hasOwnProperty("prop_size")                                             ?  data.prop_size              : "";
-            let prop_formFilter       =  data.hasOwnProperty("prop_formFilter")   && data.prop_formFilter != null     ?  data.prop_formFilter        : this._COMPONENT_SLOTS?.filter?.html ?? "";
+            let prop_formFilter         =  data.hasOwnProperty("prop_formFilter")   && data.prop_formFilter != null     ?  data.prop_formFilter        : this._COMPONENT_SLOTS?.filter?.html ?? "";
             const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")                                     ?  data.prop_langSelected      : "";
             const prop_langs            =  data.hasOwnProperty("prop_langs")                                            ?  data.prop_langs             : {};
             const prop_url              =  data.hasOwnProperty("prop_url")                                              ?  data.prop_url               : "";
+
 
             let langFilterBtn = "";
             if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
@@ -31649,7 +31821,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             this._PAGE_FILTER = new window.ComponentForm(
                 `component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                   // classList: "row"  ,
+                    // classList: "row"  ,
                     // prop_title: "test Form"  ,
                     prop_size ,
                     prop_showErrorStepper: true ,
@@ -31664,6 +31836,10 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                     } ,
                     prop_url: prop_url,
                     prop_data: [] ,
+                    prop_runFetch : false ,
+                    fn_onClickSubmit: (event , url , formData , extraData) => {
+                        console.log(formData , extraData);
+                    } ,
                     fn_onGetResponse: (event , fetch)=>{
                         fetch
                             .then(
@@ -31672,7 +31848,9 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                                     if (response!= null && response.hasOwnProperty("resultExp")){
                                         const resultExp = response.resultExp;
 
+                                        let dataExist = false;
                                         if (resultExp != null && resultExp.hasOwnProperty("data")){
+                                            dataExist = true;
                                             if (resultExp.data.hasOwnProperty("report")){
                                                 this._PAGE_REPORT = resultExp.data.report;
                                                 this.templateFn("part_pages_main_formTable_table");
@@ -31685,19 +31863,11 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                                             this._PAGE_FROM_DATA = ((this._PAGE_SELECTED-1)*this._PAGE_PER_DATA) + 1
                                             this._PAGE_TO_DATA = (this._PAGE_SELECTED)*this._PAGE_PER_DATA < this._PAGE_TOTAL ? this._PAGE_TOTAL : (this._PAGE_SELECTED)*this._PAGE_PER_DATA
 
-                                            console.log("resultExp " , resultExp )
-                                            console.log("this._PAGE_TOTAL_DATA " , this._PAGE_TOTAL_DATA )
-                                            console.log("this._PAGE_SELECTED " , this._PAGE_SELECTED )
-                                            console.log("this._PAGE_PER_DATA " , this._PAGE_PER_DATA )
-                                            console.log("this._PAGE_TOTAL " , this._PAGE_TOTAL )
-                                            console.log("this._PAGE_FROM_DATA " , this._PAGE_FROM_DATA )
-                                            console.log("this._PAGE_TO_DATA " , this._PAGE_TO_DATA )
-
                                             this.templateFn("part_pages_main_formTable_pageNumber");
                                             this.templateFn("part_pages_main_formTable_pageData");
                                             this.templateFn("part_pages_main_formTable_pagePer");
-
                                         }
+
                                     }
                                 });
                     }
@@ -31706,7 +31876,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         }
     }
 
-    template_render_pageMain_fromTable_table(partName){
+    componentFn_render_pageMain_fromTable_table(partName){
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -31720,7 +31890,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             new window.ComponentTableResponsible(
                 `table-component-report-page-main-form-table-table-responsible-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    classList: [" col-12" ," row" , "mt-2" , "p-0" , directionRtl ? "me-0 ms-4" : "ms-0 me-4"]   ,
+                    classList: [" col-12" ," row" , "mt-2" , "p-0" , "m-0"   ,/*, directionRtl ? "me-0 ms-4" : "ms-0 me-4"*/]   ,
                     styles: {
                         "margin-top" : "45px !important"
                     },
@@ -31738,7 +31908,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         }
     }
 
-    template_render_pageMain_fromTable_pageNumber(partName){
+    componentFn_render_pageMain_fromTable_pageNumber(partName){
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -31767,7 +31937,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         }
     }
 
-    template_render_pageMain_fromTable_pageData(partName){
+    componentFn_render_pageMain_fromTable_pageData(partName){
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -31786,7 +31956,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         }
     }
 
-    template_render_pageMain_fromTable_pagePear(partName){
+    componentFn_render_pageMain_fromTable_pagePear(partName){
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -31836,7 +32006,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             return `
 <section data-part-name="${partName}" 
          id="component-report-page-excel-${this._COMPONENT_RANDOM_ID}"
-         class="" 
+         class="h-100" 
          >
          
      <style>
@@ -31946,7 +32116,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             return `
 <section data-part-name="${partName}" 
          id="component-report-page-print-${this._COMPONENT_RANDOM_ID}"
-         class="" 
+         class="h-100" 
          >
          
      <style>
@@ -32079,9 +32249,6 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                 }
             }
 
-
-
-
         }
     }
 
@@ -32133,14 +32300,6 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         return html;
     }
 
-
-    call_openOrClosePage(pageName , status){
-        this._PAGE_MANAGER.call_openOrClosePage(pageName, status);
-    }
-
-
-
-
     fn_onClickTableOption(event , optionName , optionId){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_onClickTableOption") && typeof data.fn_onClickTableOption != null){
@@ -32155,6 +32314,10 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         }
     }
 
+
+    call_openOrClosePage(pageName , status){
+        this._PAGE_MANAGER.call_openOrClosePage(pageName, status);
+    }
 
 
 }

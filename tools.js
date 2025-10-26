@@ -8,7 +8,7 @@ Version: 0.1
 
 if (typeof component_props === 'undefined') {
     component_props = {
-        directionRtl: false,
+        directionRtl: true,
         elementSizes: "m",
 
 
@@ -194,6 +194,31 @@ tools_init = {
             inputSize: {
                 backgroundColor_form:                  component_props.secondaryColor1 ,
                 color_icon:                            component_props.darkColor1 ,
+            },
+
+            inputAcl: {
+                backgroundColor_headerList:            component_props.secondaryColor1 ,
+                color_icon:                            component_props.darkColor1 ,
+                color_btn:                             component_props.shanColor1 ,
+                borderColor_selector:                  component_props.primaryColor1 ,
+                backgroundColor_bodyHeader:            component_props.primaryColor1 ,
+                backgroundColor_bodyFootrer:           component_props.primaryColor2 ,
+
+                backgroundColor_itemAcl_unSelected:              component_props.secondaryColor3 ,
+                color_itemAcl_unSelected:                        component_props.darkColor1 ,
+                iconColor_itemAcl_unSelected:                    component_props.darkColor1 ,
+                borderColor_itemAcl_unSelected:                  component_props.shadowColor1 ,
+                color_itemAcl_unSelected_hover:                  component_props.darkColor1 ,
+                backgroundColor_itemAcl_unSelected_hover:        component_props.secondaryColor2 ,
+
+                backgroundColor_itemAcl_selected:                component_props.primaryColor3 ,
+                color_itemAcl_selected:                          component_props.shanColor1 ,
+                iconColor_itemAcl_selected:                      component_props.shanColor1 ,
+                borderColor_itemAcl_Selected:                    component_props.darkColor1 ,
+                color_itemAcl_selected_hover:                    component_props.shanColor1 ,
+                backgroundColor_itemAcl_selected_hover:          component_props.primaryColor2 ,
+
+
             },
 
             inputColor: {
@@ -679,7 +704,6 @@ tools_component = {
                 if (!prop_fetch.data.hasOwnProperty("data")){
                     prop_fetch.data.data = {};
                 }
-                console.log(prop_fetch)
 
 
                 if (insert){
@@ -797,6 +821,7 @@ tools_submit = {
         }
 
 
+
         return await fetch(
             url ,
             {
@@ -822,8 +847,9 @@ tools_submit = {
 
                             break;
                         case 200:
-
                             const contentType = data.hasOwnProperty("contentType") ? data.contentType : tools_const.contentTypes.json
+
+
                             switch (contentType){
                                 case tools_const.contentTypes.json:
                                     return response.json();
@@ -968,6 +994,8 @@ tools_vue = {
 tools_converter = {
 
     serializeArray: function (formElement){
+        if (formElement == null) return [];
+
         const result = [];
         const elements = formElement.elements;
 
@@ -2393,6 +2421,51 @@ tools_icons = {
   <rect x="3" y="3" width="18" height="18" rx="3" stroke="${bg_color}" stroke-width="1.8"/>
   <path d="M8 8l8 8M16 8l-8 8M12 6v4M12 14v4" stroke="${bg_color}" stroke-width="1.8" stroke-linecap="round"/>
 </svg>`;
-    }
+    },
+
+
+
+    icon_input_acl(sizeName = component_props.elementSizes , bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="input acl"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>input acl</title>
+ 
+  <rect x="3" y="5" width="18" height="14" rx="3" ry="3" stroke="${bg_color}" stroke-width="1.5"/>
+  
+  <path d="M9 10l3 3 3-3" stroke="${bg_color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <circle cx="17" cy="15" r="2" stroke="${bg_color}" stroke-width="1.3"/>
+  <line x1="18.5" y1="16.5" x2="20" y2="18" stroke="${bg_color}" stroke-width="1.3" stroke-linecap="round"/>
+</svg>`;
+    } ,
+
+
+    icon_selectAllRight(sizeName = component_props.elementSizes , bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="select all right"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>select all right</title>
+ 
+  <path d="M4 8l6 4-6 4" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <path d="M10 8l6 4-6 4" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    } ,
+
+    icon_selectAllLeft(sizeName = component_props.elementSizes , bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="select all left"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>select all left</title>
+ 
+  <path d="M20 8l-6 4 6 4" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+ 
+  <path d="M14 8l-6 4 6 4" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+    } ,
 }
 
