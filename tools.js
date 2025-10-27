@@ -8,7 +8,7 @@ Version: 0.1
 
 if (typeof component_props === 'undefined') {
     component_props = {
-        directionRtl: true,
+        directionRtl: false,
         elementSizes: "m",
 
 
@@ -151,9 +151,9 @@ tools_init = {
 
             button: {
                 submit:{
-                    backgroundColor:                   component_props.primaryColor1,
-                    backgroundColorHover:              component_props.primaryColor2,
-                    color:                             component_props.shanColor1,
+                    backgroundColor:                   component_props.secondaryColor1,
+                    backgroundColorHover:              component_props.secondaryColor2,
+                    color:                             component_props.darkColor1,
                 } ,
                 cancel:{
                     backgroundColor:                   component_props.errorColor1,
@@ -161,9 +161,9 @@ tools_init = {
                     color:                             component_props.shanColor1,
                 } ,
                 back:{
-                    backgroundColor:                   component_props.secondaryColor1,
-                    backgroundColorHover:              component_props.secondaryColor2,
-                    color:                             component_props.darkColor1,
+                    backgroundColor:                   component_props.primaryColor1,
+                    backgroundColorHover:              component_props.primaryColor2,
+                    color:                             component_props.shanColor1,
                 }
             },
 
@@ -335,7 +335,7 @@ tools_init = {
                 backgroundColor_optionHover:           component_props.secondaryColor2 ,
                 color_optionHover:                     component_props.shanColor2 ,
             } ,
-            
+
             selectOption: {
                 backgroundColor_form:                   component_props.secondaryColor1 ,
                 color_icon:                             component_props.darkColor1 ,
@@ -897,7 +897,7 @@ tools_submit = {
                     }
 
                     return {resultExp, data};
-                   // return resultExp ,data;
+                    // return resultExp ,data;
                 }
             ).catch(
                 e=>{
@@ -1471,7 +1471,7 @@ tools_svg = {
                     animate.setAttribute("dur", animDuration/2+"ms");
                     animate.setAttribute("fill", "freeze");
                     animate.setAttribute("begin", "indefinite"); // ❌
-                   // animate.setAttribute("begin", animTimer+"ms");
+                    // animate.setAttribute("begin", animTimer+"ms");
                     requestAnimationFrame(() => {
                         path.getBoundingClientRect(); // force reflow
                         path.style.transition = `stroke-dashoffset ${animDuration}ms linear`;
@@ -1908,7 +1908,7 @@ tools_validtor = {
 tools_icons = {
 
     icon_visit(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1928,7 +1928,7 @@ tools_icons = {
 
 
     icon_un_visit(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1952,7 +1952,7 @@ tools_icons = {
 
 
     icon_is_true(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1972,7 +1972,7 @@ tools_icons = {
 
 
     icon_is_false(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
@@ -1992,7 +1992,7 @@ tools_icons = {
 
 
     icon_email(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-email outline" 
      width="${size}" height="${size}" 
@@ -2018,7 +2018,7 @@ tools_icons = {
 
 
     icon_lock(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-password lock" 
      width="${size}" height="${size}" 
@@ -2042,7 +2042,7 @@ tools_icons = {
 
 
     icon_tik(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-selected-check" 
      width="${size}" height="${size}" 
@@ -2066,7 +2066,7 @@ tools_icons = {
 
 
     icon_plus_badge(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="plus badge"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2078,7 +2078,7 @@ tools_icons = {
 
 
     icon_minus_badge(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="minus badge"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2089,7 +2089,7 @@ tools_icons = {
 
 
     icon_arrow_down(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow down"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2100,7 +2100,7 @@ tools_icons = {
 
 
     icon_arrow_up(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow up"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2112,7 +2112,7 @@ tools_icons = {
 
 
     icon_arrow_right(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow right"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2127,7 +2127,7 @@ tools_icons = {
 
 
     icon_arrow_left(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow left"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2142,7 +2142,7 @@ tools_icons = {
 
 
     icon_clear(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="clear"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2155,7 +2155,7 @@ tools_icons = {
 
 
     icon_close(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="close"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2181,7 +2181,7 @@ tools_icons = {
 
 
     icon_password(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img"  aria-label="password" 
       width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2194,7 +2194,7 @@ tools_icons = {
     } ,
 
     icon_search(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="search"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
@@ -2206,7 +2206,7 @@ tools_icons = {
 
 
     icon_pin_close(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" aria-label="pin closed"
      width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2217,7 +2217,7 @@ tools_icons = {
 
 
     icon_pin_open(sizeName = component_props.elementSizes , color = "#000" ) {
-              const size = tools_css.getIconSize(sizeName , sizeName);
+        const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" aria-label="pin open"
      width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2467,5 +2467,150 @@ tools_icons = {
   <path d="M14 8l-6 4 6 4" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     } ,
+
+
+
+
+    icon_wallet(sizeName = component_props.elementSizes , bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <rect x="2" y="6" width="20" height="12" rx="2" stroke="${bg_color}" stroke-width="2"/>
+  <circle cx="18" cy="12" r="1.5" fill="${bg_color}"/>
+</svg>`;
+    } ,
+
+
+
+
+
+    icon_edit(sizeName = component_props.elementSizes ,  bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="edit"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>edit</title>
+  <path d="M3 17.25V21h3.75L17.81 9.94a1 1 0 0 0 0-1.41L15.47 6.19a1 1 0 0 0-1.41 0L3 17.25z" 
+        stroke="${bg_color}" stroke-width="2" stroke-linejoin="round" fill="none"/>
+  <path d="M14.06 7.02l2.92 2.92" 
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round"/>
+</svg>`;
+    } ,
+
+
+    icon_delete(sizeName = component_props.elementSizes , bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="delete"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+  <title>delete</title>
+  <path d="M9 3h6l1 2h4v2H4V5h4l1-2z" 
+        stroke="${bg_color}" stroke-width="2" stroke-linejoin="round" fill="none"/>
+  <path d="M6 7h12l-1 13H7L6 7z" 
+        stroke="${bg_color}" stroke-width="2" stroke-linejoin="round" fill="none"/>
+  <path d="M10 10v8M14 10v8" 
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round"/>
+</svg>`;
+    } ,
+
+
+
+
+
+    icon_wallet(sizeName = component_props.elementSizes, bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName, sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="wallet"
+    width="${size}" height="${size}" viewBox="0 0 346 244"  fill="none">
+  <title>wallet</title>
+  
+    <path fill="${bg_color}" d="M229.73,181.71c-15.74,0-28.5-12.76-28.5-28.5v-4c0-15.74,12.76-28.5,28.5-28.5h41.5V82.65
+     c0-13.25-10.75-24-24-24h-207c-13.25,0-24,10.75-24,24v132c0,13.25,10.75,24,24,24h207c13.25,0,24-10.75,24-24v-32.94H229.73z"/>
+    <path fill="${bg_color}" d="M225.21,54.36l-21.09-37.72c-5.1-9.8-17.17-13.61-26.97-8.52l-88.9,46.22L225.21,54.36z"/>
+    <path fill="${bg_color}" d="M295.98,125.21h-67.8c-11.05,0-20,8.95-20,20v10.88c0,11.05,8.95,20,20,20h67.8c5.52,0,10-4.48,10-10v-30.88
+	C305.98,129.69,301.5,125.21,295.98,125.21z M234.65,169.23c-10.26,0-18.58-8.32-18.58-18.58s8.32-18.58,18.58-18.58
+	s18.58,8.32,18.58,18.58S244.91,169.23,234.65,169.23z"/>
+</svg>`;
+    } ,
+
+
+
+    icon_cardNumber(sizeName = component_props.elementSizes, bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName, sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="card_number"
+    width="${size}" height="${size}" viewBox="0 0 316 221" fill="none">
+  <title>Card Number</title>
+    <g>
+     	<path fill="${bg_color}" d="M271.25,138.17c-22.09,0-40,17.91-40,40c0,22.09,17.91,40,40,40s40-17.91,40-40
+		C311.25,156.08,293.34,138.17,271.25,138.17z M289.73,174.17h-6.51l-2.36,8.06h6.87c2.22,0,4.03,1.8,4.03,4.03v0
+		c0,2.22-1.8,4.03-4.03,4.03h-9.22l-1.69,5.78c-0.62,2.14-2.86,3.36-5,2.74h0c-2.14-0.62-3.36-2.86-2.74-5l1.03-3.52h-5.73
+		l-1.69,5.78c-0.62,2.14-2.86,3.36-5,2.74h0c-2.14-0.62-3.36-2.86-2.74-5l1.03-3.52h-3.21c-2.22,0-4.03-1.8-4.03-4.03v0
+		c0-2.22,1.8-4.03,4.03-4.03h5.56l2.36-8.06h-5.92c-2.22,0-4.03-1.8-4.03-4.03s1.8-4.03,4.03-4.03h8.27l1.71-5.85
+		c0.62-2.14,2.86-3.36,5-2.74c2.14,0.62,3.36,2.86,2.74,5l-1.05,3.59h5.73l1.71-5.85c0.62-2.14,2.86-3.36,5-2.74
+		c2.14,0.62,3.36,2.86,2.74,5l-1.05,3.59h4.16c2.22,0,4.03,1.8,4.03,4.03S291.95,174.17,289.73,174.17z"/>
+        <polygon fill="${bg_color}" points="266.73,182.23 272.47,182.23 274.82,174.17 269.09,174.17 	"/>
+    </g>
+    <g>
+	    <path fill="${bg_color}" d="M260.25,6.17h-234c-11.05,0-20,8.95-20,20v140c0,11.05,8.95,20,20,20h194c0-33.14,26.86-60,60-60v-100
+		C280.25,15.12,271.3,6.17,260.25,6.17z M63.04,15.21c19.33,0,35,15.67,35,35c0,19.33-15.67,35-35,35s-35-15.67-35-35
+		C28.04,30.88,43.71,15.21,63.04,15.21z M232.67,111.41c0,5.44-4.41,9.85-9.85,9.85H37.89c-5.44,0-9.85-4.41-9.85-9.85v0
+		c0-5.44,4.41-9.85,9.85-9.85h184.93C228.26,101.56,232.67,105.97,232.67,111.41L232.67,111.41z"/>
+        <polygon fill="${bg_color}" points="56.6,68.24 68.73,68.24 68.73,42.17 83.34,42.17 83.34,31.56 42.41,31.56 42.41,42.17 56.6,42.17 	"/>
+    </g>
+</svg>`;
+    },
+
+
+
+    icon_note(sizeName = component_props.elementSizes , bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Note"
+    width="${size}" height="${size}" viewBox="0 0 201 239" fill="none">
+  <title>Note</title>
+    <path stroke="${bg_color}" stroke-width="10" d="M171.38,228.02h-141c-11.05,0-20-8.95-20-20v-147c0-11.05,8.95-20,20-20h141c11.05,0,20,8.95,20,20v147 C191.38,219.07,182.42,228.02,171.38,228.02z"/>
+    <circle fill="${bg_color}" cx="48.59" cy="102.88" r="10"/>
+    <path fill="${bg_color}" d="M155.95,108.63H77.76c-3.31,0-6-2.69-6-6v0c0-3.31,2.69-6,6-6h78.19c3.31,0,6,2.69,6,6v0 C161.95,105.95,159.26,108.63,155.95,108.63z"/>
+    <circle fill="${bg_color}" cx="49.12" cy="135.28" r="10"/>
+    <path fill="${bg_color}" d="M156.48,141.03H78.29c-3.31,0-6-2.69-6-6v0c0-3.31,2.69-6,6-6h78.19c3.31,0,6,2.69,6,6v0 C162.48,138.35,159.79,141.03,156.48,141.03z"/>
+    <circle fill="${bg_color}" cx="47.7" cy="167.68" r="10"/>
+    <path fill="${bg_color}" d="M155.06,173.43H76.87c-3.31,0-6-2.69-6-6l0,0c0-3.31,2.69-6,6-6h78.19c3.31,0,6,2.69,6,6l0,0 C161.06,170.75,158.37,173.43,155.06,173.43z"/>
+    <path stroke="${bg_color}" stroke-width="10" d="M55.33,69.93c-11.05,0-20-13.43-20-30s8.95-30,20-30s20,13.43,20,30"/>
+    <path stroke="${bg_color}" stroke-width="10" d="M103.83,69.93c-11.05,0-20-13.43-20-30s8.95-30,20-30s20,13.43,20,30"/>
+    <path stroke="${bg_color}" stroke-width="10" d="M143.83,69.93c-11.05,0-20-13.43-20-30s8.95-30,20-30c11.05,0,20,13.43,20,30"/>
+</svg>`;
+    } ,
+
+
+    icon_title(sizeName = component_props.elementSizes , bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Title"
+    width="${size}" height="${size}" viewBox="0 0 277 300" fill="none">
+    <title>Title</title>
+    <path stroke="${bg_color}" stroke-width="10" d="M94.38,279.52l111.46-121.67l25.83-101.33c0,0-102.08,29.43-103.26,30.41L16.95,208.59 c-7.46,8.14-6.91,20.8,1.24,28.26l47.93,43.91C74.27,288.22,86.92,287.67,94.38,279.52z"/>
+    <path fill="${bg_color}" d="M66.13,199.07l41.81-45.64c1.7-1.85,1.57-4.73-0.28-6.42h0c-1.85-1.7-4.73-1.57-6.42,0.28l-41.81,45.64 c-1.7,1.85-1.57,4.73,0.28,6.42l0,0C61.56,201.05,64.44,200.92,66.13,199.07z"/>
+    <path fill="${bg_color}" d="M134.07,213.17l-45.64-41.81c-1.85-1.7-4.73-1.57-6.42,0.28h0c-1.7,1.85-1.57,4.73,0.28,6.42l45.64,41.81 c1.85,1.7,4.73,1.57,6.42-0.28h0C136.05,217.75,135.93,214.87,134.07,213.17z"/>
+    <circle stroke="${bg_color}" stroke-width="10" cx="188.52" cy="99.03" r="12.5"/>
+    <path stroke="${bg_color}" stroke-width="10" d="M179.21,67.43c-12.1-45.11-0.09-44.43,30.26-53.62c42.13-12.77,46.69-7.12,54.32,38.78 c4.3,25.88-16.7,34.71-62.57,45.91"/>
+</svg>`;
+    },
+
+
+    icon_type(sizeName = component_props.elementSizes , bg_color = "#000") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Type"
+    width="${size}" height="${size}" viewBox="0 0 150 160" fill="none">
+    <title>Type</title>
+   <path fill="${bg_color}" d="M133.93,54.3c-1.32-2.25-3.23-3.76-6.21-5.04c-0.07,1.99-0.45,3.8-0.74,5.14c-5.07,22.91-14.5,54.28-16.08,59.54 c-2.85,7.94-9.7,23.63-22.35,26.11c-2.44,0.48-3.95,0.24-10.83-1.02c-31.01-5.66-38.01-7.64-45.98-10.86 c-4.26-1.73-7.32-3.21-9.54-4.49c0.04,2.76,0.65,4.87,1.71,6.79c1,1.8,3.16,4.79,15.66,9.85c7.97,3.23,14.97,5.21,45.98,10.86 c6.89,1.26,8.39,1.5,10.83,1.02c12.65-2.48,19.5-18.17,22.35-26.11c1.59-5.26,11.01-36.63,16.08-59.54 C135.45,63.67,136.48,58.66,133.93,54.3z"/>
+    <path fill="${bg_color}" d="M124.97,37.87c-1.32-2.25-3.23-3.76-6.21-5.04c-0.07,1.99-0.45,3.8-0.74,5.14c-5.07,22.91-14.5,54.28-16.08,59.54 c-2.85,7.94-9.7,23.63-22.35,26.11c-2.44,0.48-3.95,0.24-10.83-1.02c-31.01-5.66-38.01-7.64-45.98-10.86 c-4.26-1.73-7.32-3.21-9.54-4.49c0.04,2.76,0.65,4.87,1.71,6.79c1,1.8,3.16,4.79,15.66,9.85c7.97,3.23,14.97,5.21,45.98,10.86 c6.89,1.26,8.39,1.5,10.83,1.02c12.65-2.48,19.5-18.17,22.35-26.11c1.59-5.26,11.01-36.63,16.08-59.54 C126.49,47.24,127.53,42.23,124.97,37.87z"/>
+    <path fill="${bg_color}" d="M115.58,21.58c-2.8-4.77-8.21-6.24-21.1-9.22C83.94,9.92,74.99,7.98,68.21,6.55C64.06,5.2,57.57,3.86,50.78,6.06 c-6.74,2.19-10.71,6.87-19.96,21.71C15.04,53.07,10.18,65.85,7.33,74.51C3.03,87.55,3.02,93.19,5.56,97.75 c1,1.8,3.16,4.79,15.66,9.85c7.97,3.23,14.97,5.21,45.98,10.86c6.89,1.26,8.39,1.5,10.83,1.02c12.65-2.48,19.5-18.17,22.35-26.11 c1.59-5.26,11.01-36.63,16.08-59.54C117.1,30.95,118.14,25.94,115.58,21.58z M78.66,95.23c-1.55,0.8-3.45,0.19-4.25-1.36 L59.18,64.25c-1.74,0.67-3.62,1.05-5.59,1.05c-8.62,0-15.61-6.99-15.61-15.61c0-8.62,6.99-15.61,15.61-15.61S69.2,41.06,69.2,49.69 c0,4.37-1.8,8.31-4.68,11.14l15.51,30.15C80.82,92.53,80.21,94.43,78.66,95.23z"/>
+</svg>`;
+    },
+
+
+
 }
 
