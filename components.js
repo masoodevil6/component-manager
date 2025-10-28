@@ -1,8 +1,8 @@
 /*
 Name: Components
 Developer: Mehdi Maarefian
-Version: 0.5
-Date: 10/07/2025
+Version: 0.7
+Date: 10/28/2025
 */
 
 
@@ -376,17 +376,19 @@ class ComponentBase{
                         const list = componentTag.list;
 
                         if(list != null && Array.isArray(list)){
-                            if (list.length > 1){
-                                const listExp = [];
-                                for (const itemComponent of list) {
-                                    const name = itemComponent.getAttribute("name")
-                                    listExp.push( this.getElementData(itemComponent))
-                                }
-                                this._COMPONENT_SLOTS[componentTag.el.tagName.toLowerCase().replace(/^component-/, '')] = listExp
+                            /*if (list.length > 1){
+
                             }
                             else if (list.length == 1){
                                 this._COMPONENT_SLOTS[list[0].tagName.toLowerCase().replace(/^component-/, '')] = this.getElementData(list[0]);
+                            }*/
+
+                            const listExp = [];
+                            for (const itemComponent of list) {
+                                const name = itemComponent.getAttribute("name")
+                                listExp.push( this.getElementData(itemComponent))
                             }
+                            this._COMPONENT_SLOTS[componentTag.el.tagName.toLowerCase().replace(/^component-/, '')] = listExp
                         }
                     }
                 }
@@ -1422,7 +1424,7 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
 
         if (data != null){
             const prop_size =      data.hasOwnProperty("prop_size")        ?  data.prop_size       : 5;
-            const prop_title =     data.hasOwnProperty("prop_title")       ?  data.prop_title      :  this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_title =     data.hasOwnProperty("prop_title")       ?  data.prop_title      :  this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -1657,7 +1659,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
         if (data != null){
 
             const prop_for          =   data.hasOwnProperty("prop_for")                                   ?  data.prop_for          : "";
-            const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_title        =   data.hasOwnProperty("prop_title") && data.prop_title !=null       ?  data.prop_title        :  this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
             const prop_labelColor   =   data.hasOwnProperty("prop_labelColor")                            ?  data.prop_labelColor   :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("label") && tools_const.styles.label.hasOwnProperty("color")   ? tools_const.styles.label.color : "";
             const prop_labelSize    =   data.hasOwnProperty("prop_labelSize")                             ?  data.prop_labelSize    :  null;
             const prop_labelShow    =   data.hasOwnProperty("prop_labelShow")                             ?  data.prop_labelShow    :  true;
@@ -1726,7 +1728,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
 
         if (data != null){
 
-            const prop_labelTooltipDescription   =   data.hasOwnProperty("prop_labelTooltipDescription") && data.prop_labelTooltipDescription !=null       ?  data.prop_labelTooltipDescription     : this._COMPONENT_SLOTS?.description?.html ?? "";
+            const prop_labelTooltipDescription   =   data.hasOwnProperty("prop_labelTooltipDescription") && data.prop_labelTooltipDescription !=null       ?  data.prop_labelTooltipDescription     : this._COMPONENT_SLOTS?.description?.[0]?.html ?? "";
             const prop_tooltipIcon               =   data.hasOwnProperty("prop_tooltipIcon")                                                               ?  data.prop_tooltipIcon                 : "";
             const prop_labelSize                 =   data.hasOwnProperty("prop_labelSize")                                                                 ?  data.prop_labelSize                   : null;
             const prop_TooltipIconColor          =   data.hasOwnProperty("prop_TooltipIconColor")                                                          ?  data.prop_TooltipIconColor            : null;
@@ -2897,7 +2899,7 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
         const data = this.getPartProps(partName)
 
         if (data != null) {
-            const prop_header                    =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header                     :  this._COMPONENT_SLOTS?.header?.html ?? "";
+            const prop_header                    =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header                     :  this._COMPONENT_SLOTS?.header?.[0]?.html ?? "";
             const prop_cardHeaderClassBackground = data.hasOwnProperty("prop_cardHeaderClassBackground")                 ? data.prop_cardHeaderClassBackground   : "";
             const prop_cardHeaderClassColor      = data.hasOwnProperty("prop_cardHeaderClassColor")                      ? data.prop_cardHeaderClassColor        : "";
 
@@ -2924,7 +2926,7 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
 
         if (data != null) {
 
-            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
             const prop_cardBodyClassBackground = data.hasOwnProperty("prop_cardBodyClassBackground")               ? data.prop_cardBodyClassBackground   : "";
             const prop_cardBodyClassColor      = data.hasOwnProperty("prop_cardBodyClassColor")                    ? data.prop_cardBodyClassColor        : "";
 
@@ -3121,7 +3123,7 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
         const data = this.getPartProps(partName);
 
         if (data != null){
-            const prop_body =     data.hasOwnProperty("prop_body") && data.prop_body != null      ? data.prop_body           : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_body =     data.hasOwnProperty("prop_body") && data.prop_body != null      ? data.prop_body           : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}"
@@ -3510,7 +3512,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
 
             const prop_size             = data.hasOwnProperty("prop_size")                                            ? data.prop_size                           : null;
             const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                                     ? data.prop_hasIconBack                    : null;
-            const prop_pageTitle        = data.hasOwnProperty("prop_pageTitle")  && data.prop_pageTitle != null       ? data.prop_pageTitle                      : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_pageTitle        = data.hasOwnProperty("prop_pageTitle")  && data.prop_pageTitle != null       ? data.prop_pageTitle                      : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
             const prop_colorHeader      = data.hasOwnProperty("prop_colorHeader")                                     ? data.prop_colorHeader                    : null;
             const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                      ? this._COMPONENT_CONFIG.directionRtl      : false;
 
@@ -4846,7 +4848,7 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
 
         if (data != null){
 
-            const prop_forms =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_forms =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
             const prop_formsMinHeight =     data.hasOwnProperty("prop_formsMinHeight")               ? data.prop_formsMinHeight  : "";
 
             return `
@@ -5233,7 +5235,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
 
     template_render_structure(partName) {
         const data = this.getPartProps(partName)
-        const prop_layoutContent    =   data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null    ?  data.prop_layoutContent     :  this._COMPONENT_SLOTS?.body?.html ?? "";
+        const prop_layoutContent    =   data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null    ?  data.prop_layoutContent     :  this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
         const content = `
    <component-border id="border-widget-component-${this._COMPONENT_RANDOM_ID}">
@@ -5783,7 +5785,7 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
 
             const prop_type             =   data.hasOwnProperty("prop_type")                 ?  data.prop_type               :  null;
             const prop_btnType          =   data.hasOwnProperty("prop_btnType")              ?  data.prop_btnType               :  null;
-            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             const prop_btnClass         =   data.hasOwnProperty("prop_btnClass")             ?  data.prop_btnClass           : "w-100"
             const prop_size             =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               : 0;
@@ -18540,7 +18542,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
 
         if (data != null){
 
-            const prop_description                 =   data.hasOwnProperty("prop_description")                ?  data.prop_description                   : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_description                 =   data.hasOwnProperty("prop_description")                ?  data.prop_description                   : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
             const prop_descriptionColor            =   data.hasOwnProperty("prop_descriptionColor")           ?  data.prop_descriptionColor              :  "";
             const prop_descriptionBackground       =   data.hasOwnProperty("prop_descriptionBackground")      ?  data.prop_descriptionBackground         :  "";
             const prop_descriptionWidth            =   data.hasOwnProperty("prop_descriptionWidth")           ?  data.prop_descriptionWidth              :  "";
@@ -20123,7 +20125,7 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                height: ${elIconSize+15}px;
                padding: 5px;
                top: 50%;
-               ${directionRtl ? "right" : "left"} : -${elIconSize/2}px;
+               ${directionRtl ? "right" : "left"} : 0;
                transform: translate(0 , -50%);
           }
           .component-table-responsible-card-view-form-icon-${ this._COMPONENT_RANDOM_ID} b{
@@ -21850,7 +21852,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
 
             const prop_bodyBackgroundColor  = data.hasOwnProperty("prop_bodyBackgroundColor")                     ?  data.prop_bodyBackgroundColor  : "";
             const prop_bodyShow             = data.hasOwnProperty("prop_bodyShow")                                ?  data.prop_bodyShow             : false;
-            const prop_body                 = data.hasOwnProperty("prop_body") && data.prop_body != null          ?  data.prop_body                 : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_body                 = data.hasOwnProperty("prop_body") && data.prop_body != null          ?  data.prop_body                 : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             this._BODY_SHOW = prop_bodyShow;
 
@@ -22410,7 +22412,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 
         if (data != null){
 
-            const prop_header        =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header       : this._COMPONENT_SLOTS?.header?.html ?? "";
+            const prop_header        =   data.hasOwnProperty("prop_header") && data.prop_header !=null       ?  data.prop_header       : this._COMPONENT_SLOTS?.header?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -22468,7 +22470,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 
         if (data != null){
 
-            const prop_body        =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body        : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_body        =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body        : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
 
             return `
@@ -22498,7 +22500,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 
         if (data != null){
 
-            const prop_footer        =   data.hasOwnProperty("prop_footer") && data.prop_footer !=null       ?  data.prop_footer        :  this._COMPONENT_SLOTS?.footer?.html ?? "";
+            const prop_footer        =   data.hasOwnProperty("prop_footer") && data.prop_footer !=null       ?  data.prop_footer        :  this._COMPONENT_SLOTS?.footer?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -22884,7 +22886,7 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWi
 
         if (data != null) {
 
-            const prop_header = data.hasOwnProperty("prop_header") && data.prop_header != null ? data.prop_header :  this._COMPONENT_SLOTS?.header?.html ?? "";
+            const prop_header = data.hasOwnProperty("prop_header") && data.prop_header != null ? data.prop_header :  this._COMPONENT_SLOTS?.header?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -22914,7 +22916,7 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWi
 
         if (data != null) {
 
-            const prop_body = data.hasOwnProperty("prop_body") && data.prop_body != null ? data.prop_body : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_body = data.hasOwnProperty("prop_body") && data.prop_body != null ? data.prop_body : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -26885,12 +26887,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
                 prop_items = data.prop_items
             }
             else{
-                const listItems =  this._COMPONENT_SLOTS?.body?.html ?? "";
-                /*  const listItems =
-                      this._COMPONENT_SLOTS != null && this._COMPONENT_SLOTS.hasOwnProperty("body")
-                          ? this._COMPONENT_SLOTS.body
-                          : '';*/
-
+                const listItems =  this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(listItems, "text/html");
                 prop_items = Array.from(doc.body.children).map(el => el.outerHTML);
@@ -27305,7 +27302,7 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :   this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :   this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -27339,29 +27336,36 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
             const prop_effect    = data.hasOwnProperty("prop_effect")                                 ?  data.prop_effect                     :  null;
             const prop_duration  = data.hasOwnProperty("prop_duration")                               ?  data.prop_duration                   :  100;
 
-            let left= "0";
-            let right= "0";
-            let top= "0";
-            let bottom= "0";
+            let styleStr = "";
             switch (prop_effect){
                 case this._EFFECT_TOP:
-                    top= "-100%"
-                    break;
-                case this._EFFECT_RIGHT:
-                    right= "-100%"
+                    if (directionRtl){
+                        styleStr= "right: 0; top: -100%;"
+                    }
+                    else{
+                        styleStr= "left: 0;  top: -100%;"
+                    }
                     break;
                 case this._EFFECT_BOTTOM:
-                    bottom= "-100%"
+                    if (directionRtl){
+                        styleStr= "right: 0; bottom: -100%;"
+                    }
+                    else{
+                        styleStr= "left: 0;  bottom: -100%;"
+                    }
                     break;
                 case this._EFFECT_LEFT:
-                    left= "-100%"
+                    styleStr= "top: 0; left: -100%;"
+                    break;
+                case this._EFFECT_RIGHT:
+                    styleStr= "top: 0; right: -100%;"
                     break;
                 default:
                     if (directionRtl){
-                        right= "-100%"
+                        styleStr= "top: 0; right: -100%;"
                     }
                     else{
-                        left= "-100%"
+                        styleStr= "top: 0; left: -100%;"
                     }
                     break;
             }
@@ -27381,10 +27385,7 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
              transition: left ease ${prop_duration}ms ,  right ease ${prop_duration}ms ,  top ease ${prop_duration}ms ,  bottom ease ${prop_duration}ms;
              width: 100%;
              height: 100%;
-             left: ${left};
-             top: ${top};
-             right: ${right};
-             bottom: ${bottom};
+             ${styleStr};
              z-index: ${tools_css.getZIndex(tools_css.standardZIndex.new_page.name , 10)}
          }
      </style>
@@ -27466,37 +27467,28 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
         const prop_effect    = data.hasOwnProperty("prop_effect")                                 ?  data.prop_effect                     :  null;
         const directionRtl   = data.hasOwnProperty("directionRtl")                                ? data.directionRtl                     : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
 
-        let left= "0";
-        let right= "0";
-        let top= "0";
-        let bottom= "0";
         switch (prop_effect){
             case this._EFFECT_TOP:
-                top=  status ? "0" : "-100%"
+                pageEl.style.setProperty("top", status ? "0" : "-100%", "important");
                 break;
             case this._EFFECT_RIGHT:
-                right= status ? "0" : "-100%"
+                pageEl.style.setProperty("right", status ? "0" : "-100%", "important");
                 break;
             case this._EFFECT_BOTTOM:
-                bottom= status ? "0" : "-100%"
+                pageEl.style.setProperty("bottom", status ? "0" : "-100%", "important");
                 break;
             case this._EFFECT_LEFT:
-                left= status ? "0" : "-100%"
+                pageEl.style.setProperty("left", status ? "0" : "-100%", "important");
                 break;
             default:
                 if (directionRtl){
-                    right= status ? "0" : "-100%"
+                    pageEl.style.setProperty("right", status ? "0" : "-100%", "important");
                 }
                 else{
-                    left= status ? "0" : "-100%"
+                    pageEl.style.setProperty("left", status ? "0" : "-100%", "important");
                 }
                 break;
         }
-
-        pageEl.style.left = left;
-        pageEl.style.right = right;
-        pageEl.style.top = top;
-        pageEl.style.bottom = bottom;
 
         pageEl.setAttribute("data-page-status" , status ? 1 : 0);
         this.fn_setStatusFormShadow();
@@ -29567,7 +29559,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_content  =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content     : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_content  =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content     : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -29752,7 +29744,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
             const prop_borderClass      =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass   : [];
             const prop_borderStyles     =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles  : {};
             const prop_minWidth         =  data.hasOwnProperty("prop_minWidth")                                  ?  data.prop_minWidth      : null;
-            const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content       : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content       : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             prop_content
             return `
@@ -30118,7 +30110,7 @@ window.ComponentLayout = class ComponentLayout extends ComponentLayoutBase{
         if (data != null){
             const prop_layoutClass     =  data.hasOwnProperty("prop_layoutClass")                                        ?  data.prop_layoutClass     : [];
             const prop_layoutStyles    =  data.hasOwnProperty("prop_layoutStyles")                                       ?  data.prop_layoutStyles    : {};
-            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -30631,7 +30623,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : this._COMPONENT_SLOTS?.body?.html ?? "";
+            const prop_layoutContent   =  data.hasOwnProperty("prop_layoutContent")  && data.prop_layoutContent != null  ?  data.prop_layoutContent   : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             return `
 <section data-part-name="${partName}" 
@@ -31073,7 +31065,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
 
         if (backgroundSelected != null){
             const el = this.fn_getElementContent();
-            el.style.backgroundColor = backgroundSelected;
+            if(el != null) el.style.backgroundColor = backgroundSelected;
         }
     }
 
@@ -31430,7 +31422,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         this.templateFn("part_other_pages_Header");
 
         requestAnimationFrame(() => {
-            this._PAGE_FILTER.call_onCLickBtnSubmit();
+            this.call_refreshSearchReport();
         });
 
     }
@@ -31827,7 +31819,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
 
         if (data != null){
             const prop_size             =  data.hasOwnProperty("prop_size")                                             ?  data.prop_size              : "";
-            let prop_formFilter         =  data.hasOwnProperty("prop_formFilter")   && data.prop_formFilter != null     ?  data.prop_formFilter        : this._COMPONENT_SLOTS?.filter?.html ?? "";
+            let prop_formFilter         =  data.hasOwnProperty("prop_formFilter")   && data.prop_formFilter != null     ?  data.prop_formFilter        : this._COMPONENT_SLOTS?.filter?.[0]?.html ?? "";
             const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")                                     ?  data.prop_langSelected      : "";
             const prop_langs            =  data.hasOwnProperty("prop_langs")                                            ?  data.prop_langs             : {};
 
@@ -31917,7 +31909,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                         const elPage = this.fn_getInputHiddenPage();
                         if (elPage != null){
                             elPage.value = page;
-                            this._PAGE_FILTER.call_onCLickBtnSubmit();
+                            this.call_refreshSearchReport();
                         }
                     }
                 }
@@ -31974,7 +31966,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                         if (elPagePer != null && elPage != null){
                             elPage.value = 1;
                             elPagePer.value = index;
-                            this._PAGE_FILTER.call_onCLickBtnSubmit();
+                            this.call_refreshSearchReport();
                         }
                     } ,
 
@@ -32215,7 +32207,6 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             if (prop_pages != null && Array.isArray(prop_pages)){
                 for (let i = 0; i < prop_pages.length; i++) {
                     const itemPage = prop_pages[i];
-                    console.log(itemPage)
                     if (itemPage != null && itemPage.hasOwnProperty("html") && itemPage.hasOwnProperty("attrs") && itemPage.attrs.hasOwnProperty("name")){
 
                         new window.ComponentPageHeader(
@@ -32306,8 +32297,6 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                     data: fetchData
                 },
                 fn_onGetResponse: (response , request)=>{
-                    console.log(response , request);
-
                     this._PAGE_TOTAL_DATA = response?.totalData   ?? 0;
                     this._PAGE_SELECTED =   response?.page        ?? 1;
                     this._PAGE_PER_DATA =   response?.perPage     ?? 25;
@@ -32373,6 +32362,10 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         if (data.hasOwnProperty("fn_onClickNew") && typeof data.fn_onClickNew != null){
             data.fn_onClickNew(event);
         }
+    }
+
+    call_refreshSearchReport(){
+        this._PAGE_FILTER.call_onCLickBtnSubmit();
     }
 
     call_openOrClosePage(pageName , status){
