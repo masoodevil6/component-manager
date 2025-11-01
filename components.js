@@ -261,16 +261,36 @@ class ComponentBase{
 
 
     onRegister(){
-        //components.set(this._COMPONENT_ELEMENT , this);
         components[this._COMPONENT_RANDOM_ID] = this;
+        if (typeof this.componentFn !== "undefined"){
+            this.componentFn();
+        }
 
-        this.setComponents();
 
-        /* window.addEventListener('resize', (event)=>{
-             this.setComponents();
-         });*/
     }
 
+
+    onRegisterFinish() {
+        const selector = `#component-${this._COMPONENT_NAME}-structure-${this._COMPONENT_RANDOM_ID}`
+
+        return new Promise((resolve) => {
+            const el = document.querySelector(selector);
+            if (el) {
+                resolve(el);
+                return;
+            }
+
+            const observer = new MutationObserver((mutations, obs) => {
+                const el = document.querySelector(selector);
+                if (el) {
+                    resolve(el);
+                    obs.disconnect();
+                }
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+    }
 
 
 
@@ -522,11 +542,6 @@ class ComponentBase{
         }*/
     }
 
-    setComponents(){
-        if (typeof this.componentFn !== "undefined"){
-            this.componentFn();
-        }
-    }
 
 
 
@@ -3812,11 +3827,11 @@ window.ComponentListSelectedScroller = class ComponentListSelectedScroller exten
     TEMPLATEs
     --------------------------------------------- */
     componentFn() {
-
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_renderListItemsSelected();
             this.fn_addScrollerWithMouse();
-        });
+        })
+
     }
 
     templateFn(partName = null) {
@@ -5523,9 +5538,9 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
     TEMPLATEs
    --------------------------------------------- */
     componentFn(){
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_renderIframe();
-        });
+        })
     }
     templateFn(partName = null){
         switch (partName){
@@ -6704,7 +6719,8 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
            
             ${prop_btnAddStatus  ? (directionRtl ? "border-top-left-radius: 0 !important" : "border-top-right-radius: 0 !important") : ""};
             ${prop_btnAddStatus  ? (directionRtl ? "border-bottom-left-radius: 0 !important" : "border-bottom-right-radius: 0 !important") : ""};
-           
+            
+            direction: ${directionRtl ? "rtl" : "ltr"} ;
             height: ${elHeight}px;
             line-height: ${elHeight}px;
             white-space: nowrap;
@@ -7951,12 +7967,12 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
         this.templateFn("part_form_icon_clear");
         this.templateFn("part_form_color_icon_empty");
 
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_connectToElementReference();
             this.fn_startCalcColorDefaultSelected();
 
             this.fn_checkValueColor()
-        });
+        })
     }
     templateFn(partName = null){
         switch (partName){
@@ -9118,9 +9134,9 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
         this.templateFn("part_body_icon_negetive");
         this.templateFn("part_validate");
 
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_connectToElementReference();
-        });
+        })
     }
     templateFn(partName = null){
 
@@ -15993,7 +16009,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                     prop_elementClass: ["form-control" , "custom-select" , "rounded" , "px-2"] ,
                     prop_elementStyles: prop_optionStyles ,
                     prop_width: prop_optionWidth,
-                    prop_height: prop_optionHeight,
+                    prop_height: prop_optionHeight + "px",
 
                     prop_positionTop: prop_positionTop,
                     prop_positionLeft: prop_positionLeft,
@@ -16990,9 +17006,9 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
         this.templateFn("part_checkBoxesList_checkBoxRender");
         this.templateFn("part_checkBoxesList_draggableRender");
 
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_onCheckBoxItem();
-        });
+        })
     }
 
     templateFn(partName = null){
@@ -17483,10 +17499,9 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
 
         this.templateFn("part_columnsSelected");
 
-
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.readyListColumns();
-        });
+        })
     }
 
     templateFn(partName = null){
@@ -17720,7 +17735,7 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
                         "height": elHeight+"px" ,
                         "font-size": elFontSize+"px" ,
                     },
-                    prop_type: "back",
+
                     prop_title: `<b>${titleBtnAccept}</b>` ,
 
                     fn_callback: (event) => {
@@ -17773,7 +17788,7 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
                         "font-size": elFontSize+"px" ,
                     },
 
-
+                    prop_type: "back",
                     prop_title: `<b>${titleBtnCancel}</b>` ,
 
                     fn_callback: (event) => {
@@ -18097,9 +18112,10 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
     componentFn(screanWidthType){
         this.templateFn("part_form");
 
-        requestAnimationFrame(() => {
+
+        this.onRegisterFinish().then(el => {
             this.fn_connectToInputReference();
-        });
+        })
     }
 
 
@@ -19161,11 +19177,11 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
              top: -${prop_headerIconSize/2}px;
              transform: translate(-50% , -50%);
              background-color: ${prop_headerIconBackgroundColor};
-             padding: 5px;
+             padding: 2.5px;
              border-radius: 100%;
              border: 3px solid ${prop_headerIconBorderColor};
-             width:  ${prop_headerIconSize+20}px;
-             height:  ${prop_headerIconSize+20}px;
+             width:  ${prop_headerIconSize+15}px;
+             height:  ${prop_headerIconSize+15}px;
          }
      </style>
     <tr>
@@ -19865,9 +19881,9 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
        TEMPLATEs
     --------------------------------------------- */
     componentFn(){
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_renderTable();
-        });
+        })
     }
 
     templateFn(partName = null){
@@ -24088,9 +24104,9 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
      TEMPLATEs
     --------------------------------------------- */
     componentFn() {
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_renderBreadCrumb();
-        });
+        })
     }
 
     templateFn(partName = null) {
@@ -24992,9 +25008,10 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentChartTre
    --------------------------------------------- */
     componentFn(){
         this.templateFn("part_layout_mouse_scroller");
-        setTimeout(()=>{
+
+        this.onRegisterFinish().then(el => {
             this.fn_chartInit();
-        } , 0)
+        })
     }
     templateFn(partName = null){
         switch (partName){
@@ -26800,9 +26817,9 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
        TEMPLATEs
     --------------------------------------------- */
     componentFn(){
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_readyTemplateItems();
-        });
+        })
     }
 
     templateFn(partName = null){
@@ -26961,8 +26978,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
                     this._ITEM_ORDERS[i].isPin = false;
                 }
             }
-
-            form.style.height = prop_height * this._ITEM_ORDERS.length+10;
+            form.style.height = prop_height * this._ITEM_ORDERS.length+10 + "px";
         }
 
         if (data.hasOwnProperty("fn_startComponent") && typeof data.fn_startComponent != null){
@@ -27253,7 +27269,7 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
             case "part_form_pages":
                 return this.template_render_form_pages( partName );
             default:
-                return this.templateBasic_render([]);
+                return this.templateBasic_render([ "h-100" , "d-block"]);
         }
     }
 
@@ -27261,7 +27277,7 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
         const content = `
        ${this.templateFn("part_form") ?? ""}
                 `;
-        return this.templateBasic_render_structure(content);
+        return this.templateBasic_render_structure(content , [ "h-100" , "d-block"]);
     }
 
     template_render_form(partName) {
@@ -27610,9 +27626,9 @@ window.ComponentRecyclerView  = class ComponentRecyclerView extends ComponentRec
        TEMPLATEs
     --------------------------------------------- */
     componentFn(){
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.fn_readyItemsRecyclerView();
-        });
+        })
     }
 
     templateFn(partName = null){
@@ -28051,7 +28067,6 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
 
             }
 
-
             new window.ComponentSelectColumns(
                 `component-tools-table-config-select-columns-${this._COMPONENT_RANDOM_ID}` ,
                 {
@@ -28455,7 +28470,7 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
        FUNCTIONs
     --------------------------------------------- */
     renderTableOptions(){
-        requestAnimationFrame(() => {
+        setTimeout(() => {
             this.templateFn("part_tableConfig_headerTitle");
             this.templateFn("part_tableConfig_headerBackgroundColor");
             this.templateFn("part_tableConfig_headerColor");
@@ -28463,7 +28478,7 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
             this.templateFn("part_tableConfig_footerBackgroundColor");
             this.templateFn("part_tableConfig_footerColor");
             this.templateFn("part_tableConfig_footerAction");
-        });
+        }, 0);
     }
 
 
@@ -31421,10 +31436,9 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
 
         this.templateFn("part_other_pages_Header");
 
-        requestAnimationFrame(() => {
+        this.onRegisterFinish().then(el => {
             this.call_refreshSearchReport();
-        });
-
+        })
     }
     templateFn(partName = null){
         switch (partName){
@@ -31481,7 +31495,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
 
 
             default:
-                return this.templateBasic_render([]);
+                return this.templateBasic_render(["h-100" , "d-block"]);
         }
     }
 
@@ -31512,7 +31526,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
        </component-change-page>
           
                 `;
-        return this.templateBasic_render_structure(content , "position-relative p-0");
+        return this.templateBasic_render_structure(content , ["position-relative" , "p-0" , "h-100" , "d-block"]);
     }
 
 
@@ -31527,7 +31541,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             return `
 <section data-part-name="${partName}" 
          id="component-report-page-main-${this._COMPONENT_RANDOM_ID}"
-         class="pb-2" 
+         class="pb-2 d-block h-100" 
          >
          
      <style>
@@ -31658,6 +31672,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             this._PAGE_MANAGER = new window.ComponentChangePage(
                 `component-report-change-page-${this._COMPONENT_RANDOM_ID}`  ,
                 {
+                    classList: [ "h-100" , "d-block"]  ,
+
                     prop_size ,
                     prop_effect: directionRtl? 1 : 3
                 }
@@ -31942,6 +31958,9 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
 
         if (data != null){
             const prop_size             =  data.hasOwnProperty("prop_size")               ?  data.prop_size               : null;
+            const directionRtl = data.hasOwnProperty("directionRtl") ? data.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+            const elHeight = tools_css.getHeightSize(prop_size);
 
             new window.ComponentSelectOption(
                 `table-component-report-page-main-form-table-page-per-${this._COMPONENT_RANDOM_ID}` ,
@@ -31951,6 +31970,10 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                     prop_labelShow:          false ,
                     prop_size:               prop_size ,
                     prop_itemSelected:       this._PAGE_PER_DATA  ,
+
+                    prop_positionLeft:       directionRtl ? 0 : "",
+                    prop_positionRight:       !directionRtl ? 0 : "",
+                    prop_positionBottom:     `calc( -100% + ${elHeight}px)`,
 
                     prop_options: [
                         {id: this._PER_PAGE_10 , name: this._PER_PAGE_10} ,
