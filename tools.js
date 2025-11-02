@@ -32,7 +32,12 @@ if (typeof component_props === 'undefined') {
         warningColor1: "#b4500c",
         warningColor2: "#f47920",
         warningColor3: "#eca574",
-        warningColor4: "#efc5a7",
+        warningColor4: "#ffe4d0",
+
+        infoColor1: "#077af1",
+        infoColor2: "#1988fd",
+        infoColor3: "#4ba2fd",
+        infoColor4: "#74b8ff",
 
         successColor1: "#06502d",
         successColor2: "#2e9f6b",
@@ -153,11 +158,11 @@ tools_init = {
                 submit:{
                     backgroundColor:                   component_props.secondaryColor1,
                     backgroundColorHover:              component_props.secondaryColor2,
-                    color:                             component_props.darkColor1,
+                    color:                             component_props.shanColor1,
                 } ,
                 cancel:{
-                    backgroundColor:                   component_props.errorColor1,
-                    backgroundColorHover:              component_props.errorColor2,
+                    backgroundColor:                   component_props.primaryColor1,
+                    backgroundColorHover:              component_props.primaryColor2,
                     color:                             component_props.shanColor1,
                 } ,
                 back:{
@@ -261,7 +266,7 @@ tools_init = {
 
 
             table: {
-                backgroundColor:                       component_props.shanColor1 ,
+                backgroundColor:                       component_props.primaryColor1 ,
                 backgroundColor_headerIcon:            component_props.secondaryColor1 ,
                 borderColor_headerIcon:                component_props.primaryColor1 ,
                 color_headerIcon:                      component_props.primaryColor1 ,
@@ -270,10 +275,10 @@ tools_init = {
                 backgroundColor_textSelected:          component_props.shanColor1 ,
 
                 bacKgroundColor_rowOptions:            component_props.secondaryColor1 ,
-                color_rowOptions:                      component_props.shanColor2 ,
-                bacKgroundColor_rowOptionsItem:        component_props.secondaryColor1 ,
-                color_rowOptionsItem:                  component_props.shanColor2 ,
-                bacKgroundColor_rowOptionsItemHover:   component_props.secondaryColor1 ,
+                color_rowOptions:                      component_props.darkColor1 ,
+                bacKgroundColor_rowOptionsItem:        component_props.secondaryColor3 ,
+                color_rowOptionsItem:                  component_props.darkColor1 ,
+                bacKgroundColor_rowOptionsItemHover:   component_props.secondaryColor2 ,
                 color_rowOptionsItemHover:             component_props.darkColor1 ,
 
                 backgroundColor_iconColumnSelector:    component_props.secondaryColor1 ,
@@ -429,8 +434,8 @@ tools_init = {
 
             report: {
                 backgroundColor_page:                  component_props.primaryColor5 ,
-                color_iconPage:                        component_props.darkColor1 ,
-                color_iconBtnNewPage:                  component_props.darkColor1 ,
+                color_iconPage:                        component_props.infoColor1 ,
+                color_iconBtnNewPage:                  component_props.shanColor1 ,
             } ,
 
 
@@ -450,13 +455,13 @@ tools_css = {
         xs: {
             name: "x-s",
             fontSize: 8,
-            height: 18,
+            height: 22,
             icon: 14
         } ,
         s: {
             name: "s" ,
             fontSize: 10 ,
-            height: 22,
+            height: 24,
             icon: 16
         } ,
         m: {
@@ -480,7 +485,7 @@ tools_css = {
         xxl: {
             name: "xx-l",
             fontSize: 15 ,
-            height: 34,
+            height: 32,
             icon: 28
         }
     } ,
@@ -880,7 +885,7 @@ tools_submit = {
                         componentMessagesData.prop_messages = response.hasOwnProperty("messages") ? response.messages : [];
                         componentMessagesData.prop_size = prop_size;
 
-                        let messageType = "success";
+                        let messageType = "warning";
                         if (response.hasOwnProperty("status")){
                             messageType = response.status ? "success" : "error";
                         }
@@ -2488,18 +2493,6 @@ tools_icons = {
 
 
 
-    icon_wallet(sizeName = component_props.elementSizes , bg_color = "#000") {
-        const size = tools_css.getIconSize(sizeName , sizeName);
-        return `
-<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
-  <rect x="2" y="6" width="20" height="12" rx="2" stroke="${bg_color}" stroke-width="2"/>
-  <circle cx="18" cy="12" r="1.5" fill="${bg_color}"/>
-</svg>`;
-    } ,
-
-
-
-
 
     icon_edit(sizeName = component_props.elementSizes ,  bg_color = "#000") {
         const size = tools_css.getIconSize(sizeName , sizeName);
@@ -2534,7 +2527,7 @@ tools_icons = {
 
 
 
-    icon_wallet(sizeName = component_props.elementSizes, bg_color = "#000") {
+    icon_wallet(sizeName = component_props.elementSizes, bg_color = "#00AEEF") {
         const size = tools_css.getIconSize(sizeName, sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="wallet"
@@ -2549,6 +2542,27 @@ tools_icons = {
 	s18.58,8.32,18.58,18.58S244.91,169.23,234.65,169.23z"/>
 </svg>`;
     } ,
+
+    icon_wallet2(sizeName = component_props.elementSizes, bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName, sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="wallet"
+    width="${size}" height="${size}" viewBox="0 0 197.43 203.49"  fill="none">
+  <title>wallet</title>
+    <path fill="none" opacity="0.4" stroke="${bg_color}" stroke-width="5"  d="M142.99,159.38c-9.05,0-16.39-7.34-16.39-16.39s7.34-16.39,16.39-16.39h37.69v32.91L142.99,159.38z"/>
+    <path fill="${bg_color}" opacity="0.2" d="M152.66,81.2c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07L119.6,13.62 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C84.94,80.95,152.66,81.2,152.66,81.2z"/>
+    <path fill="${bg_color}" opacity="0.2" d="M14.78,144v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20H34.78 c-11.05,0-20,8.95-20,20v24.72"/>
+    <path fill="none" stroke="${bg_color}" stroke-width="5" d="M14.78,144v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20H34.78 c-11.05,0-20,8.95-20,20v24.72"/>
+    <line fill="none" stroke="${bg_color}" stroke-width="5" x1="17.78" y1="105.35" x2="184.14" y2="105.35"/>
+    <line fill="none" stroke="${bg_color}" stroke-width="5" x1="17.78" y1="170.91" x2="184.14" y2="170.91"/>
+    <path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M142.99,154.52c-9.05,0-16.39-7.34-16.39-16.39c0-9.05,7.34-16.39,16.39-16.39h37.69v32.91L142.99,154.52z"/>
+    <circle fill="none" stroke="${bg_color}" stroke-width="5"  cx="149.91" cy="138.64" r="7.77"/>
+    <path fill="none" stroke="${bg_color}" stroke-width="5"  d="M152.66,83.25c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07L119.6,15.67 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C84.94,83,152.66,83.25,152.66,83.25z"/>
+    <path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M133.5,83.26l10.6-12.38c0,0-5.99-5.32-6.23-9.29c-0.37-6,3.65-8.72,3.65-8.72l-19.4-14.96 c0,0-2.21,4.41-8.07,5.82c-6.34,1.52-11.19-1.95-11.87-2.44c0,0-21.74,25.57-35.11,41.86C90.9,81.95,133.5,83.26,133.5,83.26z"/>
+    <path fill="none" stroke="${bg_color}" stroke-width="5"  d="M92.71,78.8c0,6.49,5.26,4.75,11.75,4.75s11.75,1.74,11.75-4.75s-5.26-11.75-11.75-11.75 S92.71,72.31,92.71,78.8z"/>
+</svg>`;
+    } ,
+
 
 
 
@@ -2685,6 +2699,145 @@ tools_icons = {
      <path fill="none" stroke="${bg_color}" stroke-width="30"  d="M336.87,36.51c36.51-26.19,85.59-20.28,109.61,13.21s13.9,81.87-22.61,108.07"/>
      <path fill="none" stroke="${bg_color}" stroke-width="30"  d="M155.22,350.51c-12.87,9.23-32.62,3.73-44.11-12.28c-11.49-16.02-10.37-36.48,2.5-45.72"/>
      <path fill="${bg_color}" d="M125.41,301.9l216.85-155.57c4.49-3.22,5.52-9.47,2.3-13.95l-5.25-7.31c-3.22-4.49-9.47-5.52-13.95-2.3L108.51,278.33 c-4.49,3.22-5.52,9.47-2.3,13.95l5.25,7.31C114.68,304.09,120.93,305.12,125.41,301.9z"/>
+</svg>`;
+    },
+
+
+    icon_withdrawal(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Withdrawal"
+    width="${size}" height="${size}" viewBox="0 0 350.91 358.26" fill="none">
+    <title>Withdrawal</title>
+<g id="Layer_4">
+	<path fill="none" stroke="${bg_color}" stroke-width="5"  d="M321.66,349.33c7.96,0.01,15.33,0.02,15.33,0.02l0,0c3.46,0,6.91,0.01,10.37,0.01"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M34.84,348.92c1.74,0,279.26,0.39,279.3,0.39"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M3.55,348.87c4.67,0.01,9.35,0.01,14.02,0.02"/>
+</g>
+<g id="Layer_1">
+	<path fill="none" stroke="${bg_color}" stroke-width="5" opacity="0.4" d="M142.99,316.64c-9.05,0-16.39-7.34-16.39-16.39s7.34-16.39,16.39-16.39h37.69v32.91L142.99,316.64z"/>
+	<path fill="${bg_color}" opacity="0.2" d="M152.66,238.47c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07l-44.68-36.68 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C84.94,238.21,152.66,238.47,152.66,238.47z"/>
+	<path fill="${bg_color}" opacity="0.2" d="M14.78,301.26v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20H34.78 c-11.05,0-20,8.95-20,20v24.72"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M14.78,301.26v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20H34.78 c-11.05,0-20,8.95-20,20v24.72"/>
+	<line fill="none" stroke="${bg_color}" stroke-width="5" x1="17.78" y1="262.61" x2="184.14" y2="262.61"/>
+	<line fill="none" stroke="${bg_color}" stroke-width="5" x1="17.78" y1="328.17" x2="184.14" y2="328.17"/>
+	<path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M142.99,311.78c-9.05,0-16.39-7.34-16.39-16.39c0-9.05,7.34-16.39,16.39-16.39h37.69v32.91L142.99,311.78z"/>
+	<circle fill="none" stroke="${bg_color}" stroke-width="5" cx="149.91" cy="295.91" r="7.77"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M152.66,240.51c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07l-44.68-36.68 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C84.94,240.26,152.66,240.51,152.66,240.51z"/>
+	<path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M133.5,240.53l10.6-12.38c0,0-5.99-5.32-6.23-9.29c-0.37-6,3.65-8.72,3.65-8.72l-19.4-14.96 c0,0-2.21,4.41-8.07,5.82c-6.34,1.52-11.19-1.95-11.87-2.44c0,0-21.74,25.57-35.11,41.86C90.9,239.21,133.5,240.53,133.5,240.53z"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M92.71,236.06c0,6.49,5.26,4.75,11.75,4.75s11.75,1.74,11.75-4.75c0-6.49-5.26-11.75-11.75-11.75 S92.71,229.58,92.71,236.06z"/>
+</g>
+<g id="Layer_2">
+	<path fill="${bg_color}" opacity="0.2" d="M131.44,70.38l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83c3.44-4.32,2.73-10.61-1.6-14.05 L179.58,9.9c-4.32-3.44-10.61-2.73-14.05,1.6l-35.69,44.83C126.4,60.65,127.12,66.94,131.44,70.38z"/>
+	<path fill="${bg_color}" opacity="0.2" d="M327.18,118.34l-25.09,34.76c-1.62,2.24-1.11,5.36,1.13,6.98l5.94,4.29c2.24,1.62,5.36,1.11,6.98-1.13 l25.09-34.76c1.62-2.24,1.11-5.36-1.13-6.98l-5.94-4.29C331.92,115.6,328.79,116.1,327.18,118.34z"/>
+	<path fill="${bg_color}" opacity="0.2" d="M274.47,103.99c0,0-29.11,37.98-34.39,42.29c-5.28,4.31-11.38,3.03-16.44-1 c-5.06-4.03-93.51-74.75-93.51-74.75c-3.44,4.32-4.73,13.61-0.4,17.05l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83 C279.5,113.72,278.79,107.42,274.47,103.99"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M131.44,70.38l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83c3.44-4.32,2.73-10.61-1.6-14.05 L179.58,9.9c-4.32-3.44-10.61-2.73-14.05,1.6l-35.69,44.83C126.4,60.65,127.12,66.94,131.44,70.38z"/>
+	<path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M148.29,73.25l74.18,58.62c2.24,1.78,4.88-2.55,9.31-2.92c4.13-0.34,8.08,4.41,9.74,2.33l20.58-25.4 c1.72-2.16-5.1-6.81-5.89-11.36c-0.79-4.54,4.45-8.98,2.29-10.7l-71.18-55.62c-2.23-1.78-5.87,3.82-10.29,4.45 c-4.14,0.58-9.1-3.94-10.76-1.85l-19.58,23.4c-1.72,2.16,3.6,6.06,3.89,9.86C150.87,67.85,146.13,71.53,148.29,73.25z"/>
+	<circle fill="${bg_color}" cx="172.01" cy="55.74" r="6.35"/>
+	<circle fill="${bg_color}" cx="235.58" cy="105.92" r="6.35"/>
+	<ellipse fill="none" stroke="${bg_color}" stroke-width="5" cx="203.49" cy="81.47" rx="22.23" ry="22.74"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M208.72,81.71c0,0,7.92-2.25,4-8.2c-1.67-2.54-5.56-3.27-7.91-0.88c-2.29,2.33-3.46,4.56-1.2,8.08 c1.98,3.09,2.14,2.91,2.28,5.44c0.25,4.42-3.65,6.57-6.81,5.31c-3.16-1.26-4.66-3.3-4.81-6.95c-0.18-4.42,4.02-5.04,4.02-5.04"/>
+	<line fill="none" stroke="${bg_color}" stroke-width="5" x1="213.8" y1="68.72" x2="211.24" y2="72.05"/>
+	<line fill="none" stroke="${bg_color}" stroke-width="5" x1="196.29" y1="90.14" x2="193.73" y2="93.48"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M275.87,103.99c0,0-29.11,37.98-34.39,42.29c-5.28,4.31-11.38,3.03-16.44-1 c-5.06-4.03-93.51-74.75-93.51-74.75c-3.44,4.32-4.73,13.61-0.4,17.05l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83 C280.9,113.72,280.19,107.42,275.87,103.99"/>
+	<path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M323.6,121.25c0,0-10.59-17.67-18.42-27.02s-30.29-27.54-34.59-28.55s-16.44,2.02-16.44,2.02l22.48,18.44 c0,0,1.77,0.51,5.05,2.02c3.28,1.52,26.02,24.51,26.02,24.51S286.12,86,277.13,86.66c-13.63,1-19.46-1.94-26.02-1.16 c-4.54,0.54-6.33,7.46-0.52,9.23c5.81,1.77,16.44,1.52,21.49,4.8c5.05,3.28,1.75,7.32,5.05,13.64c3.3,6.32,13.64,16.68,13.64,16.68 l-11.35-11.36l-11.39,14.89c0,0,9.85,10.36,14.65,11.62c4.8,1.26,22.99,2.53,22.99,2.53L323.6,121.25z"/>
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M327.18,118.34l-25.09,34.76c-1.62,2.24-1.11,5.36,1.13,6.98l5.94,4.29c2.24,1.62,5.36,1.11,6.98-1.13 l25.09-34.76c1.62-2.24,1.11-5.36-1.13-6.98l-5.94-4.29C331.92,115.6,328.79,116.1,327.18,118.34z"/>
+</g>
+<g id="Layer_3">
+	<path fill="none" stroke="${bg_color}" stroke-width="5" d="M118.2,46.96l-39.24,5.29l12.54,4.15c0,0-44.13,14.12-59.45,66.77c-7.22,24.81-7.12,53.12-7.04,58.14 c-4.24,1.8-7.22,6-7.22,10.89c0,6.53,5.29,11.83,11.83,11.83s11.83-5.29,11.83-11.83c0-5.6-3.89-10.27-9.11-11.5 c-0.01-7.72,0.56-26.88,5.53-50.12c11.28-52.75,58.74-68.04,58.74-68.04l-0.35,12.38L118.2,46.96z"/>
+</g>
+</svg>`;
+    },
+
+
+    icon_deposit(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Deposit"
+    width="${size}" height="${size}" viewBox="0 0 350.91 358.26" fill="none">
+    <title>Deposit</title>
+<g id="Layer_4">
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M321.66,349.33c7.96,0.01,15.33,0.02,15.33,0.02l0,0c3.46,0,6.91,0.01,10.37,0.01"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M34.84,348.92c1.74,0,279.26,0.39,279.3,0.39"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M3.55,348.87c4.67,0.01,9.35,0.01,14.02,0.02"/>
+</g>
+<g id="Layer_1">
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" opacity="0.4" d="M142.99,316.64c-9.05,0-16.39-7.34-16.39-16.39s7.34-16.39,16.39-16.39h37.69v32.91L142.99,316.64z"/>
+	<path  fill="${bg_color}" opacity="0.2" d="M152.66,238.47c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07l-44.68-36.68 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C84.94,238.21,152.66,238.47,152.66,238.47z"/>
+	<path  fill="${bg_color}" opacity="0.2" d="M14.78,301.26v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20H34.78 c-11.05,0-20,8.95-20,20v24.72"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M14.78,301.26v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20H34.78 c-11.05,0-20,8.95-20,20v24.72"/>
+	<line  fill="none" stroke="${bg_color}" stroke-width="5" x1="17.78" y1="262.61" x2="184.14" y2="262.61"/>
+	<line  fill="none" stroke="${bg_color}" stroke-width="5" x1="17.78" y1="328.17" x2="184.14" y2="328.17"/>
+	<path  fill="#fff" stroke="${bg_color}" stroke-width="5"  d="M142.99,311.78c-9.05,0-16.39-7.34-16.39-16.39c0-9.05,7.34-16.39,16.39-16.39h37.69v32.91L142.99,311.78z"/>
+	<circle  fill="none" stroke="${bg_color}" stroke-width="5" cx="149.91" cy="295.91" r="7.77"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M152.66,240.51c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07l-44.68-36.68 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C84.94,240.26,152.66,240.51,152.66,240.51z"/>
+	<path  fill="#fff" stroke="${bg_color}" stroke-width="5" d="M133.5,240.53l10.6-12.38c0,0-5.99-5.32-6.23-9.29c-0.37-6,3.65-8.72,3.65-8.72l-19.4-14.96 c0,0-2.21,4.41-8.07,5.82c-6.34,1.52-11.19-1.95-11.87-2.44c0,0-21.74,25.57-35.11,41.86C90.9,239.21,133.5,240.53,133.5,240.53z"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M92.71,236.06c0,6.49,5.26,4.75,11.75,4.75s11.75,1.74,11.75-4.75c0-6.49-5.26-11.75-11.75-11.75 S92.71,229.58,92.71,236.06z"/>
+</g>
+<g id="Layer_2">
+	<path  fill="${bg_color}" opacity="0.2" d="M131.44,70.38l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83c3.44-4.32,2.73-10.61-1.6-14.05 L179.58,9.9c-4.32-3.44-10.61-2.73-14.05,1.6l-35.69,44.83C126.4,60.65,127.12,66.94,131.44,70.38z"/>
+	<path  fill="${bg_color}" opacity="0.2"  d="M327.18,118.34l-25.09,34.76c-1.62,2.24-1.11,5.36,1.13,6.98l5.94,4.29c2.24,1.62,5.36,1.11,6.98-1.13 l25.09-34.76c1.62-2.24,1.11-5.36-1.13-6.98l-5.94-4.29C331.92,115.6,328.79,116.1,327.18,118.34z"/>
+	<path  fill="${bg_color}" opacity="0.2" d="M274.47,103.99c0,0-29.11,37.98-34.39,42.29c-5.28,4.31-11.38,3.03-16.44-1 c-5.06-4.03-93.51-74.75-93.51-74.75c-3.44,4.32-4.73,13.61-0.4,17.05l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83 C279.5,113.72,278.79,107.42,274.47,103.99"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M131.44,70.38l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83c3.44-4.32,2.73-10.61-1.6-14.05 L179.58,9.9c-4.32-3.44-10.61-2.73-14.05,1.6l-35.69,44.83C126.4,60.65,127.12,66.94,131.44,70.38z"/>
+	<path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M148.29,73.25l74.18,58.62c2.24,1.78,4.88-2.55,9.31-2.92c4.13-0.34,8.08,4.41,9.74,2.33l20.58-25.4 c1.72-2.16-5.1-6.81-5.89-11.36c-0.79-4.54,4.45-8.98,2.29-10.7l-71.18-55.62c-2.23-1.78-5.87,3.82-10.29,4.45 c-4.14,0.58-9.1-3.94-10.76-1.85l-19.58,23.4c-1.72,2.16,3.6,6.06,3.89,9.86C150.87,67.85,146.13,71.53,148.29,73.25z"/>
+	<circle fill="${bg_color}" cx="172.01" cy="55.74" r="6.35"/>
+	<circle fill="${bg_color}" cx="235.58" cy="105.92" r="6.35"/>
+	<ellipse  fill="none" stroke="${bg_color}" stroke-width="5" cx="203.49" cy="81.47" rx="22.23" ry="22.74"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M208.72,81.71c0,0,7.92-2.25,4-8.2c-1.67-2.54-5.56-3.27-7.91-0.88c-2.29,2.33-3.46,4.56-1.2,8.08 c1.98,3.09,2.14,2.91,2.28,5.44c0.25,4.42-3.65,6.57-6.81,5.31c-3.16-1.26-4.66-3.3-4.81-6.95c-0.18-4.42,4.02-5.04,4.02-5.04"/>
+	<line  fill="none" stroke="${bg_color}" stroke-width="5" x1="213.8" y1="68.72" x2="211.24" y2="72.05"/>
+	<line  fill="none" stroke="${bg_color}" stroke-width="5" x1="196.29" y1="90.14" x2="193.73" y2="93.48"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M275.87,103.99c0,0-29.11,37.98-34.39,42.29c-5.28,4.31-11.38,3.03-16.44-1 c-5.06-4.03-93.51-74.75-93.51-74.75c-3.44,4.32-4.73,13.61-0.4,17.05l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83 C280.9,113.72,280.19,107.42,275.87,103.99"/>
+	<path  fill="#fff" stroke="${bg_color}" stroke-width="5" d="M323.6,121.25c0,0-10.59-17.67-18.42-27.02s-30.29-27.54-34.59-28.55s-16.44,2.02-16.44,2.02l22.48,18.44 c0,0,1.77,0.51,5.05,2.02c3.28,1.52,26.02,24.51,26.02,24.51S286.12,86,277.13,86.66c-13.63,1-19.46-1.94-26.02-1.16 c-4.54,0.54-6.33,7.46-0.52,9.23c5.81,1.77,16.44,1.52,21.49,4.8c5.05,3.28,1.75,7.32,5.05,13.64c3.3,6.32,13.64,16.68,13.64,16.68 l-11.35-11.36l-11.39,14.89c0,0,9.85,10.36,14.65,11.62c4.8,1.26,22.99,2.53,22.99,2.53L323.6,121.25z"/>
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M327.18,118.34l-25.09,34.76c-1.62,2.24-1.11,5.36,1.13,6.98l5.94,4.29c2.24,1.62,5.36,1.11,6.98-1.13 l25.09-34.76c1.62-2.24,1.11-5.36-1.13-6.98l-5.94-4.29C331.92,115.6,328.79,116.1,327.18,118.34z"/>
+</g>
+<g id="Layer_3">
+	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M202.57,315.81l39.42,3.73l-11.27-6.88c0,0,46.18-3.76,73.03-51.57c12.66-22.53,18.97-50.12,20.03-55.03 c4.54-0.79,8.39-4.21,9.5-8.98c1.48-6.36-2.48-12.72-8.84-14.2s-12.72,2.48-14.2,8.84c-1.27,5.45,1.46,10.89,6.27,13.27 c-1.74,7.52-6.64,26.05-16.74,47.56c-22.94,48.82-72.63,52.96-72.63,52.96l3.15-11.98L202.57,315.81z"/>
+</g>
+</svg>`;
+    },
+
+
+    icon_transition(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Transition"
+    width="${size}" height="${size}" viewBox="0 0 350.91 358.26" fill="none">
+    <title>Transition</title>
+    <g id="Layer_4">
+		<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M321.66,349.33c7.96,0.01,15.33,0.02,15.33,0.02l0,0c3.46,0,6.91,0.01,10.37,0.01"/>
+		<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M34.84,348.92c1.74,0,279.26,0.39,279.3,0.39"/>
+		<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M3.55,348.87c4.67,0.01,9.35,0.01,14.02,0.02"/>
+	</g>
+	<g id="Layer_1">
+		<path fill="none" stroke="${bg_color}" stroke-width="5" opacity="0.4" d="M142.99,316.64c-9.05,0-16.39-7.34-16.39-16.39s7.34-16.39,16.39-16.39h37.69v32.91L142.99,316.64z"/>
+		<path fill="${bg_color}" opacity="0.2" d="M152.66,238.47c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07l-44.68-36.68 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C84.94,238.21,152.66,238.47,152.66,238.47z"/>
+		<path fill="${bg_color}" opacity="0.2" d="M14.78,301.26v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20H34.78 c-11.05,0-20,8.95-20,20v24.72"/>
+		<path fill="none" stroke="${bg_color}" stroke-width="5" d="M14.78,301.26v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20H34.78 c-11.05,0-20,8.95-20,20v24.72"/>
+		<line fill="none" stroke="${bg_color}" stroke-width="5" x1="17.78" y1="262.61" x2="184.14" y2="262.61"/>
+		<line fill="none" stroke="${bg_color}" stroke-width="5" x1="17.78" y1="328.17" x2="184.14" y2="328.17"/>
+		<path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M142.99,311.78c-9.05,0-16.39-7.34-16.39-16.39c0-9.05,7.34-16.39,16.39-16.39h37.69v32.91L142.99,311.78z"/>
+		<circle fill="none" stroke="${bg_color}" stroke-width="5" cx="149.91" cy="295.91" r="7.77"/>
+		<path fill="none" stroke="${bg_color}" stroke-width="5" d="M152.66,240.51c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07l-44.68-36.68 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C84.94,240.26,152.66,240.51,152.66,240.51z"/>
+		<path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M133.5,240.53l10.6-12.38c0,0-5.99-5.32-6.23-9.29c-0.37-6,3.65-8.72,3.65-8.72l-19.4-14.96 c0,0-2.21,4.41-8.07,5.82c-6.34,1.52-11.19-1.95-11.87-2.44c0,0-21.74,25.57-35.11,41.86C90.9,239.21,133.5,240.53,133.5,240.53z"/>
+		<path fill="none" stroke="${bg_color}" stroke-width="5" d="M92.71,236.06c0,6.49,5.26,4.75,11.75,4.75s11.75,1.74,11.75-4.75c0-6.49-5.26-11.75-11.75-11.75 S92.71,229.58,92.71,236.06z"/>
+	</g>
+    <g id="Layer_5">
+    	<path fill="none" stroke="${bg_color}" stroke-width="5" opacity="0.4"  d="M267.98,156.03c-9.05,0-16.39-7.34-16.39-16.39s7.34-16.39,16.39-16.39h37.69v32.91L267.98,156.03z"/>
+	    <path fill="${bg_color}" opacity="0.2" d="M277.65,77.85c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07l-44.68-36.68 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C209.93,77.6,277.65,77.85,277.65,77.85z"/>
+    	<path fill="${bg_color}" opacity="0.2" d="M139.77,140.65v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20 H159.77c-11.05,0-20,8.95-20,20v24.72"/>
+    	<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M139.77,140.65v27.75c0,11.05,8.95,20,20,20h129.77c11.05,0,20-8.95,20-20v-68.38c0-11.05-8.95-20-20-20 H159.77c-11.05,0-20,8.95-20,20v24.72"/>
+	    <line  fill="none" stroke="${bg_color}" stroke-width="5" x1="142.77" y1="102" x2="309.13" y2="102"/>
+	    <line  fill="none" stroke="${bg_color}" stroke-width="5" x1="142.77" y1="167.56" x2="309.13" y2="167.56"/>
+	    <path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M267.98,151.17c-9.05,0-16.39-7.34-16.39-16.39c0-9.05,7.34-16.39,16.39-16.39h37.69v32.91L267.98,151.17z"/>
+	    <circle  fill="none" stroke="${bg_color}" stroke-width="5" cx="274.89" cy="135.29" r="7.77"/>
+	    <path  fill="none" stroke="${bg_color}" stroke-width="5" d="M277.65,79.9c0,0,8.67-11.56,13-16.83c3.5-4.27,2.88-10.57-1.38-14.07l-44.68-36.68 c-4.27-3.5-10.57-2.88-14.07,1.38c-18.15,22.11-36.3,44.21-54.45,66.32C209.93,79.65,277.65,79.9,277.65,79.9z"/>
+    	<path fill="#fff" stroke="${bg_color}" stroke-width="5" d="M258.49,79.91l10.6-12.38c0,0-5.99-5.32-6.23-9.29c-0.37-6,3.65-8.72,3.65-8.72l-19.4-14.96 c0,0-2.21,4.41-8.07,5.82c-6.34,1.52-11.19-1.95-11.87-2.44c0,0-21.74,25.57-35.11,41.86C215.89,78.6,258.49,79.91,258.49,79.91z"/>
+	    <path  fill="none" stroke="${bg_color}" stroke-width="5" d="M217.69,75.45c0,6.49,5.26,4.75,11.75,4.75c6.49,0,11.75,1.74,11.75-4.75s-5.26-11.75-11.75-11.75	C222.95,63.7,217.69,68.96,217.69,75.45z"/>
+    </g>
+	<g id="Layer_3">
+		<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M202.57,315.81l39.42,3.73l-11.27-6.88c0,0,46.18-3.76,73.03-51.57c12.66-22.53,18.97-50.12,20.03-55.03 c4.54-0.79,8.39-4.21,9.5-8.98c1.48-6.36-2.48-12.72-8.84-14.2s-12.72,2.48-14.2,8.84c-1.27,5.45,1.46,10.89,6.27,13.27 c-1.74,7.52-6.64,26.05-16.74,47.56c-22.94,48.82-72.63,52.96-72.63,52.96l3.15-11.98L202.57,315.81z"/>
+		<path fill="none" stroke="${bg_color}" stroke-width="5" d="M118.2,46.96l-39.24,5.29l12.54,4.15c0,0-44.13,14.12-59.45,66.77c-7.22,24.81-7.12,53.12-7.04,58.14 c-4.24,1.8-7.22,6-7.22,10.89c0,6.53,5.29,11.83,11.83,11.83s11.83-5.29,11.83-11.83c0-5.6-3.89-10.27-9.11-11.5 c-0.01-7.72,0.56-26.88,5.53-50.12c11.28-52.75,58.74-68.04,58.74-68.04l-0.35,12.38L118.2,46.96z"/>
+	</g>
 </svg>`;
     },
 

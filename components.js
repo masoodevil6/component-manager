@@ -3055,6 +3055,7 @@ class ComponentCardInfoBase extends ComponentBase{
 
         part_border_body: [
             this._COMPONENT_PATTERN.prop_body,
+            this._COMPONENT_PATTERN.prop_size,
         ],
 
 
@@ -3131,7 +3132,7 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
        </component-border>
         
                 `;
-        return this.templateBasic_render_structure(content);
+        return this.templateBasic_render_structure(content , ["mb-3"]);
     }
 
     componentFn_render_border_body(partName) {
@@ -3139,6 +3140,9 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
 
         if (data != null){
             const prop_body =     data.hasOwnProperty("prop_body") && data.prop_body != null      ? data.prop_body           : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+            const prop_size      = data.hasOwnProperty("prop_size")                               ? data.prop_size           : null;
+
+            const elHeight = tools_css.getHeightSize();
 
             return `
 <section data-part-name="${partName}"
@@ -3149,6 +3153,7 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
       #${this._COMPONENT_ID} #component-card-info-border-body-${this._COMPONENT_RANDOM_ID}{
            display:  flow-root;
            overflow: hidden;
+           padding-top: ${elHeight+10}px;
       }
 
    </style>
@@ -3188,10 +3193,9 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
 
    <style>
       #${this._COMPONENT_ID} #component-card-info-border-body-options-${this._COMPONENT_RANDOM_ID}{
-           top: 50%;
-           ${directionRtl ? "left" : "right"} :  20px;
+           top: 10px;
+           ${directionRtl ? "left" : "right"} :  10px;
            background-color: ${prop_backgroundOptions};
-           transform: translate(0 , -50%);
            opacity: ${prop_optionsOpacity/100};
       }
       #${this._COMPONENT_ID}  #component-card-info-border-body-${this._COMPONENT_RANDOM_ID}:hover #component-card-info-border-body-options-${this._COMPONENT_RANDOM_ID} {
@@ -3249,6 +3253,10 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
       FUNCTIONs
     --------------------------------------------- */
     fn_getHtmlOptions(prop_options){
+        const data = this._COMPONENT_CONFIG;
+        const prop_size             = data.hasOwnProperty("prop_size")              ? data.prop_size              : null;
+        const prop_colorItem        =  data.hasOwnProperty("prop_colorItem")        ? data.prop_colorItem         : "";
+
         let html= "";
         if (prop_options != null && Array.isArray(prop_options)){
             for (let i = 0; i < prop_options.length; i++) {
@@ -3257,7 +3265,7 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
                <div class="component-card-info-border-body-options-${this._COMPONENT_RANDOM_ID}-item float-start rounded mx-1 text-center " 
                     title="${itemOption?.attrs?.title ?? ""}" 
                     onclick="${this.getFn("fn_onclickOtiponCard" , "event" , `'${itemOption?.attrs?.name ?? ""}'` , `'${itemOption?.attrs?.id ?? ''}'` )}">
-                   ${itemOption?.html ?? ""}
+                   ${typeof itemOption?.html == "function" ? itemOption?.html(prop_size , prop_colorItem ) : itemOption?.html ?? ""}
                </div>
             `
             }
@@ -18792,7 +18800,7 @@ class ComponentTableBase extends ComponentBase{
         },
         prop_headerIconSize: {
             prop: "prop_headerIconSize",
-            default: 25
+            default: 15
         },
         prop_headerIconBackgroundColor: {
             prop: "prop_headerIconBackgroundColor",
@@ -19182,6 +19190,12 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
              border: 3px solid ${prop_headerIconBorderColor};
              width:  ${prop_headerIconSize+15}px;
              height:  ${prop_headerIconSize+15}px;
+         }
+         #${this._COMPONENT_ID} .component-table-header-item-icon-${this._COMPONENT_RANDOM_ID} svg{
+             position: absolute;
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
          }
      </style>
     <tr>
@@ -19591,9 +19605,10 @@ ${itemRowOptions}
 
     fn_onGetHtmlBody_rowOption(itemBody){
         const data = this._COMPONENT_CONFIG;
-        const prop_rowOptions    =   data.hasOwnProperty("prop_rowOptions")                     ?  data.prop_rowOptions                           : [];
-        const directionRtl       =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl             : false;
-        const prop_size          =   data.hasOwnProperty("prop_size")                           ?  data.prop_size                                 : null;
+        const prop_rowOptions             =   data.hasOwnProperty("prop_rowOptions")                     ?  data.prop_rowOptions                           : [];
+        const directionRtl                =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl             : false;
+        const prop_size                   =   data.hasOwnProperty("prop_size")                           ?  data.prop_size                                 : null;
+        const prop_rowOptionsItemColor    =   data.hasOwnProperty("prop_rowOptionsItemColor")            ?  data.prop_rowOptionsItemColor                      : "";
         //const elHeight = tools_css.getHeightSize(prop_size);
         let html = "";
 
@@ -19610,7 +19625,7 @@ ${itemRowOptions}
                <div class="component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID}-item rounded text-center float-start mx-1 " 
                     title="${itemOption?.attrs?.title ?? ""}" 
                     onclick="${this.getFn("fn_onclickOtiponCard" , "event" , `'${itemOption?.attrs?.name ?? ""}'` , `'${itemBody[itemOption.attrs.id]?.content ?? "" }'` )}">
-                   ${itemOption.html}
+                   ${typeof  itemOption.html == "function" ? itemOption.html(prop_size , prop_rowOptionsItemColor) : itemOption.html}
                </div>
             `
                 }
@@ -19622,7 +19637,7 @@ ${itemRowOptions}
                     <div class="component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID} rounded position-absolute py-1 px-2">
                     
                         <div class="component-table-body-item-option-col-arrow-${this._COMPONENT_RANDOM_ID} rounded text-center  mx-1 " >
-                               ${directionRtl ? tools_icons.icon_arrow_right(prop_size) : tools_icons.icon_arrow_left(prop_size)}
+                               ${directionRtl ? tools_icons.icon_arrow_right(prop_size , prop_rowOptionsItemColor) : tools_icons.icon_arrow_left(prop_size , prop_rowOptionsItemColor)}
                         </div>
                         
                         <div class="component-table-body-item-option-col-icons-${this._COMPONENT_RANDOM_ID}" style="width: ${prop_rowOptions.length * 50}px" >
@@ -19792,6 +19807,10 @@ class ComponentTableResponsibleBase extends ComponentBase{
             prop: "prop_options",
             default: null
         },
+        prop_headerIconSize: {
+            prop: "prop_headerIconSize",
+            default: 15
+        },
 
         prop_backgroundColorIconColumnSelector: {
             prop: "prop_backgroundColorIconColumnSelector",
@@ -19846,6 +19865,8 @@ class ComponentTableResponsibleBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_colorIconCardvView,
             this._COMPONENT_PATTERN.prop_backgroundColorIconCardvView,
             this._COMPONENT_PATTERN.prop_borderColorIconCardvView,
+
+            this._COMPONENT_PATTERN.prop_headerIconSize,
         ],
     };
 
@@ -19986,6 +20007,8 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
             const prop_backgroundColorIconColumnSelector    =   data.hasOwnProperty("ckgroundColorIconColumnSelector")             ?  data.ckgroundColorIconColumnSelector                   : "";
             const prop_colorIconColumnSelector              =   data.hasOwnProperty("prop_backgroundColorIconColumnSelector")      ?  data.prop_backgroundColorIconColumnSelector            : "";
 
+            const prop_headerIconSize                       =   data.hasOwnProperty("prop_headerIconSize")                         ?  data.prop_headerIconSize            : 20;
+
             formEl.innerHTML = `<component-table id="component-table-responsible-${ this._COMPONENT_RANDOM_ID}-table"></component-table>`
 
             const componentTable = new window.ComponentTable (
@@ -19994,6 +20017,7 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                     prop_order , prop_header ,  prop_data ,
                     prop_backgroundColorIconColumnSelector ,  prop_colorIconColumnSelector ,
                     prop_doColSelector,
+                    prop_headerIconSize ,
                     prop_tableItemHeadStyles: {
                         "background-color" : prop_backgroundcolorHeader ,
                         "color" : prop_colorHeader ,
@@ -20105,6 +20129,7 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         const prop_borderColorIconCardvView        =   data.hasOwnProperty("prop_borderColorIconCardvView")          ?  data.prop_borderColorIconCardvView            : "";
         const prop_size                            =   data.hasOwnProperty("prop_size")                              ?  data.prop_size                                : null;
         const directionRtl                         =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")         ? this._COMPONENT_CONFIG.directionRtl            : false;
+        const prop_headerIconSize                  =   data.hasOwnProperty("prop_headerIconSize")                    ?  data.prop_headerIconSize                      : 20;
 
         const elHeight = tools_css.getHeightSize(prop_size);
         const elFontSize = tools_css.getFontSize(prop_size);
@@ -20115,7 +20140,7 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
         if (itemHeader!= null && itemHeader.hasOwnProperty("icon") ){
             iconHtml = `
               <div class="component-table-responsible-card-view-form-icon-el-${ this._COMPONENT_RANDOM_ID}  position-absolute">
-                   ${(typeof itemHeader.icon == "function" ? itemHeader.icon(prop_size , prop_colorIconCardvView) : itemHeader.icon)}
+                   ${(typeof itemHeader.icon == "function" ? itemHeader.icon(prop_headerIconSize , prop_colorIconCardvView) : itemHeader.icon)}
               </div>
             `
         }
@@ -20128,14 +20153,10 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                 height: ${elHeight+10}px;        
           }
           .component-table-responsible-card-view-form-icon-${ this._COMPONENT_RANDOM_ID}{
-              background-color: ${prop_borderColorIconCardvView};
-              width: 150px;
               float: ${directionRtl ? "right" : "left"};
-              border-bottom: 3px solid ${prop_borderColorIconCardvView};
+              width: 200px;
           }
           .component-table-responsible-card-view-form-icon-el-${ this._COMPONENT_RANDOM_ID}{
-               background-color: ${prop_backgroundColorIconCardvView};
-               border: 3px solid ${prop_borderColorIconCardvView};
                border-radius: 100%;
                width: ${elIconSize+15}px;
                height: ${elIconSize+15}px;
@@ -20144,8 +20165,8 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
                ${directionRtl ? "right" : "left"} : 0;
                transform: translate(0 , -50%);
           }
-          .component-table-responsible-card-view-form-icon-${ this._COMPONENT_RANDOM_ID} b{
-              color: ${prop_backgroundColorIconCardvView};
+          .component-table-responsible-card-view-form-icon-${ this._COMPONENT_RANDOM_ID} span{
+              color: ${prop_colorIconCardvView};
               font-size: ${elFontSize}px;
               height: ${elHeight}px;
               line-height: ${elHeight}px;
@@ -20153,18 +20174,18 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
               ${directionRtl ? "margin-right" : "margin-left"} : ${elIconSize + 25}px;
           }
           .component-table-responsible-card-view-form-info-${ this._COMPONENT_RANDOM_ID}{
-              width: calc(100% - 150px);
+              width: calc(100% - 200px);
               float: ${directionRtl ? "right" : "left"};
               font-size: ${elFontSize}px;
               height: ${elHeight}px;
               line-height: ${elHeight}px;
-               color: ${prop_colorIconCardvView};
+              color: ${prop_colorIconCardvView};
           }
      </style>
      
      <div class="component-table-responsible-card-view-form-icon-${ this._COMPONENT_RANDOM_ID}  h-100 position-relative rounded">
          ${iconHtml}
-         <b>${itemHeader.content}</b>
+         <span>${itemHeader.content} :</span>
      </div>
    
      <div class="component-table-responsible-card-view-form-info-${ this._COMPONENT_RANDOM_ID} px-2 h-100">
@@ -20175,10 +20196,6 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
 </div>
 
 `;
-
-        //  : <span></span> </br>
-
-
         return html;
     }
 
@@ -24265,7 +24282,7 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 {
                     "text-anchor" : "middle" ,
                     "dominant-baseline" : "middle" ,
-                    "font-size" : "16" ,
+                    "font-size" : "12" ,
                     "fill" : number <= prop_stepSelected ? prop_activeBreadcrumb : prop_unactiveBreadcrumb ,
                 },
                 {
@@ -24295,7 +24312,7 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                     {
                         "text-anchor" : "middle" ,
                         "dominant-baseline" : "middle" ,
-                        "font-size" : "16" ,
+                        "font-size" : "12" ,
                         "fill" : number <= prop_stepSelected ? prop_colorUnactive : prop_colorActive  ,
                     },
                     {
@@ -31113,7 +31130,7 @@ class ComponentReportBase extends ComponentBase{
 
         prop_size: {
             prop: "prop_size",
-            default: tools_css.standardSizes.xl.name
+            default: tools_css.standardSizes.m.name
         },
         prop_sizeHeader: {
             prop: "prop_sizeHeader",
@@ -31592,7 +31609,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             return `
 <section data-part-name="${partName}" 
          id="component-report-page-main-form-new-${this._COMPONENT_RANDOM_ID}"
-         class="border border-2 shadow-sm py-2  p-0 m-0 row mt-2  mb-0 bg-white" 
+         class=" py-2 py-lg-5  p-0 m-0 row mt-2  mb-0 bg-white" 
          >
          
      <style>
@@ -31610,7 +31627,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
          <component-icon id="component-report-page-main-form-new-icon-page-${this._COMPONENT_RANDOM_ID}"></component-icon>
       </div>
      
-     <div class="col-md-9 col-12"> 
+     <div class="col-md-6 col-12"> 
           
           <b id="component-report-page-main-form-new-description-${this._COMPONENT_RANDOM_ID}"
              class=" text-center mt-2 d-block">
@@ -31639,7 +31656,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             return `
 <section data-part-name="${partName}" 
          id="component-report-page-main-form-table-${this._COMPONENT_RANDOM_ID}"
-         class="mt-2 border shadow-sm bg-white p-2 " 
+         class="mt-2  bg-white p-2 " 
          >
          
      <style>
@@ -31782,9 +31799,11 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                     },
 
                     prop_size ,
-                    prop_btnClass: ["d-block" , "m-auto" , "mb-1" , "mt-2"] ,
+                    prop_btnClass: ["d-block" , "m-auto" , "mb-1" , "mt-2" ] ,
                     prop_btnStyles: {
-                        "width" : "200px"
+                        "width" : "300px" ,
+                        "height" : "40px" ,
+                        "line-height" : "40px" ,
                     } ,
                     prop_title: `
 <b>${prop_btnTitleNewPage}</b>
