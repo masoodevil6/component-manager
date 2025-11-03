@@ -125,7 +125,9 @@ tools_init = {
             },
 
             form: {
-                backgroundColor_title:                 component_props.secondaryColor1 ,
+                backgroundColor_btnSubmit:             component_props.primaryColor1 ,
+                backgroundColor_btnSubmit_hover:       component_props.primaryColor2 ,
+                color_btnSubmit:                       component_props.shanColor1 ,
             },
 
             title: {
@@ -441,8 +443,12 @@ tools_init = {
 
             changePage: {
                 backgroundColor_shadow:                component_props.shadowColor1 ,
+                backgroundColor_page:                  component_props.primaryColor5 ,
             } ,
-
+            pageCardInfo: {
+                color_iconPage:                        component_props.infoColor1 ,
+                color_iconBtn:                         component_props.shanColor1 ,
+            } ,
 
         };
     }
@@ -456,37 +462,37 @@ tools_css = {
             name: "x-s",
             fontSize: 8,
             height: 22,
-            icon: 14
+            icon: 12
         } ,
         s: {
             name: "s" ,
             fontSize: 10 ,
             height: 24,
-            icon: 16
+            icon: 14
         } ,
         m: {
             name: "m" ,
             fontSize: 12,
             height: 26,
-            icon: 18
+            icon: 16
         } ,
         l: {
             name:  "l"  ,
             fontSize: 13,
             height: 28,
-            icon: 20
+            icon: 18
         } ,
         xl: {
             name:  "x-l" ,
             fontSize: 14,
             height: 30,
-            icon: 24
+            icon: 20
         } ,
         xxl: {
             name: "xx-l",
             fontSize: 15 ,
             height: 32,
-            icon: 28
+            icon: 22
         }
     } ,
 
@@ -2838,6 +2844,27 @@ tools_icons = {
 		<path  fill="none" stroke="${bg_color}" stroke-width="5" d="M202.57,315.81l39.42,3.73l-11.27-6.88c0,0,46.18-3.76,73.03-51.57c12.66-22.53,18.97-50.12,20.03-55.03 c4.54-0.79,8.39-4.21,9.5-8.98c1.48-6.36-2.48-12.72-8.84-14.2s-12.72,2.48-14.2,8.84c-1.27,5.45,1.46,10.89,6.27,13.27 c-1.74,7.52-6.64,26.05-16.74,47.56c-22.94,48.82-72.63,52.96-72.63,52.96l3.15-11.98L202.57,315.81z"/>
 		<path fill="none" stroke="${bg_color}" stroke-width="5" d="M118.2,46.96l-39.24,5.29l12.54,4.15c0,0-44.13,14.12-59.45,66.77c-7.22,24.81-7.12,53.12-7.04,58.14 c-4.24,1.8-7.22,6-7.22,10.89c0,6.53,5.29,11.83,11.83,11.83s11.83-5.29,11.83-11.83c0-5.6-3.89-10.27-9.11-11.5 c-0.01-7.72,0.56-26.88,5.53-50.12c11.28-52.75,58.74-68.04,58.74-68.04l-0.35,12.38L118.2,46.96z"/>
 	</g>
+</svg>`;
+    },
+
+
+
+    icon_changePassword(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ChangePassword"
+    width="${size}" height="${size}" viewBox="0 0 356.97 361.52" fill="none">
+    <title>Change Password</title>
+<path fill="none" stroke="${bg_color}" stroke-width="20" opacity="0.4"  d="M329.07,150.86l-27,5l36,16l3-33l-8.42,8.93c0,0-5.38-10.99-26.15-40.44c-38.44-54.5-93.44-65.14-124.94-64.72 c-58.81,0.79-150,54.37-150,150c0,82.84,67.16,150,150,150c20.91,0,38.67-4.84,44.6-6.74c55.49-17.77,82.96-64.15,90.77-78.56"/>
+<path fill="none" stroke="${bg_color}" stroke-width="20" opacity="0.4" d="M172.12,189l18.17-17.51c12.93-12.46,13.31-33.04,0.85-45.96l0,0c-12.46-12.93-33.04-13.31-45.96-0.85 l-18.17,17.51c-12.93,12.46-13.31,33.04-0.85,45.96l0,0C138.61,201.07,159.19,201.45,172.12,189z"/>
+<line fill="none" stroke="${bg_color}" stroke-width="20" opacity="0.4" x1="188.52" y1="184.92" x2="251.18" y2="246.57"/>
+<line fill="none" stroke="${bg_color}" stroke-width="20" opacity="0.4" x1="207.72" y1="211.45" x2="189.71" y2="229.39"/>
+<line fill="none" stroke="${bg_color}" stroke-width="20" opacity="0.4" x1="233.64" y1="234.42" x2="215.63" y2="252.36"/>
+<path fill="none" stroke="${bg_color}" stroke-width="20" d="M324.32,134.43l-27,5l36,16l3-33l-8.42,8.93c0,0-5.38-10.99-26.15-40.44c-38.44-54.5-93.44-65.14-124.94-64.72 c-58.81,0.79-150,54.37-150,150c0,82.84,67.16,150,150,150c20.91,0,38.67-4.84,44.6-6.74c55.49-17.77,82.96-64.15,90.77-78.56"/>
+<path fill="none" stroke="${bg_color}" stroke-width="20" d="M175.72,177.88l18.17-17.51c12.93-12.46,13.31-33.04,0.85-45.96l0,0c-12.46-12.93-33.04-13.31-45.96-0.85 l-18.17,17.51c-12.93,12.46-13.31,33.04-0.85,45.96l0,0C142.22,189.96,162.8,190.34,175.72,177.88z"/>
+<line fill="none" stroke="${bg_color}" stroke-width="20" x1="192.13" y1="173.8" x2="254.78" y2="235.45"/>
+<line fill="none" stroke="${bg_color}" stroke-width="20" x1="211.33" y1="200.34" x2="193.32" y2="218.27"/>
+<line fill="none" stroke="${bg_color}" stroke-width="20" x1="237.25" y1="223.31" x2="219.24" y2="241.24"/>
 </svg>`;
     },
 

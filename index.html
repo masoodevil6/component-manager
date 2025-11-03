@@ -61,7 +61,7 @@
                 </component-card-info>
 
 
-                <component-page-header id="page_header"></component-page-header>
+
 
                 <component-list-selected-scroller id="list-selected-scroller"></component-list-selected-scroller>
 
@@ -300,24 +300,19 @@
         </component-body>
     </component-collapse>
 
-    <component-collapse  id="el_specials">
+
+    <component-collapse  id="el_pages">
         <component-body>
 
             <section class="row p-0 m-0">
-                <component-draggable-orders    id="draggable_orders">
-                    <component-body>
-                        <span> item 1 </span>
-                        <span> item 2 </span>
-                        <span> item 3 </span>
-                        <span> item 4 </span>
-                    </component-body>
-                </component-draggable-orders>
-
 
                 <component-change-page  id="change-page">
 
                     <component-body>
                         <component-icon    id="change-page-icon"></component-icon>
+
+                        <component-page-card-info id="page_card_info"></component-page-card-info>
+
                     </component-body>
 
                     <component-pages name="a1">
@@ -333,8 +328,31 @@
                 </component-change-page>
 
 
-                <component-recycler-view  id="recycler-view"></component-recycler-view>
+                <component-page-header id="page_header"></component-page-header>
 
+
+
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
+
+    <component-collapse  id="el_specials">
+        <component-body>
+
+            <section class="row p-0 m-0">
+                <component-draggable-orders    id="draggable_orders">
+                    <component-body>
+                        <span> item 1 </span>
+                        <span> item 2 </span>
+                        <span> item 3 </span>
+                        <span> item 4 </span>
+                    </component-body>
+                </component-draggable-orders>
+
+                <component-recycler-view  id="recycler-view"></component-recycler-view>
 
             </section>
 
@@ -355,7 +373,6 @@
 
         </component-body>
     </component-collapse>
-
 
     <component-collapse  id="others">
         <component-body>
@@ -559,42 +576,7 @@
         );
 
 
-        /*-------------------------------------
-           01-010) Component page header
-        -------------------------------------*/
-        new window.ComponentPageHeader(
-            "page_header" ,
-            {
-                classList: "col-12 mt-2"  ,
 
-                prop_pageTitle: "Page Title Sample" ,
-
-                prop_optionsList:[
-                    {
-                        html: tools_icons.icon_excel ,
-                        attrs: {
-                            title: "Excel" ,
-                            name: "excel" ,
-                        }
-                    } ,
-                    {
-                        html: tools_icons.icon_print ,
-                        attrs: {
-                            title: "Print" ,
-                            name: "print" ,
-                        }
-                    }
-                ] ,
-
-                fn_onBackClick: (event)=>{
-                    console.log(event)
-                },
-
-                fn_onOptionClick: (event , optionName)=>{
-                    console.log(event , optionName)
-                }
-            }
-        );
 
         /*-------------------------------------
            01-010) Component page header
@@ -1891,29 +1873,6 @@
 
 
 
-        new window.ComponentIcon(
-            "change-page-icon" ,
-            {
-                classList: "col-md-3 col-12 mt-2"  ,
-
-                prop_icon: " &#x2315; " ,
-
-                fn_callback: (event) => {
-                    componentChangePage.call_openOrClosePage("a2");
-                    console.log(componentChangePage)
-                } ,
-            }
-        )
-
-        let componentChangePage = new window.ComponentChangePage(
-            "change-page" ,
-            {
-                classList: "col-md-3 col-12 mt-2"  ,
-
-
-            }
-        );
-
 
 
 
@@ -2109,11 +2068,86 @@
 
 
 
+/*=======================================================================================
+  [81]   pages
+======================================================================================*/
+
+    /// 080-01) Component page header
+    new window.ComponentIcon(
+        "change-page-icon" ,
+        {
+            classList: "col-12 mt-2"  ,
+
+
+            prop_icon: " &#x2315; " ,
+
+            fn_callback: (event) => {
+                componentChangePage.call_openOrClosePage("a2");
+                console.log(componentChangePage)
+            } ,
+        }
+    )
+    let componentChangePage = new window.ComponentChangePage(
+        "change-page" ,
+        {
+            classList: "col-12 mt-2"  ,
+            styles:{
+                "height" : "200px"
+            },
+
+        }
+    );
+
+
+    /// 080-02) Component page header
+    new window.ComponentPageHeader(
+        "page_header" ,
+        {
+            classList: "col-12 mt-2"  ,
+
+            prop_pageTitle: "Page Title Sample" ,
+
+            prop_optionsList:[
+                {
+                    html: tools_icons.icon_excel ,
+                    attrs: {
+                        title: "Excel" ,
+                        name: "excel" ,
+                    }
+                } ,
+                {
+                    html: tools_icons.icon_print ,
+                    attrs: {
+                        title: "Print" ,
+                        name: "print" ,
+                    }
+                }
+            ] ,
+
+            fn_onBackClick: (event)=>{
+                console.log(event)
+            },
+
+            fn_onOptionClick: (event , optionName)=>{
+                console.log(event , optionName)
+            }
+        }
+    );
 
 
 
-
-
+    /// 080-02) Component page card info
+    new window.ComponentPageCardInfo(
+        "page_card_info" ,
+        {
+            classList: "col-12 mt-2"  ,
+            prop_description: "description test" ,
+            prop_icon: tools_icons.icon_wallet2 ,
+            fn_callback: (event)=>{
+                alert("asd")
+            }
+        }
+    );
 
 
 
@@ -2148,7 +2182,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [03] Button And Inputs" ,
-                prop_bodyShow: true
+                prop_bodyShow: false
             }
         )
         new window.ComponentCollapse(
@@ -2250,15 +2284,27 @@
             }
         )
 
+
+    new window.ComponentCollapse(
+        "el_pages" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_title: " [80] el_pages" ,
+            prop_bodyShow: true
+        }
+    )
+
         new window.ComponentCollapse(
             "el_specials" ,
             {
                 classList: "col-md-3 col-12 mt-2"  ,
 
-                prop_title: " [99] el_specials" ,
+                prop_title: " [81] el_specials" ,
                 prop_bodyShow: false
             }
         )
+
 
         new window.ComponentCollapse(
             "el_tools" ,

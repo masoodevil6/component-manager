@@ -19,8 +19,7 @@ if (typeof listComponent === 'undefined') {
         ComponentInfo:                       "component-info" ,                           //01-07
         ComponentCard:                       "component-card" ,                           //01-08
         ComponentCardInfo:                   "component-card-info" ,                      //01-09
-        ComponentPageHeader:                 "component-page-header" ,                    //01-010
-        ComponentListSelectedScroller:      "component-list-selected-scroller" ,          //01-011
+        ComponentListSelectedScroller:      "component-list-selected-scroller" ,          //01-010
 
         // [02] Fetch
         ComponentLoading:                    "component-loading" ,                        //02-01
@@ -122,12 +121,16 @@ if (typeof listComponent === 'undefined') {
         ComponentQrCodeReader:               "component-qr-code-reader" ,                 //036-04
 
 
+        // [080] elements page
+        ComponentChangePage:                 "component-change-page" ,                    //080-01
+        ComponentPageHeader:                 "component-page-header" ,                    //080-02
+        ComponentPageCardInfo:               "component-page-card-info" ,                 //080-03
 
 
-        // [080] elements spicals
-        ComponentDraggableOrders:           "component-draggable-orders" ,               //080-01
-        ComponentChangePage:                "component-change-page" ,                    //080-02
-        ComponentRecyclerView:              "component-recycler-view" ,                  //080-03
+        // [081] elements spicals
+        ComponentDraggableOrders:           "component-draggable-orders" ,               //081-01
+        ComponentRecyclerView:              "component-recycler-view" ,                  //081-02
+
 
         // [081] elements tools
         ComponentToolsTableConfig:          "component-tools-table-config" ,             //080-01
@@ -3285,445 +3288,6 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
 }
 
 
-/*-------------------------------------
- 01-010) Component Page Header
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
--------------------------------------*/
-class ComponentPageHeaderBase extends ComponentBase{
-
-    /* ---------------------------------------------
-        PROPERTYs Pattern
-     --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_size: {
-            prop: "prop_size",
-            default: tools_css.standardSizes.xl.name
-        },
-        prop_backgroundForm: {
-            prop: "prop_backgroundForm",
-            default: tools_const?.styles?.pageHeader?.backgroundColor_form ?? ""
-        },
-        prop_formClass: {
-            prop: "prop_formClass",
-            default: []
-        },
-        prop_formStyles: {
-            prop: "prop_formStyles",
-            default: {}
-        },
-
-        prop_colorIcon: {
-            prop: "prop_colorIcon",
-            default: tools_const?.styles?.pageHeader?.color_icon ?? ""
-        },
-        prop_hasIconBack: {
-            prop: "prop_hasIconBack",
-            default: true
-        },
-
-        prop_pageTitle: {
-            prop: "prop_pageTitle",
-            default: null
-        },
-        prop_colorHeader: {
-            prop: "prop_colorHeader",
-            default: tools_const?.styles?.pageHeader?.color_header ?? ""
-        },
-
-        prop_optionsList: {
-            prop: "prop_optionsList",
-            default: []
-        },
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-
-        part_form: [
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_backgroundForm,
-            this._COMPONENT_PATTERN.prop_formClass,
-            this._COMPONENT_PATTERN.prop_formStyles,
-        ] ,
-
-        part_form_back: [
-            this._COMPONENT_PATTERN.prop_size,
-        ] ,
-
-        part_form_back_icon: [
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_colorIcon,
-            this._COMPONENT_PATTERN.prop_hasIconBack,
-        ],
-
-        part_form_title: [
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_hasIconBack,
-            this._COMPONENT_PATTERN.prop_pageTitle,
-            this._COMPONENT_PATTERN.prop_colorHeader,
-        ],
-
-        part_form_options: [
-            this._COMPONENT_PATTERN.prop_size,
-        ],
-
-        part_form_options_render: [
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_colorIcon,
-            this._COMPONENT_PATTERN.prop_optionsList,
-        ]
-
-    };
-
-    /* ---------------------------------------------
-     PROPERTYs Schema
-     --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_form: {
-                part_form_back:{
-                    part_form_back_icon: {}
-                } ,
-                part_form_title:{
-
-                } ,
-                part_form_options:{
-                    part_form_options_render: {}
-                } ,
-            }
-        },
-    }
-
-}
-window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHeaderBase {
-
-    /* ---------------------------------------------
-       SETUP
-    --------------------------------------------- */
-    constructor(elId, config) {
-        super(
-            listComponent[ComponentPageHeader.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-    /* ---------------------------------------------
-    TEMPLATEs
-    --------------------------------------------- */
-    componentFn() {
-        this.templateFn("part_form_back_icon");
-        this.templateFn("part_form_options_render");
-    }
-
-    templateFn(partName = null) {
-        switch (partName) {
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_form":
-                return this.template_render_form(partName);
-            case "part_form_back":
-                return this.template_render_formBack(partName);
-            case "part_form_title":
-                return this.template_render_formTitle(partName);
-            case "part_form_options":
-                return this.template_render_formOptions(partName);
-            case "part_form_back_icon":
-                return this.componentFn_render_formBackIcon(partName);
-            case "part_form_options_render":
-                return this.componentFn_render_formBackIconRender(partName);
-
-            default:
-                return this.templateBasic_render([]);
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-        
-        ${this.templateFn("part_form")}
-        
-                `;
-        return this.templateBasic_render_structure(content);
-    }
-
-    template_render_form(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null) {
-
-            const prop_size             = data.hasOwnProperty("prop_size")              ? data.prop_size              : null;
-            const prop_backgroundForm   = data.hasOwnProperty("prop_backgroundForm")    ? data.prop_backgroundForm    : "";
-            const prop_formClass        = data.hasOwnProperty("prop_formClass")         ? data.prop_formClass         : [];
-            const prop_formStyles       = data.hasOwnProperty("prop_formStyles")        ? data.prop_formStyles        : {};
-
-            let elHeight = tools_css.getHeightSize(prop_size);
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-header-page-form-${this._COMPONENT_RANDOM_ID}"
-         class=" ${tools_public.renderListClass(prop_formClass)}">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-header-page-form-${this._COMPONENT_RANDOM_ID}{
-             ${tools_public.renderListStyle(prop_formStyles)};
-             height:           ${elHeight+4}px;
-             padding-top:      2px;
-             padding-bottom:   2px;
-             background-color: ${prop_backgroundForm};
-         }
-     </style>
-     
-       ${this.templateFn("part_form_back")}
-       ${this.templateFn("part_form_title")}
-       ${this.templateFn("part_form_options")}
-       
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_formBack(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null) {
-
-            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
-            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-            let elHeight = tools_css.getHeightSize(prop_size);
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-header-page-form-back-${this._COMPONENT_RANDOM_ID}"
-         class="position-relative ">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-header-page-form-back-${this._COMPONENT_RANDOM_ID}{
-             height:           ${elHeight}px;
-             width:            ${elHeight+10}px;
-             float:            ${directionRtl ? "right" : "left"};
-         }
-     </style>
-     
-     <component-icon id="component-header-page-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
-       
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_formTitle(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null) {
-
-            const prop_size             = data.hasOwnProperty("prop_size")                                            ? data.prop_size                           : null;
-            const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                                     ? data.prop_hasIconBack                    : null;
-            const prop_pageTitle        = data.hasOwnProperty("prop_pageTitle")  && data.prop_pageTitle != null       ? data.prop_pageTitle                      : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
-            const prop_colorHeader      = data.hasOwnProperty("prop_colorHeader")                                     ? data.prop_colorHeader                    : null;
-            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                      ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-            let elHeight = tools_css.getHeightSize(prop_size);
-            let elFontSize = tools_css.getFontSize(prop_size);
-
-            return `
-<b data-part-name="${partName}" 
-         id="component-header-page-form-title-${this._COMPONENT_RANDOM_ID}"
-         class="position-relative px-2">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-header-page-form-title-${this._COMPONENT_RANDOM_ID}{
-             height:           ${elHeight}px;
-             line-height:      ${elHeight}px;
-             width:            40%;
-             float:            ${directionRtl ? "right" : "left"};
-             font-size:        ${elFontSize}px;
-             color:            ${prop_colorHeader};
-             ${prop_hasIconBack ? (directionRtl ? "border-right" : "border-left") : ""}:    1px solid white;
-         }
-     </style>
-     
-     ${prop_pageTitle}
-       
-</b>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_formOptions(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null) {
-
-            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
-            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-            let elHeight = tools_css.getHeightSize(prop_size);
-
-            return `
-<div data-part-name="${partName}" 
-         id="component-header-page-form-options-${this._COMPONENT_RANDOM_ID}"
-         class="position-relative px-2">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-header-page-form-options-${this._COMPONENT_RANDOM_ID}{
-             height:           ${elHeight}px;
-             width:            calc(100% - ${elHeight+10}px - 40% - 2px);
-             float:            ${directionRtl ? "right" : "left"};
-         }
-         #${this._COMPONENT_ID} .component-header-page-form-option-icon-forms-${this._COMPONENT_RANDOM_ID}{
-             height:           ${elHeight}px;
-             width:            ${elHeight+10}px;
-             float:            ${directionRtl ? "left" : "right"};
-         }
-     </style>
-     
-     
-</div>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_formBackIcon(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null) {
-
-            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                 : null;
-            const prop_colorIcon        = data.hasOwnProperty("prop_colorIcon")                  ? data.prop_colorIcon            : "";
-            const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                ? data.prop_hasIconBack          : true;
-            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-            if (prop_hasIconBack){
-
-                let styles = {
-                    "top" :       "50%",
-                    "left" :      "50%",
-                    "transform" : "translate(-50% , -50%)" ,
-                    "cursor" :    "pointer" ,
-                }
-
-                new window.ComponentIcon(
-                    `component-header-page-icon-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_icon : directionRtl ? tools_icons.icon_back_right(prop_size , prop_colorIcon) : tools_icons.icon_back_left(prop_size , prop_colorIcon)  ,
-
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-
-                        fn_callback: (event)=>{
-                            this.fn_onBackClick(event);
-                        }
-                    }
-                )
-            }
-        }
-    }
-
-    componentFn_render_formBackIconRender(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null) {
-
-            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
-            const prop_colorIcon        = data.hasOwnProperty("prop_colorIcon")                  ? data.prop_colorIcon                      : "";
-            const prop_optionsList      = data.hasOwnProperty("prop_optionsList")                ? data.prop_optionsList                    : [];
-
-            if (prop_optionsList != null && Array.isArray(prop_optionsList)){
-                const el = this.fn_getElFormOptions();
-
-                for (let i = 0; i < prop_optionsList.length; i++) {
-                    const itemOptions = prop_optionsList[i];
-
-                    if (itemOptions != null && itemOptions.hasOwnProperty("html")){
-                        const icon = itemOptions.html;
-
-                        let styles = {
-                            "top" :       "50%",
-                            "left" :      "50%",
-                            "transform" : "translate(-50% , -50%)" ,
-                            "cursor" :    "pointer" ,
-                        }
-
-                        el.innerHTML = el.innerHTML + `
-<div class="component-header-page-form-option-icon-forms-${this._COMPONENT_RANDOM_ID} position-relative">
-    <component-icon id="component-header-page-form-option-icon-${this._COMPONENT_RANDOM_ID}-${i}"></component-icon>
-</div>
-`
-
-                        new window.ComponentIcon(
-                            `component-header-page-form-option-icon-${this._COMPONENT_RANDOM_ID}-${i}` ,
-                            {
-                                prop_icon : typeof icon == "function" ? icon(prop_size , prop_colorIcon) : icon ,
-                                prop_title: itemOptions?.attrs?.title ?? "" ,
-
-                                prop_iconClass : ["position-absolute"] ,
-                                prop_iconStyles : styles ,
-
-                                fn_callback: (event)=>{
-                                    this.fn_onOptionClick(event , itemOptions?.attrs?.name ?? "" );
-                                }
-                            }
-                        )
-
-                    }
-
-                }
-            }
-
-        }
-    }
-
-
-
-
-    /* ---------------------------------------------
-      FUNCTIONs
-    --------------------------------------------- */
-    fn_getElFormOptions(){
-        return document.querySelector(`#${this._COMPONENT_ID} #component-header-page-form-options-${this._COMPONENT_RANDOM_ID}`)
-    }
-
-    fn_onBackClick(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onBackClick") && typeof data.fn_onBackClick != null){
-            data.fn_onBackClick(event);
-        }
-    }
-    fn_onOptionClick(event , optionName){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onOptionClick") && typeof data.fn_onOptionClick != null){
-            data.fn_onOptionClick(event , optionName);
-        }
-    }
-
-
-}
-
 
 /*-------------------------------------
  01-010) Component list selected
@@ -4011,11 +3575,11 @@ window.ComponentListSelectedScroller = class ComponentListSelectedScroller exten
                         "top": "50%",
                     }
                     if (directionRtl) {
-                        styles["left"] = "7.5px";
+                        styles["left"] = "5px";
                         styles["transform"] = "translate(0 , -50%)";
                     }
                     else {
-                        styles["right"] = "7.5px";
+                        styles["right"] = "5px";
                         styles["transform"] = "translate(0 , -50%)";
                     }
 
@@ -4686,26 +4250,65 @@ class ComponentFormBase extends ComponentBase{
         PROPERTYs Pattern
      --------------------------------------------- */
     _COMPONENT_PATTERN = {
-        prop_formClass: {
-            prop: "prop_formClass",
-            default: ["border", "shadow-sm" , "px-2"]
-        },
-        prop_title: {
-            prop: "prop_title",
-            default: null
-        },
-        prop_titleBackgroundColor: {
-            prop: "prop_titleBackgroundColor",
-            default: tools_const?.styles?.form?.backgroundColor_title ?? ""
-        },
         prop_size: {
             prop: "prop_size",
             default: tools_css.standardSizes.m.name
+        },
+
+        prop_borderClass: {
+            prop: "prop_borderClass",
+            default: ["d-block","bg-white","px-3","py-3" , "m-2"]
+        },
+        prop_borderStyles: {
+            prop: "prop_borderStyles",
+            default: {}
+        },
+
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: ["m-2" , "row" , "p-0"]
         },
         prop_formStyles: {
             prop: "prop_formStyles",
             default: {}
         },
+        prop_btnformClass: {
+            prop: "prop_btnformClass",
+            default: []
+        },
+        prop_btnformStyles: {
+            prop: "prop_btnformStyles",
+            default: {
+                "display" : "flow-root"
+            }
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: null
+        },
+
+
+        prop_formBackgroundColor: {
+            prop: "prop_formBackgroundColor",
+            default: tools_const?.styles?.form?.backgroundColor_form ?? ""
+        },
+        prop_titleBackgroundColor: {
+            prop: "prop_titleBackgroundColor",
+            default: tools_const?.styles?.form?.backgroundColor_title ?? ""
+        },
+        prop_btnSubmitBackground: {
+            prop: "prop_btnSubmitBackground",
+            default: tools_const?.styles?.form?.backgroundColor_btnSubmit ?? ""
+        },
+        prop_btnSubmitBackgroundHover: {
+            prop: "prop_btnSubmitBackgroundHover",
+            default: tools_const?.styles?.form?.backgroundColor_btnSubmit_hover ?? ""
+        },
+        prop_btnSubmitColor: {
+            prop: "prop_btnSubmitColor",
+            default: tools_const?.styles?.form?.color_btnSubmit ?? ""
+        },
+
         prop_forms: {
             prop: "prop_forms",
             default: null
@@ -4729,7 +4332,6 @@ class ComponentFormBase extends ComponentBase{
         prop_btnSubmit: {
             prop: "prop_btnSubmit",
             default: {
-                prop_type: "submit",
                 prop_title: "Submit",
                 prop_btnClass: ["w-100"]
             }
@@ -4746,25 +4348,23 @@ class ComponentFormBase extends ComponentBase{
     --------------------------------------------- */
     _COMPONENT_PROPS = {
         part_structure: [
-
+            this._COMPONENT_PATTERN.prop_btnformClass,
+            this._COMPONENT_PATTERN.prop_btnformStyles,
         ],
 
         part_border: [
-            this._COMPONENT_PATTERN.prop_formClass,
-            this._COMPONENT_PATTERN.prop_formStyles,
+            this._COMPONENT_PATTERN.prop_formBackgroundColor,
+            this._COMPONENT_PATTERN.prop_borderClass,
+            this._COMPONENT_PATTERN.prop_borderStyles,
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_title,
         ],
 
         part_loading: [],
 
-        part_title: [
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_title,
-            this._COMPONENT_PATTERN.prop_titleBackgroundColor,
-        ],
-
         part_form: [
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles,
             this._COMPONENT_PATTERN.prop_forms,
             this._COMPONENT_PATTERN.prop_url,
             this._COMPONENT_PATTERN.prop_data,
@@ -4778,6 +4378,9 @@ class ComponentFormBase extends ComponentBase{
         part_button_submit: [
             this._COMPONENT_PATTERN.prop_btnSubmit,
             this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_btnSubmitBackground,
+            this._COMPONENT_PATTERN.prop_btnSubmitBackgroundHover,
+            this._COMPONENT_PATTERN.prop_btnSubmitColor,
         ]
     };
 
@@ -4787,7 +4390,6 @@ class ComponentFormBase extends ComponentBase{
        --------------------------------------------- */
     _COMPONENT_SCHEMA = {
         part_structure: {
-            part_title: {} ,
             part_border: {
                 part_loading: {} ,
                 part_form: {} ,
@@ -4827,8 +4429,6 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
                 return this.template_render_structure(partName);
             case "part_border":
                 return this.componentFn_render_border(partName);
-            case "part_title":
-                return this.template_render_title(partName);
             case "part_form":
                 return this.template_render_form( partName);
             case "part_button_submit":
@@ -4839,23 +4439,22 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
     }
 
     template_render_structure(partName) {
+        const data = this.getPartProps(partName)
+        const prop_btnformClass        =  data.hasOwnProperty("prop_btnformClass")       ?  data.prop_btnformClass         : [];
+        const prop_btnformStyles       =  data.hasOwnProperty("prop_btnformStyles")      ?  data.prop_btnformStyles        : {}        ;
 
         const content = `
-           
-           
-           ${this.templateFn("part_title") ?? ""}
-
            <component-border id="component-form-border-${this._COMPONENT_RANDOM_ID}">
                <component-body>
-
-                    ${this.templateFn("part_form") ?? ""}
          
+                    ${this.templateFn("part_form") ?? ""}
+
                     <component-messages id="component-form-messages-${this._COMPONENT_RANDOM_ID}"></component-messages>
          
-                    <section class="mx-2 mt-4 mb-2 border-top py-1" style="display: flow-root">
-                        <component-button id="component-form-button-submit-${this._COMPONENT_RANDOM_ID}"></component-button>
-                    </section>
-         
+                    <div class="${tools_public.renderListClass(prop_btnformClass)}" style="${tools_public.renderListStyle(prop_btnformStyles)}">
+                           <component-button id="component-form-button-submit-${this._COMPONENT_RANDOM_ID}"></component-button>
+                    </div>
+
                     <component-404 id="component-form-404-${this._COMPONENT_RANDOM_ID}"></component-404>
          
                     <component-loading id="component-form-loading-${this._COMPONENT_RANDOM_ID}"></component-loading>
@@ -4871,9 +4470,10 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
 
         if (data != null){
 
-            const prop_forms =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
-            const prop_formsMinHeight =     data.hasOwnProperty("prop_formsMinHeight")               ? data.prop_formsMinHeight  : "";
-
+            const prop_forms               =     data.hasOwnProperty("prop_forms") && data.prop_forms != null      ? data.prop_forms           : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+            const prop_formsMinHeight      =     data.hasOwnProperty("prop_formsMinHeight")                        ? data.prop_formsMinHeight  : "";
+            const prop_formClass           =     data.hasOwnProperty("prop_formClass")                             ? data.prop_formClass       : null;
+            const prop_formStyles          =     data.hasOwnProperty("prop_formStyles")                            ? data.prop_formStyles      : null;
             return `
 <section data-part-name="${partName}">
     <style>
@@ -4895,74 +4495,24 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
         `;
     }
 
-    template_render_title(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const directionRtl    =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-            const prop_size                      =    data.hasOwnProperty("prop_size")                            ? data.prop_size                           : null;
-            const prop_title                     =    data.hasOwnProperty("prop_title")                           ? data.prop_title                          : null;
-            const prop_titleBackgroundColor      =    data.hasOwnProperty("prop_titleBackgroundColor")            ? data.prop_titleBackgroundColor           : null;
-
-            const elheight = tools_css.getHeightSize(prop_size);
-            const elfontSize = tools_css.getFontSize(prop_size);
-
-            if (prop_title != null){
-                return `
-<section data-part-name="${partName}"  
-         class="position-relative">
-         
-    <style>
-        #${this._COMPONENT_ID} #component-form-title-${this._COMPONENT_RANDOM_ID}{
-            top:              -${elheight/2}px;
-            line-height:      ${elheight}px;
-            font-size:        ${elfontSize}px;
-            ${directionRtl ? "right" : "left"} : 30px;
-            width:            200px;
-            background-color: ${prop_titleBackgroundColor}
-        }
-    </style>
-    
-    <b id="component-form-title-${this._COMPONENT_RANDOM_ID}" 
-         class="position-absolute border px-3 py-1 rounded text-center">
-        ${prop_title}
-    </b>
-    
-</section>
-        `;
-            }
-
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
     componentFn_render_border(partName) {
         const data = this.getPartProps(partName)
 
         if (data != null){
 
-            const prop_formClass  =      data.hasOwnProperty("prop_formClass")             ? data.prop_formClass              : null;
-            const prop_formStyles =     data.hasOwnProperty("prop_formStyles")             ? data.prop_formStyles             : null;
-            const prop_size       =     data.hasOwnProperty("prop_size")                   ? data.prop_size                   : null;
-            const prop_title                     =    data.hasOwnProperty("prop_title")                           ? data.prop_title                          : null;
-
-            const elheight = tools_css.getHeightSize(prop_size);
+            const prop_borderClass         =     data.hasOwnProperty("prop_borderClass")            ? data.prop_borderClass            : null;
+            const prop_borderStyles        =     data.hasOwnProperty("prop_borderStyles")           ? data.prop_borderStyles           : null;
+            const prop_size                =     data.hasOwnProperty("prop_size")                   ? data.prop_size                   : null;
 
             new window.ComponentBorder(
                 `component-form-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_btnMore_show: false ,
 
-                    prop_structureClass: prop_formClass ,
-                    prop_structureStyles: prop_formStyles ,
+                    prop_structureClass: prop_borderClass ,
+                    prop_structureStyles: {} ,
 
-                    prop_borderStyles: {
-                        "padding-top" : prop_title != null ? `${elheight/2}px` : ""
-                    }
+                    prop_borderStyles: prop_borderStyles
                 }
             )
         }
@@ -4972,10 +4522,12 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_btnSubmit   =  data.hasOwnProperty("prop_btnSubmit")             ?  data.prop_btnSubmit              : {};
-            const prop_size        =  data.hasOwnProperty("prop_size")                  ?  data.prop_size                   : null;
+            const prop_btnSubmit                  =  data.hasOwnProperty("prop_btnSubmit")                    ?  data.prop_btnSubmit                   : {};
+            const prop_size                       =  data.hasOwnProperty("prop_size")                         ?  data.prop_size                        : null;
+            const prop_btnSubmitBackground        =  data.hasOwnProperty("prop_btnSubmitBackground")          ?  data.prop_btnSubmitBackground         : null;
+            const prop_btnSubmitBackgroundHover   =  data.hasOwnProperty("prop_btnSubmitBackgroundHover")     ?  data.prop_btnSubmitBackgroundHover    : null;
+            const prop_btnSubmitColor             =  data.hasOwnProperty("prop_btnSubmitColor")               ?  data.prop_btnSubmitColor              : null;
 
-            const prop_type       =  prop_btnSubmit.hasOwnProperty("prop_type")         ?  prop_btnSubmit.prop_type         : "submit";
             const prop_title      =  prop_btnSubmit.hasOwnProperty("prop_title")        ?  prop_btnSubmit.prop_title        : "submit";
             const prop_btnClass   =  prop_btnSubmit.hasOwnProperty("prop_btnClass")     ?  prop_btnSubmit.prop_btnClass     : [  "float-start"  ];
             const prop_btnStyles  =  prop_btnSubmit.hasOwnProperty("prop_btnStyles")    ?  prop_btnSubmit.prop_btnStyles    : {
@@ -4989,9 +4541,11 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
                     styles:{
 
                     },
-
+                    prop_btnBackgroundColor :           prop_btnSubmitBackground ,
+                    prop_btnBackgroundColor_hover :     prop_btnSubmitBackgroundHover ,
+                    prop_btnColor :                     prop_btnSubmitColor ,
+                    prop_type:                          null ,
                     prop_size ,
-                    prop_type ,
                     prop_title ,
                     prop_btnClass ,
                     prop_btnStyles ,
@@ -6854,11 +6408,11 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
             }
             if (directionRtl){
                 styles["right"]= "0";
-                styles["transform"]= "translate(-7.5px , -50%)" ;
+                styles["transform"]= "translate(-5px , -50%)" ;
             }
             else {
                 styles["left"]= "0";
-                styles["transform"]= "translate(7.5px , -50%)" ;
+                styles["transform"]= "translate(5px , -50%)" ;
             }
 
 
@@ -7461,11 +7015,11 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
             }
             if (directionRtl){
                 styles["right"]= "0";
-                styles["transform"]= "translate(-7.5px , -50%)" ;
+                styles["transform"]= "translate(-5px , -50%)" ;
             }
             else {
                 styles["left"]= "0";
-                styles["transform"]= "translate(7.5px , -50%)" ;
+                styles["transform"]= "translate(5px , -50%)" ;
             }
 
 
@@ -8500,11 +8054,11 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                 }
                 if (directionRtl){
                     styles["left"]= "0";
-                    styles["transform"]= "translate(7.5px, -50%)";
+                    styles["transform"]= "translate(5px, -50%)";
                 }
                 else {
                     styles["right"]= "0"
-                    styles["transform"]= "translate(-7.5px, -50%)";
+                    styles["transform"]= "translate(-5px, -50%)";
                 }
 
                 new window.ComponentIcon(
@@ -9319,11 +8873,11 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
             }
             if (directionRtl){
                 styles["right"]= "0"
-                styles["transform"]= "translate(-7.5px, -50%)";
+                styles["transform"]= "translate(-5px, -50%)";
             }
             else {
                 styles["left"]= "0";
-                styles["transform"]= "translate(7.5px, -50%)";
+                styles["transform"]= "translate(5px, -50%)";
             }
 
             if (prop_icon != null){
@@ -10449,11 +10003,11 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             }
             if (directionRtl){
                 styles["right"]= "0"
-                styles["transform"]= "translate(-7.5px, -50%)";
+                styles["transform"]= "translate(-5px, -50%)";
             }
             else {
                 styles["left"]= "0";
-                styles["transform"]= "translate(7.5px, -50%)";
+                styles["transform"]= "translate(5px, -50%)";
             }
 
             new window.ComponentIcon(
@@ -11454,11 +11008,11 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
             }
             if (directionRtl){
                 styles["right"]= "0"
-                styles["transform"]= "translate(-7.5px, -50%)"
+                styles["transform"]= "translate(-5px, -50%)"
             }
             else {
                 styles["left"]= "0"
-                styles["transform"]= "translate(7.5px, -50%)"
+                styles["transform"]= "translate(5px, -50%)"
             }
 
             if (prop_icon != null){
@@ -11552,11 +11106,11 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
 
                 if (directionRtl){
                     styles["left"]= "0"
-                    styles["transform"]= "translate(7.5px, -50%)"
+                    styles["transform"]= "translate(5px, -50%)"
                 }
                 else {
                     styles["right"]= "0"
-                    styles["transform"]= "translate(-7.5px, -50%)"
+                    styles["transform"]= "translate(-5px, -50%)"
                 }
 
 
@@ -12069,11 +11623,11 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
             }
             if (directionRtl){
                 styles["right"]= "0"
-                styles["transform"]= "translate(-7.5px, -50%)"
+                styles["transform"]= "translate(-5px, -50%)"
             }
             else {
                 styles["left"]= "0"
-                styles["transform"]= "translate(7.5px, -50%)"
+                styles["transform"]= "translate(5px, -50%)"
             }
 
             if (prop_icon != null){
@@ -14152,7 +13706,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                     "margin" : "0 10px",
                     "top" : "50%",
                     "right" : "0",
-                    "transform" : "translate(-7.5px , -50%)",
+                    "transform" : "translate(-5px , -50%)",
                 }
 
                 new window.ComponentIcon(
@@ -14193,7 +13747,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                 "top" :          "50%" ,
                 "color" :         prop_colorIcon ,
                 "left" :          "0" ,
-                "transform" :    "translate(7.5px , -50%)" ,
+                "transform" :    "translate(5px , -50%)" ,
             }
 
             new window.ComponentIcon(
@@ -15856,11 +15410,11 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             }
             if (directionRtl){
                 styles["right"]= "0";
-                styles["transform"]= "translate(-7.5px , -50%)" ;
+                styles["transform"]= "translate(-5px , -50%)" ;
             }
             else {
                 styles["left"]= "0";
-                styles["transform"]= "translate(7.5px , -50%)" ;
+                styles["transform"]= "translate(5px , -50%)" ;
             }
 
             if (prop_icon != null){
@@ -26728,9 +26282,1210 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCo
 
 
 
+/* ===============================================================================================================
+    [080] elements Pages
+=============================================================================================================== */
+class ComponentChangePageBase extends ComponentBase{
+
+    _EFFECT_TOP =       0;
+    _EFFECT_RIGHT =     1;
+    _EFFECT_BOTTOM =    2;
+    _EFFECT_LEFT=       3;
+
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+
+        prop_effect: {
+            prop: "prop_effect",
+            default: null
+        },
+        prop_duration: {
+            prop: "prop_duration",
+            default: 500
+        },
+        prop_backgroundColorShadow: {
+            prop: "prop_backgroundColorShadow",
+            default: tools_const?.styles?.changePage?.backgroundColor_shadow ?? ""
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+
+        prop_formWidth: {
+            prop: "prop_formWidth",
+            default: "100%"
+        },
+        prop_formHeight: {
+            prop: "prop_formHeight",
+            default: "100%"
+        },
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: []
+        },
+        prop_formtSyles: {
+            prop: "prop_formtSyles",
+            default: {}
+        },
+        prop_body: {
+            prop: "prop_body",
+            default: null
+        },
+        prop_pages: {
+            prop: "prop_pages",
+            default: null
+        },
+
+
+        prop_backgroundColorPage: {
+            prop: "prop_backgroundColorPage",
+            default: tools_const?.styles?.changePage?.backgroundColor_page ?? ""
+        },
+
+        var_openAnyPage: {
+            prop: "var_openAnyPage",
+            default: false
+        },
+
+    }
+
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_formWidth,
+            this._COMPONENT_PATTERN.prop_formHeight,
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formtSyles,
+        ],
+
+        part_form_body: [
+            this._COMPONENT_PATTERN.prop_backgroundColorPage,
+            this._COMPONENT_PATTERN.prop_body,
+        ],
+
+        part_form_shadow: [
+            this._COMPONENT_PATTERN.var_openAnyPage,
+            this._COMPONENT_PATTERN.prop_backgroundColorShadow,
+        ],
+
+        part_form_pages: [
+            this._COMPONENT_PATTERN.prop_backgroundColorPage,
+            this._COMPONENT_PATTERN.prop_pages,
+            this._COMPONENT_PATTERN.prop_effect,
+            this._COMPONENT_PATTERN.prop_duration,
+        ],
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form:{
+                part_form_body:{} ,
+                part_form_shadow:{} ,
+                part_form_pages:{} ,
+            } ,
+        }
+    }
+
+}
+window.ComponentChangePage  = class ComponentChangePage extends ComponentChangePageBase{
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentChangePage.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure( partName );
+            case "part_form":
+                return this.template_render_form( partName );
+            case "part_form_body":
+                return this.template_render_form_body( partName );
+            case "part_form_shadow":
+                return this.template_render_form_shadow( partName );
+            case "part_form_pages":
+                return this.template_render_form_pages( partName );
+            default:
+                return this.templateBasic_render([ "h-100" , "d-block"]);
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+       ${this.templateFn("part_form") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content , [ "h-100" , "d-block"]);
+    }
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_formWidth        =   data.hasOwnProperty("prop_formWidth")        ?  data.prop_formWidth                :  "";
+            const prop_formHeight       =   data.hasOwnProperty("prop_formHeight")       ?  data.prop_formHeight               :  "";
+            const prop_formClass        =   data.hasOwnProperty("prop_formClass")        ?  data.prop_formClass                :  [];
+            const prop_formtSyles       =   data.hasOwnProperty("prop_formtSyles")       ?  data.prop_formtSyles               : {};
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-change-page-form-${this._COMPONENT_RANDOM_ID}"
+         class="overflow-hidden position-relative ${tools_public.renderListClass(prop_formClass)}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-change-page-form-${this._COMPONENT_RANDOM_ID}{
+             width: ${prop_formWidth};
+             height: ${prop_formHeight};
+             ${tools_public.renderListStyle(prop_formtSyles)}
+         }
+     </style>
+     
+       ${this.templateFn("part_form_body") ?? ""}
+       ${this.templateFn("part_form_shadow") ?? ""}
+       ${this.templateFn("part_form_pages") ?? ""}
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form_body(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_backgroundColorPage     =   data.hasOwnProperty("prop_backgroundColorPage")                 ?  data.prop_backgroundColorPage      :   "";
+            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :   this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-change-page-form-body-${this._COMPONENT_RANDOM_ID}"
+         class="w-100 h-100">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-change-page-form-body-${this._COMPONENT_RANDOM_ID}{
+              background-color: ${prop_backgroundColorPage};
+         }
+     </style>
+     
+     ${prop_body}
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form_pages(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_pages                   =   data.hasOwnProperty("prop_pages") && data.prop_pages !=null      ?  data.prop_pages                      :  this._COMPONENT_SLOTS?.pages ?? [];
+
+            const directionRtl                 = data.hasOwnProperty("directionRtl")                                ? data.directionRtl                     : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+            const prop_effect                  = data.hasOwnProperty("prop_effect")                                 ?  data.prop_effect                     :  null;
+            const prop_duration                = data.hasOwnProperty("prop_duration")                               ?  data.prop_duration                   :  100;
+
+            const prop_backgroundColorPage     =   data.hasOwnProperty("prop_backgroundColorPage")                  ?  data.prop_backgroundColorPage        :   "";
+
+
+            let styleStr = "";
+            switch (prop_effect){
+                case this._EFFECT_TOP:
+                    if (directionRtl){
+                        styleStr= "right: 0; top: -100%;"
+                    }
+                    else{
+                        styleStr= "left: 0;  top: -100%;"
+                    }
+                    break;
+                case this._EFFECT_BOTTOM:
+                    if (directionRtl){
+                        styleStr= "right: 0; bottom: -100%;"
+                    }
+                    else{
+                        styleStr= "left: 0;  bottom: -100%;"
+                    }
+                    break;
+                case this._EFFECT_LEFT:
+                    styleStr= "top: 0; left: -100%;"
+                    break;
+                case this._EFFECT_RIGHT:
+                    styleStr= "top: 0; right: -100%;"
+                    break;
+                default:
+                    if (directionRtl){
+                        styleStr= "top: 0; right: -100%;"
+                    }
+                    else{
+                        styleStr= "top: 0; left: -100%;"
+                    }
+                    break;
+            }
+
+            const html = this.fn_getTemplatePages(prop_pages)
+
+            return `
+<section data-part-name="${partName}" 
+         id="ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}"
+         class="w-100 h-100 ">
+         
+     <style>
+         #${this._COMPONENT_ID} #ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+         #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page{
+             transition: left ease ${prop_duration}ms ,  right ease ${prop_duration}ms ,  top ease ${prop_duration}ms ,  bottom ease ${prop_duration}ms;
+             width: 100%;
+             height: 100%;
+             ${styleStr};
+             z-index: ${tools_css.getZIndex(tools_css.standardZIndex.new_page.name , 10)};
+             background-color: ${prop_backgroundColorPage};
+         }
+     </style>
+     
+     ${html}
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form_shadow(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const var_openAnyPage  =            data.hasOwnProperty("var_openAnyPage")                         ?  data.var_openAnyPage                   :  false;
+            const prop_backgroundColorShadow  = data.hasOwnProperty("prop_backgroundColorShadow")              ?  data.prop_backgroundColorShadow        :  "";
+
+            if (var_openAnyPage){
+                return `
+<section data-part-name="${partName}" 
+         id="ccomponent-change-page-form-shadow-${this._COMPONENT_RANDOM_ID}"
+         class="w-100 h-100 position-absolute">
+         
+     <style>
+         #${this._COMPONENT_ID} #ccomponent-change-page-form-shadow-${this._COMPONENT_RANDOM_ID}{
+             background-color: ${prop_backgroundColorShadow};
+             top: 0 ;
+             left: 0;
+         }
+     </style>
+     
+</section>
+        `;
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getPageSelected(pageName){
+        return document.querySelector(` #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page[data-page-name="${pageName}"]`);
+    }
+    fn_getAllPage(pageName){
+        return document.querySelectorAll(` #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page`);
+    }
+
+
+    fn_getTemplatePages(prop_pages){
+        let html = "";
+        if(prop_pages != null ){
+            for (let i = 0; i < prop_pages.length; i++) {
+                const itemPage = prop_pages[i];
+                html += `
+                <section class="ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page position-absolute" data-page-name="${itemPage?.attrs?.name ?? ""}" data-page-status="0">
+                   ${itemPage?.html ?? ""}
+                </section>
+                `
+            }
+        }
+
+        return html;
+    }
+
+    fn_setStatusPageSelected(pageEl , status){
+        const data = this._COMPONENT_CONFIG;
+        const prop_effect    = data.hasOwnProperty("prop_effect")                                 ?  data.prop_effect                     :  null;
+        const directionRtl   = data.hasOwnProperty("directionRtl")                                ? data.directionRtl                     : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+        switch (prop_effect){
+            case this._EFFECT_TOP:
+                pageEl.style.setProperty("top", status ? "0" : "-100%", "important");
+                break;
+            case this._EFFECT_RIGHT:
+                pageEl.style.setProperty("right", status ? "0" : "-100%", "important");
+                break;
+            case this._EFFECT_BOTTOM:
+                pageEl.style.setProperty("bottom", status ? "0" : "-100%", "important");
+                break;
+            case this._EFFECT_LEFT:
+                pageEl.style.setProperty("left", status ? "0" : "-100%", "important");
+                break;
+            default:
+                if (directionRtl){
+                    pageEl.style.setProperty("right", status ? "0" : "-100%", "important");
+                }
+                else{
+                    pageEl.style.setProperty("left", status ? "0" : "-100%", "important");
+                }
+                break;
+        }
+
+        pageEl.setAttribute("data-page-status" , status ? 1 : 0);
+        this.fn_setStatusFormShadow();
+    }
+
+
+    fn_setStatusFormShadow(){
+        let status = false;
+        const pages = this.fn_getAllPage();
+        if (pages != null){
+            for (let i = 0; i < pages.length; i++) {
+                const itemPage = pages[i];
+                let pageStatusNumber = itemPage.getAttribute("data-page-status");
+                if (parseInt(pageStatusNumber) == 1){
+                    status = true;
+                    break;
+                }
+            }
+        }
+
+        this.set("var_openAnyPage" , status)
+    }
+
+    call_openOrClosePage(pageName , status = null){
+        const pageEl = this.fn_getPageSelected(pageName);
+
+        if (pageEl != null){
+            let pageStatusNumber = pageEl.getAttribute("data-page-status");
+            let pageStatus = false;
+            if (status == null){
+                if (parseInt(pageStatusNumber) == 1){
+                    pageStatus = false;
+                }
+                else if (parseInt(pageStatusNumber) == 0){
+                    pageStatus = true;
+                }
+            }
+            else{
+                pageStatus = status;
+            }
+
+            this.fn_setStatusPageSelected(pageEl , pageStatus);
+        }
+    }
+}
+
+
+class ComponentPageHeaderBase extends ComponentBase{
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.xl.name
+        },
+        prop_backgroundForm: {
+            prop: "prop_backgroundForm",
+            default: tools_const?.styles?.pageHeader?.backgroundColor_form ?? ""
+        },
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: []
+        },
+        prop_formStyles: {
+            prop: "prop_formStyles",
+            default: {}
+        },
+
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.pageHeader?.color_icon ?? ""
+        },
+        prop_hasIconBack: {
+            prop: "prop_hasIconBack",
+            default: true
+        },
+
+        prop_pageTitle: {
+            prop: "prop_pageTitle",
+            default: null
+        },
+        prop_colorHeader: {
+            prop: "prop_colorHeader",
+            default: tools_const?.styles?.pageHeader?.color_header ?? ""
+        },
+
+        prop_optionsList: {
+            prop: "prop_optionsList",
+            default: []
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_backgroundForm,
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles,
+        ] ,
+
+        part_form_back: [
+            this._COMPONENT_PATTERN.prop_size,
+        ] ,
+
+        part_form_back_icon: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_colorIcon,
+            this._COMPONENT_PATTERN.prop_hasIconBack,
+        ],
+
+        part_form_title: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_hasIconBack,
+            this._COMPONENT_PATTERN.prop_pageTitle,
+            this._COMPONENT_PATTERN.prop_colorHeader,
+        ],
+
+        part_form_options: [
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+
+        part_form_options_render: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_colorIcon,
+            this._COMPONENT_PATTERN.prop_optionsList,
+        ]
+
+    };
+
+    /* ---------------------------------------------
+     PROPERTYs Schema
+     --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form: {
+                part_form_back:{
+                    part_form_back_icon: {}
+                } ,
+                part_form_title:{
+
+                } ,
+                part_form_options:{
+                    part_form_options_render: {}
+                } ,
+            }
+        },
+    }
+
+}
+window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHeaderBase {
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentPageHeader.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+    TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+        this.templateFn("part_form_back_icon");
+        this.templateFn("part_form_options_render");
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_form":
+                return this.template_render_form(partName);
+            case "part_form_back":
+                return this.template_render_formBack(partName);
+            case "part_form_title":
+                return this.template_render_formTitle(partName);
+            case "part_form_options":
+                return this.template_render_formOptions(partName);
+            case "part_form_back_icon":
+                return this.componentFn_render_formBackIcon(partName);
+            case "part_form_options_render":
+                return this.componentFn_render_formBackIconRender(partName);
+
+            default:
+                return this.templateBasic_render([]);
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+        
+        ${this.templateFn("part_form")}
+        
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_size             = data.hasOwnProperty("prop_size")              ? data.prop_size              : null;
+            const prop_backgroundForm   = data.hasOwnProperty("prop_backgroundForm")    ? data.prop_backgroundForm    : "";
+            const prop_formClass        = data.hasOwnProperty("prop_formClass")         ? data.prop_formClass         : [];
+            const prop_formStyles       = data.hasOwnProperty("prop_formStyles")        ? data.prop_formStyles        : {};
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-header-page-form-${this._COMPONENT_RANDOM_ID}"
+         class=" ${tools_public.renderListClass(prop_formClass)}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-header-page-form-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_formStyles)};
+             height:           ${elHeight+4}px;
+             padding-top:      2px;
+             padding-bottom:   2px;
+             background-color: ${prop_backgroundForm};
+         }
+     </style>
+     
+       ${this.templateFn("part_form_back")}
+       ${this.templateFn("part_form_title")}
+       ${this.templateFn("part_form_options")}
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_formBack(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
+            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-header-page-form-back-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative ">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-header-page-form-back-${this._COMPONENT_RANDOM_ID}{
+             height:           ${elHeight}px;
+             width:            ${elHeight+10}px;
+             float:            ${directionRtl ? "right" : "left"};
+         }
+     </style>
+     
+     <component-icon id="component-header-page-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_formTitle(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_size             = data.hasOwnProperty("prop_size")                                            ? data.prop_size                           : null;
+            const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                                     ? data.prop_hasIconBack                    : null;
+            const prop_pageTitle        = data.hasOwnProperty("prop_pageTitle")  && data.prop_pageTitle != null       ? data.prop_pageTitle                      : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+            const prop_colorHeader      = data.hasOwnProperty("prop_colorHeader")                                     ? data.prop_colorHeader                    : null;
+            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                      ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+            let elFontSize = tools_css.getFontSize(prop_size);
+
+            return `
+<b data-part-name="${partName}" 
+         id="component-header-page-form-title-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative px-2">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-header-page-form-title-${this._COMPONENT_RANDOM_ID}{
+             height:           ${elHeight}px;
+             line-height:      ${elHeight}px;
+             width:            40%;
+             float:            ${directionRtl ? "right" : "left"};
+             font-size:        ${elFontSize}px;
+             color:            ${prop_colorHeader};
+             ${prop_hasIconBack ? (directionRtl ? "border-right" : "border-left") : ""}:    1px solid white;
+         }
+     </style>
+     
+     ${prop_pageTitle}
+       
+</b>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_formOptions(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
+            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<div data-part-name="${partName}" 
+         id="component-header-page-form-options-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative px-2">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-header-page-form-options-${this._COMPONENT_RANDOM_ID}{
+             height:           ${elHeight}px;
+             width:            calc(100% - ${elHeight+10}px - 40% - 2px);
+             float:            ${directionRtl ? "right" : "left"};
+         }
+         #${this._COMPONENT_ID} .component-header-page-form-option-icon-forms-${this._COMPONENT_RANDOM_ID}{
+             height:           ${elHeight}px;
+             width:            ${elHeight+10}px;
+             float:            ${directionRtl ? "left" : "right"};
+         }
+     </style>
+     
+     
+</div>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_formBackIcon(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                 : null;
+            const prop_colorIcon        = data.hasOwnProperty("prop_colorIcon")                  ? data.prop_colorIcon            : "";
+            const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                ? data.prop_hasIconBack          : true;
+            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            if (prop_hasIconBack){
+
+                let styles = {
+                    "top" :       "50%",
+                    "left" :      "50%",
+                    "transform" : "translate(-50% , -50%)" ,
+                    "cursor" :    "pointer" ,
+                }
+
+                new window.ComponentIcon(
+                    `component-header-page-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon : directionRtl ? tools_icons.icon_back_right(prop_size , prop_colorIcon) : tools_icons.icon_back_left(prop_size , prop_colorIcon)  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+
+                        fn_callback: (event)=>{
+                            this.fn_onBackClick(event);
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    componentFn_render_formBackIconRender(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
+            const prop_colorIcon        = data.hasOwnProperty("prop_colorIcon")                  ? data.prop_colorIcon                      : "";
+            const prop_optionsList      = data.hasOwnProperty("prop_optionsList")                ? data.prop_optionsList                    : [];
+
+            if (prop_optionsList != null && Array.isArray(prop_optionsList)){
+                const el = this.fn_getElFormOptions();
+
+                for (let i = 0; i < prop_optionsList.length; i++) {
+                    const itemOptions = prop_optionsList[i];
+
+                    if (itemOptions != null && itemOptions.hasOwnProperty("html")){
+                        const icon = itemOptions.html;
+
+                        let styles = {
+                            "top" :       "50%",
+                            "left" :      "50%",
+                            "transform" : "translate(-50% , -50%)" ,
+                            "cursor" :    "pointer" ,
+                        }
+
+                        el.innerHTML = el.innerHTML + `
+<div class="component-header-page-form-option-icon-forms-${this._COMPONENT_RANDOM_ID} position-relative">
+    <component-icon id="component-header-page-form-option-icon-${this._COMPONENT_RANDOM_ID}-${i}"></component-icon>
+</div>
+`
+
+                        new window.ComponentIcon(
+                            `component-header-page-form-option-icon-${this._COMPONENT_RANDOM_ID}-${i}` ,
+                            {
+                                prop_icon : typeof icon == "function" ? icon(prop_size , prop_colorIcon) : icon ,
+                                prop_title: itemOptions?.attrs?.title ?? "" ,
+
+                                prop_iconClass : ["position-absolute"] ,
+                                prop_iconStyles : styles ,
+
+                                fn_callback: (event)=>{
+                                    this.fn_onOptionClick(event , itemOptions?.attrs?.name ?? "" );
+                                }
+                            }
+                        )
+
+                    }
+
+                }
+            }
+
+        }
+    }
+
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+    --------------------------------------------- */
+    fn_getElFormOptions(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-header-page-form-options-${this._COMPONENT_RANDOM_ID}`)
+    }
+
+    fn_onBackClick(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onBackClick") && typeof data.fn_onBackClick != null){
+            data.fn_onBackClick(event);
+        }
+    }
+    fn_onOptionClick(event , optionName){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onOptionClick") && typeof data.fn_onOptionClick != null){
+            data.fn_onOptionClick(event , optionName);
+        }
+    }
+
+
+}
+
+
+
+
+class ComponentPageCardInfoBase extends ComponentBase{
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.xl.name
+        },
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: ["bg-white" , "py-2" , "py-lg-5" , "px-3" , "mx-2" , "mt-2" ]
+        },
+        prop_formStyles: {
+            prop: "prop_formStyles",
+            default: {}
+        },
+        prop_description: {
+            prop: "prop_description",
+            default: ""
+        },
+
+
+        prop_iconColor: {
+            prop: "prop_iconColor",
+            default: tools_const?.styles?.pageCardInfo?.color_iconPage ?? ""
+        },
+        prop_iconSize: {
+            prop: "prop_iconSize",
+            default: 120
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: ""
+        },
+
+
+        prop_hasBtn: {
+            prop: "prop_hasBtn",
+            default: true
+        },
+        prop_titleBtn: {
+            prop: "prop_titleBtn",
+            default: "New Order"
+        },
+        prop_iconBtn: {
+            prop: "prop_iconBtn",
+            default: tools_icons.icon_plus_badge
+        },
+        prop_colorIconBtn: {
+            prop: "prop_colorIconBtn",
+            default: tools_const?.styles?.pageCardInfo?.color_iconBtn ?? ""
+        },
+
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ],
+
+        part_border: [
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles,
+        ] ,
+
+        part_border_icon: [
+            this._COMPONENT_PATTERN.prop_iconColor,
+            this._COMPONENT_PATTERN.prop_iconSize,
+            this._COMPONENT_PATTERN.prop_icon,
+        ] ,
+
+        part_border_description: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_description,
+        ] ,
+
+        part_border_btn: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_hasBtn,
+            this._COMPONENT_PATTERN.prop_titleBtn,
+            this._COMPONENT_PATTERN.prop_iconBtn,
+            this._COMPONENT_PATTERN.prop_colorIconBtn,
+        ] ,
+
+    };
+
+    /* ---------------------------------------------
+     PROPERTYs Schema
+     --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_border: {
+                part_border_icon: {} ,
+                part_border_description: {} ,
+                part_border_btn: {} ,
+            }
+        },
+    }
+
+}
+window.ComponentPageCardInfo = class ComponentPageCardInfo extends ComponentPageCardInfoBase {
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentPageCardInfo.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+    TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+        this.templateFn("part_border");
+        this.templateFn("part_border_icon");
+        this.templateFn("part_border_btn");
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_border_description":
+                return this.templateFn_render_borderDescription(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
+            case "part_border_icon":
+                return this.componentFn_render_borderIcon(partName);
+            case "part_border_btn":
+                return this.componentFn_render_borderButton(partName);
+            default:
+                return this.templateBasic_render([]);
+        }
+    }
+
+    template_render_structure(partName) {
+
+        const content = `
+        
+        <component-border id="component-page-card-info-border-${this._COMPONENT_RANDOM_ID}">
+            <component-body>
+                <section class="row" >
+
+                    <div class="col-md-3 col-12"> 
+                        <component-icon id="component-page-card-info-border-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+                    </div>
+     
+                    <div class="col-md-6 col-12 py-md-3"> 
+          
+                        ${this.templateFn("part_border_description")}
+                      
+                        <component-button id="component-page-card-info-border-btn-${this._COMPONENT_RANDOM_ID}"></component-button>
+                    </div>
+     
+                 </section>
+            </component-body>
+        </component-border>
+        
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    templateFn_render_borderDescription(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_description         =  data.hasOwnProperty("prop_description")       ?  data.prop_description            : "";
+            const prop_size                =  data.hasOwnProperty("prop_size")              ?  data.prop_size                   : "";
+
+            const elFontSize = tools_css.getFontSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-page-card-info-border-description-${this._COMPONENT_RANDOM_ID}"
+         class="text-center mt-2 d-block" 
+         >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-page-card-info-border-description-${this._COMPONENT_RANDOM_ID}{
+            font-size:    ${elFontSize}px;
+            line-height:  ${elHeight}px;
+         }
+         
+     </style>
+     
+     <b>${prop_description} </b>
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_border(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_formClass      =  data.hasOwnProperty("prop_formClass")        ?  data.prop_formClass            :   [];
+            const prop_formStyles     =  data.hasOwnProperty("prop_formStyles")       ?  data.prop_formStyles           : {};
+
+
+            new window.ComponentBorder(
+                `component-page-card-info-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  prop_formClass ,
+                    prop_structureStyles: prop_formStyles ,
+                }
+            )
+        }
+
+    }
+
+    componentFn_render_borderIcon(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_iconSize         =  data.hasOwnProperty("prop_iconSize")            ?  data.prop_iconSize         : "";
+            const prop_icon             =  data.hasOwnProperty("prop_icon")                ?  data.prop_icon             : "";
+            const prop_iconColor        =  data.hasOwnProperty("prop_iconColor")           ?  data.prop_iconColor        : "";
+
+            if (prop_icon != null){
+
+                new window.ComponentIcon(
+                    `component-page-card-info-border-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList: [ ] ,
+                        prop_icon: typeof  prop_icon == "function" ? prop_icon(prop_iconSize , prop_iconColor) : prop_icon ,
+
+                        prop_iconClass : [  ] ,
+                        prop_iconStyles : {
+                            "margin" :      "auto" ,
+                            "text-align":   "center",
+                            "width":        prop_iconSize+"px",
+                            "height":       prop_iconSize+"px",
+                            "color":        prop_iconColor,
+                            "display":      "block",
+                        } ,
+                    }
+                );
+            }
+        }
+    }
+
+    componentFn_render_borderButton(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_size                =  data.hasOwnProperty("prop_size")             ?  data.prop_size                : "";
+            const prop_hasBtn              =  data.hasOwnProperty("prop_hasBtn")           ?  data.prop_hasBtn              : true;
+            const prop_titleBtn            =  data.hasOwnProperty("prop_titleBtn")         ?  data.prop_titleBtn            : "";
+            const prop_iconBtn             =  data.hasOwnProperty("prop_iconBtn")          ?  data.prop_iconBtn             : "";
+            const prop_colorIconBtn        =  data.hasOwnProperty("prop_colorIconBtn")     ?  data.prop_colorIconBtn        : "";
+
+            if (prop_hasBtn){
+
+                new window.ComponentButton(
+                    `component-page-card-info-border-btn-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList: [] ,
+                        styles: {
+
+                        },
+
+                        prop_size ,
+                        prop_btnClass: ["d-block" , "m-auto" , "mb-1" , "mt-2" ] ,
+                        prop_btnStyles: {
+                            "width" : "300px" ,
+                            "height" : "40px" ,
+                            "line-height" : "40px" ,
+                        } ,
+                        prop_title: `
+<b>${prop_titleBtn}</b>
+${ typeof prop_iconBtn == "function" ? prop_iconBtn(prop_size , prop_colorIconBtn) : prop_iconBtn}
+                    ` ,
+
+                        fn_callback: (event)=>{
+                            this.fn_callback(event)
+                        }
+                    }
+                );
+            }
+
+        }
+    }
+
+
+
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+    --------------------------------------------- */
+    fn_callback(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+
+}
+
+
+
+
+
 
 /* ===============================================================================================================
-    [080] elements spicals
+    [081] elements spicals
 =============================================================================================================== */
 class ComponentDraggableOrdersBase extends ComponentBase{
 
@@ -26858,9 +27613,6 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
         const prop_boderColorHover      =  data.hasOwnProperty("prop_boderColorHover")    ?  data.prop_boderColorHover      : "" ;
         const prop_draggable            =  data.hasOwnProperty("prop_draggable")          ?  data.prop_draggable            : false ;
         const directionRtl              = data.hasOwnProperty("directionRtl")             ? data.directionRtl               : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
-
-
-
 
         const content = `
               
@@ -27140,430 +27892,6 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
             data.fn_callback(this._ITEM_ORDERS);
-        }
-    }
-}
-
-
-class ComponentChangePageBase extends ComponentBase{
-
-    _EFFECT_TOP =       0;
-    _EFFECT_RIGHT =     1;
-    _EFFECT_BOTTOM =    2;
-    _EFFECT_LEFT=       3;
-
-
-    /* ---------------------------------------------
-        PROPERTYs Pattern
-     --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-
-        prop_effect: {
-            prop: "prop_effect",
-            default: null
-        },
-        prop_duration: {
-            prop: "prop_duration",
-            default: 500
-        },
-        prop_backgroundColorShadow: {
-            prop: "prop_backgroundColorShadow",
-            default: tools_const?.styles?.changePage?.backgroundColor_shadow ?? ""
-        },
-        prop_size: {
-            prop: "prop_size",
-            default: tools_css.standardSizes.m.name
-        },
-
-        prop_formWidth: {
-            prop: "prop_formWidth",
-            default: "100%"
-        },
-        prop_formHeight: {
-            prop: "prop_formHeight",
-            default: "100%"
-        },
-        prop_formClass: {
-            prop: "prop_formClass",
-            default: []
-        },
-        prop_formtSyles: {
-            prop: "prop_formtSyles",
-            default: {}
-        },
-        prop_body: {
-            prop: "prop_body",
-            default: null
-        },
-        prop_pages: {
-            prop: "prop_pages",
-            default: null
-        },
-        var_openAnyPage: {
-            prop: "var_openAnyPage",
-            default: false
-        },
-    }
-
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [
-
-        ],
-
-        part_form: [
-            this._COMPONENT_PATTERN.prop_formWidth,
-            this._COMPONENT_PATTERN.prop_formHeight,
-            this._COMPONENT_PATTERN.prop_formClass,
-            this._COMPONENT_PATTERN.prop_formtSyles,
-        ],
-
-        part_form_body: [
-            this._COMPONENT_PATTERN.prop_body,
-        ],
-
-        part_form_shadow: [
-            this._COMPONENT_PATTERN.var_openAnyPage,
-            this._COMPONENT_PATTERN.prop_backgroundColorShadow,
-        ],
-
-        part_form_pages: [
-            this._COMPONENT_PATTERN.prop_pages,
-            this._COMPONENT_PATTERN.prop_effect,
-            this._COMPONENT_PATTERN.prop_duration,
-        ],
-    };
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_form:{
-                part_form_body:{} ,
-                part_form_shadow:{} ,
-                part_form_pages:{} ,
-            } ,
-        }
-    }
-
-}
-window.ComponentChangePage  = class ComponentChangePage extends ComponentChangePageBase{
-
-
-    /* ---------------------------------------------
-       SETUP
-    --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentChangePage.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-    /* ---------------------------------------------
-       TEMPLATEs
-    --------------------------------------------- */
-    componentFn(){
-    }
-
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure( partName );
-            case "part_form":
-                return this.template_render_form( partName );
-            case "part_form_body":
-                return this.template_render_form_body( partName );
-            case "part_form_shadow":
-                return this.template_render_form_shadow( partName );
-            case "part_form_pages":
-                return this.template_render_form_pages( partName );
-            default:
-                return this.templateBasic_render([ "h-100" , "d-block"]);
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-       ${this.templateFn("part_form") ?? ""}
-                `;
-        return this.templateBasic_render_structure(content , [ "h-100" , "d-block"]);
-    }
-
-    template_render_form(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_formWidth        =   data.hasOwnProperty("prop_formWidth")        ?  data.prop_formWidth                :  "";
-            const prop_formHeight       =   data.hasOwnProperty("prop_formHeight")       ?  data.prop_formHeight               :  "";
-            const prop_formClass        =   data.hasOwnProperty("prop_formClass")        ?  data.prop_formClass                :  [];
-            const prop_formtSyles       =   data.hasOwnProperty("prop_formtSyles")       ?  data.prop_formtSyles               : {};
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-change-page-form-${this._COMPONENT_RANDOM_ID}"
-         class="overflow-hidden position-relative ${tools_public.renderListClass(prop_formClass)}">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-change-page-form-${this._COMPONENT_RANDOM_ID}{
-             width: ${prop_formWidth};
-             height: ${prop_formHeight};
-             ${tools_public.renderListStyle(prop_formtSyles)}
-         }
-     </style>
-     
-       ${this.templateFn("part_form_body") ?? ""}
-       ${this.templateFn("part_form_shadow") ?? ""}
-       ${this.templateFn("part_form_pages") ?? ""}
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_form_body(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_body                    =   data.hasOwnProperty("prop_body") && data.prop_body !=null       ?  data.prop_body                     :   this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-change-page-form-body-${this._COMPONENT_RANDOM_ID}"
-         class="w-100 h-100">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-change-page-form-body-${this._COMPONENT_RANDOM_ID}{
-        
-         }
-     </style>
-     
-     ${prop_body}
-     
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_form_pages(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_pages     =   data.hasOwnProperty("prop_pages") && data.prop_pages !=null      ?  data.prop_pages                      :  this._COMPONENT_SLOTS?.pages ?? [];
-
-            const directionRtl   = data.hasOwnProperty("directionRtl")                                ? data.directionRtl                     : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
-            const prop_effect    = data.hasOwnProperty("prop_effect")                                 ?  data.prop_effect                     :  null;
-            const prop_duration  = data.hasOwnProperty("prop_duration")                               ?  data.prop_duration                   :  100;
-
-            let styleStr = "";
-            switch (prop_effect){
-                case this._EFFECT_TOP:
-                    if (directionRtl){
-                        styleStr= "right: 0; top: -100%;"
-                    }
-                    else{
-                        styleStr= "left: 0;  top: -100%;"
-                    }
-                    break;
-                case this._EFFECT_BOTTOM:
-                    if (directionRtl){
-                        styleStr= "right: 0; bottom: -100%;"
-                    }
-                    else{
-                        styleStr= "left: 0;  bottom: -100%;"
-                    }
-                    break;
-                case this._EFFECT_LEFT:
-                    styleStr= "top: 0; left: -100%;"
-                    break;
-                case this._EFFECT_RIGHT:
-                    styleStr= "top: 0; right: -100%;"
-                    break;
-                default:
-                    if (directionRtl){
-                        styleStr= "top: 0; right: -100%;"
-                    }
-                    else{
-                        styleStr= "top: 0; left: -100%;"
-                    }
-                    break;
-            }
-
-            const html = this.fn_getTemplatePages(prop_pages)
-
-            return `
-<section data-part-name="${partName}" 
-         id="ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}"
-         class="w-100 h-100 ">
-         
-     <style>
-         #${this._COMPONENT_ID} #ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}{
-         
-         }
-         #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page{
-             transition: left ease ${prop_duration}ms ,  right ease ${prop_duration}ms ,  top ease ${prop_duration}ms ,  bottom ease ${prop_duration}ms;
-             width: 100%;
-             height: 100%;
-             ${styleStr};
-             z-index: ${tools_css.getZIndex(tools_css.standardZIndex.new_page.name , 10)}
-         }
-     </style>
-     
-     ${html}
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_form_shadow(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const var_openAnyPage  =            data.hasOwnProperty("var_openAnyPage")                         ?  data.var_openAnyPage                   :  false;
-            const prop_backgroundColorShadow  = data.hasOwnProperty("prop_backgroundColorShadow")              ?  data.prop_backgroundColorShadow        :  "";
-
-            if (var_openAnyPage){
-                return `
-<section data-part-name="${partName}" 
-         id="ccomponent-change-page-form-shadow-${this._COMPONENT_RANDOM_ID}"
-         class="w-100 h-100 position-absolute">
-         
-     <style>
-         #${this._COMPONENT_ID} #ccomponent-change-page-form-shadow-${this._COMPONENT_RANDOM_ID}{
-             background-color: ${prop_backgroundColorShadow};
-             top: 0 ;
-             left: 0;
-         }
-     </style>
-     
-</section>
-        `;
-            }
-
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-
-    fn_getPageSelected(pageName){
-        return document.querySelector(` #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page[data-page-name="${pageName}"]`);
-    }
-    fn_getAllPage(pageName){
-        return document.querySelectorAll(` #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page`);
-    }
-
-
-    fn_getTemplatePages(prop_pages){
-        let html = "";
-        if(prop_pages != null ){
-            for (let i = 0; i < prop_pages.length; i++) {
-                const itemPage = prop_pages[i];
-                html += `
-                <section class="ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page position-absolute" data-page-name="${itemPage?.attrs?.name ?? ""}" data-page-status="0">
-                   ${itemPage?.html ?? ""}
-                </section>
-                `
-            }
-        }
-
-        return html;
-    }
-
-    fn_setStatusPageSelected(pageEl , status){
-        const data = this._COMPONENT_CONFIG;
-        const prop_effect    = data.hasOwnProperty("prop_effect")                                 ?  data.prop_effect                     :  null;
-        const directionRtl   = data.hasOwnProperty("directionRtl")                                ? data.directionRtl                     : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
-
-        switch (prop_effect){
-            case this._EFFECT_TOP:
-                pageEl.style.setProperty("top", status ? "0" : "-100%", "important");
-                break;
-            case this._EFFECT_RIGHT:
-                pageEl.style.setProperty("right", status ? "0" : "-100%", "important");
-                break;
-            case this._EFFECT_BOTTOM:
-                pageEl.style.setProperty("bottom", status ? "0" : "-100%", "important");
-                break;
-            case this._EFFECT_LEFT:
-                pageEl.style.setProperty("left", status ? "0" : "-100%", "important");
-                break;
-            default:
-                if (directionRtl){
-                    pageEl.style.setProperty("right", status ? "0" : "-100%", "important");
-                }
-                else{
-                    pageEl.style.setProperty("left", status ? "0" : "-100%", "important");
-                }
-                break;
-        }
-
-        pageEl.setAttribute("data-page-status" , status ? 1 : 0);
-        this.fn_setStatusFormShadow();
-    }
-
-
-    fn_setStatusFormShadow(){
-        let status = false;
-        const pages = this.fn_getAllPage();
-        if (pages != null){
-            for (let i = 0; i < pages.length; i++) {
-                const itemPage = pages[i];
-                let pageStatusNumber = itemPage.getAttribute("data-page-status");
-                if (parseInt(pageStatusNumber) == 1){
-                    status = true;
-                    break;
-                }
-            }
-        }
-
-        this.set("var_openAnyPage" , status)
-    }
-
-    call_openOrClosePage(pageName , status = null){
-        const pageEl = this.fn_getPageSelected(pageName);
-
-        if (pageEl != null){
-            let pageStatusNumber = pageEl.getAttribute("data-page-status");
-            let pageStatus = false;
-            if (status == null){
-                if (parseInt(pageStatusNumber) == 1){
-                    pageStatus = false;
-                }
-                else if (parseInt(pageStatusNumber) == 0){
-                    pageStatus = true;
-                }
-            }
-            else{
-                pageStatus = status;
-            }
-
-            this.fn_setStatusPageSelected(pageEl , pageStatus);
         }
     }
 }
@@ -31113,7 +31441,11 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
 
 
 
+/*-------------------------------------
+ n-01) Component Report
+-------------------------------------
 
+-------------------------------------*/
 class ComponentReportBase extends ComponentBase{
 
     _PER_PAGE_10 = 10;
@@ -31130,7 +31462,7 @@ class ComponentReportBase extends ComponentBase{
 
         prop_size: {
             prop: "prop_size",
-            default: tools_css.standardSizes.m.name
+            default: tools_css.standardSizes.l.name
         },
         prop_sizeHeader: {
             prop: "prop_sizeHeader",
@@ -31147,13 +31479,11 @@ class ComponentReportBase extends ComponentBase{
                 fa: {
                     excel: "اکسل" ,
                     print: "چاپ" ,
-                    filter_title: "فیلتر" ,
                     filter_btn: "جست و جو" ,
                 } ,
                 en: {
                     excel: "Excel" ,
                     print: "Print" ,
-                    filter_title: "Filters" ,
                     filter_btn: "Search" ,
                 }
             }
@@ -31206,7 +31536,7 @@ class ComponentReportBase extends ComponentBase{
 
         prop_iconPageSize: {
             prop: "prop_iconPageSize",
-            default: 80
+            default: 120
         },
         prop_iconPage: {
             prop: "prop_iconPage",
@@ -31250,16 +31580,16 @@ class ComponentReportBase extends ComponentBase{
     _COMPONENT_PROPS = {
 
         part_structure: [
-            this._COMPONENT_PATTERN.prop_backgroundColorPage,
             this._COMPONENT_PATTERN.prop_pages,
         ],
 
         part_pages: [
+            this._COMPONENT_PATTERN.prop_backgroundColorPage,
             this._COMPONENT_PATTERN.prop_size,
         ],
 
         part_pages_main: [
-            this._COMPONENT_PATTERN.prop_backgroundColorPage,
+            this._COMPONENT_PATTERN.prop_hasFilter,
         ],
         part_pages_main_header: [
             this._COMPONENT_PATTERN.prop_sizeHeader,
@@ -31270,25 +31600,13 @@ class ComponentReportBase extends ComponentBase{
         part_pages_main_formNew: [
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_descriptionPage,
-        ],
-        part_pages_main_formNew_icon: [
             this._COMPONENT_PATTERN.prop_iconPageSize,
             this._COMPONENT_PATTERN.prop_iconPage,
             this._COMPONENT_PATTERN.prop_iconPageColor,
-        ],
-        part_pages_main_formNew_btn: [
-            this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_btnTitleNewPage,
             this._COMPONENT_PATTERN.prop_btnColorIconNewPage,
         ],
-        part_pages_main_collapseFilter: [
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_langSelected,
-            this._COMPONENT_PATTERN.prop_langs,
-            this._COMPONENT_PATTERN.prop_formFilter,
-            this._COMPONENT_PATTERN.prop_hasFilter,
-        ],
-        part_pages_main_collapseFilter_form: [
+        part_pages_main_form: [
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
@@ -31322,7 +31640,7 @@ class ComponentReportBase extends ComponentBase{
 
 
         part_pages_excel: [
-            this._COMPONENT_PATTERN.prop_backgroundColorPage,
+
         ],
         part_pages_excel_header: [
             this._COMPONENT_PATTERN.prop_sizeHeader,
@@ -31337,7 +31655,7 @@ class ComponentReportBase extends ComponentBase{
 
 
         part_pages_print : [
-            this._COMPONENT_PATTERN.prop_backgroundColorPage,
+
         ],
         part_pages_print_header : [
             this._COMPONENT_PATTERN.prop_sizeHeader,
@@ -31366,13 +31684,8 @@ class ComponentReportBase extends ComponentBase{
             part_pages:{
                 part_pages_main:{
                     part_pages_main_header: {},
-                    part_pages_main_formNew: {
-                        part_pages_main_formNew_icon: {} ,
-                        part_pages_main_formNew_btn: {} ,
-                    },
-                    part_pages_main_collapseFilter: {
-                        part_pages_main_collapseFilter_form: {},
-                    },
+                    part_pages_main_formNew: {},
+                    part_pages_main_form: {},
                     part_pages_main_formTable: {
 
                         part_pages_main_formTable_table:{} ,
@@ -31391,10 +31704,8 @@ class ComponentReportBase extends ComponentBase{
                     part_pages_print_header: {}
                 },
 
-
                 part_other_pages_Header: {}
             },
-
         } ,
     }
 }
@@ -31439,11 +31750,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         this.templateFn("part_pages");
 
         this.templateFn("part_pages_main_header");
-        this.templateFn("part_pages_main_formNew_icon");
-        this.templateFn("part_pages_main_formNew_btn");
-        this.templateFn("part_pages_main_collapseFilter");
-        this.templateFn("part_pages_main_collapseFilter_form");
-
+        this.templateFn("part_pages_main_formNew");
+        this.templateFn("part_pages_main_form");
 
         this.templateFn("part_pages_excel_header");
         this.templateFn("part_pages_excel_tool");
@@ -31464,7 +31772,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             case "part_pages_main":
                 return this.template_render_pageMain(partName);
             case "part_pages_main_formNew":
-                return this.template_render_pageMain_formNew(partName);
+                return this.componentFn_render_pageMain_formNew(partName);
             case "part_pages_main_formTable":
                 return this.template_render_pageMain_fromTable(partName);
 
@@ -31479,14 +31787,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
 
             case "part_pages_main_header":
                 return this.componentFn_render_pageMain_header(partName);
-            case "part_pages_main_formNew_icon":
-                return this.componentFn_render_pageMain_formNew_iconHeader(partName);
-            case "part_pages_main_formNew_btn":
-                return this.componentFn_render_pageMain_formNew_button(partName);
-            case "part_pages_main_collapseFilter":
-                return this.componentFn_render_pageMain_collapseFilter(partName);
-            case "part_pages_main_collapseFilter_form":
-                return this.componentFn_render_pageMain_collapseFilter_form(partName);
+            case "part_pages_main_form":
+                return this.componentFn_render_pageMain_form(partName);
 
             case "part_pages_main_formTable_table":
                 return this.componentFn_render_pageMain_fromTable_table(partName);
@@ -31519,7 +31821,6 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
     template_render_structure(partName) {
         const data = this.getPartProps(partName)
         const prop_pages    =  data.hasOwnProperty("prop_pages")   && data.prop_pages != null    ?  data.prop_pages                 : this._COMPONENT_SLOTS?.pages ?? [];
-        const prop_backgroundColorPage    =  data.hasOwnProperty("prop_backgroundColorPage")     ?  data.prop_backgroundColorPage   : "";
 
         const content = `
         
@@ -31538,7 +31839,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                       ${this.templateFn("part_pages_print")}
                </component-pages>
                
-               ${this.fn_getHtmlPages(prop_pages , prop_backgroundColorPage)}
+               ${this.fn_getHtmlPages(prop_pages )}
 
        </component-change-page>
           
@@ -31553,7 +31854,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_backgroundColorPage         =  data.hasOwnProperty("prop_backgroundColorPage")           ?  data.prop_backgroundColorPage            : "";
+
+            const prop_hasFilter             =  data.hasOwnProperty("prop_hasFilter")                ?  data.prop_hasFilter             : true;
 
             return `
 <section data-part-name="${partName}" 
@@ -31563,7 +31865,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
          
      <style>
          #${this._COMPONENT_ID} #component-report-page-main-${this._COMPONENT_RANDOM_ID}{
-              background-color: ${prop_backgroundColorPage};
+              
          }
          #${this._COMPONENT_ID} #component-report-page-main-inside-${this._COMPONENT_RANDOM_ID}{
               
@@ -31573,16 +31875,14 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
      
      <component-page-header id="component-report-page-main-header-${this._COMPONENT_RANDOM_ID}"></component-page-header>
      
-     <div id="component-report-page-main-inside-${this._COMPONENT_RANDOM_ID}" class="h-100 overflow-auto mx-2">
+     <div id="component-report-page-main-inside-${this._COMPONENT_RANDOM_ID}" class="h-100 overflow-auto">
      
-          ${this.templateFn("part_pages_main_formNew")}
+          <component-page-card-info id="component-report-page-main-form-new-${this._COMPONENT_RANDOM_ID}"></component-page-card-info>
 
-          <component-collapse id="component-report-page-main-collapse-filter-${this._COMPONENT_RANDOM_ID}">
-              <component-body>
-                  <component-form id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}"></component-form>
-              </component-body>
-          </component-collapse>
-          
+          <div class="py-1 px-1 m-0 mt-2 bg-white  mx-2 ${prop_hasFilter ? "" : "d-none"}">
+               <component-form id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}"></component-form>
+           </div>
+
           ${this.templateFn("part_pages_main_formTable")}
           
      </div>
@@ -31596,55 +31896,37 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         `;
     }
 
-    template_render_pageMain_formNew(partName){
+    componentFn_render_pageMain_formNew(partName){
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_descriptionPage         =  data.hasOwnProperty("prop_descriptionPage")           ?  data.prop_descriptionPage            : "";
-            const prop_size                        =  data.hasOwnProperty("prop_size")                          ?  data.prop_size                           : "";
+            const prop_descriptionPage         =  data.hasOwnProperty("prop_descriptionPage")       ?  data.prop_descriptionPage         : "";
+            const prop_size                    =  data.hasOwnProperty("prop_size")                  ?  data.prop_size                    : "";
+            const prop_iconPageSize            =  data.hasOwnProperty("prop_iconPageSize")          ?  data.prop_iconPageSize            : "";
+            const prop_iconPage                =  data.hasOwnProperty("prop_iconPage")              ?  data.prop_iconPage                : "";
+            const prop_iconPageColor           =  data.hasOwnProperty("prop_iconPageColor")         ?  data.prop_iconPageColor           : "";
+            const prop_btnTitleNewPage         =  data.hasOwnProperty("prop_btnTitleNewPage")       ?  data.prop_btnTitleNewPage         : "";
+            const prop_btnColorIconNewPage     =  data.hasOwnProperty("prop_btnColorIconNewPage")   ?  data.prop_btnColorIconNewPage     : "";
 
-            const elFontSize = tools_css.getFontSize(prop_size);
-            const elHeight = tools_css.getHeightSize(prop_size);
+            new window.ComponentPageCardInfo(
+                `component-report-page-main-form-new-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_size ,
+                    prop_description:      prop_descriptionPage,
+                    prop_icon:             prop_iconPage ,
+                    prop_iconColor:        prop_iconPageColor ,
+                    prop_iconSize:         prop_iconPageSize ,
+                    prop_titleBtn:         prop_btnTitleNewPage ,
+                    prop_colorIconBtn:     prop_btnColorIconNewPage ,
+                    prop_iconBtn:          tools_icons.icon_plus_badge ,
+                    fn_callback: (event)=>{
+                        this.fn_onClickNew(event);
+                    }
+                }
+            );
 
-            return `
-<section data-part-name="${partName}" 
-         id="component-report-page-main-form-new-${this._COMPONENT_RANDOM_ID}"
-         class=" py-2 py-lg-5  p-0 m-0 row mt-2  mb-0 bg-white" 
-         >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-report-page-main-form-new-${this._COMPONENT_RANDOM_ID}{
-            
-         }
-         #${this._COMPONENT_ID} #component-report-page-main-form-new-description-${this._COMPONENT_RANDOM_ID}{
-            font-size:    ${elFontSize}px;
-            line-height:  ${elHeight}px;
-         }
-         
-     </style>
-     
-     <div class="col-md-3 col-12"> 
-         <component-icon id="component-report-page-main-form-new-icon-page-${this._COMPONENT_RANDOM_ID}"></component-icon>
-      </div>
-     
-     <div class="col-md-6 col-12"> 
-          
-          <b id="component-report-page-main-form-new-description-${this._COMPONENT_RANDOM_ID}"
-             class=" text-center mt-2 d-block">
-              ${prop_descriptionPage} 
-          </b>
-          
-           <component-button id="component-report-page-main-form-new-button-${this._COMPONENT_RANDOM_ID}"></component-button>
-          
-     </div>
-     
-</section>
-        `;
         }
 
-        return `
-<section data-part-name="${partName}"></section>
-        `;
     }
 
     template_render_pageMain_fromTable(partName){
@@ -31656,14 +31938,13 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             return `
 <section data-part-name="${partName}" 
          id="component-report-page-main-form-table-${this._COMPONENT_RANDOM_ID}"
-         class="mt-2  bg-white p-2 " 
+         class="mt-2  bg-white p-2  mx-2 " 
          >
          
      <style>
          #${this._COMPONENT_ID} #component-report-page-main-form-table-${this._COMPONENT_RANDOM_ID}{
          
          }
-         
      </style>
      
      <component-widget     id="table-component-report-page-main-form-table-widget-table-${this._COMPONENT_RANDOM_ID}"></component-widget>
@@ -31685,12 +31966,13 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         if (data != null){
             const prop_size         =  data.hasOwnProperty("prop_size")           ?  data.prop_size            : "";
             const directionRtl      = data.hasOwnProperty("directionRtl")         ? data.directionRtl          : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
-
+            const prop_backgroundColorPage   =  data.hasOwnProperty("prop_backgroundColorPage")      ?  data.prop_backgroundColorPage   : "";
             this._PAGE_MANAGER = new window.ComponentChangePage(
                 `component-report-change-page-${this._COMPONENT_RANDOM_ID}`  ,
                 {
                     classList: [ "h-100" , "d-block"]  ,
 
+                    prop_backgroundColorPage ,
                     prop_size ,
                     prop_effect: directionRtl? 1 : 3
                 }
@@ -31749,107 +32031,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         }
     }
 
-    componentFn_render_pageMain_formNew_iconHeader(partName){
-        const data = this.getPartProps(partName)
 
-        if (data != null){
-            const prop_iconPageSize         =  data.hasOwnProperty("prop_iconPageSize")           ?  data.prop_iconPageSize            : "";
-            const prop_iconPage              =  data.hasOwnProperty("prop_iconPage")                ?  data.prop_iconPage                 : "";
-            const prop_iconPageColor              =  data.hasOwnProperty("prop_iconPageColor")                ?  data.prop_iconPageColor                 : "";
-
-            if (prop_iconPage != null){
-
-                new window.ComponentIcon(
-                    `component-report-page-main-form-new-icon-page-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        classList: [ ] ,
-                        prop_icon: typeof  prop_iconPage == "function" ? prop_iconPage(prop_iconPageSize , prop_iconPageColor) : prop_iconPage ,
-
-                        prop_iconClass : [  ] ,
-                        prop_iconStyles : {
-                            "margin" :      "auto" ,
-                            "text-align":   "center",
-                            "width":        prop_iconPageSize+"px",
-                            "height":       prop_iconPageSize+"px",
-                            "color":        prop_iconPageColor,
-                            "display":      "block",
-                        } ,
-                    }
-                );
-
-            }
-
-        }
-    }
-
-    componentFn_render_pageMain_formNew_button(partName){
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_size                       =  data.hasOwnProperty("prop_size")                    ?  data.prop_size                       : "";
-            const prop_btnTitleNewPage            =  data.hasOwnProperty("prop_btnTitleNewPage")         ?  data.prop_btnTitleNewPage            : "";
-            const prop_btnColorIconNewPage        =  data.hasOwnProperty("prop_btnColorIconNewPage")     ?  data.prop_btnColorIconNewPage        : "";
-
-            new window.ComponentButton(
-                `component-report-page-main-form-new-button-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    classList: [] ,
-                    styles: {
-
-                    },
-
-                    prop_size ,
-                    prop_btnClass: ["d-block" , "m-auto" , "mb-1" , "mt-2" ] ,
-                    prop_btnStyles: {
-                        "width" : "300px" ,
-                        "height" : "40px" ,
-                        "line-height" : "40px" ,
-                    } ,
-                    prop_title: `
-<b>${prop_btnTitleNewPage}</b>
-${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
-                    ` ,
-
-                    fn_callback: (event)=>{
-                        this.fn_onClickNew(event);
-                    }
-                }
-            );
-
-        }
-    }
-
-    componentFn_render_pageMain_collapseFilter(partName){
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_size                       =  data.hasOwnProperty("prop_size")                    ?  data.prop_size                       : "";
-            const prop_langSelected               =  data.hasOwnProperty("prop_langSelected")            ?  data.prop_langSelected               : "";
-            const prop_langs                      =  data.hasOwnProperty("prop_langs")                   ?  data.prop_langs                      : {};
-            const prop_hasFilter                  =  data.hasOwnProperty("prop_hasFilter")               ?  data.prop_hasFilter                  : true;
-
-            let langFilterTitle = "";
-            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
-                const langs= prop_langs[prop_langSelected];
-                langFilterTitle = langs?.filter_title ?? "Search";
-            }
-
-            new window.ComponentCollapse(
-                `component-report-page-main-collapse-filter-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_structureClass: ["mt-2" , prop_hasFilter ? "" : "d-none"]  ,
-
-                    prop_size ,
-
-                    prop_icon: tools_icons.icon_filter ,
-                    prop_title: langFilterTitle ,
-                    prop_bodyShow: true
-                }
-            )
-        }
-    }
-
-    componentFn_render_pageMain_collapseFilter_form(partName){
+    componentFn_render_pageMain_form(partName){
         const data = this.getPartProps(partName)
 
         if (data != null){
@@ -31857,13 +32040,13 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             let prop_formFilter         =  data.hasOwnProperty("prop_formFilter")   && data.prop_formFilter != null     ?  data.prop_formFilter        : this._COMPONENT_SLOTS?.filter?.[0]?.html ?? "";
             const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")                                     ?  data.prop_langSelected      : "";
             const prop_langs            =  data.hasOwnProperty("prop_langs")                                            ?  data.prop_langs             : {};
+            const directionRtl          = data.hasOwnProperty("directionRtl")                                           ? data.directionRtl            : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
 
             let langFilterBtn = "";
             if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
                 const langs= prop_langs[prop_langSelected];
                 langFilterBtn = langs?.filter_btn ?? "Search";
             }
-
 
             if (prop_formFilter != null){
                 prop_formFilter += `<input id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page" type="hidden" name="page" value="1"/>`
@@ -31874,8 +32057,15 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
             this._PAGE_FILTER = new window.ComponentForm(
                 `component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    // classList: "row"  ,
                     // prop_title: "test Form"  ,
+                    prop_borderClass: ["px-2"] ,
+                    prop_borderStyles: {
+                        "display" : "flow-root"
+                    },
+                    prop_btnformClass : [] ,
+                    prop_btnformStyles : {
+                        "float" : directionRtl ? "left" : "right"
+                    },
                     prop_size ,
                     prop_showErrorStepper: true ,
                     prop_forms: prop_formFilter ,
@@ -32024,7 +32214,6 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_backgroundColorPage         =  data.hasOwnProperty("prop_backgroundColorPage")           ?  data.prop_backgroundColorPage            : "";
 
             return `
 <section data-part-name="${partName}" 
@@ -32034,7 +32223,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
          
      <style>
          #${this._COMPONENT_ID} #component-report-page-excel-${this._COMPONENT_RANDOM_ID}{
-              background-color: ${prop_backgroundColorPage};
+              
          }
          #${this._COMPONENT_ID} #component-report-page-excel-inside-${this._COMPONENT_RANDOM_ID}{
               
@@ -32134,7 +32323,6 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_backgroundColorPage         =  data.hasOwnProperty("prop_backgroundColorPage")           ?  data.prop_backgroundColorPage            : "";
 
             return `
 <section data-part-name="${partName}" 
@@ -32144,7 +32332,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
          
      <style>
          #${this._COMPONENT_ID} #component-report-page-print-${this._COMPONENT_RANDOM_ID}{
-              background-color: ${prop_backgroundColorPage};
+            
          }
          #${this._COMPONENT_ID} #component-report-page-print-inside-${this._COMPONENT_RANDOM_ID}{
               
@@ -32355,7 +32543,7 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
         );
     }
 
-    fn_getHtmlPages(prop_pages , prop_backgroundColorPage){
+    fn_getHtmlPages(prop_pages ){
         let html = "";
 
         if (prop_pages != null && Array.isArray(prop_pages)){
@@ -32368,7 +32556,6 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
                             <div id="component-report-page-other-header-${this._COMPONENT_RANDOM_ID}-page-${itemPage.attrs.name}">
                                <style>
                                    #${this._COMPONENT_ID} #component-report-page-other-header-${this._COMPONENT_RANDOM_ID}-page-${itemPage.attrs.name}{
-                                      background-color: ${prop_backgroundColorPage};
                                       height: 100%;
                                    }
                                </style>
@@ -32413,6 +32600,5 @@ ${tools_icons.icon_plus_badge(prop_size , prop_btnColorIconNewPage)}
     call_openOrClosePage(pageName , status){
         this._PAGE_MANAGER.call_openOrClosePage(pageName, status);
     }
-
 
 }
