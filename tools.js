@@ -115,6 +115,11 @@ tools_init = {
                 }
             },
 
+            isEmpty: {
+                color_icon:                            component_props.primaryColor1 ,
+                btnColor_icon:                         component_props.shanColor1 ,
+            },
+
             loading: {
                 backgroundColor_loading:               component_props.primaryColor1 ,
                 backgroundColor_shadow:                component_props.shadowColor1
@@ -144,8 +149,10 @@ tools_init = {
 
             pageHeader: {
                 backgroundColor_form:                  component_props.primaryColor1 ,
+                backgroundColor_nav:                   component_props.shanColor1 ,
                 color_icon:                            component_props.shanColor1 ,
                 color_header:                          component_props.shanColor1 ,
+                color_nav:                             component_props.primaryColor1 ,
             },
 
             collapse: {
@@ -506,16 +513,17 @@ tools_css = {
     } ,
 
     standardZIndex:{
-        basic:       {name:"basic"       ,val:1             } ,
-        menu_main:   {name:"menu_main"   ,val:2             } ,
-        icon_attach: {name:"icon_attach" ,val:3             } ,
-        tools:       {name:"tools"       ,val:4             } ,
-        tools_btn:   {name:"tools_btn"   ,val:5             } ,
+        basic:            {name:"basic"            ,val:1             } ,
+        menu_main:        {name:"menu_main"        ,val:2             } ,
+        icon_attach:      {name:"icon_attach"      ,val:3             } ,
+        tools:            {name:"tools"            ,val:4             } ,
+        tools_btn:        {name:"tools_btn"        ,val:5             } ,
+        tools_position:   {name:"tools_position"   ,val:6             } ,
 
 
-        new_page:    {name:"new_page"    ,val:10             } ,
-        blur_popup:  {name:"blur_popup"  ,val:19             } ,
-        popup:       {name:"popup"       ,val:20             } ,
+        new_page:         {name:"new_page"         ,val:10             } ,
+        blur_popup:       {name:"blur_popup"       ,val:19             } ,
+        popup:            {name:"popup"            ,val:20             } ,
     } ,
 
     //---------------------------------------------------------------------------
@@ -1164,6 +1172,35 @@ tools_validate = {
 
 tools_public = {
 
+    getTineUnixThisYear: function(isSamci=true){
+
+        if (isSamci){
+            const now = new Date();
+            const j = jalaali.toJalaali(now);
+            const jy = j.jy;
+
+            const g = jalaali.toGregorian(jy, 1, 1);
+
+            const date = new Date(g.gy, g.gm - 1, g.gd, 0, 0, 0);
+
+            return  Math.floor(date.getTime() / 1000);
+        }
+        else{
+            const year = new Date().getFullYear();
+
+            const date = new Date(year, 0, 1, 0, 0, 0);
+
+            return  Math.floor(date.getTime() / 1000);
+        }
+    } ,
+
+
+    getTineUnixThisTime: function(withTomorrow = true) {
+        return Math.floor(Date.now() / 1000) + (withTomorrow ? 86400 : 0);
+    },
+
+
+
     mergeFormArray: function(base, incoming) {
         const map = new Map(base.map(item => [item.name, item.value]));
 
@@ -1266,7 +1303,7 @@ tools_public = {
 
 tools_stepper = {
 
-    createStepper(elementId , manifest , botUrl){
+    createStepper(elementId , manifest , botUrl , stepActive=null){
         steps = [];
         workFlow = {};
         if (manifest != null){
@@ -1278,7 +1315,7 @@ tools_stepper = {
             }
         }
 
-        return new NavStepper(elementId , workFlow);
+        return new NavStepper(elementId , workFlow , stepActive);
     } ,
 
 
@@ -2330,31 +2367,28 @@ tools_icons = {
         const size = tools_css.getIconSize(sizeName, sizeName);
 
         return `
-<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="excel file"
-    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
-  <title>excel file with folded corner</title>
-
-  <!-- قاب فایل با گوشه تاخورده -->
-  <path d="M3 3 H17 L21 7 V21 H3 V3 Z M17 3 V7 H21"
-        stroke="${bg_color}" stroke-width="1.8" fill="none"/>
-
-  <!-- X وسط فایل -->
-  <path d="M7 8 L12 16 M12 8 L7 16"
-        stroke="${bg_color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="excel"
+    width="${size}" height="${size}" viewBox="0 0 340 380" fill="none">
+  <title>excel</title>
+  <path fill="${bg_color}" stroke="#000" stroke-width="4" d="M234.65,349.08h64.75c15.05,0,27.25-12.2,27.25-27.25v-266c0-15.05-12.2-27.25-27.25-27.25h-64.75V349.08z"/>
+  <path fill="${bg_color}" stroke="#000" stroke-width="4"  d="M197.4,6.58l-174.75,22c-5.52,0-10,4.48-10,10v300.5c0,5.52,4.48,10,10,10l174.75,21 c15.05,0,27.25-12.2,27.25-27.25v-309C224.65,18.78,212.45,6.58,197.4,6.58z M162.52,146.8h-11.22l-29.45,61.75l30.75,65.64h9.92 v12.55H123.9V274.2h9.84l-21.41-45.69L90.55,274.2h6.85v12.55H58.79V274.2h12.84l31.33-65.71l-28.9-61.69H59.98v-12.55h38.61v12.55 h-5.68l19.55,41.74l19.91-41.74h-8.47v-12.55h38.61V146.8z"/>
 </svg>`;
     } ,
 
-    icon_print(sizeName =  component_props.elementSizes, bg_color = "#107C41") {
+    icon_print(sizeName =  component_props.elementSizes, bg_color = "#000") {
         const size = tools_css.getIconSize(sizeName , sizeName);
 
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="print"
-    width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+    width="${size}" height="${size}" viewBox="0 0 350 205" fill="none">
   <title>print</title>
-  <path d="M6 9V4h12v5" stroke="${bg_color}" stroke-width="2" stroke-linejoin="round"/>
-  <rect x="4" y="9" width="16" height="8" rx="2" stroke="${bg_color}" stroke-width="2"/>
-  <rect x="7" y="13" width="10" height="7" stroke="${bg_color}" stroke-width="2"/>
-  <circle cx="17" cy="12" r="1" fill="${bg_color}"/>
+  <path fill="${bg_color}" d="M327.75,80.75h-77c-5.52,0-10,4.48-10,10v5.21c0,5.41-4.39,9.79-9.79,9.79H118.62c-5.45,0-9.87-4.42-9.87-9.87v-5.13 c0-5.52-4.48-10-10-10h-77c-5.52,0-10,4.48-10,10v135c0,5.52,4.48,10,10,10h77c5.52,0,10-4.48,10-10l7-20.03 c0-8.27-0.3-14.97,7.97-14.97h100.87c8.92,0,7.16,7.23,7.16,16.16l9,18.84c0,5.52,4.48,10,10,10h77c5.52,0,10-4.48,10-10v-135 C337.75,85.22,333.27,80.75,327.75,80.75z M315.03,105.83c3.28,0,5.94,2.66,5.94,5.94s-2.66,5.94-5.94,5.94 c-3.28,0-5.94-2.66-5.94-5.94S311.75,105.83,315.03,105.83z M315.03,139.96c-3.94,0-7.14-3.2-7.14-7.14s3.2-7.14,7.14-7.14 c3.94,0,7.14,3.2,7.14,7.14S318.97,139.96,315.03,139.96z"/>
+  <path fill="${bg_color}" stroke="#000" stroke-width="5"  d="M125.73,101.29h99.16c6.24,0,11.3-3,11.3-6.69V16.54c0-3.7-5.06-6.69-11.3-6.69h-84.14 c-3.14,0-6.13,0.77-8.27,2.13l-15.02,16.54c-1.95,1.24-3.03,10.87-3.03,12.56V94.6C114.42,98.3,119.48,101.29,125.73,101.29z"/>
+  <path fill="#000" d="M130.22,11.98L115.2,28.53c-1.39,0.88-2.34,6.04-2.77,9.54h21.22c5.85,0,10.57-4.76,10.53-10.61l-0.14-17.6h-5.55 C135.35,9.85,132.36,10.62,130.22,11.98z"/>
+  <path fill="${bg_color}" stroke="#000" stroke-width="5"  d="M129.94,197.43h85.72c2.74,0,5.25,1.63,6.48,4.2l28.84,60.58c2.41,5.06-1.09,11-6.48,11H108.93 c-5.03,0-8.52-5.25-6.8-10.21l21.01-60.58C124.18,199.43,126.89,197.43,129.94,197.43z"/>
+  <line fill="none" stroke="#000" stroke-width="5"  x1="236.19" y1="258.44" x2="116.97" y2="258.44"/>
+  <line fill="none" stroke="#000" stroke-width="5"  x1="223.59" y1="240.75" x2="127.31" y2="240.75"/>
+  <line fill="none" stroke="#000" stroke-width="5"  x1="212.98" y1="225.47" x2="136.18" y2="225.47"/>
 </svg>`;
     },
 
@@ -2696,7 +2730,7 @@ tools_icons = {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Clip"
-    width="${size}" height="${size}" viewBox="0 0 485 458" fill="none">
+    width="${size}" height="${size}" viewBox="0 0 490 400" fill="none">
     <title>clip</title>
      <path fill="${bg_color}" d="M65.41,248.8L344.66,48.46c4.49-3.22,5.52-9.47,2.3-13.95l-5.25-7.31c-3.22-4.49-9.47-5.52-13.95-2.3L48.51,225.23 c-4.49,3.22-5.52,9.47-2.3,13.95l5.25,7.31C54.67,250.99,60.92,252.02,65.41,248.8z"/>
      <path fill="none" stroke="${bg_color}" stroke-width="30"  d="M191.18,420.73c-40.97,29.39-103.8,11.92-140.35-39.02s-32.96-116.06,8.01-145.45"/>
@@ -2867,6 +2901,278 @@ tools_icons = {
 <line fill="none" stroke="${bg_color}" stroke-width="20" x1="237.25" y1="223.31" x2="219.24" y2="241.24"/>
 </svg>`;
     },
+
+
+
+
+
+    icon_account(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Account"
+    width="${size}" height="${size}" viewBox="0 0 300 300" fill="none">
+    <title>Account </title>
+<circle fill="none" stroke-width="10" stroke="${bg_color}"  cx="151.75" cy="150.25" r="140"/>
+<path fill="${bg_color}" d="M190.81,157.38C179.72,164.09,166.46,168,152.2,168s-27.52-3.91-38.61-10.62c-34.32,11.1-60.76,36.55-69.89,68.09 c23.5,33.29,63.32,55.18,108.5,55.18s85-21.89,108.5-55.18C251.57,193.93,225.13,168.48,190.81,157.38z"/>
+<ellipse fill="${bg_color}" cx="152.2" cy="109.52" rx="60" ry="55"/>
+</svg>`;
+    },
+
+    icon_account_add(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AccountAdd"
+    width="${size}" height="${size}" viewBox="0 0 300 300" fill="none">
+    <title>Account Add</title>
+<circle  fill="none" stroke="${bg_color}" stroke-width="10"  cx="151.75" cy="150.25" r="140"/>
+<path    fill="${bg_color}" d="M190.81,157.38C179.72,164.09,166.46,168,152.2,168s-27.52-3.91-38.61-10.62c-34.32,11.1-60.76,36.55-69.89,68.09 c23.5,33.29,63.32,55.18,108.5,55.18s85-21.89,108.5-55.18C251.57,193.93,225.13,168.48,190.81,157.38z"/>
+<ellipse fill="${bg_color}" cx="152.2" cy="109.52" rx="60" ry="55"/>
+<circle  fill="#fff" stroke="${bg_color}" stroke-width="10" cx="234.26" cy="226.26" r="61.74"/>
+<path    fill="${bg_color}" d="M200.48,235h65c5.52,0,10-4.48,10-10v0c0-5.52-4.48-10-10-10h-65c-5.52,0-10,4.48-10,10v0 C190.48,230.52,194.96,235,200.48,235z"/>
+<path    fill="${bg_color}" d="M224.26,193.76v65c0,5.52,4.48,10,10,10h0c5.52,0,10-4.48,10-10v-65c0-5.52-4.48-10-10-10h0 C228.74,183.76,224.26,188.24,224.26,193.76z"/>
+</svg>`;
+    },
+
+    icon_account_reference(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Account Refrence"
+    width="${size}" height="${size}" viewBox="0 0 305 300" fill="none">
+    <title>Account Refrence</title>
+<circle  fill="none" stroke="${bg_color}" stroke-width="10"  cx="151.75" cy="150.25" r="140"/>
+<path    fill="${bg_color}"  d="M190.81,157.38C179.72,164.09,166.46,168,152.2,168s-27.52-3.91-38.61-10.62c-34.32,11.1-60.76,36.55-69.89,68.09 c23.5,33.29,63.32,55.18,108.5,55.18s85-21.89,108.5-55.18C251.57,193.93,225.13,168.48,190.81,157.38z"/>
+<ellipse fill="${bg_color}"  cx="152.2" cy="109.52" rx="60" ry="55"/>
+<ellipse fill="#fff" stroke="#000" stroke-width="10" transform="matrix(0.982 -0.1891 0.1891 0.982 -40.0528 32.8657)"  cx="152.2" cy="226.32" rx="45.22" ry="45.22"/>
+<path    fill="#000" d="M182.08,250.08l-7.55-14.41h2.63c1.26,0,1.9-1.42,1.01-2.25l-4.45-4.22c-0.27-0.25-0.63-0.4-1.01-0.4l-1.77,0l-19.35-36.93 c-0.48-0.91-1.84-0.88-2.27,0.06l-16.75,36.93l-1.61,0c-0.41,0-0.81,0.17-1.07,0.46l-3.83,4.16c-0.79,0.86-0.14,2.19,1.08,2.19h2.34 l-6.56,14.47c-0.36,0.8,0.24,1.7,1.15,1.7h9.21c0.5,0,0.96-0.29,1.15-0.73l6.87-15.44h21.82l8.24,15.51 c0.21,0.4,0.65,0.66,1.12,0.66h8.52C181.89,251.84,182.5,250.89,182.08,250.08z M144.31,228.85l4.35-9.78 c1.02-2.29,4.33-2.4,5.51-0.18l5.28,9.94L144.31,228.85z"/>
+</svg>`;
+    },
+
+    icon_account_destination(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Account Destination"
+    width="${size}" height="${size}" viewBox="0 0 305 300" fill="none">
+    <title>Account Destination</title>
+<circle  fill="none" stroke="${bg_color}" stroke-width="10" cx="151.75" cy="150.25" r="140"/>
+<path    fill="${bg_color}" d="M190.81,157.38C179.72,164.09,166.46,168,152.2,168s-27.52-3.91-38.61-10.62c-34.32,11.1-60.76,36.55-69.89,68.09 c23.5,33.29,63.32,55.18,108.5,55.18s85-21.89,108.5-55.18C251.57,193.93,225.13,168.48,190.81,157.38z"/>
+<ellipse fill="${bg_color}" cx="152.2" cy="109.52" rx="60" ry="55"/>
+<ellipse fill="#fff" stroke="#000" stroke-width="10" transform="matrix(0.982 -0.1891 0.1891 0.982 -40.0528 32.8657)"  cx="152.2" cy="226.32" rx="45.22" ry="45.22"/>
+<path    fill="#000" d="M144.98,196.56L144.98,196.56c2.04,0,3.7,1.65,3.7,3.7v54.83c0,2.04-1.65,3.7-3.7,3.7l0,0c-2.04,0-3.7-1.65-3.7-3.7v-54.83 C141.28,198.21,142.94,196.56,144.98,196.56z"/>
+<path    fill="none" stroke="#000" stroke-width="8"  d="M144.08,213.47c0.02,5.73-2.96,12.33,1.66,13.72c6.08,1.83,21.06-5.1,21.06-13.83 c0-12.19-17.63-14.86-21.06-13.83C141.03,200.95,144.06,207.76,144.08,213.47z"/>
+<path    fill="none" stroke="#000" stroke-width="8"  d="M144.08,242.41c0.02,5.49-2.96,11.83,1.66,13.16c6.08,1.76,21.06-4.9,21.06-13.27 c0-8.37-14.97-15.03-21.06-13.27C141.03,230.39,144.06,236.93,144.08,242.41z"/>
+</svg>`;
+    },
+
+    icon_time(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Time"
+    width="${size}" height="${size}" viewBox="0 0 313.01 346.36" fill="none">
+    <title>Time </title>
+<circle fill="none" stroke="${bg_color}" stroke-width="10" cx="158.07" cy="172.22" r="140"/>
+<path fill="${bg_color}"  d="M156.57,172.22h3c2.76,0,5-2.24,5-5V51.72c0-2.76-2.24-5-5-5h-3c-2.76,0-5,2.24-5,5v115.5 C151.57,169.98,153.81,172.22,156.57,172.22z"/>
+<path fill="${bg_color}"  d="M217.64,251.33l2.4-1.8c2.21-1.65,2.66-4.79,1.01-7l-58.07-77.65c-1.65-2.21-4.79-2.66-7-1.01l-2.4,1.8 c-2.21,1.65-2.66,4.79-1.01,7l58.07,77.65C212.29,252.53,215.43,252.98,217.64,251.33z"/>
+<path fill="${bg_color}"  d="M127.07,35.45C119.06,18.52,101.83,6.8,81.85,6.8c-27.61,0-50,22.39-50,50c0,12.53,4.62,23.97,12.23,32.75 C63.91,62.51,93.19,42.85,127.07,35.45z"/>
+<path fill="${bg_color}"  d="M272.49,92.96c9.54-9.11,15.49-21.94,15.49-36.16c0-27.61-22.39-50-50-50c-20.45,0-38.02,12.28-45.77,29.86 C225.3,45.22,253.64,65.57,272.49,92.96z"/>
+<path fill="${bg_color}"  d="M218.87,296.44c-17.72,6.99-37.88,10.95-59.26,10.95s-41.54-3.96-59.26-10.95c-39.08,3.8-65.63,11.25-65.63,19.82 c0,12.43,55.91,22.51,124.89,22.51s124.89-10.08,124.89-22.51C284.49,307.7,257.94,300.25,218.87,296.44z"/>
+</svg>`;
+    },
+
+    icon_status(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Status"
+    width="${size}" height="${size}" viewBox="0 0 270 250" fill="none">
+    <title>Status</title>
+<path fill="${bg_color}" d="M244.4,58.43L140.73,180.41l-5.21,6.13c-3.58,4.21-9.89,4.72-14.1,1.14l-10.17-8.64L74.3,147.63 c-4.21-3.58-4.72-9.89-1.14-14.1l5.21-6.13c3.58-4.21,9.89-4.72,14.1-1.14l29.34,24.94L222.67,32.5C200.47,12.31,170.97,0,138.59,0 c-69.04,0-125,55.96-125,125s55.96,125,125,125s125-55.96,125-125C263.59,100.53,256.55,77.71,244.4,58.43z"/>
+<path fill="none" stroke="${bg_color}" stroke-width="10" d="M256.72,28.29l-10.17-8.64c-4.21-3.58-10.52-3.06-14.1,1.14L121.62,151.2l-29.34-24.94 c-4.21-3.58-10.52-3.06-14.1,1.14l-5.21,6.13c-3.58,4.21-3.06,10.52,1.14,14.1l36.96,31.41l10.17,8.64 c4.21,3.58,10.52,3.06,14.1-1.14l5.21-6.13l117.3-138.02C261.44,38.18,260.92,31.87,256.72,28.29z"/>
+</svg>`;
+    },
+
+    icon_amount(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amount"
+    width="${size}" height="${size}" viewBox="0 0 250 270" fill="none">
+    <title>Amount</title>
+<path fill="${bg_color}" d="M230.92,139.53c0-0.11,0-0.22,0-0.34c0-0.8-0.01-1.61-0.03-2.41c-0.01-0.25-0.02-0.5-0.03-0.74 c-0.02-0.7-0.05-1.39-0.08-2.08c-0.01-0.14-0.02-0.28-0.02-0.43c-2.77-52.57-41.54-95.46-91.8-103.86V9.29c0-2.76-2.24-5-5-5h-22.08 c-2.76,0-5,2.24-5,5v19.8C54.62,35.83,13.83,79.67,11.07,133.7c0,0.06-0.01,0.13-0.01,0.19c-0.04,0.72-0.06,1.45-0.08,2.17 c-0.01,0.23-0.02,0.45-0.02,0.68c-0.02,0.76-0.03,1.53-0.03,2.29c0,0.16-0.01,0.32-0.01,0.49c0,0.01,0,0.01,0,0.02 c0,0.01,0,0.01,0,0.02c0,55.45,40.02,101.43,92.41,109.96v19.35c0,3.31,2.69,6,6,6h19.98c3.31,0,6-2.69,6-6v-18.88 c53.95-7.14,95.61-53.85,95.61-110.42c0-0.01,0-0.01,0-0.02C230.92,139.54,230.92,139.53,230.92,139.53z M128.84,217.63v44.71 c0,2.72-2.24,4.92-5,4.92h-9.71c-2.76,0-5-2.2-5-4.92v-43.32c-13.3-0.74-25.43-4.65-34.12-10.37l6.26-21.33 c7.4,5.41,20.5,11.14,33.03,11.14c18.22,0,26.76-10.19,26.76-22.92c0-13.37-7.12-20.7-25.62-28.34 c-24.77-9.87-36.44-25.15-36.44-43.62c0-20.79,12.58-38.46,34.06-43.65V18.34c0-2.72,2.24-4.92,5-4.92h9.71c2.76,0,5,2.2,5,4.92 v40.34c11.34,1.07,21.14,4.92,27.66,9.25l-6.26,20.38c-5.41-3.82-15.37-8.92-28.19-8.92c-14.8,0-23.06,9.55-23.06,21.01c0,12.74,8.26,18.47,26.19,26.11c23.92,10.19,36.16,23.56,36.16,46.49C165.27,195.57,152.19,212.6,128.84,217.63z"/>
+</svg>`;
+    },
+
+    icon_rate(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rate"
+    width="${size}" height="${size}" viewBox="0 0 290 270" fill="none">
+    <title>Rate</title>
+<path fill="none" stroke="${bg_color}" stroke-width="20"  d="M260.03,136.86c0-69.04-55.96-125-125-125s-125,55.96-125,125s55.96,125,125,125c45.02,0,84.48-23.8,106.49-59.5"/>
+<polygon fill="${bg_color}" points="223.52,114.32 258.34,176.86 288.94,114.32 "/>
+<circle fill="none" stroke="${bg_color}" stroke-width="20"  cx="107.39" cy="100.2" r="25"/>
+<path fill="${bg_color}" d="M87.68,209.33l6.11,3.77c2.35,1.45,5.43,0.72,6.88-1.63l84.79-137.48c1.45-2.35,0.72-5.43-1.63-6.88l-6.11-3.77c-2.35-1.45-5.43-0.72-6.88,1.63L86.05,202.45C84.6,204.8,85.33,207.88,87.68,209.33z"/>
+<circle fill="none" stroke="${bg_color}" stroke-width="20"  cx="164.87" cy="174.98" r="25"/>
+</svg>`;
+    },
+
+
+
+    icon_warning(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Warning"
+    width="${size}" height="${size}" viewBox="0 0 300 290" fill="none">
+    <title>Warning</title>
+<g id="Layer_2"  opacity="0.2">
+	<path    fill="none" stroke="${bg_color}" stroke-width="20"  d="M132.22,32.75L25.01,234.67c-8.54,16.08,0.67,37.59,16.09,37.59h211.93c14.81,0,23.73-20.54,15.68-36.1 L163.6,32.99C156.26,18.79,139.7,18.66,132.22,32.75z"/>
+	<circle  fill="${bg_color}" cx="146.74" cy="233.83" r="15"/>
+	<path    fill="${bg_color}" d="M239.6,30.67l5.81,8.74c1.24,1.86,0.97,4.14-0.57,4.93l-38.37,19.53c-1.36,0.69-3.24-0.03-4.33-1.67l0,0 c-1.08-1.63-1.03-3.62,0.11-4.62l32.56-28.27C236.13,28.16,238.36,28.79,239.6,30.67z"/>
+	<path    fill="${bg_color}" d="M275.91,45.98l6.54,9.85c1.39,2.1,0.66,4.95-1.58,6.17l-55.62,30.23c-1.97,1.07-4.42,0.48-5.65-1.37v0 c-1.22-1.83-0.83-4.3,0.9-5.71l49.08-40.08C271.57,43.45,274.51,43.87,275.91,45.98z"/>
+	<path    fill="${bg_color}" d="M266.21,98.05l3.85,5.25c0.82,1.12,0.54,2.67-0.6,3.36l-28.39,17c-1.01,0.6-2.33,0.31-3.05-0.67l0,0 c-0.72-0.98-0.61-2.32,0.26-3.1l24.53-22.25C263.8,96.73,265.38,96.93,266.21,98.05z"/>
+	<path    fill="${bg_color}" d="M50.63,30.67l-5.81,8.74c-1.24,1.86-0.97,4.14,0.57,4.93l38.37,19.53c1.36,0.69,3.24-0.03,4.33-1.67v0 c1.08-1.63,1.03-3.62-0.11-4.62L55.42,29.31C54.1,28.16,51.88,28.79,50.63,30.67z"/>
+	<path    fill="${bg_color}" d="M14.32,45.98l-6.54,9.85c-1.39,2.1-0.66,4.95,1.58,6.17l55.62,30.23c1.97,1.07,4.42,0.48,5.65-1.37l0,0 c1.22-1.83,0.83-4.3-0.9-5.71L20.65,45.07C18.66,43.45,15.72,43.87,14.32,45.98z"/>
+	<path    fill="${bg_color}" d="M24.02,98.05l-3.85,5.25c-0.82,1.12-0.54,2.67,0.6,3.36l28.39,17c1.01,0.6,2.33,0.31,3.05-0.67h0 c0.72-0.98,0.61-2.32-0.26-3.1L27.42,97.63C26.43,96.73,24.85,96.93,24.02,98.05z"/>
+	<path    fill="${bg_color}" d="M136.76,106.51h16.7c3.55,0,6.34,3.05,6.02,6.59L151.58,201c-0.28,3.12-2.89,5.51-6.02,5.51l0,0 c-3.11,0-5.71-2.35-6.02-5.45l-8.79-87.91C130.39,109.59,133.19,106.51,136.76,106.51z"/>
+</g>
+<g id="Layer_1">
+	<path   fill="none" stroke="${bg_color}" stroke-width="20"  d="M135.97,24.45L28.76,226.37c-8.54,16.08,0.67,37.59,16.09,37.59h211.93c14.81,0,23.73-20.54,15.68-36.1 L167.36,24.68C160.01,10.48,143.45,10.36,135.97,24.45z"/>
+	<circle fill="${bg_color}" cx="150.49" cy="225.52" r="15"/>
+	<path   fill="${bg_color}" d="M142.14,101.01h16.7c3.55,0,6.34,3.05,6.02,6.59l-7.91,87.91c-0.28,3.12-2.89,5.51-6.02,5.51h0 c-3.11,0-5.71-2.35-6.02-5.45l-8.79-87.91C135.77,104.1,138.57,101.01,142.14,101.01z"/>
+	<path   fill="${bg_color}" d="M243.35,22.37l5.81,8.74c1.24,1.86,0.97,4.14-0.57,4.93l-38.37,19.53c-1.36,0.69-3.24-0.03-4.33-1.67v0 c-1.08-1.63-1.03-3.62,0.11-4.62L238.57,21C239.88,19.86,242.11,20.49,243.35,22.37z"/>
+	<path   fill="${bg_color}" d="M279.66,37.68l6.54,9.85c1.39,2.1,0.66,4.95-1.58,6.17l-55.62,30.23c-1.97,1.07-4.42,0.48-5.65-1.37v0 c-1.22-1.83-0.83-4.3,0.9-5.71l49.08-40.08C275.32,35.15,278.26,35.57,279.66,37.68z"/>
+	<path   fill="${bg_color}" d="M269.96,89.75l3.85,5.25c0.82,1.12,0.54,2.67-0.6,3.36l-28.39,17c-1.01,0.6-2.33,0.31-3.05-0.67l0,0 c-0.72-0.98-0.61-2.32,0.26-3.1l24.53-22.25C267.56,88.43,269.13,88.62,269.96,89.75z"/>
+	<path   fill="${bg_color}" d="M54.38,22.37l-5.81,8.74c-1.24,1.86-0.97,4.14,0.57,4.93l38.37,19.53c1.36,0.69,3.24-0.03,4.33-1.67l0,0 c1.08-1.63,1.03-3.62-0.11-4.62L59.17,21C57.85,19.86,55.63,20.49,54.38,22.37z"/>
+	<path   fill="${bg_color}" d="M18.07,37.68l-6.54,9.85c-1.39,2.1-0.66,4.95,1.58,6.17l55.62,30.23c1.97,1.07,4.42,0.48,5.65-1.37v0 c1.22-1.83,0.83-4.3-0.9-5.71L24.4,36.77C22.42,35.15,19.48,35.57,18.07,37.68z"/>
+	<path   fill="${bg_color}" d="M27.78,89.75L23.92,95c-0.82,1.12-0.54,2.67,0.6,3.36l28.39,17c1.01,0.6,2.33,0.31,3.05-0.67l0,0 c0.72-0.98,0.61-2.32-0.26-3.1L31.17,89.33C30.18,88.43,28.6,88.62,27.78,89.75z"/>
+</g>
+</svg>`;
+    },
+
+
+    icon_reload(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reload"
+    width="${size}" height="${size}" viewBox="0 0 320 325" fill="none">
+    <title>Reload</title>
+<path fill="none" stroke="${bg_color}" stroke-width="40"  d="M70.6,258.28C94.44,280.44,126.39,294,161.5,294c73.73,0,133.5-59.77,133.5-133.5S235.23,27,161.5,27 S28,86.77,28,160.5c0,16.4,2.96,32.11,8.37,46.62"/>
+<polygon fill="${bg_color}" points="42,217 49,302 122,234 "/>
+</svg>`;
+    },
+
+
+    icon_typeCash(sizeName = component_props.elementSizes , bg_color = "#FBB040") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TypeCash"
+    width="${size}" height="${size}" viewBox="0 0 275 275" fill="none">
+    <title>Type Cash</title>
+    
+	<circle fill="${bg_color}" stroke="#000" stroke-width="5" cx="137.33" cy="135.94" r="126.5"/>
+	<circle fill="none" stroke="#fff" stroke-width="5" opacity="0.6"  cx="136.45" cy="136.07" r="99.62"/>
+	<path fill="#fff" stroke="#000" stroke-width="5"  d="M168.44,145.92c-32.63-15.01-22.17-34.46-29.18-38.58c2.53-4.85,6.57-14.45,12.67-20.88 c33.86-35.77-11.51,1.49-23.21-14.06c-19.48-25.88-49.79-3.53-31.06,1.57c23.77,6.46,28.83,21.14,26.38,31.61	c-10.85,0.65-8.37,16.95-25.8,37.34c-38.41,44.92,7.43,68.67,29.86,68.92C185.43,212.46,214.23,166.99,168.44,145.92z"/>
+	<line fill="none" stroke="#000" stroke-width="5" x1="122.04" y1="105.22" x2="141.34" y2="106.22"/>
+
+	<circle opacity="0.25" fill="#000" cx="135" cy="180" r="17.5"/>
+	<circle opacity="0.25" fill="#000" cx="150" cy="155" r="10"/>
+	<circle opacity="0.25" fill="#000" cx="120" cy="150" r="12.5"/>
+
+	<path opacity="0.4" fill="#fff" d="M252.43,136.57c0-64.9-52.6-117.5-117.5-117.5c-5.57,0-11.05,0.4-16.42,1.15c-32.84,40.19-13.24,98.58,30.71,132.61c29.93,23.18,44.56,55.38,51.7,80.98C232,212.66,252.43,177,252.43,136.57z"/>
+
+</svg>`;
+    },
+
+
+    icon_typeTether(sizeName = component_props.elementSizes , bg_color = "#00A790") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TypeTether"
+    width="${size}" height="${size}" viewBox="0 0 275 275" fill="none">
+    <title>Type Tether</title>
+    
+	<circle fill="${bg_color}" stroke="#000" stroke-width="5"  cx="140.3" cy="137.75" r="126.5"/>
+    <circle fill="none" stroke="#fff" stroke-width="5" opacity="0.6"  cx="139.42" cy="137.88" r="99.62"/>
+    <path fill="#000" stroke="#fff" stroke-width="5" d="M130.33,92.81h-19.28v-6.1c0-3.74-3.92-6.78-8.77-6.78h-4.09c-4.84,0-8.77,3.03-8.77,6.78v28.92 c0,3.74,3.92,6.78,8.77,6.78h4.09c4.84,0,8.77-3.03,8.77-6.78v-6.1h19.28c4.84,0,8.77-3.03,8.77-6.78v-3.16 C139.09,95.84,135.17,92.81,130.33,92.81z"/>
+    <path fill="#000" stroke="#fff" stroke-width="5" d="M148.04,109.83l19.48-0.18l0.06,6.1c0.04,3.74,4.03,6.74,8.92,6.69l4.13-0.04c4.89-0.05,8.83-3.12,8.79-6.86 l-0.27-28.91c-0.04-3.74-4.03-6.74-8.92-6.69l-4.13,0.04c-4.89,0.05-8.83,3.12-8.79,6.86l0.06,6.1l-19.48,0.18 c-4.89,0.05-8.83,3.12-8.79,6.86l0.03,3.16C139.16,106.88,143.15,109.88,148.04,109.83z"/>
+    <path fill="#000" stroke="#fff" stroke-width="5" d="M164.11,177.52h-15.96V89.4c0-3.74-3.03-6.78-6.78-6.78h-4.52c-3.74,0-6.78,3.03-6.78,6.78v88.12h-15.96 c-3.74,0-6.78,3.03-6.78,6.78v4.52c0,3.74,3.03,6.78,6.78,6.78h22.74h4.52h22.74c3.74,0,6.78-3.03,6.78-6.78v-4.52 C170.89,180.55,167.85,177.52,164.11,177.52z"/>
+    <path fill="none" stroke="#fff" stroke-width="10" d="M162.54,136.44c24.26,1.79,41.49,6.3,41.49,11.59c0,6.85-28.93,12.41-64.61,12.41s-64.61-5.56-64.61-12.41 c0-5.51,18.7-10.18,44.57-11.8"/>
+
+    <path opacity="0.3" fill="#fff" d="M252.43,136.57c0-64.9-52.6-117.5-117.5-117.5c-5.57,0-11.05,0.4-16.42,1.15c-32.84,40.19-13.24,98.58,30.71,132.61c29.93,23.18,44.56,55.38,51.7,80.98C232,212.66,252.43,177,252.43,136.57z"/>
+	
+</svg>`;
+    },
+
+
+
+    icon_typeDerham(sizeName = component_props.elementSizes , bg_color = "#1e35c0") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TypeDerham"
+    width="${size}" height="${size}" viewBox="0 0 275 275" fill="none">
+    <title>Type Derham</title>
+    
+	<circle fill="${bg_color}" stroke="#000" stroke-width="5"  cx="142.16" cy="137.34" r="126.5"/>
+	<circle fill="none" stroke="#fff" stroke-width="5" opacity="0.6"  cx="139.42" cy="137.88" r="99.62"/>
+    <path fill="#000" stroke="#fff" stroke-width="5"  d="M162.12,79.76c-27.16-14.73-80.23-4.1-54.14,6.48c0,0,8.58,102.02,1.37,106.93c-7.21,4.91,22.47,7.56,42.91,1.4 C205.82,178.44,208.8,105.08,162.12,79.76z M154.14,179.21c-12.37,5.12-30.56,3.6-26.26-0.32c4.31-3.92-2.96-82.47-2.96-82.47 c-16.16-7.7,16.06-16.84,32.96-5.96C186.92,109.16,186.55,165.81,154.14,179.21z"/>
+    <path fill="#000" stroke="#fff" stroke-width="4"  d="M92.99,135.26l13.3-1.7h90.95l11.77-1.7c3.32,0,6.02-1.9,6.02-4.25v-0.09c0-2.35-2.7-4.25-6.02-4.25l-11.77,1.7 h-92.47l-11.77,1.7c-3.32,0-6.02,1.9-6.02,4.25v0.09C86.97,133.35,89.67,135.26,92.99,135.26z"/>
+    <path fill="#000" stroke="#fff" stroke-width="4"  d="M100.04,154.27l13.02-1.71h76.96l11.95-1.71c2.92,0,5.29-1.91,5.29-4.27v-0.09c0-2.36-2.37-4.27-5.29-4.27 l-9.27,1.71h-79.63l-13.02,1.71c-2.92,0-5.29,1.91-5.29,4.27V150C94.75,152.36,97.12,154.27,100.04,154.27z"/>
+
+    <path opacity="0.3" fill="#fff" d="M252.43,136.57c0-64.9-52.6-117.5-117.5-117.5c-5.57,0-11.05,0.4-16.42,1.15c-32.84,40.19-13.24,98.58,30.71,132.61c29.93,23.18,44.56,55.38,51.7,80.98C232,212.66,252.43,177,252.43,136.57z"/>
+	
+</svg>`;
+    },
+
+
+    icon_typeRial(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TypeRial"
+    width="${size}" height="${size}" viewBox="0 0 275 275" fill="none">
+    <title>Type Rial</title>
+    
+<circle fill="${bg_color}" stroke="#000" stroke-width="5" cx="137.33" cy="135.94" r="126.5"/>
+	<circle fill="none" stroke="#fff" stroke-width="5" opacity="0.6"  cx="136.45" cy="136.07" r="99.62"/>
+<g>
+	<path fill="#fff" d="M73.68,168.05v-67.27h25.14c5.05,0,8.89,0.6,11.52,1.81c2.63,1.21,4.73,3.34,6.3,6.4c1.57,3.06,2.36,6.44,2.36,10.1 	c0,4.77-1.3,8.79-3.91,12.07c-2.6,3.27-6.63,5.35-12.06,6.24c1.98,1.13,3.49,2.25,4.52,3.35c2.19,2.39,4.27,5.37,6.23,8.9 	l9.86,18.31h-9.44l-7.5-14c-2.19-4.04-4-7.13-5.41-9.27c-1.42-2.14-2.69-3.64-3.81-4.5c-1.12-0.86-2.26-1.45-3.42-1.7 	c-0.85-0.21-2.24-0.32-4.18-0.32h-8.7v29.87H73.68z M81.18,130.47h16.12c3.43,0,6.11-0.42,8.04-1.26c1.93-0.84,3.4-2.19,4.41-4.04 c1.01-1.85,1.51-3.86,1.51-6.03c0-3.18-0.97-5.8-2.92-7.85c-1.95-2.05-5.02-3.07-9.22-3.07H81.18V130.47z"/>
+	<path fill="#fff" d="M129.9,110.28v-9.5h6.96v9.5H129.9z M129.9,168.05v-48.73h6.96v48.73H129.9z"/>
+	<path fill="#fff" d="M174.26,162.04c-2.58,2.6-5.06,4.44-7.44,5.51c-2.38,1.07-4.94,1.61-7.68,1.61c-4.51,0-7.98-1.31-10.4-3.92 c-2.42-2.62-3.64-5.96-3.64-10.03c0-2.39,0.46-4.57,1.37-6.54c0.91-1.97,2.11-3.56,3.6-4.75c1.48-1.19,3.15-2.09,5.01-2.71 c1.37-0.43,3.43-0.84,6.19-1.24c5.62-0.79,9.76-1.74,12.41-2.84c0.03-1.13,0.04-1.85,0.04-2.16c0-3.37-0.66-5.74-1.97-7.11 c-1.78-1.87-4.42-2.8-7.93-2.8c-3.27,0-5.69,0.68-7.25,2.04c-1.56,1.36-2.71,3.77-3.46,7.23l-6.81-1.1 c0.62-3.46,1.64-6.25,3.06-8.37c1.42-2.13,3.47-3.76,6.15-4.91c2.68-1.15,5.79-1.72,9.32-1.72c3.5,0,6.35,0.49,8.55,1.47 c2.19,0.98,3.8,2.21,4.83,3.69s1.75,3.36,2.17,5.62c0.23,1.41,0.35,3.95,0.35,7.62v11.01c0,7.68,0.15,12.53,0.45,14.57 c0.3,2.04,0.88,3.99,1.76,5.85h-7.27C174.93,166.34,174.46,164.34,174.26,162.04z M173.68,143.6c-2.53,1.22-6.32,2.26-11.37,3.12 c-2.86,0.49-4.89,1.04-6.07,1.65c-1.19,0.61-2.1,1.51-2.75,2.68c-0.65,1.18-0.97,2.49-0.97,3.92c0,2.2,0.7,4.04,2.11,5.51 c1.4,1.47,3.46,2.2,6.17,2.2c2.68,0,5.07-0.7,7.15-2.09s3.62-3.3,4.6-5.71c0.75-1.87,1.12-4.62,1.12-8.26V143.6z"/>
+	<path fill="#fff" d="M191.35,168.05v-67.27h6.96v67.27H191.35z"/>
+</g>
+<g>
+	<path fill="#000" stroke="#000" stroke-width="2" d="M71.02,172.35v-67.27h25.14c5.05,0,8.89,0.6,11.52,1.81c2.63,1.21,4.73,3.34,6.3,6.4 c1.57,3.06,2.36,6.44,2.36,10.14c0,4.77-1.3,8.79-3.91,12.07c-2.6,3.27-6.63,5.35-12.06,6.24c1.98,1.13,3.49,2.25,4.52,3.35 c2.19,2.39,4.27,5.37,6.23,8.95l9.86,18.31h-9.44l-7.5-14c-2.19-4.04-4-7.13-5.41-9.27c-1.42-2.14-2.69-3.64-3.81-4.5 c-1.12-0.86-2.26-1.45-3.42-1.79c-0.85-0.21-2.24-0.32-4.18-0.32h-8.7v29.87H71.02z M78.52,134.77h16.12 c3.43,0,6.11-0.42,8.04-1.26c1.93-0.84,3.4-2.19,4.41-4.04c1.01-1.85,1.51-3.86,1.51-6.03c0-3.18-0.97-5.8-2.92-7.85 c-1.95-2.05-5.02-3.07-9.22-3.07H78.52V134.77z"/>
+	<path fill="#000" stroke="#000" stroke-width="2" d="M127.24,114.58v-9.5h6.96v9.5H127.24z M127.24,172.35v-48.73h6.96v48.73H127.24z"/>
+	<path fill="#000" stroke="#000" stroke-width="2" d="M171.6,166.34c-2.58,2.6-5.06,4.44-7.44,5.51c-2.38,1.07-4.94,1.61-7.68,1.61c-4.51,0-7.98-1.31-10.4-3.92 c-2.42-2.62-3.64-5.96-3.64-10.03c0-2.39,0.46-4.57,1.37-6.54c0.91-1.97,2.11-3.56,3.6-4.75c1.48-1.19,3.15-2.09,5.01-2.71 c1.37-0.43,3.43-0.84,6.19-1.24c5.62-0.79,9.76-1.74,12.41-2.84c0.03-1.13,0.04-1.85,0.04-2.16c0-3.37-0.66-5.74-1.97-7.11 c-1.78-1.87-4.42-2.8-7.93-2.8c-3.27,0-5.69,0.68-7.25,2.04c-1.56,1.36-2.71,3.77-3.46,7.23l-6.81-1.1 c0.62-3.46,1.64-6.25,3.06-8.37c1.42-2.13,3.47-3.76,6.15-4.91c2.68-1.15,5.79-1.72,9.32-1.72c3.5,0,6.35,0.49,8.55,1.47 c2.19,0.98,3.8,2.21,4.83,3.69c1.03,1.48,1.75,3.36,2.17,5.62c0.23,1.41,0.35,3.95,0.35,7.62v11.01c0,7.68,0.15,12.53,0.45,14.57 c0.3,2.04,0.88,3.99,1.76,5.85h-7.27C172.27,170.64,171.8,168.63,171.6,166.34z M171.02,147.89c-2.53,1.22-6.32,2.26-11.37,3.12 c-2.86,0.49-4.89,1.04-6.07,1.65c-1.19,0.61-2.1,1.51-2.75,2.68c-0.65,1.18-0.97,2.49-0.97,3.92c0,2.2,0.7,4.04,2.11,5.51 c1.4,1.47,3.46,2.2,6.17,2.2c2.68,0,5.07-0.7,7.15-2.09s3.62-3.3,4.6-5.71c0.75-1.87,1.12-4.62,1.12-8.26V147.89z"/>
+	<path fill="#000" stroke="#000" stroke-width="2" d="M188.69,172.35v-67.27h6.96v67.27H188.69z"/>
+</g>
+
+    <path opacity="0.3" fill="#fff" d="M252.43,136.57c0-64.9-52.6-117.5-117.5-117.5c-5.57,0-11.05,0.4-16.42,1.15c-32.84,40.19-13.24,98.58,30.71,132.61c29.93,23.18,44.56,55.38,51.7,80.98C232,212.66,252.43,177,252.43,136.57z"/>
+
+</svg>`;
+    },
+
+
+
+
+
+    icon_crcode(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CrCode"
+    width="${size}" height="${size}" viewBox="0 0 300 300" fill="none">
+    <title>Cr Code</title>
+<rect fill="none" stroke="${bg_color}" stroke-width="20" x="27.31" y="26.78"  width="100" height="100"/>
+<rect fill="${bg_color}" x="58.5" y="57.97" width="37.62" height="37.62"/>
+<rect fill="none" stroke="${bg_color}" stroke-width="20" x="171.06" y="26.78" width="100" height="100"/>
+<rect fill="${bg_color}" x="202.25" y="57.97" width="37.62" height="37.62"/>
+<rect fill="none" stroke="${bg_color}" stroke-width="20" x="27.31" y="168.53" width="100" height="100"/>
+<rect fill="${bg_color}" x="165.5" y="240.47" width="37.62" height="37.62"/>
+<rect fill="${bg_color}" x="184.31" y="158.03" width="94.75" height="25"/>
+<rect fill="${bg_color}" x="203.25" y="166.03" width="37.62" height="56.03"/>
+<rect fill="${bg_color}" x="239.88" y="203.25" width="37.62" height="37.62"/>
+<rect fill="${bg_color}" x="221.06" y="259.28" width="56.44" height="18.81"/>
+<rect fill="${bg_color}" x="165.5" y="203.25" width="18.81" height="37.62"/>
+<rect fill="${bg_color}" x="58.5" y="200.4" width="37.62" height="37.62"/>
+</svg>`;
+    },
+
 
 
 

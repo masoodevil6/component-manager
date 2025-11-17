@@ -1012,10 +1012,10 @@ class ComponentIsEmptyBase extends ComponentBase{
        PROPERTYs Pattern
      --------------------------------------------- */
     _COMPONENT_PATTERN = {
-        prop_size : {
-            prop: "prop_size" ,
-            default: 5
-        } ,
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
         prop_borderClass : {
             prop: "prop_borderClass" ,
             default: ["border" , "border-danger" , "rounded" , "shadow-sm"]
@@ -1026,7 +1026,15 @@ class ComponentIsEmptyBase extends ComponentBase{
         },
         prop_icon: {
             prop: "prop_icon" ,
-            default: "&#9888;"
+            default: tools_icons.icon_warning
+        } ,
+        prop_iconSize: {
+            prop: "prop_iconSize" ,
+            default: 80
+        } ,
+        prop_iconColor: {
+            prop: "prop_iconColor" ,
+            default: tools_const?.styles?.isEmpty?.color_icon ?? ""
         } ,
         prop_iconClass: {
             prop: "prop_iconClass" ,
@@ -1054,7 +1062,11 @@ class ComponentIsEmptyBase extends ComponentBase{
         } ,
         prop_btnAddIcon: {
             prop: "prop_btnAddIcon" ,
-            default:  "&#10082;"
+            default:  tools_icons?.icon_reload
+        } ,
+        prop_btnAddIconColor: {
+            prop: "prop_btnAddIconColor" ,
+            default: tools_const?.styles?.isEmpty?.btnColor_icon ?? ""
         } ,
         prop_btnAddTitle: {
             prop: "prop_btnAddTitle" ,
@@ -1076,17 +1088,22 @@ class ComponentIsEmptyBase extends ComponentBase{
         ] ,
         part_icon: [
             this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_iconSize ,
+            this._COMPONENT_PATTERN.prop_iconColor ,
             this._COMPONENT_PATTERN.prop_iconClass ,
             this._COMPONENT_PATTERN.prop_iconStyles ,
         ] ,
         part_title: [
             this._COMPONENT_PATTERN.prop_title ,
+            this._COMPONENT_PATTERN.prop_size ,
         ] ,
         part_btn_retry: [
             this._COMPONENT_PATTERN.prop_btnAddStatus ,
             this._COMPONENT_PATTERN.prop_btnAddClass ,
             this._COMPONENT_PATTERN.prop_btnAddStyles ,
             this._COMPONENT_PATTERN.prop_btnAddIcon ,
+            this._COMPONENT_PATTERN.prop_btnAddIconColor ,
+            this._COMPONENT_PATTERN.prop_size ,
             this._COMPONENT_PATTERN.prop_btnAddTitle ,
         ] ,
     }
@@ -1172,6 +1189,9 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
         if (data != null){
 
             const prop_title =     data.hasOwnProperty("prop_title")    ?  data.prop_title     : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_size  =      data.hasOwnProperty("prop_size")    ?  data.prop_size      :  null
+
+            const elHeight = tools_css.getFontSize(prop_size);
 
             return `
 <section data-part-name="${partName}" 
@@ -1180,6 +1200,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
     <style>
         #${this._COMPONENT_ID} #component-is-empty-title-${this._COMPONENT_RANDOM_ID}{
              text-align: center!important;
+             font-size: ${elHeight}px;
        }
     </style>
     <p>
@@ -1220,21 +1241,27 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_icon        =  data.hasOwnProperty("prop_icon")       ?  data.prop_icon         : "&#9888;";
-            const prop_iconClass   =  data.hasOwnProperty("prop_iconClass")  ?  data.prop_iconClass    : [  "mx-3"];
-            const prop_iconStyles  =  data.hasOwnProperty("prop_iconStyles")  ?  data.prop_iconStyles  : {
+            const prop_icon        =  data.hasOwnProperty("prop_icon")            ?  data.prop_icon         : null;
+            const prop_iconSize    =  data.hasOwnProperty("prop_iconSize")        ?  data.prop_iconSize     : 80;
+            const prop_iconColor   =  data.hasOwnProperty("prop_iconColor")       ?  data.prop_iconColor    : "#000";
+            const prop_iconClass   =  data.hasOwnProperty("prop_iconClass")       ?  data.prop_iconClass    : [  "mx-3"];
+            const prop_iconStyles  =  data.hasOwnProperty("prop_iconStyles")      ?  data.prop_iconStyles   : {
                 "font-size" : "30px" ,
                 "width" : "100%" ,
                 "display" : "block" ,
                 "text-align" : "center" ,
             };
 
+            this._COMPONENT_PATTERN.prop_iconSize ,
+                this._COMPONENT_PATTERN.prop_iconColor ,
+
+
             new window.ComponentIcon(
                 `component-is-empty-icon-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_iconClass: prop_iconClass ,
                     prop_iconStyles: prop_iconStyles ,
-                    prop_icon: prop_icon ,
+                    prop_icon: typeof prop_icon == "function" ? prop_icon(prop_iconSize , prop_iconColor ) : prop_icon,
                 }
             )
         }
@@ -1245,14 +1272,16 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
 
         if (data != null && data.hasOwnProperty("prop_btnAddStatus") && data.prop_btnAddStatus){
 
-            const prop_btnAddClass   =      data.hasOwnProperty("prop_btnAddClass")             ?  data.prop_btnAddClass            :  [];
-            const prop_btnAddStyles  =      data.hasOwnProperty("prop_btnAddStyles")            ?  data.prop_btnAddStyles           :  {
+            const prop_btnAddClass        =      data.hasOwnProperty("prop_btnAddClass")             ?  data.prop_btnAddClass            :  [];
+            const prop_btnAddStyles       =      data.hasOwnProperty("prop_btnAddStyles")            ?  data.prop_btnAddStyles           :  {
                 "cursor" : "pointer" ,
                 "height" : "32px" ,
                 "text-align" : "center!important" ,
             };
-            const prop_btnAddIcon    =      data.hasOwnProperty("prop_btnAddIcon")              ?  data.prop_btnAddIcon             :  "&#10082;";
-            const prop_btnAddTitle   =      data.hasOwnProperty("prop_btnAddTitle")             ?  data.prop_btnAddTitle            :  "add item";
+            const prop_btnAddIcon         =      data.hasOwnProperty("prop_btnAddIcon")              ?  data.prop_btnAddIcon             :  "&#10082;";
+            const prop_btnAddIconColor    =      data.hasOwnProperty("prop_btnAddIconColor")         ?  data.prop_btnAddIconColor        :  "#000"
+            const prop_size               =      data.hasOwnProperty("prop_size")                    ?  data.prop_size                   :  null
+            const prop_btnAddTitle        =      data.hasOwnProperty("prop_btnAddTitle")             ?  data.prop_btnAddTitle            :  "add item";
 
             new window.ComponentButton(
                 `component-is-empty-button-${this._COMPONENT_RANDOM_ID}` ,
@@ -1262,12 +1291,12 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
                         "width" : "200px"
                     },
 
-
+                    prop_size: prop_size ,
                     prop_btnClass: prop_btnAddClass ,
                     prop_btnStyles: prop_btnAddStyles ,
                     prop_title: `
 <span class="mx-1">
-      ${prop_btnAddIcon}
+      ${typeof prop_btnAddIcon == "function" ? prop_btnAddIcon(prop_size , prop_btnAddIconColor) : prop_btnAddIcon}
 </span>
 <span class="d-none d-md-inline">
       ${prop_btnAddTitle}
@@ -1324,7 +1353,7 @@ class ComponentHeaderBase extends ComponentBase{
     _COMPONENT_PATTERN = {
         prop_borderClass : {
             prop: "prop_borderClass" ,
-            default: ["pb-0","px-2","mb-1","border-bottom"]
+            default: ["pb-0","px-2","mb-1","border-bottom" , "border-2"]
         } ,
         prop_borderStyles : {
             prop: "prop_borderStyles" ,
@@ -1447,7 +1476,7 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
             return `
 <section data-part-name="${partName}" 
          id="component-header-text-${this._COMPONENT_RANDOM_ID}">
-   <h${prop_size}>${prop_title ?? ''}</h${prop_size}>
+   <h${prop_size}> <b>${prop_title ?? ''}</b> </h${prop_size}>
 </section>
             `;
         }
@@ -1758,7 +1787,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
                 const styles = {
                     "top" :        "50%" ,
                     "transform" :  "translate(0 , -50%)" ,
-                    "z-index":     `${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }` ,
+                    "z-index":     `${ tools_css.getZIndex(tools_css.standardZIndex.tools_position.name , 10) }` ,
                 };
                 styles[directionRtl ? "left" : "right"] = "10px"
 
@@ -4266,7 +4295,7 @@ class ComponentFormBase extends ComponentBase{
 
         prop_formClass: {
             prop: "prop_formClass",
-            default: ["m-2" , "row" , "p-0"]
+            default: ["m-2" , "d-block" , "p-0"]
         },
         prop_formStyles: {
             prop: "prop_formStyles",
@@ -4477,15 +4506,21 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
             return `
 <section data-part-name="${partName}">
     <style>
+        #${this._COMPONENT_ID} #component-form-forms-outside-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_formStyles)};
+        }
         #${this._COMPONENT_ID} #component-form-forms-${this._COMPONENT_RANDOM_ID}{
-            min-height: ${prop_formsMinHeight};
+             min-height: ${prop_formsMinHeight};
         }
     </style>
-    <form id="component-form-forms-${this._COMPONENT_RANDOM_ID}" class="m-2 row p-0" >
+    <div id="component-form-forms-outside-${this._COMPONENT_RANDOM_ID}" class="${tools_public.renderListClass(prop_formClass)}" >
+       <form id="component-form-forms-${this._COMPONENT_RANDOM_ID}" class="row" >
          
          ${prop_forms}
 
-    </form>
+       </form>  
+    </div>
+    
 </section>
         `;
         }
@@ -4647,6 +4682,9 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
                                     this.call_onCLickBtnSubmit(event);
                                 }
                             },
+                            callback: (resultExp , data) =>{
+                                this.fn_onClickResponse(resultExp , data);
+                            }
                         });
 
                     if (data.hasOwnProperty("fn_onGetResponse") && typeof data.fn_onGetResponse != null){
@@ -4672,6 +4710,13 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_onClickSubmit") && typeof data.fn_onClickSubmit != null){
             data.fn_onClickSubmit(event , prop_url, formData , prop_data);
+        }
+    }
+
+    fn_onClickResponse(resultExp , response){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onClickResponse") && typeof data.fn_onClickResponse != null){
+            data.fn_onClickResponse(resultExp , response);
         }
     }
 
@@ -6947,47 +6992,50 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
             const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
             const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
             const prop_size                 =  data.hasOwnProperty("prop_size")                       ?  data.prop_size                          : null;
+            const prop_isDisable            =  data.hasOwnProperty("prop_isDisable")                  ?  data.prop_isDisable                     : false;
 
-            let styles = {
-                "font-size" : "20pt",
-                "margin" : "0 10px",
-                "top" : "50%",
-            }
-            if (directionRtl){
-                if (screanWidthType == "xs"){
-                    styles["left"]=  "0px";
-                    styles["transform"]= prop_btnAddStatus ? "translate(30px , -50%)" : "translate(0 , -50%)";
+            if (!prop_isDisable){
+                let styles = {
+                    "font-size" : "20pt",
+                    "margin" : "0 10px",
+                    "top" : "50%",
                 }
-                else{
-                    styles["left"]=  "0px";
-                    styles["transform"]= prop_btnAddStatus ? "translate(160px , -50%)" : "translate(0 , -50%)";
-                }
-            }
-            else {
-                if (screanWidthType == "xs"){
-                    styles["right"]=  "0px";
-                    styles["transform"]= prop_btnAddStatus ? "translate(-30px , -50%)" :  "translate(0 , -50%)";
-                }
-                else{
-                    styles["right"]= "0px";
-                    styles["transform"]= prop_btnAddStatus ? "translate(-160px , -50%)" : "translate(0 , -50%)";
-                }
-            }
-
-
-            new window.ComponentIcon(
-                `component-input-price-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_icon : tools_icons.icon_clear(prop_size),
-
-                    prop_iconClass : ["position-absolute"] ,
-                    prop_iconStyles : styles ,
-
-                    fn_callback: (event)=>{
-                        this.fn_onClearInput(event);
+                if (directionRtl){
+                    if (screanWidthType == "xs"){
+                        styles["left"]=  "0px";
+                        styles["transform"]= prop_btnAddStatus ? "translate(30px , -50%)" : "translate(0 , -50%)";
+                    }
+                    else{
+                        styles["left"]=  "0px";
+                        styles["transform"]= prop_btnAddStatus ? "translate(160px , -50%)" : "translate(0 , -50%)";
                     }
                 }
-            )
+                else {
+                    if (screanWidthType == "xs"){
+                        styles["right"]=  "0px";
+                        styles["transform"]= prop_btnAddStatus ? "translate(-30px , -50%)" :  "translate(0 , -50%)";
+                    }
+                    else{
+                        styles["right"]= "0px";
+                        styles["transform"]= prop_btnAddStatus ? "translate(-160px , -50%)" : "translate(0 , -50%)";
+                    }
+                }
+
+                new window.ComponentIcon(
+                    `component-input-price-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon : tools_icons.icon_clear(prop_size),
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+
+                        fn_callback: (event)=>{
+                            this.fn_onClearInput(event);
+                        }
+                    }
+                );
+
+            }
 
         }
 
@@ -11399,8 +11447,6 @@ class ComponentInputEmailBase extends ComponentBase{
         ]
     };
 
-
-
     /* ---------------------------------------------
    PROPERTYs Schema
    --------------------------------------------- */
@@ -12815,13 +12861,13 @@ class ComponentDateBase extends ComponentBase{
                     month_10 : "بهمن" ,
                     month_11 : "اسفند" ,
 
-                    day_0 : "شنبه" ,
-                    day_1 : "یک شنبه" ,
-                    day_2 : "دو شنبه" ,
-                    day_3 : "سه شنبه" ,
-                    day_4 : "چهار شنبه" ,
-                    day_5 : "پنج شنبه" ,
-                    day_6 : "جمعه" ,
+                    day_0 : "ش" ,
+                    day_1 : "ی.ش" ,
+                    day_2 : "د.ش" ,
+                    day_3 : "س.ش" ,
+                    day_4 : "چ.ش" ,
+                    day_5 : "پ.ش" ,
+                    day_6 : "ج" ,
 
                     btn_accept : "تایید" ,
                     btn_now : "اکنون" ,
@@ -12841,13 +12887,13 @@ class ComponentDateBase extends ComponentBase{
                     month_10 : "November" ,
                     month_11 : "December" ,
 
-                    day_0 : "Saturday" ,
-                    day_1 : "Sunday" ,
-                    day_2 : "Monday" ,
-                    day_3 : "Tuesday" ,
-                    day_4 : "Wednesday" ,
-                    day_5 : "Thursday" ,
-                    day_6 : "Friday" ,
+                    day_0 : "Sa" ,
+                    day_1 : "Su" ,
+                    day_2 : "Mo" ,
+                    day_3 : "Tu" ,
+                    day_4 : "We" ,
+                    day_5 : "Th" ,
+                    day_6 : "Fr" ,
 
                     btn_accept : "Accept" ,
                     btn_now : "Now" ,
@@ -13186,6 +13232,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
         if (data != null) {
             const prop_backgroundHeader   =   data.hasOwnProperty("prop_backgroundHeader")              ?  data.prop_backgroundHeader               :  "";
             const prop_size               =   data.hasOwnProperty("prop_size")                          ?  data.prop_size                           :  null;
+            const directionRtl            =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")      ? this._COMPONENT_CONFIG.directionRtl       : false;
 
             let elHeight = tools_css.getHeightSize(prop_size);
 
@@ -13200,10 +13247,9 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
              height:          ${elHeight}px;
          }
          #${this._COMPONENT_ID} #component-input-date-header-form-${this._COMPONENT_RANDOM_ID}{
-               margin-left :    30px ;
-               padding-right :  25px ;
+               margin-left :    ${directionRtl ? "0" : "30px"};
                float:           left;
-               height:          ${elHeight}px;
+               height:          ${elHeight-2}px;
                width:           calc(100% - 30px)
          }
      </style>
@@ -13232,8 +13278,9 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
 
         if (data != null){
 
-            const prop_size    =   data.hasOwnProperty("prop_size")               ?  data.prop_size                    :  دعمم;
-            const prop_type    =   data.hasOwnProperty("prop_type")               ?  data.prop_type                    :  0;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         :  null;
+            const prop_type          =   data.hasOwnProperty("prop_type")                     ?  data.prop_type                                         :  0;
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
 
             let inputs = "";
             if (prop_type == this.TYPE_INPUT_ONE_DIGIT){
@@ -13250,8 +13297,8 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                 const dayDigitTwo    = this.fn_getDigitDatePart(this.TYPE_DAY , 2);
 
                 inputs = `
-                    <div class="row parts-form-input-date">
-                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                    <div class="row parts-form-input-date w-100">
+                             <div class="part-form-input-date-1 col-6 row p-0 m-0 position-relative">
                                   <div class="col-3 pe-0 ps-1 m-0">
                                        <input
                                              id="Date_1-${this._COMPONENT_RANDOM_ID}" 
@@ -13294,7 +13341,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                                   </div>
                              </div>
                              
-                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
+                             <div class="part-form-input-date-2 col-3 row  p-0 m-0 position-relative">
                                   <div class="col-6 pe-0 ps-1 m-0">
                                        <input                                           
                                              id="Date_5-${this._COMPONENT_RANDOM_ID}"
@@ -13317,7 +13364,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                                   </div>
                              </div>
                              
-                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                             <div class="part-form-input-date-3 col-3 row  p-0  m-0 position-relative">
                                   <div class="col-6 pe-0 ps-1 m-0">
                                        <input 
                                              id="Date_7-${this._COMPONENT_RANDOM_ID}" 
@@ -13351,8 +13398,8 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                 const dayDigitOne    = this.fn_getDigitDatePart(this.TYPE_DAY);
 
                 inputs = `
-                    <div class="row parts-form-input-date">
-                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                    <div class="row parts-form-input-date w-100">
+                             <div class="part-form-input-date-1 col-6 row  p-0  m-0 position-relative">
                                   <div class="col-12 pe-0 ps-1 m-0">
                                        <input
                                              id="Date_1-${this._COMPONENT_RANDOM_ID}" 
@@ -13378,7 +13425,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                                   </div>
                              </div>
                              
-                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                             <div class="part-form-input-date-3 col-3 row  p-0  m-0 position-relative">
                                   <div class="col-12 pe-0 ps-1 m-0">
                                        <input 
                                              id="Date_3-${this._COMPONENT_RANDOM_ID}" 
@@ -13396,7 +13443,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
             else if (prop_type == this.TYPE_INPUT_FULL_DIGIT){
                 const digitAll   = this.fn_getDigitDatePart();
                 inputs = `
-                    <div class="row parts-form-input-date">
+                    <div class="row parts-form-input-date w-100">
                     
                            <input
                                  id="Date_1-${this._COMPONENT_RANDOM_ID}" 
@@ -13418,9 +13465,9 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                 const dayDigitOne    = this.fn_getDigitDatePart(this.TYPE_DAY);
 
                 inputs = `
-                    <div class="row parts-form-input-date" onclick="${this.getFn("fn_selectDate" , "event")}">
+                    <div class="row parts-form-input-date w-100" onclick="${this.getFn("fn_selectDate" , "event")}">
                           
-                             <div class="part-form-input-date-1 col-6 row pe-2 ps-0 m-0 position-relative">
+                             <div class="part-form-input-date-1 col-6 row  p-0  m-0 position-relative">
                                   <div class="col-12 pe-0 ps-1 m-0">
                                        <span class="inputs-date  form-control text-center">
                                                ${yearDigitOne}
@@ -13428,7 +13475,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                                   </div>
                              </div>
                              
-                             <div class="part-form-input-date-2 col-3 row pe-2 ps-2 m-0 position-relative">
+                             <div class="part-form-input-date-2 col-3 row p-0  m-0 position-relative">
                                   <div class="col-12 pe-0 ps-1 m-0">
                                        <span class="inputs-date  form-control text-center">
                                                ${monthDigitOne}
@@ -13436,7 +13483,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                                   </div>
                              </div>
                              
-                             <div class="part-form-input-date-3 col-3 row pe-0 ps-2 m-0 position-relative">
+                             <div class="part-form-input-date-3 col-3 row p-0 m-0 position-relative">
                                   <div class="col-12 pe-0 ps-1 m-0">
                                          <span class="inputs-date  form-control text-center">
                                                ${dayDigitOne}
@@ -13453,30 +13500,28 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
             return `
 <section  data-part-name="${partName}"
           id="component-input-date-header-inputs-${this._COMPONENT_RANDOM_ID}"  
-          class="" >
+          class="w-100" >
           
      <style>
          #${this._COMPONENT_ID} #component-input-date-header-inputs-${this._COMPONENT_RANDOM_ID}{
-              padding-right:    calc(30px + 20%);
-              padding-left:     calc(20px + 20%);
-              height:           30px;
               direction:        ltr !important;
          }
          
          #${this._COMPONENT_ID} .parts-form-input-date{
-              width:       175px;
-              margin:      auto;
+              width:        175px;
+              margin:       auto;
+              ${directionRtl ? "padding-left" : "padding-right"} : 25px;
          }
          #${this._COMPONENT_ID} .part-form-input-date-1:after , .part-form-input-date-2:after{
               content:      "/";
-              right:        -5px;
-              line-height:  ${elHeight}px;
+              right:        0;
+              line-height:  ${elHeight-4}px;
               position:     absolute;
          }
          #${this._COMPONENT_ID} .inputs-date{
               border-color: #ebebeb;
-              height:  ${elHeight - 2}px;
-              line-height:  ${elHeight - 2}px;
+              height:       ${elHeight - 4}px;
+              line-height:  ${elHeight - 4}px;
               font-size:    ${elFontSize}px;
               padding:      0;
               margin:       0;
@@ -13625,7 +13670,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
           
      <style>
          #${this._COMPONENT_ID} #component-input-date-body-weeks-${this._COMPONENT_RANDOM_ID}{
-             height: calc(100% - 80px);
+             height: 200px;
          }
      </style>
      
@@ -13700,19 +13745,26 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
             if (!prop_isDisable){
 
                 const prop_size                 =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  0;
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
 
                 let styles = {
-                    "font-size" : "20pt",
-                    "margin" : "0 10px",
-                    "top" : "50%",
-                    "right" : "0",
-                    "transform" : "translate(-5px , -50%)",
+                    "z-index":   `${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }`,
+                    "cursor" :   "pointer",
+                    "top" :      "50%" ,
+                }
+                if (directionRtl){
+                    styles["left"]= "0"
+                    styles["transform"]= "translate(5px, -50%)"
+                }
+                else {
+                    styles["right"]= "0"
+                    styles["transform"]= "translate(-5px, -50%)"
                 }
 
                 new window.ComponentIcon(
                     `component-input-date-header-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : tools_icons.icon_clear(prop_size),
+                        prop_icon : tools_icons.icon_reload(prop_size , "#000"),
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -13741,13 +13793,18 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
             const elIconHeight = tools_css.getIconSize(prop_size);
 
             let styles = {
-                "z-index":       ` ${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }`,
-                "margin" :       "auto",
-                "cursor" :       "pointer",
-                "top" :          "50%" ,
-                "color" :         prop_colorIcon ,
-                "left" :          "0" ,
-                "transform" :    "translate(5px , -50%)" ,
+                "z-index":   `${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }`,
+                "cursor" :   "pointer",
+                "top" :      "50%" ,
+                "color" :    prop_colorIcon ,
+            }
+            if (directionRtl){
+                styles["right"]= "0"
+                styles["transform"]= "translate(-5px, -50%)"
+            }
+            else {
+                styles["left"]= "0"
+                styles["transform"]= "translate(5px, -50%)"
             }
 
             new window.ComponentIcon(
@@ -14072,7 +14129,6 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                     prop_structureClass : ["h-100"] ,
                     prop_structureStyles : {
                         //"background" : "#fff" ,
-                        "height" : "100%" ,
                     },
                     prop_size ,
 
@@ -14099,7 +14155,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "width" : "14%" ,
                         "text-align" : "center !important" ,
                     },
-                    prop_tableBodyClass : [ "bg-white" , "h-100"] ,
+                    prop_tableBodyClass : [ "bg-white"] ,
                     prop_tableItemBodyClass : [  "rounded" , "d-block"] ,
                     prop_tableItemBodyStyles: {
                         "color" : "#525252" ,
@@ -15330,7 +15386,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             return `
 <section data-part-name="${partName}" 
          id="component-select-option-body-options-${ this._COMPONENT_RANDOM_ID}" 
-         class=" d-block" >
+         class="h-100 d-block mt-2" >
      <style>
          #${this._COMPONENT_ID} #component-select-option-body-options-${ this._COMPONENT_RANDOM_ID}{
                   
@@ -15500,7 +15556,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 const prop_size                 =  data.hasOwnProperty("prop_size")                       ?  data.prop_size                          :  0;
 
                 let styles =  {
-                    "z-index" : `${tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name, 10)}`  ,
+                    //"z-index" : `${tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name, 10)}`  ,
                     "top" : "0" ,
                     "cursor" : "pointer" ,
                 };
@@ -15740,6 +15796,10 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 }
             }
         }
+    }
+
+    call_setValue(value){
+        this.set("prop_value" , value )
     }
 
 }
@@ -18354,7 +18414,7 @@ class ComponentTableBase extends ComponentBase{
         },
         prop_headerIconSize: {
             prop: "prop_headerIconSize",
-            default: 15
+            default: 20
         },
         prop_headerIconBackgroundColor: {
             prop: "prop_headerIconBackgroundColor",
@@ -18739,11 +18799,10 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
              top: -${prop_headerIconSize/2}px;
              transform: translate(-50% , -50%);
              background-color: ${prop_headerIconBackgroundColor};
-             padding: 2.5px;
              border-radius: 100%;
              border: 3px solid ${prop_headerIconBorderColor};
-             width:  ${prop_headerIconSize+15}px;
-             height:  ${prop_headerIconSize+15}px;
+             width:  ${prop_headerIconSize+10}px;
+             height:  ${prop_headerIconSize+10}px;
          }
          #${this._COMPONENT_ID} .component-table-header-item-icon-${this._COMPONENT_RANDOM_ID} svg{
              position: absolute;
@@ -19363,7 +19422,7 @@ class ComponentTableResponsibleBase extends ComponentBase{
         },
         prop_headerIconSize: {
             prop: "prop_headerIconSize",
-            default: 15
+            default: 20
         },
 
         prop_backgroundColorIconColumnSelector: {
@@ -19437,6 +19496,8 @@ class ComponentTableResponsibleBase extends ComponentBase{
 
 }
 window.ComponentTableResponsible = class ComponentTableResponsible extends ComponentTableResponsibleBase{
+
+    _TODO_RESIZE_SCREEN = null;
 
 
     /* ---------------------------------------------
@@ -19528,14 +19589,20 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
     }
 
     fn_renderTable_resize(event){
-        const isWideScreen = tools_css.checkMoreThanScreanWidth(tools_css.standardScreanWidth.m.name);
-        if (isWideScreen){
-            this.fn_renderTable_resize_isForPc();
-        }
-        else {
-            this.fn_renderTable_resize_isForMobile();
-        }
-        this.fn_onCallbackResizeTable(event)
+        if (this._TODO_RESIZE_SCREEN != null) clearTimeout(this._TODO_RESIZE_SCREEN)
+        this._TODO_RESIZE_SCREEN = setTimeout(
+            () => {
+                const isWideScreen = tools_css.checkMoreThanScreanWidth(tools_css.standardScreanWidth.m.name);
+                if (isWideScreen){
+                this.fn_renderTable_resize_isForPc();
+            }
+                else {
+                this.fn_renderTable_resize_isForMobile();
+            }
+                this.fn_onCallbackResizeTable(event)
+            } ,
+            200
+        )
     }
 
     fn_renderTable_resize_isForPc(){
@@ -20808,7 +20875,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
                     for (let i = 0; i < prop_tabs.length; i++) {
                         const itemTab = prop_tabs[i];
                         if (itemTab.hasOwnProperty("title")){
-                            let icon = itemTab.hasOwnProperty("icon") ? `<img src="${itemTab.icon}" alt=" ">` : ``;
+                            let icon = itemTab.hasOwnProperty("icon") ? itemTab.icon : ``;
                             const tabId =  itemTab.hasOwnProperty("id")  ?  itemTab.id  :  i;
                             let classActive = prop_tabSelected != null && prop_tabSelected == tabId ? 'btn-tab-types-active' : '';
 
@@ -20876,7 +20943,6 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
          
          
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types{
-               height:            ${elHeight+10}px;
                line-height:       ${elHeight}px;
                font-size:         ${elFontSize}px;
                padding:           5px 10px;
@@ -23657,7 +23723,7 @@ class ComponentBreadcrumbWithArrowBase extends ComponentBase{
 
 }
 window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends ComponentBreadcrumbWithArrowBase {
-
+    _TODO_RESIZE_SCREEN = null;
 
     /* ---------------------------------------------
        SETUP
@@ -23747,24 +23813,31 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
     }
 
     fn_renderBreadCrumb_resize(){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("prop_breadcrumbs")){
-            const prop_breadcrumbs         =  data.prop_breadcrumbs;
-            const prop_stepSelected        =  data.hasOwnProperty("prop_stepSelected")         ? data.prop_stepSelected           : 0;
-            const prop_unactiveBreadcrumb  =  data.hasOwnProperty("prop_unactiveBreadcrumb")   ? data.prop_unactiveBreadcrumb     : "";
-            const  prop_colorUnactive      =  data.hasOwnProperty("prop_colorUnactive")        ? data.prop_colorUnactive          : "";
-            const prop_activeBreadcrumb    =  data.hasOwnProperty("prop_activeBreadcrumb")     ? data.prop_activeBreadcrumb       : "";
-            const  prop_colorActive        =  data.hasOwnProperty("prop_colorActive")          ? data.prop_colorActive            : "";
-            const  prop_colorShadow        =  data.hasOwnProperty("prop_colorShadow")          ? data.prop_colorShadow            : "";
+        if (this._TODO_RESIZE_SCREEN != null) clearTimeout(this._TODO_RESIZE_SCREEN)
 
-            const isWideScreen = tools_css.checkMoreThanScreanWidth(tools_css.standardScreanWidth.m.name);
-            if (isWideScreen){
-                this.fn_renderBreadCrumb_resize_isForPc(prop_breadcrumbs , prop_stepSelected , prop_unactiveBreadcrumb , prop_colorUnactive , prop_activeBreadcrumb , prop_colorActive , prop_colorShadow);
-            }
-            else {
-                this.fn_renderBreadCrumb_resize_isForMobile(prop_breadcrumbs , prop_stepSelected, prop_unactiveBreadcrumb , prop_colorUnactive , prop_activeBreadcrumb , prop_colorActive , prop_colorShadow);
-            }
-        }
+        this._TODO_RESIZE_SCREEN = setTimeout(
+            () => {
+                const data = this._COMPONENT_CONFIG;
+                if (data.hasOwnProperty("prop_breadcrumbs")){
+                    const prop_breadcrumbs         =  data.prop_breadcrumbs;
+                    const prop_stepSelected        =  data.hasOwnProperty("prop_stepSelected")         ? data.prop_stepSelected           : 0;
+                    const prop_unactiveBreadcrumb  =  data.hasOwnProperty("prop_unactiveBreadcrumb")   ? data.prop_unactiveBreadcrumb     : "";
+                    const  prop_colorUnactive      =  data.hasOwnProperty("prop_colorUnactive")        ? data.prop_colorUnactive          : "";
+                    const prop_activeBreadcrumb    =  data.hasOwnProperty("prop_activeBreadcrumb")     ? data.prop_activeBreadcrumb       : "";
+                    const  prop_colorActive        =  data.hasOwnProperty("prop_colorActive")          ? data.prop_colorActive            : "";
+                    const  prop_colorShadow        =  data.hasOwnProperty("prop_colorShadow")          ? data.prop_colorShadow            : "";
+
+                    const isWideScreen = tools_css.checkMoreThanScreanWidth(tools_css.standardScreanWidth.m.name);
+                    if (isWideScreen){
+                        this.fn_renderBreadCrumb_resize_isForPc(prop_breadcrumbs , prop_stepSelected , prop_unactiveBreadcrumb , prop_colorUnactive , prop_activeBreadcrumb , prop_colorActive , prop_colorShadow);
+                    }
+                    else {
+                        this.fn_renderBreadCrumb_resize_isForMobile(prop_breadcrumbs , prop_stepSelected, prop_unactiveBreadcrumb , prop_colorUnactive , prop_activeBreadcrumb , prop_colorActive , prop_colorShadow);
+                    }
+                }
+            } ,
+            200
+        )
     }
 
 
@@ -23912,75 +23985,78 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 this.fn_onBackClick(e , step)
             }
 
+            const gapBetween = (directionRtl ? 1 : -1)*5* ( number);
+
+
             /// SHAPE A
             let shapeAPoints = [];
 
             if (directionRtl){
 
                 if (number == stepLength-1 ){
-                    shapeAPoints.push({x: xStart + prop_side                              , y: 0})
+                    shapeAPoints.push({x: xStart + prop_side + gapBetween                              , y: 0})
                 }
                 else {
-                    shapeAPoints.push({x: xStart + 2*prop_side                            , y: 0})
+                    shapeAPoints.push({x: xStart + 2*prop_side + gapBetween                             , y: 0})
                 }
 
-                shapeAPoints.push({x: xStart + 3*prop_side+prop_length                    , y: 0})
+                shapeAPoints.push({x: xStart + 3*prop_side+prop_length + gapBetween                     , y: 0})
 
                 if (number == 0){
-                    shapeAPoints.push({x: xStart + 3*prop_side+prop_length               , y: prop_height})
+                    shapeAPoints.push({x: xStart + 3*prop_side+prop_length + gapBetween                , y: prop_height})
                 }
                 else {
-                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length               , y: prop_height})
+                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length + gapBetween                , y: prop_height})
                 }
 
-                shapeAPoints.push({x: xStart + 3*prop_side+prop_length                   , y: 2*prop_height})
+                shapeAPoints.push({x: xStart + 3*prop_side+prop_length + gapBetween                    , y: 2*prop_height})
 
                 if (number == stepLength-1 ){
-                    shapeAPoints.push({x: xStart + prop_side                             , y: 2*prop_height})
+                    shapeAPoints.push({x: xStart + prop_side + gapBetween                              , y: 2*prop_height})
                 }
                 else {
-                    shapeAPoints.push({x: xStart + 2*prop_side                           , y: 2*prop_height})
+                    shapeAPoints.push({x: xStart + 2*prop_side + gapBetween                            , y: 2*prop_height})
                 }
 
-                shapeAPoints.push({x: xStart + prop_side                               , y: prop_height})
+                shapeAPoints.push({x: xStart + prop_side + gapBetween                                , y: prop_height})
 
                 if (number == stepLength-1 ){
-                    shapeAPoints.push({x: xStart + prop_side                             , y: 0})
+                    shapeAPoints.push({x: xStart + prop_side + gapBetween                              , y: 0})
                 }
                 else {
-                    shapeAPoints.push({x: xStart + 2*prop_side                           , y: 0})
+                    shapeAPoints.push({x: xStart + 2*prop_side + gapBetween                            , y: 0})
                 }
 
             }
             else{
-                shapeAPoints.push({x: xStart                                             , y: 0})
+                shapeAPoints.push({x: xStart+ gapBetween                                              , y: 0})
 
                 if (number == stepLength-1 ){
-                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length               , y: 0})
+                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length+ gapBetween                , y: 0})
                 }
                 else {
-                    shapeAPoints.push({x: xStart + prop_side+prop_length               , y: 0})
+                    shapeAPoints.push({x: xStart + prop_side+prop_length+ gapBetween                , y: 0})
                 }
 
-                shapeAPoints.push({x: xStart + 2*prop_side+prop_length                   , y: prop_height})
+                shapeAPoints.push({x: xStart + 2*prop_side+prop_length+ gapBetween                    , y: prop_height})
 
                 if (number == stepLength-1 ){
-                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length               , y: 2*prop_height})
+                    shapeAPoints.push({x: xStart + 2*prop_side+prop_length+ gapBetween                , y: 2*prop_height})
                 }
                 else {
-                    shapeAPoints.push({x: xStart + prop_side+prop_length               , y: 2*prop_height})
+                    shapeAPoints.push({x: xStart + prop_side+prop_length+ gapBetween                , y: 2*prop_height})
                 }
 
-                shapeAPoints.push({x: xStart                                             , y: 2*prop_height})
+                shapeAPoints.push({x: xStart+ gapBetween                                              , y: 2*prop_height})
 
                 if (number == 0){
-                    shapeAPoints.push({x: xStart                                         , y: prop_height})
+                    shapeAPoints.push({x: xStart+ gapBetween                                          , y: prop_height})
                 }
                 else {
-                    shapeAPoints.push({x: xStart + prop_side                             , y: prop_height})
+                    shapeAPoints.push({x: xStart + prop_side+ gapBetween                              , y: prop_height})
                 }
 
-                shapeAPoints.push({x: xStart                                             , y: 0})
+                shapeAPoints.push({x: xStart+ gapBetween                                              , y: 0})
 
             }
 
@@ -23989,24 +24065,24 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
                 let shapeBPoints = [];
                 if (directionRtl){
                     shapeBPoints = [
-                        {x: xStart +prop_side             -prop_gap   , y: 0} ,
-                        {x: xStart +2*prop_side-prop_gap  -prop_gap   , y: 0} ,
-                        {x: xStart +prop_side-prop_gap    -prop_gap   , y: prop_height} ,
-                        {x: xStart +2*prop_side-prop_gap  -prop_gap   , y: 2*prop_height} ,
-                        {x: xStart +prop_side             -prop_gap   , y: 2*prop_height} ,
-                        {x: xStart                        -prop_gap   , y: prop_height} ,
-                        {x: xStart +prop_side             -prop_gap   , y: 0} ,
+                        {x: xStart +prop_side+gapBetween               -prop_gap   , y: 0} ,
+                        {x: xStart +2*prop_side-prop_gap+gapBetween    -prop_gap   , y: 0} ,
+                        {x: xStart +prop_side-prop_gap+gapBetween      -prop_gap   , y: prop_height} ,
+                        {x: xStart +2*prop_side-prop_gap+gapBetween    -prop_gap   , y: 2*prop_height} ,
+                        {x: xStart +prop_side+gapBetween               -prop_gap   , y: 2*prop_height} ,
+                        {x: xStart+gapBetween                          -prop_gap   , y: prop_height} ,
+                        {x: xStart +prop_side+gapBetween               -prop_gap   , y: 0} ,
                     ]
                 }
                 else{
                     shapeBPoints = [
-                        {x: xStart                            + 2*prop_side+prop_length   -prop_gap   , y: 0} ,
-                        {x: xStart + prop_side-prop_gap       + 2*prop_side+prop_length   -prop_gap    , y: 0} ,
-                        {x: xStart + 2*prop_side-prop_gap     + 2*prop_side+prop_length   -prop_gap    , y: prop_height} ,
-                        {x: xStart + prop_side-prop_gap       + 2*prop_side+prop_length   -prop_gap    , y: 2*prop_height} ,
-                        {x: xStart                            + 2*prop_side+prop_length   -prop_gap    , y: 2*prop_height} ,
-                        {x: xStart + prop_side                + 2*prop_side+prop_length   -prop_gap    , y: prop_height} ,
-                        {x: xStart                            + 2*prop_side+prop_length   -prop_gap    , y: 0} ,
+                        {x: xStart+gapBetween                              + 2*prop_side+prop_length   -prop_gap   , y: 0} ,
+                        {x: xStart + prop_side-prop_gap+gapBetween         + 2*prop_side+prop_length   -prop_gap    , y: 0} ,
+                        {x: xStart + 2*prop_side-prop_gap+gapBetween       + 2*prop_side+prop_length   -prop_gap    , y: prop_height} ,
+                        {x: xStart + prop_side-prop_gap+gapBetween         + 2*prop_side+prop_length   -prop_gap    , y: 2*prop_height} ,
+                        {x: xStart+gapBetween                              + 2*prop_side+prop_length   -prop_gap    , y: 2*prop_height} ,
+                        {x: xStart + prop_side+gapBetween                  + 2*prop_side+prop_length   -prop_gap    , y: prop_height} ,
+                        {x: xStart+gapBetween                              + 2*prop_side+prop_length   -prop_gap    , y: 0} ,
                     ];
                 }
 
@@ -25387,7 +25463,7 @@ class ComponentCameraQrCodeReaderBase extends ComponentBase{
         },
         prop_titleBtnRetry: {
             prop: "prop_titleBtnRetry",
-            default: "تلاج مجدد"
+            default: "تلاش مجدد"
         },
         prop_titleErrorPermisionCamera: {
             prop: "prop_titleErrorPermisionCamera",
@@ -26760,6 +26836,18 @@ class ComponentPageHeaderBase extends ComponentBase{
             prop: "prop_pageTitle",
             default: null
         },
+        prop_pageNav: {
+            prop: "prop_pageNav",
+            default: null
+        },
+        prop_colorNav: {
+            prop: "prop_colorNav",
+            default: tools_const?.styles?.pageHeader?.color_nav ?? ""
+        },
+        prop_backgroundColorNav: {
+            prop: "prop_backgroundColorNav",
+            default: tools_const?.styles?.pageHeader?.backgroundColor_nav ?? ""
+        },
         prop_colorHeader: {
             prop: "prop_colorHeader",
             default: tools_const?.styles?.pageHeader?.color_header ?? ""
@@ -26795,10 +26883,21 @@ class ComponentPageHeaderBase extends ComponentBase{
         ],
 
         part_form_title: [
-            this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_hasIconBack,
+        ],
+
+        part_form_title_nav: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_pageNav,
+            this._COMPONENT_PATTERN.prop_colorNav,
+            this._COMPONENT_PATTERN.prop_backgroundColorNav,
+        ],
+
+        part_form_title_txt: [
+            this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_pageTitle,
             this._COMPONENT_PATTERN.prop_colorHeader,
+            this._COMPONENT_PATTERN.prop_pageNav,
         ],
 
         part_form_options: [
@@ -26823,7 +26922,8 @@ class ComponentPageHeaderBase extends ComponentBase{
                     part_form_back_icon: {}
                 } ,
                 part_form_title:{
-
+                    part_form_title_nav: {} ,
+                    part_form_title_txt: {} ,
                 } ,
                 part_form_options:{
                     part_form_options_render: {}
@@ -26865,6 +26965,10 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
                 return this.template_render_formBack(partName);
             case "part_form_title":
                 return this.template_render_formTitle(partName);
+            case "part_form_title_nav":
+                return this.template_render_formTitle_nav(partName);
+            case "part_form_title_txt":
+                return this.template_render_formTitle_txt(partName);
             case "part_form_options":
                 return this.template_render_formOptions(partName);
             case "part_form_back_icon":
@@ -26964,30 +27068,156 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
         const data = this.getPartProps(partName)
 
         if (data != null) {
+            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                      ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                                     ? data.prop_hasIconBack                    : null;
+
+            return `
+<b data-part-name="${partName}" 
+         id="component-header-page-form-title-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative ">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-header-page-form-title-${this._COMPONENT_RANDOM_ID}{
+             width:            60%;
+             float:            ${directionRtl ? "right" : "left"};
+             ${prop_hasIconBack ? (directionRtl ? "border-right" : "border-left") : ""}:    1px solid white;
+         }
+     </style>
+     
+        ${this.templateFn("part_form_title_nav")}
+        ${this.templateFn("part_form_title_txt")}
+       
+</b>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_formTitle_nav(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const directionRtl                  =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                   ? this._COMPONENT_CONFIG.directionRtl       : false;
+            const prop_size                     = data.hasOwnProperty("prop_size")                                         ? data.prop_size                            : null;
+            const prop_colorNav                 = data.hasOwnProperty("prop_colorNav")                                     ? data.prop_colorNav                        : null;
+            const prop_backgroundColorNav       = data.hasOwnProperty("prop_backgroundColorNav")                           ? data.prop_backgroundColorNav              : null;
+            const prop_pageNav                  = data.hasOwnProperty("prop_pageNav")  && data.prop_pageNav != null        ? data.prop_pageNav                         : this._COMPONENT_SLOTS?.nav ?? "";
+
+            if (prop_pageNav != null){
+
+                const elHeight = tools_css.getHeightSize(prop_size);
+                const elFontSize = tools_css.getFontSize(prop_size);
+
+                let navHtml = "";
+                for (let i = prop_pageNav.length ; i >= 0 ; i--) {
+                    const itemNav = prop_pageNav[i];
+                    if (itemNav != null && itemNav.hasOwnProperty("html")){
+                        navHtml += `
+<div class="component-header-page-form-title-nav-item-${this._COMPONENT_RANDOM_ID} " onclick="${this.getFn("fn_onclickItemNav" , "event" ,  `'${itemNav?.attrs?.name ?? ""}'` )}">
+     ${itemNav.html}
+</div>
+                        `
+                    }
+                }
+
+                return `
+<b data-part-name="${partName}" 
+         id="component-header-page-form-title-nav-${this._COMPONENT_RANDOM_ID}"
+         class="position-relative ">
+         
+     <style>
+         @media (max-width: 768px) { 
+              #${this._COMPONENT_ID} #component-header-page-form-title-nav-${this._COMPONENT_RANDOM_ID}{
+                  display: none;
+              }
+         }
+    
+     
+         #${this._COMPONENT_ID} #component-header-page-form-title-nav-${this._COMPONENT_RANDOM_ID}{
+              float:            ${directionRtl ? "right" : "left"};
+         }
+         #${this._COMPONENT_ID} .component-header-page-form-title-nav-item-${this._COMPONENT_RANDOM_ID}{
+              float:             ${directionRtl ? "left" : "right"};
+              color:             ${prop_colorNav};
+              background-color:  ${prop_backgroundColorNav};
+              cursor:            pointer;
+              position:          relative;
+              height:            ${elHeight}px;
+              line-height:       ${elHeight}px;
+              font-size:         ${elFontSize}px;
+               ${directionRtl? "padding-right" : "padding-left"} :     ${elHeight+15}px;
+               ${directionRtl? "padding-left" : "padding-right"} :     10px;
+         }
+         #${this._COMPONENT_ID} .component-header-page-form-title-nav-item-${this._COMPONENT_RANDOM_ID}:before{
+              content:                                "";
+              position:                               absolute;
+              top:                                    50%;
+              ${directionRtl? "left" : "right"} :     -${elHeight+10}px;
+              transform:                              translate( 0 , -50%)  rotate(0deg);
+              width:                                  0px;
+              height:                                 0px;
+              border-style:                           solid;
+              border-width:                           ${elHeight/2}px ${directionRtl ? elHeight+10 : 0}px ${elHeight/2}px ${directionRtl ? 0 : elHeight+10}px;  
+              border-color:                           transparent ${directionRtl ? prop_colorNav : "transparent"} transparent ${directionRtl ? "transparent" : prop_colorNav} ;                 
+
+         }
+         #${this._COMPONENT_ID} .component-header-page-form-title-nav-item-${this._COMPONENT_RANDOM_ID}:after{
+              content:                                "";
+              position:                               absolute;
+              top:                                    50%;
+              ${directionRtl? "left" : "right"} :    -${elHeight}px;
+              transform:                              translate( 0 , -50%)  rotate(0deg);
+              width:                                  0px;
+              height:                                 0px;
+              border-style:                           solid;
+              border-width:                           ${elHeight/2}px ${directionRtl ? elHeight : 0}px ${elHeight/2}px ${directionRtl ? 0 : elHeight}px;
+              border-color:                           transparent ${directionRtl ? prop_backgroundColorNav : "transparent"} transparent ${directionRtl ? "transparent" : prop_backgroundColorNav} ;                 
+         }
+     </style>
+     
+     ${navHtml}
+       
+</b>
+        `;
+            }
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_formTitle_txt(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
 
             const prop_size             = data.hasOwnProperty("prop_size")                                            ? data.prop_size                           : null;
-            const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                                     ? data.prop_hasIconBack                    : null;
             const prop_pageTitle        = data.hasOwnProperty("prop_pageTitle")  && data.prop_pageTitle != null       ? data.prop_pageTitle                      : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
             const prop_colorHeader      = data.hasOwnProperty("prop_colorHeader")                                     ? data.prop_colorHeader                    : null;
             const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                      ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_pageNav          = data.hasOwnProperty("prop_pageNav")  && data.prop_pageNav != null           ? data.prop_pageNav                        : this._COMPONENT_SLOTS?.nav ?? "";
 
             let elHeight = tools_css.getHeightSize(prop_size);
             let elFontSize = tools_css.getFontSize(prop_size);
 
             return `
 <b data-part-name="${partName}" 
-         id="component-header-page-form-title-${this._COMPONENT_RANDOM_ID}"
+         id="component-header-page-form-title-txt-${this._COMPONENT_RANDOM_ID}"
          class="position-relative px-2">
          
      <style>
-         #${this._COMPONENT_ID} #component-header-page-form-title-${this._COMPONENT_RANDOM_ID}{
+         #${this._COMPONENT_ID} #component-header-page-form-title-txt-${this._COMPONENT_RANDOM_ID}{
              height:           ${elHeight}px;
              line-height:      ${elHeight}px;
-             width:            40%;
              float:            ${directionRtl ? "right" : "left"};
              font-size:        ${elFontSize}px;
              color:            ${prop_colorHeader};
-             ${prop_hasIconBack ? (directionRtl ? "border-right" : "border-left") : ""}:    1px solid white;
+             ${directionRtl ? "margin-right" : "margin-left"} : ${prop_pageNav != null ? elHeight+10 : 0}px;
          }
      </style>
      
@@ -27020,7 +27250,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
      <style>
          #${this._COMPONENT_ID} #component-header-page-form-options-${this._COMPONENT_RANDOM_ID}{
              height:           ${elHeight}px;
-             width:            calc(100% - ${elHeight+10}px - 40% - 2px);
+             width:            calc(100% - ${elHeight+10}px - 60% - 2px);
              float:            ${directionRtl ? "right" : "left"};
          }
          #${this._COMPONENT_ID} .component-header-page-form-option-icon-forms-${this._COMPONENT_RANDOM_ID}{
@@ -27146,6 +27376,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
             data.fn_onBackClick(event);
         }
     }
+
     fn_onOptionClick(event , optionName){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_onOptionClick") && typeof data.fn_onOptionClick != null){
@@ -27153,6 +27384,12 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
         }
     }
 
+    fn_onclickItemNav(event , navName){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onclickItemNav") && typeof data.fn_onclickItemNav != null){
+            data.fn_onclickItemNav(event , navName);
+        }
+    }
 
 }
 
@@ -29902,7 +30139,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
             new window.ComponentBorder(
                 `component-position-element-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    // prop_structureClass:  prop_elementClass ,
+                    prop_borderClass:  ["h-100"] ,
                     prop_structureStyles: prop_elementStyles ,
                     // prop_minWidth: 160 ,
 
@@ -29924,7 +30161,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
             return `
 <section data-part-name="${partName}" 
          id="component-position-element-content-${this._COMPONENT_RANDOM_ID}" 
-         class=" ">
+         class=" h-100">
      <style>
          #${this._COMPONENT_ID} #component-position-element-content-${this._COMPONENT_RANDOM_ID}{
             
@@ -30513,7 +30750,8 @@ window.ComponentLayout = class ComponentLayout extends ComponentLayoutBase{
     call_addElement(html , tagId= null , typeDirection=false){
         let elTarget = document.querySelector(`section#component-layout-layout-${this._COMPONENT_RANDOM_ID}`);
         if (tagId != null){
-            elTarget = elTarget.querySelector(`#${tagId}`)
+            elTarget = document.querySelector(`#${tagId}`)
+            //elTarget = elTarget.querySelector(`#${tagId}`)
         }
         if (elTarget != null){
             if (typeDirection){
@@ -31504,6 +31742,25 @@ class ComponentReportBase extends ComponentBase{
         },
 
 
+        prop_tabs: {
+            prop: "prop_tabs",
+            default: null
+        },
+        prop_tabSelected: {
+            prop: "prop_tabSelected",
+            default: null
+        },
+        prop_tabsTitle: {
+            prop: "prop_tabsTitle",
+            default: null
+        },
+        prop_tabsSendForm: {
+            prop: "prop_tabsSendForm",
+            default: true
+        },
+
+
+
         prop_hasFilter: {
             prop: "prop_hasFilter",
             default: true
@@ -31518,6 +31775,10 @@ class ComponentReportBase extends ComponentBase{
         },
 
 
+        prop_headerOptions: {
+            prop: "prop_headerOptions",
+            default: []
+        },
 
 
         prop_backgroundColorPage: {
@@ -31596,6 +31857,7 @@ class ComponentReportBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_title,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_headerOptions,
         ],
         part_pages_main_formNew: [
             this._COMPONENT_PATTERN.prop_size,
@@ -31606,12 +31868,27 @@ class ComponentReportBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_btnTitleNewPage,
             this._COMPONENT_PATTERN.prop_btnColorIconNewPage,
         ],
+        part_pages_main_formTabSection: [
+            this._COMPONENT_PATTERN.prop_tabsTitle,
+            this._COMPONENT_PATTERN.prop_tabs,
+            this._COMPONENT_PATTERN.prop_size,
+        ] ,
+        part_pages_main_formTabSection_title: [
+            this._COMPONENT_PATTERN.prop_tabsTitle,
+            this._COMPONENT_PATTERN.prop_size,
+        ] ,
+        part_pages_main_formTabSection_tab: [
+            this._COMPONENT_PATTERN.prop_tabs,
+            this._COMPONENT_PATTERN.prop_tabSelected,
+            this._COMPONENT_PATTERN.prop_tabsSendForm,
+        ] ,
         part_pages_main_form: [
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
             this._COMPONENT_PATTERN.prop_url_table,
             this._COMPONENT_PATTERN.prop_url_page,
+            this._COMPONENT_PATTERN.prop_tabSelected,
         ],
 
 
@@ -31646,6 +31923,7 @@ class ComponentReportBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_sizeHeader,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_title,
         ],
         part_pages_excel_tool: [
             this._COMPONENT_PATTERN.prop_size,
@@ -31661,6 +31939,7 @@ class ComponentReportBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_sizeHeader,
             this._COMPONENT_PATTERN.prop_langSelected,
             this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_title,
         ],
         part_pages_print_tool: [
             this._COMPONENT_PATTERN.prop_size,
@@ -31685,6 +31964,10 @@ class ComponentReportBase extends ComponentBase{
                 part_pages_main:{
                     part_pages_main_header: {},
                     part_pages_main_formNew: {},
+                    part_pages_main_formTabSection: {
+                        part_pages_main_formTabSection_title: {},
+                        part_pages_main_formTabSection_tab: {},
+                    },
                     part_pages_main_form: {},
                     part_pages_main_formTable: {
 
@@ -31752,6 +32035,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         this.templateFn("part_pages_main_header");
         this.templateFn("part_pages_main_formNew");
         this.templateFn("part_pages_main_form");
+        this.templateFn("part_pages_main_formTabSection_tab");
 
         this.templateFn("part_pages_excel_header");
         this.templateFn("part_pages_excel_tool");
@@ -31773,6 +32057,12 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                 return this.template_render_pageMain(partName);
             case "part_pages_main_formNew":
                 return this.componentFn_render_pageMain_formNew(partName);
+            case "part_pages_main_formTabSection":
+                return this.template_render_pageMain_formTabSection(partName);
+            case "part_pages_main_formTabSection_title":
+                return this.template_render_pageMain_formTabSection_title(partName);
+            case "part_pages_main_formTabSection_tab":
+                return this.componentFn_render_pageMain_formTabSection_tabs(partName);
             case "part_pages_main_formTable":
                 return this.template_render_pageMain_fromTable(partName);
 
@@ -31840,6 +32130,9 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                </component-pages>
                
                ${this.fn_getHtmlPages(prop_pages )}
+               
+            
+            
 
        </component-change-page>
           
@@ -31874,7 +32167,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
      </style>
      
      <component-page-header id="component-report-page-main-header-${this._COMPONENT_RANDOM_ID}"></component-page-header>
-     
+
      <div id="component-report-page-main-inside-${this._COMPONENT_RANDOM_ID}" class="h-100 overflow-auto">
      
           <component-page-card-info id="component-report-page-main-form-new-${this._COMPONENT_RANDOM_ID}"></component-page-card-info>
@@ -31882,6 +32175,8 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
           <div class="py-1 px-1 m-0 mt-2 bg-white  mx-2 ${prop_hasFilter ? "" : "d-none"}">
                <component-form id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}"></component-form>
            </div>
+
+          ${this.templateFn("part_pages_main_formTabSection")}
 
           ${this.templateFn("part_pages_main_formTable")}
           
@@ -31927,6 +32222,138 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
 
         }
 
+    }
+
+    template_render_pageMain_formTabSection(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_tabs         =  data.hasOwnProperty("prop_tabs")            ?  data.prop_tabs             : null;
+            const prop_size         =  data.hasOwnProperty("prop_size")            ?  data.prop_size             : null;
+            const prop_tabsTitle    =  data.hasOwnProperty("prop_tabsTitle")       ?  data.prop_tabsTitle        : null;
+            const directionRtl      = data.hasOwnProperty("directionRtl")          ? data.directionRtl           : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+            const elFontSize = tools_css.getFontSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+
+            if (prop_tabs != null && Array.isArray(prop_tabs) && prop_tabs.length > 0){
+                return `
+<section data-part-name="${partName}" 
+         id="component-report-page-formTabSection-${this._COMPONENT_RANDOM_ID}"
+         class="bg-white m-2 px-2 py-1" 
+         >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-report-page-formTabSection-${this._COMPONENT_RANDOM_ID}{
+             height:        ${elHeight+22}px;
+         }
+         #${this._COMPONENT_ID} #component-report-page-formTabSection-formTabs-${this._COMPONENT_RANDOM_ID}{
+              width:         ${prop_tabsTitle != null ? "cal(100% - 150px)" : "100%"};
+              float:         ${directionRtl ? "right" : "left"};
+         }
+     </style>
+     
+     ${this.templateFn("part_pages_main_formTabSection_title")}
+     
+     <div id="component-report-page-formTabSection-formTabs-${this._COMPONENT_RANDOM_ID}">
+         <component-tabs id="component-report-page-formTabSection-tabs-${this._COMPONENT_RANDOM_ID}"></component-tabs>
+     </div>
+     
+</section>
+        `;
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_pageMain_formTabSection_title(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_tabsTitle    =  data.hasOwnProperty("prop_tabsTitle")       ?  data.prop_tabsTitle        : null;
+            const prop_size         =  data.hasOwnProperty("prop_size")            ?  data.prop_size             : null;
+            const directionRtl      = data.hasOwnProperty("directionRtl")          ? data.directionRtl           : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+            const elFontSize = tools_css.getFontSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            if (prop_tabsTitle != null){
+                return `
+<section data-part-name="${partName}" 
+         id="component-report-page-formTabSection-title-${this._COMPONENT_RANDOM_ID}"
+         class="" 
+         >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-report-page-formTabSection-title-${this._COMPONENT_RANDOM_ID}{
+              width:         150px;
+              padding-top:   5px;
+              height:        ${elHeight}px;
+              line-height:   ${elHeight}px;
+              font-size:     ${elFontSize}px;
+              float:         ${directionRtl ? "right" : "left"};
+         }
+     </style>
+     
+     <b class="border-bottom px-2 d-block">
+         ${prop_tabsTitle}
+         :
+     </b>
+     
+</section>
+        `;
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_pageMain_formTabSection_tabs(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_size             =  data.hasOwnProperty("prop_size")            ?  data.prop_size             : null;
+            const prop_tabs             =  data.hasOwnProperty("prop_tabs")            ?  data.prop_tabs             : null;
+            const prop_tabSelected      =  data.hasOwnProperty("prop_tabSelected")     ?  data.prop_tabSelected      : null;
+            const prop_tabsSendForm     =  data.hasOwnProperty("prop_tabsSendForm")    ?  data.prop_tabsSendForm     : true;
+
+            if (prop_tabs != null && Array.isArray(prop_tabs) && prop_tabs.length > 0){
+
+                new window.ComponentTabs(
+                    `component-report-page-formTabSection-tabs-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList:          []  ,
+
+                        prop_type:          1 ,
+                        prop_tabSelected:   prop_tabSelected ,
+                        prop_tabs:          prop_tabs ,
+                        fn_callback: (event , tabId) =>{
+                            if (prop_tabsSendForm){
+                                const elTab = this.fn_getInputHiddenTab();
+                                if (elTab != null){
+                                    elTab.value = tabId;
+                                    this.call_refreshSearchReport();
+                                }
+                            }
+                            this.fn_onClickTab(event , tabId);
+                        }
+                    }
+                )
+
+            }
+
+        }
     }
 
     template_render_pageMain_fromTable(partName){
@@ -31989,6 +32416,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             const prop_title              =  data.hasOwnProperty("prop_title")                ?  data.prop_title                 : "";
             const prop_langSelected       =  data.hasOwnProperty("prop_langSelected")         ?  data.prop_langSelected          : "";
             const prop_langs              =  data.hasOwnProperty("prop_langs")                ?  data.prop_langs                 : "";
+            const prop_headerOptions      =  data.hasOwnProperty("prop_headerOptions")        ?  data.prop_headerOptions         : [];
 
             let langExcel = "";
             let langPrint = "";
@@ -31999,31 +32427,40 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             }
 
 
+            const optionsList = [
+                {
+                    html: tools_icons.icon_excel ,
+                    attrs: {
+                        title: langExcel ,
+                        name: "excel" ,
+                    }
+                } ,
+                {
+                    html: tools_icons.icon_print ,
+                    attrs: {
+                        title: langPrint ,
+                        name: "print" ,
+                    }
+                }
+            ];
+            if (prop_headerOptions != null){
+                for (let i = 0; i < prop_headerOptions.length; i++) {
+                    const itemOption = prop_headerOptions[i];
+                    optionsList.push(itemOption);
+                }
+            }
+
             new window.ComponentPageHeader(
                 `component-report-page-main-header-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_size:         prop_sizeHeader ,
                     prop_pageTitle:    prop_title ,
                     prop_hasIconBack:  false ,
-                    prop_optionsList:[
-                        {
-                            html: tools_icons.icon_excel ,
-                            attrs: {
-                                title: langExcel ,
-                                name: "excel" ,
-                            }
-                        } ,
-                        {
-                            html: tools_icons.icon_print ,
-                            attrs: {
-                                title: langPrint ,
-                                name: "print" ,
-                            }
-                        }
-                    ] ,
+                    prop_optionsList:optionsList ,
 
                     fn_onOptionClick: (event , optionName)=>{
                         this.call_openOrClosePage(optionName , true);
+                        this.fn_onclickItemOption(event , optionName);
                     }
                 }
             );
@@ -32041,6 +32478,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             const prop_langSelected     =  data.hasOwnProperty("prop_langSelected")                                     ?  data.prop_langSelected      : "";
             const prop_langs            =  data.hasOwnProperty("prop_langs")                                            ?  data.prop_langs             : {};
             const directionRtl          = data.hasOwnProperty("directionRtl")                                           ? data.directionRtl            : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+            const prop_tabSelected      =  data.hasOwnProperty("prop_tabSelected")     ?  data.prop_tabSelected      : null;
 
             let langFilterBtn = "";
             if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
@@ -32051,6 +32489,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             if (prop_formFilter != null){
                 prop_formFilter += `<input id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page" type="hidden" name="page" value="1"/>`
                 prop_formFilter += `<input id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page-per" type="hidden" name="per_page" value="${this._PER_PAGE_25}"/>`
+                prop_formFilter += `<input id="component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-tab" type="hidden" name="report_tab" value="${prop_tabSelected}"/>`
             }
 
 
@@ -32062,9 +32501,19 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                     prop_borderStyles: {
                         "display" : "flow-root"
                     },
-                    prop_btnformClass : [] ,
+                    prop_formClass: [
+                        "m-2" , "px-2" , "p-lg-0" , "d-block" , "d-lg-inline-block"
+                    ] ,
+                    prop_formStyles: {
+                        "float" : directionRtl ? "right" : "left" ,
+                        "width" : "calc(100% - clamp(0px, (100vw - 1024px) * 9999, 225px))"  ,
+                    } ,
+                    prop_btnformClass : [
+                        "mt-0" , "mt-lg-2"
+                    ] ,
                     prop_btnformStyles : {
-                        "float" : directionRtl ? "left" : "right"
+                        "float" : directionRtl ? "left" : "right" ,
+                        "width" : "200px"
                     },
                     prop_size ,
                     prop_showErrorStepper: true ,
@@ -32255,6 +32704,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             const prop_sizeHeader         =  data.hasOwnProperty("prop_sizeHeader")           ?  data.prop_sizeHeader            : "";
             const prop_langSelected       =  data.hasOwnProperty("prop_langSelected")         ?  data.prop_langSelected          : "";
             const prop_langs              =  data.hasOwnProperty("prop_langs")                ?  data.prop_langs                 : "";
+            const prop_title              =  data.hasOwnProperty("prop_title")                ?  data.prop_title                 : "";
 
             let langExcel = "";
             if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
@@ -32271,6 +32721,16 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                     prop_optionsList:[
 
                     ] ,
+
+                    prop_pageNav: [
+                        {
+                            title: prop_title ,
+                        } ,
+                    ] ,
+
+                    fn_onclickItemNav: (event , navName)=>{
+                        this.call_openOrClosePage("excel" , false);
+                    },
 
                     fn_onBackClick: (event)=>{
                         this.call_openOrClosePage("excel" , false);
@@ -32364,6 +32824,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             const prop_sizeHeader         =  data.hasOwnProperty("prop_sizeHeader")           ?  data.prop_sizeHeader            : "";
             const prop_langSelected       =  data.hasOwnProperty("prop_langSelected")         ?  data.prop_langSelected          : "";
             const prop_langs              =  data.hasOwnProperty("prop_langs")                ?  data.prop_langs                 : "";
+            const prop_title              =  data.hasOwnProperty("prop_title")                ?  data.prop_title                 : "";
 
             let langPrint = "";
             if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
@@ -32379,6 +32840,15 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                     prop_optionsList:[
 
                     ] ,
+                    prop_pageNav: [
+                        {
+                            title: prop_title ,
+                        } ,
+                    ] ,
+
+                    fn_onclickItemNav: (event , navName)=>{
+                        this.call_openOrClosePage("print" , false);
+                    },
 
                     fn_onBackClick: (event)=>{
                         this.call_openOrClosePage("print" , false);
@@ -32439,6 +32909,17 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                     const itemPage = prop_pages[i];
                     if (itemPage != null && itemPage.hasOwnProperty("html") && itemPage.hasOwnProperty("attrs") && itemPage.attrs.hasOwnProperty("name")){
 
+
+                        const pageName = itemPage?.attrs?.name ?? null;
+                        let pageNav =[];
+                        if (pageName != null && this._COMPONENT_SLOTS != null){
+                            Object.keys(this._COMPONENT_SLOTS).forEach(key => {
+                                if (key == "nav."+pageName){
+                                    pageNav = this._COMPONENT_SLOTS[key];
+                                }
+                            })
+                        }
+
                         new window.ComponentPageHeader(
                             `component-report-page-other-header-${this._COMPONENT_RANDOM_ID}-page-${itemPage.attrs.name}` ,
                             {
@@ -32447,6 +32928,11 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                                 prop_optionsList:[
 
                                 ] ,
+                                prop_pageNav: pageNav ,
+
+                                fn_onclickItemNav: (event , navName)=>{
+                                    this.fn_onclickItemNav(event , navName )
+                                },
 
                                 fn_onBackClick: (event)=>{
                                     this.call_openOrClosePage(itemPage.attrs.name , false);
@@ -32466,6 +32952,9 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
        FUNCTIONs
     --------------------------------------------- */
 
+    fn_getInputHiddenTab(){
+        return document.querySelector(`#component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-tab`);
+    }
     fn_getInputHiddenPage(){
         return document.querySelector(`#component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page`);
     }
@@ -32593,12 +33082,33 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         }
     }
 
+
+    fn_onClickTab(event , tabId){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onClickTab") && typeof data.fn_onClickTab != null){
+            data.fn_onClickTab(event , tabId);
+        }
+    }
+
     call_refreshSearchReport(){
         this._PAGE_FILTER.call_onCLickBtnSubmit();
     }
 
     call_openOrClosePage(pageName , status){
         this._PAGE_MANAGER.call_openOrClosePage(pageName, status);
+    }
+
+    fn_onclickItemNav(event , navName){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onclickItemNav") && typeof data.fn_onclickItemNav != null){
+            data.fn_onclickItemNav(event , navName);
+        }
+    }
+    fn_onclickItemOption(event , optionName){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onclickItemOption") && typeof data.fn_onclickItemOption != null){
+            data.fn_onclickItemOption(event , optionName);
+        }
     }
 
 }

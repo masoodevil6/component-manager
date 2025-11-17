@@ -23,6 +23,20 @@
       <component-pages name="test_2">
           test 2
       </component-pages>
+      <component-pages name="_CR_CODE_KEY">
+          _CR_CODE_KEY
+      </component-pages>
+
+
+
+      <component-nav.test_1 name="nav_1" >
+          nav_a
+      </component-nav.test_1>
+      <component-nav.test_1 name="nav_2">
+          nav_b
+      </component-nav.test_1>
+
+
 
   </component-report>
 
@@ -115,8 +129,30 @@
                           id:     "id"
                       }
                   } ,
-
               ] ,
+
+              prop_tabs: [
+                  {
+                      id: 1 ,
+                      title: "tab a"
+                  } ,
+                  {
+                      id: 2 ,
+                      title: "tab B"
+                  }
+              ] ,
+              prop_tabsTitle : "tab title" ,
+              prop_tabSelected: 1 ,
+
+              prop_headerOptions:[
+                  {
+                      html : tools_icons.icon_crcode ,
+                      attrs: {
+                          name:   "_CR_CODE_KEY" ,
+                          title:  'aaa'   ,
+                      }
+                  }
+              ],
 
 
               prop_pageSelected: 2 ,
@@ -134,6 +170,9 @@
               } ,
               fn_onClickNew: (event) => {
                   report.call_openOrClosePage("test_2" , true);
+              } ,
+              fn_onclickItemOption: (event , optionName) => {
+                  console.log("fn_onclickItemOption" , optionName);
               }
           }
   );

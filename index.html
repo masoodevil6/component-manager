@@ -328,7 +328,14 @@
                 </component-change-page>
 
 
-                <component-page-header id="page_header"></component-page-header>
+                <component-page-header id="page_header">
+                    <component-nav name="a">
+                        a1
+                    </component-nav>
+                    <component-nav name="b">
+                        b1
+                    </component-nav>
+                </component-page-header>
 
 
 
@@ -2107,6 +2114,17 @@
 
             prop_pageTitle: "Page Title Sample" ,
 
+            /*prop_pageNav: [
+                {
+                    name: "A" ,
+                    title: "step A" ,
+                } ,
+                {
+                    name: "BCD" ,
+                    title: "step BCD" ,
+                } ,
+            ] ,*/
+
             prop_optionsList:[
                 {
                     html: tools_icons.icon_excel ,
@@ -2126,6 +2144,10 @@
 
             fn_onBackClick: (event)=>{
                 console.log(event)
+            },
+
+            fn_onclickItemNav: (event , navName)=>{
+                console.log(navName)
             },
 
             fn_onOptionClick: (event , optionName)=>{
@@ -2182,7 +2204,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [03] Button And Inputs" ,
-                prop_bodyShow: false
+                prop_bodyShow: true
             }
         )
         new window.ComponentCollapse(
@@ -2291,7 +2313,7 @@
             classList: "col-md-3 col-12 mt-2"  ,
 
             prop_title: " [80] el_pages" ,
-            prop_bodyShow: true
+            prop_bodyShow: false
         }
     )
 
