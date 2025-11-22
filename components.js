@@ -1018,7 +1018,7 @@ class ComponentIsEmptyBase extends ComponentBase{
         },
         prop_borderClass : {
             prop: "prop_borderClass" ,
-            default: ["border" , "border-danger" , "rounded" , "shadow-sm"]
+            default: [ "rounded" , "shadow-sm"]
         } ,
         prop_borderStyles: {
             prop: "prop_borderStyles" ,
@@ -1035,6 +1035,10 @@ class ComponentIsEmptyBase extends ComponentBase{
         prop_iconColor: {
             prop: "prop_iconColor" ,
             default: tools_const?.styles?.isEmpty?.color_icon ?? ""
+        } ,
+        prop_borderColor: {
+            prop: "prop_borderColor" ,
+            default: tools_const?.styles?.isEmpty?.borderColor_border ?? ""
         } ,
         prop_iconClass: {
             prop: "prop_iconClass" ,
@@ -1085,6 +1089,7 @@ class ComponentIsEmptyBase extends ComponentBase{
         part_border: [
             this._COMPONENT_PATTERN.prop_borderClass ,
             this._COMPONENT_PATTERN.prop_borderStyles ,
+            this._COMPONENT_PATTERN.prop_borderColor ,
         ] ,
         part_icon: [
             this._COMPONENT_PATTERN.prop_icon ,
@@ -1224,6 +1229,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
 
             const prop_borderClass =      data.hasOwnProperty("prop_borderClass")     ? data.prop_borderClass    : null;
             const prop_borderStyles =     data.hasOwnProperty("prop_borderStyles")    ? data.prop_borderStyles   : null;
+            const prop_borderColor =      data.hasOwnProperty("prop_borderColor")     ? data.prop_borderColor    : null;
 
             new window.ComponentBorder(
                 `component-is-empty-border-${this._COMPONENT_RANDOM_ID}` ,
@@ -1231,7 +1237,10 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
                     prop_btnMore_show: false ,
 
                     prop_structureClass: prop_borderClass ,
-                    prop_structureStyles: prop_borderStyles ,
+                    prop_structureStyles: {
+                        ...prop_borderStyles ,
+                        "border" : `2px solid ${prop_borderColor}`
+                    } ,
                 }
             )
         }
@@ -6639,6 +6648,24 @@ class ComponentInputPriceBase extends ComponentBase{
             prop: "prop_size" ,
             default: tools_css.standardSizes.m.name
         } ,
+        prop_langSelected: {
+            prop: "prop_langSelected",
+            default: component_props.directionRtl ? "fa" : "en"
+        } ,
+        prop_langs: {
+            prop: "prop_langs",
+            default: {
+                fa: {
+                    coefficient_title : "معادل" ,
+
+                } ,
+                en: {
+                    coefficient_title : "Equivalent" ,
+                }
+            }
+        },
+
+
         prop_backgroundColorForm: {
             prop: "prop_backgroundColorForm",
             default: tools_const?.styles?.inputPrice?.backgroundColor_form ?? ""
@@ -6670,6 +6697,18 @@ class ComponentInputPriceBase extends ComponentBase{
         prop_value: {
             prop: "prop_value",
             default: null
+        },
+        prop_coefficientColor: {
+            prop: "prop_coefficientColor",
+            default: tools_const?.styles?.inputPrice?.color_confficient ?? ""
+        },
+        prop_coefficient: {
+            prop: "prop_coefficient",
+            default: null
+        },
+        prop_coefficientCurrency: {
+            prop: "prop_coefficientCurrency",
+            default: ""
         },
         prop_placeholder: {
             prop: "prop_placeholder",
@@ -6726,6 +6765,7 @@ class ComponentInputPriceBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_type,
             this._COMPONENT_PATTERN.prop_name,
             this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_coefficient,
             this._COMPONENT_PATTERN.prop_placeholder,
             this._COMPONENT_PATTERN.prop_icon,
             this._COMPONENT_PATTERN.prop_btnAddStatus,
@@ -6756,6 +6796,16 @@ class ComponentInputPriceBase extends ComponentBase{
         part_information: [
             this._COMPONENT_PATTERN.prop_information,
             this._COMPONENT_PATTERN.prop_size,
+        ],
+
+        part_coefficient: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_coefficient,
+            this._COMPONENT_PATTERN.prop_coefficientCurrency,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_coefficientColor,
         ]
     };
 
@@ -6773,6 +6823,7 @@ class ComponentInputPriceBase extends ComponentBase{
                 part_button: {} ,
                 part_information: {} ,
             } ,
+            part_coefficient: {} ,
         } ,
     }
 
@@ -6813,6 +6864,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
                 return this.template_render_form(partName);
             case "part_input":
                 return this.template_render_input(partName);
+            case "part_coefficient":
+                return this.template_render__coefficient(partName);
             case "part_icon_clear":
                 return this.componentFn_render_iconClear(partName);
             case "part_icon":
@@ -6843,6 +6896,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
      <component-label id="component-input-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
      
      ${this.templateFn("part_form") ?? ""}
+     
+     ${this.templateFn("part_coefficient") ?? ""}
      
                 `;
         return this.templateBasic_render_structure(content);
@@ -6877,7 +6932,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
                }
          }
      </style>
-
+     
      ${this.templateFn("part_input") ?? ""}
      
      <component-icon id="component-input-price-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
@@ -6897,6 +6952,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
         `;
     }
 
+
     template_render_input(partName) {
 
         const data = this.getPartProps(partName)
@@ -6907,13 +6963,13 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
             const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
             const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
             const prop_type          =   data.hasOwnProperty("prop_type")                     ?  data.prop_type                                         :  "string";
-            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
             const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
             const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
             const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
             const prop_btnAddStatus  =  data.hasOwnProperty("prop_btnAddStatus")              ?  data.prop_btnAddStatus                                 : false;
             const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                                    : false;
-            const prop_size          =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                          :  null;
+            const prop_size          =  data.hasOwnProperty("prop_size")                      ?  data.prop_size                                         :  null;
+            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
 
             const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
 
@@ -6966,6 +7022,66 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
        
 </section>
         `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    template_render__coefficient(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_size                    =   data.hasOwnProperty("prop_size")                    ?  data.prop_size                  :  null;
+            const prop_value                   =   data.hasOwnProperty("prop_value")                   ?  data.prop_value                 :  null;
+            const prop_coefficient             =   data.hasOwnProperty("prop_coefficient")             ?  data.prop_coefficient           :  null;
+            const prop_coefficientCurrency     =   data.hasOwnProperty("prop_coefficientCurrency")     ?  data.prop_coefficientCurrency   :  "";
+            const prop_coefficientColor        =   data.hasOwnProperty("prop_coefficientColor")        ?  data.prop_coefficientColor      :  "";
+            const prop_langs                   =   data.hasOwnProperty("prop_langs")                   ?  data.prop_langs                 :  null;
+            const prop_langSelected            =   data.hasOwnProperty("prop_langSelected")            ?  data.prop_langSelected          :  null;
+
+            if (prop_coefficient != null){
+
+                const elHeight = tools_css.getHeightSize(prop_size);
+                const elfontSize = tools_css.getFontSize(prop_size);
+
+                let titleCoefficient  = "";
+                if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                    const langs = prop_langs[prop_langSelected];
+                    titleCoefficient = langs?.coefficient_title ?? ""
+                }
+
+                return `
+<section  data-part-name="${partName}"
+          id="component-input-price-coefficient-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-price-coefficient-${this._COMPONENT_RANDOM_ID}{
+            height: ${elHeight}px;
+            line-height: ${elHeight}px;
+            font-size: ${elfontSize}px;
+         }
+         #${this._COMPONENT_ID} #component-input-price-coefficient-${this._COMPONENT_RANDOM_ID} b{
+            color: ${prop_coefficientColor};
+         }
+     </style> 
+     
+     ${titleCoefficient}:
+     <b id="component-input-price-coefficient-text-${this._COMPONENT_RANDOM_ID}" class="mx-2" >
+        ${tools_converter.convertPriceToString(prop_coefficient*prop_value) }
+     </b>
+     <b class="" >
+        ${prop_coefficientCurrency}
+     </b>
+       
+</section>
+        `;
+
+            }
         }
 
         return `
@@ -7218,6 +7334,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
 
 
 
+
     /* ---------------------------------------------
       FUNCTIONs
      --------------------------------------------- */
@@ -7225,22 +7342,40 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
     fn_getElementInput(){
         return document.querySelector(`input#component-input-price-${this._COMPONENT_RANDOM_ID}`);
     }
+    fn_getElementConfficient(){
+        return document.querySelector(`#component-input-price-coefficient-text-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_getElementInputHidden(){
+        return document.querySelector(`input#component-input-price-form-value-input-${this._COMPONENT_RANDOM_ID}`);
+    }
 
     fn_getValueInput(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_coefficient  =   data.hasOwnProperty("prop_coefficient")     ?  data.prop_coefficient  :  null;
 
         let inputValue =0 ;
         const input = this.fn_getElementInput();
         if (input != null){
             inputValue = input.value
         }
-        return  tools_converter.convertStringToPrice(
-            inputValue
-        );
+        return  tools_converter.convertStringToPrice(inputValue) * (prop_coefficient != null ? prop_coefficient : 1);
     }
 
     fn_onHandleInput(event){
-        this.value = event.target.value;
-        event.target.value =  tools_converter.convertPriceToString(this.value);
+        const data = this._COMPONENT_CONFIG;
+        const prop_coefficient  =   data.hasOwnProperty("prop_coefficient")     ?  data.prop_coefficient  :  null;
+
+        const value = event.target.value;
+        event.target.value =  tools_converter.convertPriceToString(value);
+        if (prop_coefficient != null){
+            const realVal = tools_converter.convertStringToPrice(value) * prop_coefficient;
+            const elConfficient = this.fn_getElementConfficient();
+            elConfficient.innerText = tools_converter.convertPriceToString( realVal );
+        }
+
+        const elInputHidden = this.fn_getElementInputHidden();
+        const realVal = tools_converter.convertStringToPrice(value);
+        elInputHidden.value = realVal;
     }
     fn_onFormatValue(event){
         document.querySelector(`#component-input-position-element-${this._COMPONENT_RANDOM_ID}`).classList.add("d-none");

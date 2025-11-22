@@ -116,6 +116,7 @@ tools_init = {
             },
 
             isEmpty: {
+                borderColor_border:                    component_props.primaryColor1 ,
                 color_icon:                            component_props.primaryColor1 ,
                 btnColor_icon:                         component_props.shanColor1 ,
             },
@@ -165,25 +166,25 @@ tools_init = {
 
             button: {
                 submit:{
-                    backgroundColor:                   component_props.secondaryColor1,
-                    backgroundColorHover:              component_props.secondaryColor2,
-                    color:                             component_props.shanColor1,
+                    backgroundColor:                              component_props.secondaryColor1,
+                    backgroundColorHover:                         component_props.secondaryColor2,
+                    color:                                        component_props.shanColor1,
                 } ,
                 cancel:{
-                    backgroundColor:                   component_props.primaryColor1,
-                    backgroundColorHover:              component_props.primaryColor2,
-                    color:                             component_props.shanColor1,
+                    backgroundColor:                              component_props.primaryColor1,
+                    backgroundColorHover:                         component_props.primaryColor2,
+                    color:                                        component_props.shanColor1,
                 } ,
                 back:{
-                    backgroundColor:                   component_props.primaryColor1,
-                    backgroundColorHover:              component_props.primaryColor2,
-                    color:                             component_props.shanColor1,
+                    backgroundColor:                              component_props.primaryColor1,
+                    backgroundColorHover:                         component_props.primaryColor2,
+                    color:                                        component_props.shanColor1,
                 }
             },
 
             input: {
-                backgroundColor_form:                  component_props.secondaryColor1 ,
-                color_icon:                            component_props.darkColor1 ,
+                backgroundColor_form:                             component_props.secondaryColor1 ,
+                color_icon:                                       component_props.darkColor1 ,
             },
 
             inputOtp: {
@@ -191,32 +192,33 @@ tools_init = {
             },
 
             inputPassword: {
-                backgroundColor_form:                  component_props.secondaryColor1 ,
-                color_icon:                            component_props.darkColor1 ,
+                backgroundColor_form:                             component_props.secondaryColor1 ,
+                color_icon:                                       component_props.darkColor1 ,
             },
 
             inputEmail: {
-                backgroundColor_form:                  component_props.secondaryColor1 ,
-                color_icon:                            component_props.darkColor1 ,
+                backgroundColor_form:                             component_props.secondaryColor1 ,
+                color_icon:                                       component_props.darkColor1 ,
             },
 
             inputPrice: {
-                backgroundColor_form:                  component_props.secondaryColor1 ,
-                color_icon:                            component_props.darkColor1 ,
+                backgroundColor_form:                             component_props.secondaryColor1 ,
+                color_icon:                                       component_props.darkColor1 ,
+                color_confficient:                                component_props.primaryColor1 ,
             },
 
             inputSize: {
-                backgroundColor_form:                  component_props.secondaryColor1 ,
-                color_icon:                            component_props.darkColor1 ,
+                backgroundColor_form:                             component_props.secondaryColor1 ,
+                color_icon:                                       component_props.darkColor1 ,
             },
 
             inputAcl: {
-                backgroundColor_headerList:            component_props.secondaryColor1 ,
-                color_icon:                            component_props.darkColor1 ,
-                color_btn:                             component_props.shanColor1 ,
-                borderColor_selector:                  component_props.primaryColor1 ,
-                backgroundColor_bodyHeader:            component_props.primaryColor1 ,
-                backgroundColor_bodyFootrer:           component_props.primaryColor2 ,
+                backgroundColor_headerList:                      component_props.secondaryColor1 ,
+                color_icon:                                      component_props.darkColor1 ,
+                color_btn:                                       component_props.shanColor1 ,
+                borderColor_selector:                            component_props.primaryColor1 ,
+                backgroundColor_bodyHeader:                      component_props.primaryColor1 ,
+                backgroundColor_bodyFootrer:                     component_props.primaryColor2 ,
 
                 backgroundColor_itemAcl_unSelected:              component_props.secondaryColor3 ,
                 color_itemAcl_unSelected:                        component_props.darkColor1 ,
@@ -1955,14 +1957,14 @@ tools_validtor = {
 
 tools_icons = {
 
-    icon_visit(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_visit(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
      viewBox="0 0 24 24" 
      aria-label="visit" 
-     stroke="${color}" 
+     stroke="${bg_color}" 
      width="${size}" height="${size}">
   <title>visit</title>
   <path stroke-linecap="round" 
@@ -1975,14 +1977,14 @@ tools_icons = {
 
 
 
-    icon_un_visit(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_un_visit(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
      viewBox="0 0 24 24" 
      aria-label="un visit" 
-     stroke="${color}" 
+     stroke="${bg_color}" 
      width="${size}" height="${size}">
   <title>un visit</title>
   <path stroke-linecap="round" 
@@ -1999,14 +2001,14 @@ tools_icons = {
 
 
 
-    icon_is_true(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_is_true(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
      viewBox="0 0 24 24"
      aria-label="is true" 
-     stroke="${color}" 
+     stroke="${bg_color}" 
      width="${size}" height="${size}">
   <title>is true</title>
   <path stroke-linecap="round" 
@@ -2019,14 +2021,14 @@ tools_icons = {
 
 
 
-    icon_is_false(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_is_false(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" 
      fill="none" 
      viewBox="0 0 24 24" 
      aria-label="is false"
-     stroke="${color}" 
+     stroke="${bg_color}" 
      width="${size}" height="${size}">
   <title>is false</title>
   <path stroke-linecap="round" 
@@ -2039,7 +2041,7 @@ tools_icons = {
 
 
 
-    icon_email(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_email(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-email outline" 
@@ -2051,11 +2053,11 @@ tools_icons = {
      role="img" aria-hidden="false">
   <title>Email</title>
   <rect x="2" y="5" width="20" height="14" rx="2" 
-        stroke="${color}" 
+        stroke="${bg_color}" 
         stroke-width="1.5" 
         fill="none"/>
   <path d="M3 7.5L12 13L21 7.5" 
-        stroke="${color}" 
+        stroke="${bg_color}" 
         stroke-width="1.5" 
         stroke-linecap="round" 
         stroke-linejoin="round"/>
@@ -2065,7 +2067,7 @@ tools_icons = {
 
 
 
-    icon_lock(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_lock(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-password lock" 
@@ -2077,10 +2079,10 @@ tools_icons = {
      aria-hidden="true">
   <title>lock</title>
   <rect x="5" y="10" width="14" height="10" rx="2" 
-        stroke="${color}" 
+        stroke="${bg_color}" 
         stroke-width="1.5"/>
   <path d="M8 10V7a4 4 0 0 1 8 0v3" 
-        stroke="${color}" 
+        stroke="${bg_color}" 
         stroke-width="1.5" 
         stroke-linecap="round"/>
 </svg>
@@ -2089,7 +2091,7 @@ tools_icons = {
 
 
 
-    icon_tik(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_tik(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg class="icon-selected-check" 
@@ -2102,7 +2104,7 @@ tools_icons = {
      style="padding:2px;">
   <title>tik</title> 
   <path d="M20 6L9 17l-5-5" 
-        stroke="${color}" 
+        stroke="${bg_color}" 
         stroke-width="2.2" 
         stroke-linecap="round" 
         stroke-linejoin="round"
@@ -2113,60 +2115,60 @@ tools_icons = {
 
 
 
-    icon_plus_badge(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_plus_badge(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="plus badge"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>plus badge</title>
-    <path d="M12 8v8M8 12h8" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 8v8M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     } ,
 
 
 
-    icon_minus_badge(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_minus_badge(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="minus badge"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>minus badge</title>
-    <path d="M8 12h8" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 12h8" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     } ,
 
 
-    icon_arrow_down(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_arrow_down(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow down"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>arrow down</title>
-    <path d="M6 9l6 6 6-6" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6 9l6 6 6-6" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     }  ,
 
 
-    icon_arrow_up(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_arrow_up(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow up"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>arrow up</title>
-    <path d="M18 15l-6-6-6 6" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 15l-6-6-6 6" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     },
 
 
 
-    icon_arrow_right(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_arrow_right(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow right"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>arrow right</title>
     <path d="M9 6l6 6-6 6" 
-        stroke="${color}" 
+        stroke="${bg_color}" 
         stroke-width="2" 
         stroke-linecap="round" 
         stroke-linejoin="round"/>
@@ -2174,14 +2176,14 @@ tools_icons = {
     },
 
 
-    icon_arrow_left(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_arrow_left(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="arrow left"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>arrow left</title>
     <path d="M15 6l-6 6 6 6" 
-        stroke="${color}" 
+        stroke="${bg_color}" 
         stroke-width="2" 
         stroke-linecap="round" 
         stroke-linejoin="round"/>
@@ -2189,36 +2191,36 @@ tools_icons = {
     },
 
 
-    icon_clear(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_clear(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="clear"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>clear</title>
     <path d="M6 6l12 12M6 18L18 6" 
-        stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     },
 
 
 
-    icon_close(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_close(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="close"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
       <title>close</title>
     <path d="M6 6l12 12M6 18L18 6" 
-        stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     },
 
 
-    icon_exclamation_square(sizeName = component_props.elementSizes, color = "#000") {
+    icon_exclamation_square(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName, sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="exclamation square"
-     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}"
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${bg_color}"
      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <title>exclamation square</title>
   <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
@@ -2228,54 +2230,54 @@ tools_icons = {
 
 
 
-    icon_password(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_password(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img"  aria-label="password" 
       width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
       <title>password</title>
-  <rect x="5" y="10" width="14" height="10" rx="2" stroke="${color}" stroke-width="1.5"/>
-  <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+  <rect x="5" y="10" width="14" height="10" rx="2" stroke="${bg_color}" stroke-width="1.5"/>
+  <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="${bg_color}" stroke-width="1.5" stroke-linecap="round"/>
 </svg>
 
 `;
     } ,
 
-    icon_search(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_search(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="search"
     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
     <title>search</title>
-    <circle cx="11" cy="11" r="7" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <line x1="16.65" y1="16.65" x2="21" y2="21" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="11" cy="11" r="7" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="16.65" y1="16.65" x2="21" y2="21" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
     } ,
 
 
-    icon_pin_close(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_pin_close(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" aria-label="pin closed"
-     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <title>pin closed</title>
   <path d="M16 3v4l2 2-4 4 2 2v4H8v-4l2-2-4-4 2-2V3h8z"/>
 </svg>`;
     } ,
 
 
-    icon_pin_open(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_pin_open(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" aria-label="pin open"
-     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${bg_color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <title>pin open</title>
   <path d="M16 3v4l2 2-4 4 2 2v4H8v-4l2-2-4-4 2-2V3h8z"/>
   <line x1="4" y1="20" x2="20" y2="4"/>
 </svg>`;
     } ,
 
-    icon_pin_open2(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_pin_open2(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Note"
@@ -2294,28 +2296,28 @@ tools_icons = {
 
 
 
-    icon_select_columns(sizeName = component_props.elementSizes , color = "#000" ) {
+    icon_select_columns(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
 
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="select column"
-     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+     width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${bg_color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
   <title>select columns</title>
   
   <rect x="3"  y="4" width="4" height="16" rx="0.8" fill="none" />
-  <rect x="10" y="3" width="4" height="18" rx="0.8" fill="${color}" opacity="0.12"/> <!-- ستون انتخاب‌شده -->
+  <rect x="10" y="3" width="4" height="18" rx="0.8" fill="${bg_color}" opacity="0.12"/> <!-- ستون انتخاب‌شده -->
 
   
-  <rect x="3"  y="4" width="4" height="16" rx="0.8" stroke="${color}" fill="none"/>
-  <rect x="10" y="3" width="4" height="18" rx="0.8" stroke="${color}" fill="none"/>
-  <rect x="17" y="4" width="4" height="16" rx="0.8" stroke="${color}" fill="none"/>
+  <rect x="3"  y="4" width="4" height="16" rx="0.8" stroke="${bg_color}" fill="none"/>
+  <rect x="10" y="3" width="4" height="18" rx="0.8" stroke="${bg_color}" fill="none"/>
+  <rect x="17" y="4" width="4" height="16" rx="0.8" stroke="${bg_color}" fill="none"/>
 </svg>`;
 
 
     } ,
 
 
-    icon_calendar(sizeName =  component_props.elementSizes, bg_color = "#000") {
+    icon_calendar(sizeName =  component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
 
         return `
@@ -2334,7 +2336,7 @@ tools_icons = {
     },
 
 
-    icon_back_left(sizeName =  component_props.elementSizes, bg_color = "#000") {
+    icon_back_left(sizeName =  component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
 
         return `
@@ -2348,7 +2350,7 @@ tools_icons = {
     },
 
 
-    icon_back_right(sizeName =  component_props.elementSizes,  bg_color = "#000") {
+    icon_back_right(sizeName =  component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
 
         return `
@@ -2363,7 +2365,7 @@ tools_icons = {
 
 
 
-    icon_excel(sizeName = component_props.elementSizes, bg_color = "#107C41") {
+    icon_excel(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName, sizeName);
 
         return `
@@ -2375,7 +2377,7 @@ tools_icons = {
 </svg>`;
     } ,
 
-    icon_print(sizeName =  component_props.elementSizes, bg_color = "#000") {
+    icon_print(sizeName =  component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
 
         return `
@@ -2393,7 +2395,7 @@ tools_icons = {
     },
 
 
-    icon_filter(sizeName = component_props.elementSizes, bg_color = "#000") {
+    icon_filter(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
 
         return `
@@ -2414,7 +2416,7 @@ tools_icons = {
     },
 
 
-    icon_clear_broom(sizeName = component_props.elementSizes, bg_color = "#000") {
+    icon_clear_broom(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="clear broom"
@@ -2431,7 +2433,7 @@ tools_icons = {
     },
 
 
-    icon_empty(sizeName = component_props.elementSizes, bg_color = "#999") {
+    icon_empty(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="empty"
@@ -2445,7 +2447,7 @@ tools_icons = {
     },
 
 
-    icon_inputText(sizeName = component_props.elementSizes, bg_color = "#555") {
+    icon_inputText(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">
@@ -2455,7 +2457,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_selectOption(sizeName = component_props.elementSizes, bg_color = "#555") {
+    icon_selectOption(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">
@@ -2465,7 +2467,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_inputColor(sizeName = component_props.elementSizes,  bg_color = "#555") {
+    icon_inputColor(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">
@@ -2475,7 +2477,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_math(sizeName = component_props.elementSizes, bg_color = "#555") {
+    icon_math(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none">
@@ -2487,7 +2489,7 @@ tools_icons = {
 
 
 
-    icon_input_acl(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_input_acl(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="input acl"
@@ -2504,7 +2506,7 @@ tools_icons = {
     } ,
 
 
-    icon_selectAllRight(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_selectAllRight(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="select all right"
@@ -2517,7 +2519,7 @@ tools_icons = {
 </svg>`;
     } ,
 
-    icon_selectAllLeft(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_selectAllLeft(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="select all left"
@@ -2534,7 +2536,7 @@ tools_icons = {
 
 
 
-    icon_edit(sizeName = component_props.elementSizes ,  bg_color = "#000") {
+    icon_edit(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="edit"
@@ -2548,7 +2550,7 @@ tools_icons = {
     } ,
 
 
-    icon_delete(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_delete(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="delete"
@@ -2567,7 +2569,7 @@ tools_icons = {
 
 
 
-    icon_wallet(sizeName = component_props.elementSizes, bg_color = "#00AEEF") {
+    icon_wallet(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName, sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="wallet"
@@ -2583,7 +2585,7 @@ tools_icons = {
 </svg>`;
     } ,
 
-    icon_wallet2(sizeName = component_props.elementSizes, bg_color = "#00AEEF") {
+    icon_wallet2(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName, sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="wallet"
@@ -2606,7 +2608,7 @@ tools_icons = {
 
 
 
-    icon_cardNumber(sizeName = component_props.elementSizes, bg_color = "#000") {
+    icon_cardNumber(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName, sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="card_number"
@@ -2634,7 +2636,7 @@ tools_icons = {
 
 
 
-    icon_note(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_note(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Note"
@@ -2655,7 +2657,7 @@ tools_icons = {
 
 
 
-    icon_tag(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_tag(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Title"
@@ -2670,7 +2672,7 @@ tools_icons = {
     },
 
 
-    icon_title(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_title(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Title"
@@ -2684,7 +2686,7 @@ tools_icons = {
 
 
 
-    icon_type(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_type(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Type"
@@ -2698,7 +2700,7 @@ tools_icons = {
 
 
 
-    icon_number(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_number(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Type"
@@ -2713,7 +2715,7 @@ tools_icons = {
 
 
 
-    icon_category(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_category(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Category"
@@ -2726,7 +2728,7 @@ tools_icons = {
     },
 
 
-    icon_clip(sizeName = component_props.elementSizes , bg_color = "#000") {
+    icon_clip(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Clip"
@@ -2743,7 +2745,7 @@ tools_icons = {
     },
 
 
-    icon_withdrawal(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_withdrawal(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Withdrawal"
@@ -2790,7 +2792,7 @@ tools_icons = {
     },
 
 
-    icon_deposit(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_deposit(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Deposit"
@@ -2837,7 +2839,7 @@ tools_icons = {
     },
 
 
-    icon_transition(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_transition(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Transition"
@@ -2883,7 +2885,7 @@ tools_icons = {
 
 
 
-    icon_changePassword(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_changePassword(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ChangePassword"
@@ -2906,7 +2908,7 @@ tools_icons = {
 
 
 
-    icon_account(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_account(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Account"
@@ -2918,7 +2920,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_account_add(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_account_add(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AccountAdd"
@@ -2933,7 +2935,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_account_reference(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_account_reference(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Account Refrence"
@@ -2947,7 +2949,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_account_destination(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_account_destination(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Account Destination"
@@ -2962,8 +2964,18 @@ tools_icons = {
 <path    fill="none" stroke="#000" stroke-width="8"  d="M144.08,242.41c0.02,5.49-2.96,11.83,1.66,13.16c6.08,1.76,21.06-4.9,21.06-13.27 c0-8.37-14.97-15.03-21.06-13.27C141.03,230.39,144.06,236.93,144.08,242.41z"/>
 </svg>`;
     },
+    icon_account_group_add(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="aaaaccountGroupAdd"
+    width="${size}" height="${size}" viewBox="0 0 410 412" fill="none">
+    <title>Account Group Add</title>
+<path fill="${bg_color}" d="M205.09,6.5C95.33,6.5,6.34,95.48,6.34,205.25S95.33,404,205.09,404s198.75-88.98,198.75-198.75 S314.86,6.5,205.09,6.5z M48.73,169.79c2.81-14.58,8.08-28.94,16-42.48c34.61-59.18,107.46-82.12,168.89-55.82 c-49.66-3.75-99.48,20.34-126.32,66.23c-0.73,1.24-1.42,2.49-2.1,3.74c-2.1,0.49-4.18,1.04-6.26,1.63 c-17.8-3.84-36.8,3.9-46.49,20.47c-1.02,1.74-1.89,3.53-2.64,5.35C49.45,169.21,49.09,169.49,48.73,169.79z M180.35,199.95 c-4.36,0-7.89-3.45-7.89-7.71s3.53-7.71,7.89-7.71h16.86v-16.48c0-4.26,3.53-7.71,7.89-7.71s7.89,3.45,7.89,7.71v16.48h16.86 c4.36,0,7.89,3.45,7.89,7.71s-3.53,7.71-7.89,7.71h-16.86v16.48c0,4.26-3.53,7.71-7.89,7.71s-7.89-3.45-7.89-7.71v-16.48H180.35z M56.16,170.37c12.07-20.64,38.6-27.59,59.24-15.52c20.64,12.07,27.59,38.6,15.52,59.24c-12.07,20.64-38.6,27.59-59.24,15.52 S44.08,191.02,56.16,170.37z M203.5,363c-68.56,0-125.14-51.3-133.45-117.6C91.89,290.16,137.84,321,191,321 c1.44,0,2.87-0.03,4.29-0.08c1.48,1.57,3.01,3.09,4.56,4.58c5.68,17.3,21.94,29.8,41.14,29.8c2.02,0,4-0.15,5.95-0.42 c0.43,0.16,0.86,0.33,1.3,0.48C234.25,360.3,219.19,363,203.5,363z M245.4,349.5c-23.91,0-43.3-19.39-43.3-43.3 s19.39-43.3,43.3-43.3s43.3,19.39,43.3,43.3S269.31,349.5,245.4,349.5z M231.55,129.48c-11.41-21.02-3.63-47.3,17.39-58.72 s47.3-3.63,58.72,17.39c11.41,21.02,3.63,47.3-17.39,58.72S242.96,150.5,231.55,129.48z M299.42,293 c28.92-40.55,34.09-95.65,8.72-142.36c-0.69-1.26-1.39-2.5-2.11-3.74c0.67-2.05,1.28-4.12,1.85-6.2 c12.5-13.24,15.71-33.5,6.55-50.38c-0.96-1.78-2.04-3.45-3.21-5.03c-0.07-0.46-0.12-0.91-0.2-1.37 c11.02,9.95,20.58,21.89,28.06,35.68C371.8,179.86,353.72,254.05,299.42,293z"/>
+<path fill="#fff" opacity="0.3" d="M205.09,6.5C95.33,6.5,6.34,95.48,6.34,205.25s88.98-13.01,198.75-13.01s198.75,122.78,198.75,13.01 S314.86,6.5,205.09,6.5z"/>
+</svg>`;
+    },
 
-    icon_time(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_time(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Time"
@@ -2978,7 +2990,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_status(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_status(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Status"
@@ -2989,7 +3001,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_amount(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_amount(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amount"
@@ -2999,7 +3011,7 @@ tools_icons = {
 </svg>`;
     },
 
-    icon_rate(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_rate(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rate"
@@ -3015,7 +3027,7 @@ tools_icons = {
 
 
 
-    icon_warning(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_warning(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Warning"
@@ -3047,7 +3059,7 @@ tools_icons = {
     },
 
 
-    icon_reload(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_reload(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reload"
@@ -3059,7 +3071,7 @@ tools_icons = {
     },
 
 
-    icon_typeCash(sizeName = component_props.elementSizes , bg_color = "#FBB040") {
+    icon_typeCash(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TypeCash"
@@ -3081,7 +3093,7 @@ tools_icons = {
     },
 
 
-    icon_typeTether(sizeName = component_props.elementSizes , bg_color = "#00A790") {
+    icon_typeTether(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TypeTether"
@@ -3102,7 +3114,7 @@ tools_icons = {
 
 
 
-    icon_typeDerham(sizeName = component_props.elementSizes , bg_color = "#1e35c0") {
+    icon_typeDerham(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TypeDerham"
@@ -3121,7 +3133,7 @@ tools_icons = {
     },
 
 
-    icon_typeRial(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_typeRial(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TypeRial"
@@ -3152,7 +3164,7 @@ tools_icons = {
 
 
 
-    icon_crcode(sizeName = component_props.elementSizes , bg_color = "#00AEEF") {
+    icon_crcode(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CrCode"
