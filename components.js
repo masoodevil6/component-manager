@@ -6648,23 +6648,6 @@ class ComponentInputPriceBase extends ComponentBase{
             prop: "prop_size" ,
             default: tools_css.standardSizes.m.name
         } ,
-        prop_langSelected: {
-            prop: "prop_langSelected",
-            default: component_props.directionRtl ? "fa" : "en"
-        } ,
-        prop_langs: {
-            prop: "prop_langs",
-            default: {
-                fa: {
-                    coefficient_title : "معادل" ,
-
-                } ,
-                en: {
-                    coefficient_title : "Equivalent" ,
-                }
-            }
-        },
-
 
         prop_backgroundColorForm: {
             prop: "prop_backgroundColorForm",
@@ -6698,17 +6681,13 @@ class ComponentInputPriceBase extends ComponentBase{
             prop: "prop_value",
             default: null
         },
-        prop_coefficientColor: {
-            prop: "prop_coefficientColor",
-            default: tools_const?.styles?.inputPrice?.color_confficient ?? ""
+        prop_calculatorColor: {
+            prop: "prop_calculatorColor",
+            default: tools_const?.styles?.inputPrice?.color_calculator ?? ""
         },
-        prop_coefficient: {
-            prop: "prop_coefficient",
+        prop_calculator: {
+            prop: "prop_calculator",
             default: null
-        },
-        prop_coefficientCurrency: {
-            prop: "prop_coefficientCurrency",
-            default: ""
         },
         prop_placeholder: {
             prop: "prop_placeholder",
@@ -6765,7 +6744,6 @@ class ComponentInputPriceBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_type,
             this._COMPONENT_PATTERN.prop_name,
             this._COMPONENT_PATTERN.prop_value,
-            this._COMPONENT_PATTERN.prop_coefficient,
             this._COMPONENT_PATTERN.prop_placeholder,
             this._COMPONENT_PATTERN.prop_icon,
             this._COMPONENT_PATTERN.prop_btnAddStatus,
@@ -6798,14 +6776,11 @@ class ComponentInputPriceBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_size,
         ],
 
-        part_coefficient: [
+        part_calculator: [
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_langSelected,
-            this._COMPONENT_PATTERN.prop_langs,
-            this._COMPONENT_PATTERN.prop_coefficient,
-            this._COMPONENT_PATTERN.prop_coefficientCurrency,
+            this._COMPONENT_PATTERN.prop_calculator,
+            this._COMPONENT_PATTERN.prop_calculatorColor,
             this._COMPONENT_PATTERN.prop_value,
-            this._COMPONENT_PATTERN.prop_coefficientColor,
         ]
     };
 
@@ -6823,7 +6798,7 @@ class ComponentInputPriceBase extends ComponentBase{
                 part_button: {} ,
                 part_information: {} ,
             } ,
-            part_coefficient: {} ,
+            part_calculator: {} ,
         } ,
     }
 
@@ -6864,8 +6839,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
                 return this.template_render_form(partName);
             case "part_input":
                 return this.template_render_input(partName);
-            case "part_coefficient":
-                return this.template_render__coefficient(partName);
+            case "part_calculator":
+                return this.template_render_calculator(partName);
             case "part_icon_clear":
                 return this.componentFn_render_iconClear(partName);
             case "part_icon":
@@ -6897,7 +6872,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
      
      ${this.templateFn("part_form") ?? ""}
      
-     ${this.templateFn("part_coefficient") ?? ""}
+     ${this.templateFn("part_calculator") ?? ""}
      
                 `;
         return this.templateBasic_render_structure(content);
@@ -6951,7 +6926,6 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
 <section data-part-name="${partName}"></section>
         `;
     }
-
 
     template_render_input(partName) {
 
@@ -7029,29 +7003,34 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
         `;
     }
 
-
-    template_render__coefficient(partName){
+    template_render_calculator(partName){
         const data = this.getPartProps(partName)
 
         if (data != null){
-
             const prop_size                    =   data.hasOwnProperty("prop_size")                    ?  data.prop_size                  :  null;
             const prop_value                   =   data.hasOwnProperty("prop_value")                   ?  data.prop_value                 :  null;
-            const prop_coefficient             =   data.hasOwnProperty("prop_coefficient")             ?  data.prop_coefficient           :  null;
-            const prop_coefficientCurrency     =   data.hasOwnProperty("prop_coefficientCurrency")     ?  data.prop_coefficientCurrency   :  "";
-            const prop_coefficientColor        =   data.hasOwnProperty("prop_coefficientColor")        ?  data.prop_coefficientColor      :  "";
-            const prop_langs                   =   data.hasOwnProperty("prop_langs")                   ?  data.prop_langs                 :  null;
-            const prop_langSelected            =   data.hasOwnProperty("prop_langSelected")            ?  data.prop_langSelected          :  null;
+            const prop_calculator              =   data.hasOwnProperty("prop_calculator")              ?  data.prop_calculator            :  null;
+            const prop_calculatorColor         =   data.hasOwnProperty("prop_calculatorColor")         ?  data.prop_calculatorColor       :  null;
 
-            if (prop_coefficient != null){
+            if (prop_calculator != null){
 
                 const elHeight = tools_css.getHeightSize(prop_size);
                 const elfontSize = tools_css.getFontSize(prop_size);
 
-                let titleCoefficient  = "";
-                if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
-                    const langs = prop_langs[prop_langSelected];
-                    titleCoefficient = langs?.coefficient_title ?? ""
+                let htmlCalc = "";
+                for (let i = 0; i < prop_calculator.length ; i++) {
+                    const itemCalc = prop_calculator[i];
+                    htmlCalc += `
+<div>
+   ${itemCalc?.title ?? ''}:
+   <b class="component-input-price-coefficient-text-${this._COMPONENT_RANDOM_ID}-${itemCalc?.name ?? ""} mx-2" >
+        ${tools_converter.convertPriceToString((itemCalc?.coefficient ?? 1) *prop_value) }
+   </b>
+    <b class="" >
+        ${itemCalc?.extension ?? ''}
+    </b>
+</div>
+                    `
                 }
 
                 return `
@@ -7061,22 +7040,15 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
           
      <style>
          #${this._COMPONENT_ID} #component-input-price-coefficient-${this._COMPONENT_RANDOM_ID}{
-            height: ${elHeight}px;
             line-height: ${elHeight}px;
             font-size: ${elfontSize}px;
          }
-         #${this._COMPONENT_ID} #component-input-price-coefficient-${this._COMPONENT_RANDOM_ID} b{
-            color: ${prop_coefficientColor};
+         #${this._COMPONENT_ID} .component-input-price-coefficient-text-${this._COMPONENT_RANDOM_ID} b{
+            color: ${prop_calculatorColor};
          }
      </style> 
      
-     ${titleCoefficient}:
-     <b id="component-input-price-coefficient-text-${this._COMPONENT_RANDOM_ID}" class="mx-2" >
-        ${tools_converter.convertPriceToString(prop_coefficient*prop_value) }
-     </b>
-     <b class="" >
-        ${prop_coefficientCurrency}
-     </b>
+     ${htmlCalc}
        
 </section>
         `;
@@ -7342,23 +7314,37 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
     fn_getElementInput(){
         return document.querySelector(`input#component-input-price-${this._COMPONENT_RANDOM_ID}`);
     }
-    fn_getElementConfficient(){
-        return document.querySelector(`#component-input-price-coefficient-text-${this._COMPONENT_RANDOM_ID}`);
-    }
-    fn_getElementInputHidden(){
-        return document.querySelector(`input#component-input-price-form-value-input-${this._COMPONENT_RANDOM_ID}`);
+    fn_getElementCalculatorElement(elName){
+        return document.querySelector(`.component-input-price-coefficient-text-${this._COMPONENT_RANDOM_ID}-${elName}`);
     }
 
     fn_getValueInput(){
         const data = this._COMPONENT_CONFIG;
-        const prop_coefficient  =   data.hasOwnProperty("prop_coefficient")     ?  data.prop_coefficient  :  null;
+        const prop_calculator  =   data.hasOwnProperty("prop_calculator")     ?  data.prop_calculator  :  null;
 
         let inputValue =0 ;
         const input = this.fn_getElementInput();
         if (input != null){
             inputValue = input.value
         }
-        return  tools_converter.convertStringToPrice(inputValue) * (prop_coefficient != null ? prop_coefficient : 1);
+
+        let calcs = {};
+        if (prop_calculator != null){
+            for (let i = 0; i < prop_calculator.length; i++) {
+                const itemCalc = prop_calculator[i];
+
+                const el = this.fn_getElementCalculatorElement(itemCalc?.name ?? "");
+                const name = itemCalc?.name ?? null;
+                if (name != null){
+                    const coefficient = itemCalc?.coefficient ?? 1;
+                    const value  =  coefficient * tools_converter.convertStringToPrice(inputValue);
+                    calcs[name] = value;
+                    el.innerText =tools_converter.convertPriceToString(value)
+                }
+            }
+        }
+
+        return {value: tools_converter.convertStringToPrice(inputValue), calcs }
     }
 
     fn_onHandleInput(event){
@@ -7369,13 +7355,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
         event.target.value =  tools_converter.convertPriceToString(value);
         if (prop_coefficient != null){
             const realVal = tools_converter.convertStringToPrice(value) * prop_coefficient;
-            const elConfficient = this.fn_getElementConfficient();
-            elConfficient.innerText = tools_converter.convertPriceToString( realVal );
         }
-
-        const elInputHidden = this.fn_getElementInputHidden();
-        const realVal = tools_converter.convertStringToPrice(value);
-        elInputHidden.value = realVal;
     }
     fn_onFormatValue(event){
         document.querySelector(`#component-input-position-element-${this._COMPONENT_RANDOM_ID}`).classList.add("d-none");
@@ -7398,19 +7378,22 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
     fn_onInputCallBack(event){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_oninput") && typeof data.fn_oninput != null){
-            data.fn_oninput(event , this.fn_getValueInput());
+            const dataValue = this.fn_getValueInput();
+            data.fn_oninput(event , dataValue.value , dataValue.calcs);
         }
     }
     fn_onFocusCallBack(event){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_onfocus") && typeof data.fn_onfocus != null){
-            data.fn_onfocus(event , this.fn_getValueInput());
+            const dataValue = this.fn_getValueInput();
+            data.fn_onfocus(event , dataValue.value , dataValue.calcs);
         }
     }
     fn_onBlurCallBack(event){
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_onblur") && typeof data.fn_onblur != null){
-            data.fn_onblur(event , this.fn_getValueInput());
+            const dataValue = this.fn_getValueInput();
+            data.fn_onblur(event , dataValue.value , dataValue.calcs);
         }
     }
 
@@ -7418,7 +7401,8 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
         event.stopPropagation();
         const data = this._COMPONENT_CONFIG;
         if (data.hasOwnProperty("fn_clickBtnTools") && typeof data.fn_clickBtnTools != null){
-            data.fn_clickBtnTools(event , this.fn_getValueInput());
+            const dataValue = this.fn_getValueInput();
+            data.fn_clickBtnTools(event , dataValue.value , dataValue.calcs);
         }
     }
 
@@ -20982,6 +20966,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
             const prop_backgroundIterBefore       =   data.hasOwnProperty("prop_backgroundIterBefore")            ?  data.prop_backgroundIterBefore            :  "";
             const prop_backgroundIterAfter        =   data.hasOwnProperty("prop_backgroundIterAfter")             ?  data.prop_backgroundIterAfter             :  "";
             const prop_colorIterAfter             =   data.hasOwnProperty("prop_colorIterAfter")                  ?  data.prop_colorIterAfter                  :  "";
+            const directionRtl                           =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")           ? this._COMPONENT_CONFIG.directionRtl             : false;
 
 
             let tabHtml = "";
@@ -21018,8 +21003,12 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
                       <div class="${tabClassCol} px-1 col-12 position-relative">
                           <div  onclick="${this.getFn("fn_onSelectTab" , "event" , tabId)}"
                                 class="${classActive} btn-tab-types btn btn-light w-100 border shadow-sm ">
-                            ${icon}
-                            ${itemTab.title}
+                                <div class="form-tab-icon">
+                                   ${icon}
+                                </div>
+                                <b class="form-tab-title">
+                                    ${itemTab.title}
+                                </b>
                          </div>
                      </div>
                 `;
@@ -21098,6 +21087,17 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types-active{
                background-color: ${prop_backgroundIterAfter} !important;
                color :           ${prop_colorIterAfter} !important;
+         }
+         #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .form-tab-icon{
+               float: ${directionRtl ? "right" : "left"};
+               width: 25%;
+               ${directionRtl ? "margin-right" : "margin-left"} : 20%;
+         }
+         #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .form-tab-title{
+               position: absolute;
+               left: 50%;
+               top: 50%;
+               transform: translate(${directionRtl ? "-75%" : "-25%"} , -50%);
          }
      </style>
      
