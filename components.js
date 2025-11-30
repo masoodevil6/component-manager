@@ -19,7 +19,7 @@ if (typeof listComponent === 'undefined') {
         ComponentInfo:                       "component-info" ,                           //01-07
         ComponentCard:                       "component-card" ,                           //01-08
         ComponentCardInfo:                   "component-card-info" ,                      //01-09
-        ComponentListSelectedScroller:      "component-list-selected-scroller" ,          //01-010
+        ComponentListSelectedScroller:       "component-list-selected-scroller" ,          //01-010
 
         // [02] Fetch
         ComponentLoading:                    "component-loading" ,                        //02-01
@@ -19713,11 +19713,11 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
             () => {
                 const isWideScreen = tools_css.checkMoreThanScreanWidth(tools_css.standardScreanWidth.m.name);
                 if (isWideScreen){
-                this.fn_renderTable_resize_isForPc();
-            }
+                    this.fn_renderTable_resize_isForPc();
+                }
                 else {
-                this.fn_renderTable_resize_isForMobile();
-            }
+                    this.fn_renderTable_resize_isForMobile();
+                }
                 this.fn_onCallbackResizeTable(event)
             } ,
             200
@@ -31875,6 +31875,10 @@ class ComponentReportBase extends ComponentBase{
             prop: "prop_btnTitleNewPage",
             default: "New Order"
         },
+        prop_btnHasPage: {
+            prop: "prop_btnHasPage",
+            default: true
+        },
 
 
         prop_tabs: {
@@ -31891,6 +31895,11 @@ class ComponentReportBase extends ComponentBase{
         },
         prop_tabsSendForm: {
             prop: "prop_tabsSendForm",
+            default: true
+        },
+
+        prop_hasPageInfo: {
+            prop: "prop_hasPageInfo",
             default: true
         },
 
@@ -32002,6 +32011,7 @@ class ComponentReportBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_iconPageColor,
             this._COMPONENT_PATTERN.prop_btnTitleNewPage,
             this._COMPONENT_PATTERN.prop_btnColorIconNewPage,
+            this._COMPONENT_PATTERN.prop_btnHasPage,
         ],
         part_pages_main_formTabSection: [
             this._COMPONENT_PATTERN.prop_tabsTitle,
@@ -32028,7 +32038,7 @@ class ComponentReportBase extends ComponentBase{
 
 
         part_pages_main_formTable: [
-
+            this._COMPONENT_PATTERN.prop_hasPageInfo,
         ],
         part_pages_main_formTable_table: [
             this._COMPONENT_PATTERN.prop_size,
@@ -32337,6 +32347,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
             const prop_iconPageColor           =  data.hasOwnProperty("prop_iconPageColor")         ?  data.prop_iconPageColor           : "";
             const prop_btnTitleNewPage         =  data.hasOwnProperty("prop_btnTitleNewPage")       ?  data.prop_btnTitleNewPage         : "";
             const prop_btnColorIconNewPage     =  data.hasOwnProperty("prop_btnColorIconNewPage")   ?  data.prop_btnColorIconNewPage     : "";
+            const prop_btnHasPage              =  data.hasOwnProperty("prop_btnHasPage")            ?  data.prop_btnHasPage              : true;
 
             new window.ComponentPageCardInfo(
                 `component-report-page-main-form-new-${this._COMPONENT_RANDOM_ID}` ,
@@ -32349,6 +32360,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                     prop_titleBtn:         prop_btnTitleNewPage ,
                     prop_colorIconBtn:     prop_btnColorIconNewPage ,
                     prop_iconBtn:          tools_icons.icon_plus_badge ,
+                    prop_hasBtn:           prop_btnHasPage ,
                     fn_callback: (event)=>{
                         this.fn_onClickNew(event);
                     }
@@ -33097,6 +33109,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
         return document.querySelector(`#component-report-page-main-collapse-filter-form-${this._COMPONENT_RANDOM_ID}-input-page-per`);
     }
 
+
     fn_onFetchData( formData, extraData){
         const fetchData = {
             "formData": formData,
@@ -33123,6 +33136,10 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                 fn_onGetResponse: (response , request)=>{
                     this._PAGE_REPORT = response;
                     this.templateFn("part_pages_main_formTable_table");
+
+                    if (data.hasOwnProperty("fn_onGetResponseData") && typeof data.fn_onGetResponseData != null){
+                        data.fn_onGetResponseData(response , request);
+                    }
                 }
             }
         );
@@ -33130,12 +33147,14 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
     }
     fn_onFetchData_page( fetchData){
         const data = this._COMPONENT_CONFIG;
-        const prop_url_page   =  data.hasOwnProperty("prop_url_page")      ?  data.prop_url_page   : "";
+        const prop_url_page   =  data.hasOwnProperty("prop_url_page")         ?  data.prop_url_page   : "";
+        const prop_hasPageInfo   =  data.hasOwnProperty("prop_hasPageInfo")   ?  data.prop_hasPageInfo   : true;
 
-        new window.ComponentWidget(
-            `table-component-report-page-main-form-table-widget-page-${this._COMPONENT_RANDOM_ID}` ,
-            {
-                prop_layoutContent: `
+        if (prop_hasPageInfo) {
+            new window.ComponentWidget(
+                `table-component-report-page-main-form-table-widget-page-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_layoutContent: `
 <div class="row py-0 px-2 py-2 my-0 mx-2 border-top">
      
          <component-page-number  id="table-component-report-page-main-form-table-page-number-${this._COMPONENT_RANDOM_ID}"></component-page-number>
@@ -33146,25 +33165,33 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
 
 </div>
                 ` ,
-                prop_fetch : {
-                    url: prop_url_page ,
-                    data: fetchData
-                },
-                fn_onGetResponse: (response , request)=>{
-                    this._PAGE_TOTAL_DATA = response?.totalData   ?? 0;
-                    this._PAGE_SELECTED =   response?.page        ?? 1;
-                    this._PAGE_PER_DATA =   response?.perPage     ?? 25;
+                    prop_fetch : {
+                        url: prop_url_page ,
+                        data: fetchData
+                    },
+                    fn_onGetResponse: (response , request)=>{
+                        this._PAGE_TOTAL_DATA = response?.totalData   ?? 0;
+                        this._PAGE_SELECTED =   response?.page        ?? 1;
+                        this._PAGE_PER_DATA =   response?.perPage     ?? 25;
 
-                    this._PAGE_TOTAL = Math.ceil( this._PAGE_TOTAL_DATA / this._PAGE_PER_DATA)
-                    this._PAGE_FROM_DATA = ((this._PAGE_SELECTED-1)*this._PAGE_PER_DATA) + 1
-                    this._PAGE_TO_DATA = (this._PAGE_SELECTED)*this._PAGE_PER_DATA < this._PAGE_TOTAL ? this._PAGE_TOTAL : (this._PAGE_SELECTED)*this._PAGE_PER_DATA
+                        this._PAGE_TOTAL = Math.ceil( this._PAGE_TOTAL_DATA / this._PAGE_PER_DATA)
+                        this._PAGE_FROM_DATA = ((this._PAGE_SELECTED-1)*this._PAGE_PER_DATA) + 1
+                        this._PAGE_TO_DATA = (this._PAGE_SELECTED)*this._PAGE_PER_DATA < this._PAGE_TOTAL ? this._PAGE_TOTAL : (this._PAGE_SELECTED)*this._PAGE_PER_DATA
 
-                    this.templateFn("part_pages_main_formTable_pageNumber");
-                    this.templateFn("part_pages_main_formTable_pageData");
-                    this.templateFn("part_pages_main_formTable_pagePer");
+                        this.templateFn("part_pages_main_formTable_pageNumber");
+                        this.templateFn("part_pages_main_formTable_pageData");
+                        this.templateFn("part_pages_main_formTable_pagePer");
+
+                        if (data.hasOwnProperty("fn_onGetResponsePage") && typeof data.fn_onGetResponsePage != null){
+                            data.fn_onGetResponsePage(response , request);
+                        }
+                    }
                 }
-            }
-        );
+            );
+
+
+        }
+
     }
 
     fn_getHtmlPages(prop_pages ){

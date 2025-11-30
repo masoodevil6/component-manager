@@ -2066,6 +2066,61 @@ tools_icons = {
     } ,
 
 
+    icon_email2(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="email"
+    width="${size}" height="${size}" viewBox="0 0 235 140" fill="none">
+    <title>Email</title>
+	<path fill="${bg_color}" d="M229.65,127.15c0.31-1.21,0.5-2.47,0.5-3.78v-105c0-2.1-0.43-4.09-1.21-5.9L151.36,62L229.65,127.15z"/>
+	<path fill="${bg_color}" d="M117.15,67.37L223.93,6.23c-2.47-1.79-5.5-2.86-8.78-2.86h-196c-3.28,0-6.31,1.07-8.78,2.86L117.15,67.37z"/>
+	<path fill="${bg_color}" d="M5.62,11.92c-0.93,1.96-1.47,4.14-1.47,6.45v105c0,2.39,0.58,4.65,1.57,6.66l73.32-69.47L5.62,11.92z"/>
+	<path fill="${bg_color}" d="M137.81,69.84l-20.66,12.52L94.58,68.32l-83.61,67.61c2.35,1.54,5.16,2.44,8.18,2.44h196 c4.25,0,8.08-1.77,10.8-4.61L137.81,69.84z"/>
+</svg>`;
+    },
+
+
+
+    icon_phone(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Phone"
+    width="${size}" height="${size}" viewBox="0 0 155 187" fill="none">
+    <title>Phone</title>
+<g>
+	<path fill="${bg_color}" d="M54.12,46.33c2.57-3.51,2.49-8.44-0.47-11.87L29.18,6.17c-3.45-3.98-9.47-4.42-13.45-0.98l-2.85,2.47 L54.12,46.33z"/>
+	<path fill="${bg_color}" d="M91.07,126.29l-0.93,0.32l16.06,54.21l3.37-1.17c4.98-1.73,7.61-7.16,5.89-12.13l-12.25-35.34 C101.48,127.2,96.04,124.56,91.07,126.29z"/>
+	<path fill="${bg_color}" d="M85.56,128.11c-12.29,2.02-28.23-9.24-37.88-27.72c-10.41-19.93-9.75-41.06,1.08-48.83 c-0.04-0.06-0.08-0.11-0.12-0.17l1.94-1.68L8.31,11.61l-1.55,1.34c-2.27,1.96-3.38,4.76-3.29,7.54 c-1.54,15.22,9.77,49.98,29.43,87.62c23.68,45.34,50.84,78.34,62.11,75.94c1.11,0.03,2.25-0.13,3.36-0.51l2.21-0.77L85.56,128.11z" />
+</g>
+<path fill="none" stroke-width="5" stroke="${bg_color}" d="M108.34,121.82c6.92-8.64,11.01-19.31,11.01-30.85c0-28.84-25.54-52.22-57.04-52.22"/>
+<path fill="none" stroke-width="5" stroke="${bg_color}" d="M120.56,130.06c8.76-10.97,13.94-24.52,13.94-39.17c0-36.62-32.32-66.31-72.2-66.31"/>
+<path fill="none" stroke-width="5" stroke="${bg_color}" d="M133.1,137.17c10.65-13.26,16.93-29.61,16.93-47.31c0-44.23-39.28-80.09-87.73-80.09"/>
+</svg>`;
+    },
+
+
+
+    icon_leverage(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Leverage"
+    width="${size}" height="${size}" viewBox="0 0 236 164" fill="none">
+    <title>Leverage</title>
+<path fill="${bg_color}"  d="M55.53,160.73h136.02c2.2,0,3.99-1.79,3.99-3.99v-0.36c0-2.2-1.79-3.99-3.99-3.99H55.53 c-2.2,0-3.99,1.79-3.99,3.99v0.36C51.54,158.94,53.32,160.73,55.53,160.73z"/>
+<path fill="${bg_color}"  d="M233.1,44.19c-1.43-4.38-6.14-6.76-10.52-5.33l-90.64,29.68c-1.74-1.86-4.23-2.8-6.72-2.61 c-3.09-0.23-6.2,1.27-7.85,4.14l-2.31,4.01l-91.11,29.84c-4.38,1.43-6.76,6.14-5.33,10.52s6.14,6.76,10.52,5.33l73.43-24.05 l-29.91,51.81c-2.3,3.99-0.94,9.09,3.05,11.39v0c3.99,2.3,9.09,0.94,11.39-3.05l38.13-66.04l38.13,66.04 c2.3,3.99,7.4,5.35,11.39,3.05v0c3.99-2.3,5.35-7.4,3.05-11.39l-37.12-64.29l87.09-28.52C232.15,53.27,234.53,48.56,233.1,44.19z  M125.51,86.55c-4.73,0-8.57-4.14-8.57-9.24c0-5.11,3.84-9.24,8.57-9.24c4.73,0,8.57,4.14,8.57,9.24 C134.08,82.41,130.24,86.55,125.51,86.55z"/>
+<circle fill="${bg_color}"  cx="27.57" cy="74.6" r="23.97"/>
+<circle fill="${bg_color}"  cx="213.3" cy="20.79" r="17.76"/>
+<path fill="#F1F2F2" opacity="0.5"  d="M195.54,20.79c0,9.81,7.95,17.76,17.76,17.76s17.76-7.95,17.76-17.76S195.54,10.98,195.54,20.79z"/>
+<path fill="#F1F2F2" opacity="0.5"  d="M3.6,74.6c0,13.24,10.73,23.97,23.97,23.97S51.54,87.84,51.54,74.6S3.6,61.36,3.6,74.6z"/>
+</svg>`;
+    },
+
+
+
+
+
+
+
 
     icon_lock(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF" ) {
         const size = tools_css.getIconSize(sizeName , sizeName);
@@ -3011,6 +3066,45 @@ tools_icons = {
 </svg>`;
     },
 
+    icon_currency(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Currency"
+    width="${size}" height="${size}" viewBox="0 0 145 57" fill="none">
+    <title>Currency</title>
+    <path fill="${bg_color}"  d="M140.96,43.23c0,2.01-3.81,5.38-10.87,5.38c-4.75,0-6.65,0-114.63,0c0,0-6.32-2.08-6.32-4.73v4.2 c0,2.66,7.32,4.73,7.32,4.73c107.98,0,108.87,0,113.63,0c7.06,0,10.87-2.52,10.87-4.53V43.23z"/>
+<path fill="${bg_color}"  d="M140.72,35.89c0,2.01-3.81,5.38-10.87,5.38c-4.75,0-6.65,0-114.63,0c0,0-6.32-2.08-6.32-4.73v4.2 c0,2.66,7.32,4.73,7.32,4.73c107.98,0,108.87,0,113.63,0c7.06,0,10.87-2.52,10.87-4.53V35.89z"/>
+<path fill="#fff" stroke="${bg_color}" stroke-width="2"  d="M125.16,5.95c4.12,0.01,6.07,0.01,8.24,2.61c2.17,2.6,5.19,19.52,5.85,21.84c0.84,2.95-4.17,6.91-9.16,6.91 c-4.98,0-108.52,0.02-112.86,0.02c-7.57,0-8.07-6.32-7.39-8.1c1.94-5.05,5.71-17.17,6.94-19.27c1.15-1.96,1.95-4.24,6.46-4.28 C48.87,5.43,121.69,5.94,125.16,5.95z"/>
+<path opacity="0.2" fill="${bg_color}" d="M125.16,5.77c4.12,0.01,6.07,0.01,8.24,2.61c2.17,2.6,5.19,19.52,5.85,21.84c0.84,2.95-4.17,6.91-9.16,6.91 c-4.98,0-108.52,0.02-112.86,0.02c-7.57,0-8.07-6.32-7.39-8.1c1.94-5.05,5.71-17.17,6.94-19.27c1.15-1.96,1.95-4.24,6.46-4.28 C48.87,5.25,121.69,5.77,125.16,5.77z"/>
+<path fill="#fff" stroke="${bg_color}" stroke-width="2" d="M119.34,9.61c1.82,0,1.16,3,2.29,3.25c1.13,0.25,5.04-0.27,6,0.71c1.92,1.96,3.6,12.69,4.18,14.44 c0.4,1.2-3.7-0.39-5.49,0.66c-1.53,0.9,0.42,4.54-1.61,4.54c-4.41,0-96.04,0.01-99.88,0.01c-3.17,0,1.07-4.06,0.14-5.32 c-1.03-1.41-7-0.07-6.68-0.78c1.71-3.8,4.05-11.92,5.14-13.51c0.7-1.02,4.26-0.15,5.85-0.77c0.71-0.27,1.63-3.45,2.86-3.46 C54.82,9.22,116.26,9.6,119.34,9.61z"/>
+<path opacity="0.75" fill="#fff"  d="M66.22,4.63L47.87,35.25c-0.17,0.33-0.27,0.7-0.27,1.08l5.39,15.35c0,1.18,0.87,2.13,1.94,2.13l37.75,0.01 c1.07,0,1.94-0.95,1.94-2.13l3.59-15.44c0-0.19-0.02-0.38-0.07-0.56L83,5.15c-0.23-0.92-0.98-1.56-1.84-1.57l-13.24,0 C67.21,3.57,66.57,3.97,66.22,4.63z"/>
+<ellipse fill="none" stroke="${bg_color}" stroke-width="2" cx="73.77" cy="22.86" rx="14.38" ry="9.64"/>
+<path fill="none" stroke="${bg_color}" stroke-width="2"  d="M76.85,21.36c0,0,3.31-2.87-1.11-3.63c-1.89-0.32-4.24,0.52-4.54,1.9c-0.3,1.35-0.04,2.36,2.55,2.82 c2.27,0.41,2.28,0.31,3.36,1.05c1.88,1.29,0.65,3.03-1.52,3.51c-2.17,0.48-3.78,0.27-5.29-0.82c-1.84-1.31,0.14-2.66,0.14-2.66"/>
+<line fill="none" stroke="${bg_color}" stroke-width="2" x1="74.83" y1="15.43" x2="74.79" y2="17.16"/>
+<line fill="none" stroke="${bg_color}" stroke-width="2"  x1="73.35" y1="27.76" x2="73.31" y2="29.49"/>
+<ellipse fill="${bg_color}"  cx="37.21" cy="20.15" rx="6" ry="3.48"/>
+<ellipse fill="${bg_color}"  cx="114.19" cy="20.15" rx="6" ry="3.48"/>
+</svg>`;
+    },
+
+    icon_currency2(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
+        const size = tools_css.getIconSize(sizeName , sizeName);
+        return `
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Currency"
+    width="${size}" height="${size}" viewBox="0 0 208 240" fill="none">
+    <title>Currency</title>
+<ellipse fill="${bg_color}" cx="103.22" cy="140.06" rx="91.05" ry="94.89"/>
+<circle fill="#fff" stroke="${bg_color}" stroke-width="10" cx="103.66" cy="132.09" r="91.05"/>
+<ellipse fill="${bg_color}"  cx="103.65" cy="112.68" rx="91.05" ry="98.01"/>
+<circle fill="#fff" stroke="${bg_color}" stroke-width="10" cx="104.09" cy="101.59" r="91.05"/>
+<circle fill="${bg_color}"  cx="103.5" cy="101.59" r="74.88"/>
+<path fill="none" stroke="#fff" stroke-width="10"  d="M119.1,90.85c0,0,17.1-25.38-7.27-30.78c-10.39-2.3-22.95,5.47-24.14,17.38c-1.17,11.62,0.57,20.18,14.85,23.53 c12.52,2.93,12.54,2.08,18.66,8.17c10.67,10.61,4.57,25.77-7.13,30.39s-20.51,3.18-29.13-5.72c-10.46-10.8-0.09-22.8-0.09-22.8"/>
+<line fill="none" stroke="#fff" stroke-width="10"  x1="106.09" y1="45.2" x2="106.44" y2="60.04"/>
+<line fill="none" stroke="#fff" stroke-width="10"  x1="103.3" y1="143.15" x2="103.65" y2="157.99"/>
+
+</svg>`;
+    },
+
     icon_rate(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
@@ -3091,6 +3185,7 @@ tools_icons = {
 
 </svg>`;
     },
+
     icon_typeCash2(sizeName = component_props.elementSizes , bg_color =  component_props?.primaryColor1 ?? "#00AEEF") {
         const size = tools_css.getIconSize(sizeName , sizeName);
         return `
@@ -3105,8 +3200,8 @@ tools_icons = {
 	<path fill="#00AEEF" opacity="0.2" d="M208.02,154.32c0,0-29.11,37.98-34.39,42.29c-5.28,4.31-11.38,3.03-16.44-1s-93.51-74.75-93.51-74.75c-3.44,4.32-4.73,13.61-0.4,17.05l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83C213.06,164.05,212.34,157.76,208.02,154.32"/>
 	<path fill="none" stroke="#000" stroke-width="5"  d="M64.99,120.71l96.6,76.89c4.32,3.44,10.61,2.73,14.05-1.6l35.69-44.83c3.44-4.32,2.73-10.61-1.6-14.05l-96.6-76.89c-4.32-3.44-10.61-2.73-14.05,1.6L63.4,106.66C59.96,110.98,60.67,117.27,64.99,120.71z"/>
 	<path fill="#fff" stroke="#000" stroke-width="5"  d="M81.84,123.59l74.18,58.62c2.24,1.78,4.88-2.55,9.31-2.92c4.13-0.34,8.08,4.41,9.74,2.33l20.58-25.4c1.72-2.16-5.1-6.81-5.89-11.36s4.45-8.98,2.29-10.7l-71.18-55.62c-2.23-1.78-5.87,3.82-10.29,4.45c-4.14,0.58-9.1-3.94-10.76-1.85l-19.58,23.4c-1.72,2.16,3.6,6.06,3.89,9.86C84.42,118.18,79.68,121.87,81.84,123.59z"/>
-	<circle fill="#000" cy="106.07" r="6.35"/>
-	<circle fill="#000" cx="169.13" cy="156.25" r="6.35"/>
+	<circle fill="#000"  cx="105.57" cy="106.07" r="6.35"/>
+    <circle fill="#000"  cx="169.13" cy="156.25" r="6.35"/>
 	<ellipse fill="none" stroke="#000" stroke-width="5"  cx="137.05" cy="131.81" rx="22.23" ry="22.74"/>
 	<path fill="none" stroke="#000" stroke-width="5"  d="M142.27,132.04c0,0,7.92-2.25,4-8.2c-1.67-2.54-5.56-3.27-7.91-0.88c-2.29,2.33-3.46,4.56-1.2,8.08c1.98,3.09,2.14,2.91,2.28,5.44c0.25,4.42-3.65,6.57-6.81,5.31s-4.66-3.3-4.81-6.95c-0.18-4.42,4.02-5.04,4.02-5.04"/>
 	<line fill="none" stroke="#000" stroke-width="5"  x1="147.36" y1="119.05" x2="144.8" y2="122.39"/>
@@ -3208,6 +3303,9 @@ tools_icons = {
 <rect fill="${bg_color}" x="58.5" y="200.4" width="37.62" height="37.62"/>
 </svg>`;
     },
+
+
+
 
 
 
