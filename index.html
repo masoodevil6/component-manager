@@ -284,6 +284,40 @@
         </component-body>
     </component-collapse>
 
+    <component-collapse  id="cStepper">
+        <component-body>
+            <section class="row p-0 m-0">
+
+                <component-stepper  id="stepper">
+
+                    <component-body name="stepA">
+                        a </br>
+                        a </br>
+                        a </br>
+                    </component-body>
+
+                    <component-body name="stepB">
+                        b</br>
+                        b</br>
+                        b</br>
+                    </component-body>
+
+                    <component-body name="stepC">
+                        c</br>
+                        c</br>
+                        c</br>
+                    </component-body>
+
+                    <component-body name="complete">
+                        complete
+                    </component-body>
+
+                </component-stepper>
+
+            </section>
+        </component-body>
+    </component-collapse>
+
     <component-collapse  id="qr-codes">
         <component-body>
             <section class="row p-0 m-0">
@@ -1800,6 +1834,91 @@
 
 
 
+
+
+    /* ====================
+    [20] Steppers
+    ==================================== */
+
+
+    let steperFormData = {
+        fieldA : 0 ,
+        fieldB : 0 ,
+        fieldC : 0 ,
+    }
+
+    const stepper = new window.ComponentStepper(
+        "stepper" ,
+        {
+            classList: ""  ,
+
+            prop_steps: [
+                {
+                    name: "stepA" ,
+                    title: "Step One" ,
+                    condition: ()=>{
+                        return true;
+                    } ,
+                    msg: "Please insert Field A" ,
+                    error: null
+                } ,
+                {
+                    name: "stepB" ,
+                    title: "Step Two" ,
+                    condition: ()=>{
+                        console.log("sa " , steperFormData);
+                        return steperFormData.fieldA > 0;
+                    } ,
+                    msg: "Please insert Field B" ,
+                    error: "for continue; insert field A"
+                } ,
+                {
+                    name: "stepC" ,
+                    title: "Step Three" ,
+                    condition: ()=>{
+                        return steperFormData.fieldB > 0;
+                    } ,
+                    msg: "Please insert Field C" ,
+                    error: "for continue; insert field c"
+                } ,
+
+                {
+                    name: "complete" ,
+                    title: "complete" ,
+                    condition: (formData)=>{
+                        return steperFormData.fieldC > 0;
+                    } ,
+                    msg: "Please insert Field A" ,
+                    error: null
+                }
+            ] ,
+
+            fn_onStepCreated: (stepName) => {
+                //console.log(stepName)
+                switch (stepName){
+                    /*case "stepA":
+                        steperFormData.fieldA = 1;
+                        break;
+                    case "stepB":
+                        steperFormData.fieldB = 1;
+                        break;
+                    case "stepC":
+                        steperFormData.fieldC = 1;
+                        break;
+                    case "complete":
+                        console.log("step finish")
+                        break;*/
+                }
+            }
+
+        }
+    );
+
+
+
+
+
+
         /* ====================
           [21] QR CODE
         ==================================== */
@@ -2221,7 +2340,7 @@
                 classList: "col-md-3 col-12 mt-2"  ,
 
                 prop_title: " [03] Button And Inputs" ,
-                prop_bodyShow: true
+                prop_bodyShow: false
             }
         )
         new window.ComponentCollapse(
@@ -2309,10 +2428,21 @@
             {
                 classList: "col-md-3 col-12 mt-2"  ,
 
-                prop_title: " [20] Charts " ,
+                prop_title: " [20] charts " ,
                 prop_bodyShow: false
             }
         )
+
+        new window.ComponentCollapse(
+            "cStepper" ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_title: " [024] steppers " ,
+                prop_bodyShow: true
+            }
+        )
+
         new window.ComponentCollapse(
             "qr-codes" ,
             {

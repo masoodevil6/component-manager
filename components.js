@@ -1,14 +1,19 @@
-/*
-Name: Components
-Developer: Mehdi Maarefian
-Version: 0.7
-Date: 10/28/2025
-*/
+// Name:      Components
+// Developer: Mehdi Maarefian
+// Version:   0.8
+// Date:      12/1/2025
+//----------------------------------------------------
+
+
 
 
 if (typeof listComponent === 'undefined') {
     var listComponent = {
 
+
+        //===============================================================================================================
+        // [01 - 10] basic
+        //===============================================================================================================
         // [01] text
         ComponentMessages:                   "component-messages" ,                       //01-01
         ComponentIsEmpty:                    "component-is-empty" ,                       //01-02
@@ -19,7 +24,7 @@ if (typeof listComponent === 'undefined') {
         ComponentInfo:                       "component-info" ,                           //01-07
         ComponentCard:                       "component-card" ,                           //01-08
         ComponentCardInfo:                   "component-card-info" ,                      //01-09
-        ComponentListSelectedScroller:       "component-list-selected-scroller" ,          //01-010
+        ComponentListSelectedScroller:       "component-list-selected-scroller" ,         //01-010
 
         // [02] Fetch
         ComponentLoading:                    "component-loading" ,                        //02-01
@@ -29,115 +34,118 @@ if (typeof listComponent === 'undefined') {
         ComponentIframe:                     "component-iframe" ,                         //02-05
 
 
-        // [03] Button
-        ComponentButton:                     "component-button" ,                         //03-01
-
-        // [04] Inputs
-        ComponentInput:                      "component-input" ,                          //05-03
-
-        // [05] Inputs for Price
-        ComponentInputPrice:                 "component-input-price" ,                    //05-01
-
-        // [06] Inputs for emails
-        ComponentInputEmail:                 "component-input-email" ,                    //06-01
-
-        // [07] Inputs for password
-        ComponentInputPassword:              "component-input-password" ,                 //07-01
-
-        // [08] Inputs for emails
-        ComponentInputFile:                  "component-input-file" ,                     //08-01
-
-        // [09] Inputs for color
-        ComponentInputColor:                 "component-input-color" ,                    //09-01
-
-        // [010] Inputs for size
-        ComponentInputSize:                  "component-input-size" ,                     //010-01
-
-        // [010] Inputs for acl
-        ComponentInputAcl:                  "component-input-acl" ,                       //011-01
-
-        // [012] Inputs for date
-        ComponentDate:                       "component-date" ,                           //011-01
-
-        // [013] Inputs for otps
-        ComponentOtp:                        "component-otp" ,                            //012-01
-
-        // [014] Inputs for select options
-        ComponentSelectOption:               "component-select-option" ,                  //013-01
-
-        // [015] Inputs for select Icons
-        ComponentSelectIcon:                 "component-select-icon" ,                    //014-01
-
-        // [016] Inputs for check box
-        ComponentCheckBox:                   "component-check-box" ,                      //014-01
-        ComponentAcceptTerms:                "component-accept-terms" ,                   //014-02
-        ComponentSelectColumns:              "component-select-columns" ,                 //014-03
-
-        // [017] Inputs Validator
-        ComponentValidate:                   "component-validate" ,                       //015-01
-
-        // [018] tooltips for Inputs
-        ComponentTooltipDescription:         "component-tooltip-description" ,            //016-01
 
 
 
+
+        //===============================================================================================================
+        // [10 - 19] button / inputs / tools
+        //===============================================================================================================
+
+        // [010] Button and Inputs
+        ComponentButton:                     "component-button" ,                         //010-01
+        ComponentInput:                      "component-input" ,                          //010-02
+        ComponentInputPrice:                 "component-input-price" ,                    //010-03
+        ComponentInputEmail:                 "component-input-email" ,                    //010-04
+        ComponentInputPassword:              "component-input-password" ,                 //010-05
+        ComponentInputFile:                  "component-input-file" ,                     //010-06
+        ComponentInputColor:                 "component-input-color" ,                    //010-07
+        ComponentInputSize:                  "component-input-size" ,                     //010-08
+        ComponentInputAcl:                  "component-input-acl" ,                       //010-09
+        ComponentDate:                       "component-date" ,                           //010-010
+        ComponentOtp:                        "component-otp" ,                            //010-011
+        ComponentSelectOption:               "component-select-option" ,                  //010-012
+        ComponentSelectIcon:                 "component-select-icon" ,                    //010-013
+        ComponentCheckBox:                   "component-check-box" ,                      //010-014
+
+        // [011] QR CODE
+        ComponentQrCode:                     "component-qr-code" ,                        //011-01
+        ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //011-02
+        ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //011-03
+        ComponentQrCodeReader:               "component-qr-code-reader" ,                 //011-04
+
+        // [012] Inputs Tools
+        ComponentAcceptTerms:                "component-accept-terms" ,                   //012-01
+        ComponentSelectColumns:              "component-select-columns" ,                 //012-02
+        ComponentValidate:                   "component-validate" ,                       //012-03
+        ComponentTooltipDescription:         "component-tooltip-description" ,            //012-04
+
+
+
+
+
+        //===============================================================================================================
+        // [20 - 29] tables and tab view
+        //===============================================================================================================
         // [020] Tables
         ComponentTable:                      "component-table" ,                          //020-01
         ComponentTableResponsible:           "component-table-responsible" ,              //020-02
-
 
         // [021] page number
         ComponentPageNumber:                "component-page-number" ,                     //021-01
         ComponentPageData:                  "component-page-data" ,                       //021-02
 
+        // [022] Tabs
+        ComponentTabs:                       "component-tabs" ,                           //022-01
+        ComponentTree:                       "component-tree" ,                           //022-02
+
+        // [023] Charts
+        ComponentChart:                      "component-chart" ,                          //023-01
+        ComponentChartTreeY:                 "component-chart-tree-y" ,                   //023-02
+
+        // [024] Steppers
+        ComponentStepper:                    "component-stepper" ,                        //024-01
 
 
-        // [030] Tabs
-        ComponentTabs:                       "component-tabs" ,                           //030-01
-        ComponentTree:                       "component-tree" ,                           //030-02
-
-        // [031] Collapse
-        ComponentCollapse:                   "component-collapse" ,                       //031-01
-
-        // [032] Window
-        ComponentWindow:                     "component-window" ,                         //032-01
-        ComponentWindowConfirm:              "component-window-confirm" ,                 //032-02
-
-        // [033] Slider Shows
-        ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //033-01
-
-        // [034] Breadcrumb
-        ComponentBreadcrumb :                "component-breadcrumb" ,                     //034-01
-        ComponentBreadcrumbWithArrow :       "component-breadcrumb-with-arrow" ,          //034-01
-
-        // [035] Charts
-        ComponentChart:                      "component-chart" ,                          //035-01
-        ComponentChartTreeY:                 "component-chart-tree-y" ,                   //035-02
-
-        // [036] QR CODE
-        ComponentQrCode:                     "component-qr-code" ,                        //036-01
-        ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //036-02
-        ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //036-03
-        ComponentQrCodeReader:               "component-qr-code-reader" ,                 //036-04
 
 
+        //===============================================================================================================
+        // [30 - 39] collapse and windows
+        //===============================================================================================================
+        // [030] Collapse
+        ComponentCollapse:                   "component-collapse" ,                       //030-01
+
+        // [031] Window
+        ComponentWindow:                     "component-window" ,                         //031-01
+        ComponentWindowConfirm:              "component-window-confirm" ,                 //031-02
+
+        // [032] Slider Shows
+        ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //032-01
+
+        // [033] Breadcrumb
+        ComponentBreadcrumb :                "component-breadcrumb" ,                     //033-01
+        ComponentBreadcrumbWithArrow :       "component-breadcrumb-with-arrow" ,          //033-02
+
+
+
+
+
+
+
+        //===============================================================================================================
+        // [80 - 89] views tools
+        //===============================================================================================================
         // [080] elements page
         ComponentChangePage:                 "component-change-page" ,                    //080-01
         ComponentPageHeader:                 "component-page-header" ,                    //080-02
         ComponentPageCardInfo:               "component-page-card-info" ,                 //080-03
 
-
         // [081] elements spicals
         ComponentDraggableOrders:           "component-draggable-orders" ,               //081-01
         ComponentRecyclerView:              "component-recycler-view" ,                  //081-02
 
+        // [082] elements tools
+        ComponentToolsTableConfig:          "component-tools-table-config" ,             //082-01
+        ComponentToolsTableToExcel:         "component-tools-table-to-excel" ,           //082-02
+        ComponentToolsTableToPrint:         "component-tools-table-to-print" ,           //082-03
 
-        // [081] elements tools
-        ComponentToolsTableConfig:          "component-tools-table-config" ,             //080-01
-        ComponentToolsTableToExcel:         "component-tools-table-to-excel" ,           //080-02
-        ComponentToolsTableToPrint:         "component-tools-table-to-print" ,           //080-03
 
+
+
+
+        //===============================================================================================================
         // [99] Others
+        //===============================================================================================================
         ComponentIcon:                       "component-icon" ,                           //99-01
         ComponentPositionElement:            "component-position-element" ,               //99-02
         ComponentBorder:                     "component-border" ,                         //99-03
@@ -147,8 +155,12 @@ if (typeof listComponent === 'undefined') {
 
 
 
-        ComponentRender:                     "component-render" ,                         //A-01
-        ComponentReport:                     "component-report" ,                         //A-02
+
+        //===============================================================================================================
+        // [---] Porfisinal
+        //===============================================================================================================
+        ComponentReport:                     "component-report" ,                         //p-02
+        ComponentRender:                     "component-render" ,                         //p-01
 
 
     }
@@ -700,21 +712,13 @@ class ComponentBase{
 
 
 
-/* ===============================================================================================================
- [01] TEXT
-=============================================================================================================== */
+
+//===============================================================================================================
+// [01 - 10] basic ->  [01] text
+//===============================================================================================================
 
 /*-------------------------------------
  01-01) Component Messages
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_type                            // success[default] | error | warning | null
-@prop_background
-@prop_color
-@prop_messages
 -------------------------------------*/
 class ComponentMessagesBase extends ComponentBase{
 
@@ -984,27 +988,8 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
 }
 
 
-
-
 /*-------------------------------------
  01-02) Component Is Empty
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_icon
-@prop_iconClass
-@prop_iconStyles
-
-@prop_title
-
-@prop_btnAddStatus
-@prop_btnAddIcon
-@prop_btnAddTitle
-@prop_btnAddClass
-
-@fn_callback
 -------------------------------------*/
 class ComponentIsEmptyBase extends ComponentBase{
 
@@ -1265,14 +1250,14 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
                 this._COMPONENT_PATTERN.prop_iconColor ,
 
 
-            new window.ComponentIcon(
-                `component-is-empty-icon-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_iconClass: prop_iconClass ,
-                    prop_iconStyles: prop_iconStyles ,
-                    prop_icon: typeof prop_icon == "function" ? prop_icon(prop_iconSize , prop_iconColor ) : prop_icon,
-                }
-            )
+                new window.ComponentIcon(
+                    `component-is-empty-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_iconClass: prop_iconClass ,
+                        prop_iconStyles: prop_iconStyles ,
+                        prop_icon: typeof prop_icon == "function" ? prop_icon(prop_iconSize , prop_iconColor ) : prop_icon,
+                    }
+                )
         }
     }
 
@@ -1339,19 +1324,8 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
 }
 
 
-
-
 /*-------------------------------------
  01-03) Component Header
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_icon
-
-@prop_size
-@prop_title
 -------------------------------------*/
 class ComponentHeaderBase extends ComponentBase{
 
@@ -1538,29 +1512,8 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
 }
 
 
-
-
 /*-------------------------------------
  01-04) Component label
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_size
-
-@prop_labelClass
-@prop_labelStyles
-@prop_labelBackgroundColor
-
-@prop_title
-@prop_for
-@prop_labelColor
-
-@prop_tooltipIcon
-@prop_tooltipDescription
-
-@fn_callback
 -------------------------------------*/
 class ComponentLabelBase extends ComponentBase{
 
@@ -1834,407 +1787,8 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
 }
 
 
-
-
 /*-------------------------------------
- 01-05) Component link
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_borderClass
-@prop_borderStyles
-@prop_borderHoverStyles
-
-@prop_linkHref
-
-@prop_imageSource
-@prop_imageTitle
-@prop_imageAlt
-@prop_imageClass
-@prop_imageStyles
-
-@prop_iconSource
-@prop_iconIsItalik
-@prop_iconClass
-@prop_iconStyles
-
-@prop_title
-@prop_titleClass
-@prop_titleStyles
--------------------------------------*/
-class ComponentLinkBase extends ComponentBase{
-
-
-
-    /* ---------------------------------------------
-     PROPERTYs Pattern
-   --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_borderClass: {
-            prop : "prop_borderClass",
-            default: ["row"  , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded"]
-        } ,
-        prop_borderStyles: {
-            prop : "prop_borderStyles",
-            default: {
-                "cursor" : "pointer" ,
-                "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("normal") && tools_const.styles.elementLink.normal.hasOwnProperty("backgroundColor")  ? tools_const.styles.elementLink.normal.backgroundColor : ""
-            }
-        } ,
-        prop_borderHoverStyles: {
-            prop : "prop_borderHoverStyles",
-            default: {
-                "transition" : "background-color ease 300ms" ,
-                "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("hover") && tools_const.styles.elementLink.hover.hasOwnProperty("backgroundColor") ? tools_const.styles.elementLink.hover.backgroundColor : ""
-            }
-        } ,
-        prop_linkHref: {
-            prop : "prop_linkHref",
-            default: null
-        } ,
-        prop_imageSource: {
-            prop : "prop_imageSource",
-            default: null
-        } ,
-        prop_imageTitle: {
-            prop : "prop_imageTitle",
-            default: null
-        } ,
-        prop_imageAlt: {
-            prop : "prop_imageAlt",
-            default: null
-        } ,
-        prop_imageClass: {
-            prop : "prop_imageClass",
-            default: ["text-center"]
-        } ,
-        prop_imageStyles:  {
-            prop : "prop_imageStyles",
-            default: null
-        } ,
-
-        prop_iconSource: {
-            prop : "prop_iconSource",
-            default: null
-        } ,
-        prop_iconIsItalik: {
-            prop : "prop_iconIsItalik",
-            default: false
-        } ,
-        prop_iconClass: {
-            prop : "prop_iconClass",
-            default: ["text-center"]
-        } ,
-        prop_iconStyles: {
-            prop : "prop_iconStyles",
-            default: null
-        } ,
-
-        prop_title: {
-            prop : "prop_title",
-            default: ""
-        } ,
-        prop_titleClass: {
-            prop : "prop_titleClass",
-            default: []
-        } ,
-        prop_titleStyles: {
-            prop : "prop_titleStyles",
-            default: {
-                "height": "100%",
-                "line-height": "500%",
-                "text-align": "center"
-            }
-        } ,
-    }
-
-
-
-    /* ---------------------------------------------
-      PROPERTYs Props
-      --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
-        part_border: [
-            this._COMPONENT_PATTERN.prop_borderClass ,
-            this._COMPONENT_PATTERN.prop_borderStyles ,
-            this._COMPONENT_PATTERN.prop_borderHoverStyles ,
-            this._COMPONENT_PATTERN.prop_linkHref ,
-        ] ,
-        part_image: [
-            this._COMPONENT_PATTERN.prop_imageSource ,
-            this._COMPONENT_PATTERN.prop_imageTitle ,
-            this._COMPONENT_PATTERN.prop_imageAlt ,
-            this._COMPONENT_PATTERN.prop_imageClass ,
-            this._COMPONENT_PATTERN.prop_imageStyles ,
-        ] ,
-        part_icon: [
-            this._COMPONENT_PATTERN.prop_iconSource ,
-            this._COMPONENT_PATTERN.prop_iconIsItalik ,
-            this._COMPONENT_PATTERN.prop_iconClass ,
-            this._COMPONENT_PATTERN.prop_iconStyles ,
-        ] ,
-        part_title: [
-            this._COMPONENT_PATTERN.prop_title ,
-            this._COMPONENT_PATTERN.prop_titleClass ,
-            this._COMPONENT_PATTERN.prop_titleStyles ,
-        ] ,
-    }
-
-
-    /* ---------------------------------------------
-     PROPERTYs Schema
-     --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_border: {
-                part_image: {} ,
-                part_icon: {} ,
-                part_title: {} ,
-            }
-        } ,
-    }
-
-}
-window.ComponentLink = class ComponentLink extends ComponentLinkBase{
-
-    /* ---------------------------------------------
-       SETUP
-    --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentLink.name] ,
-            elId
-        );
-        this.renderComponent(config);
-    }
-
-
-
-    /* ---------------------------------------------
-     TEMPLATEs
-    --------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_border");
-        this.templateFn("part_image");
-        this.templateFn("part_icon");
-    }
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_border":
-                return this.componentFn_render_border(partName);
-            case "part_image":
-                return this.componentFn_render_image(partName);
-            case "part_icon":
-                return this.componentFn_render_icon(partName);
-            case "part_title":
-                return this.template_render_title(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-   <component-border id="component-link-border-${this._COMPONENT_RANDOM_ID}" class="row px-2 py-1 m-0">
-       <component-body>
-         
-          <component-icon id="component-link-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
-         
-          <component-image id="component-link-image-${this._COMPONENT_RANDOM_ID}"></component-image>
- 
-          ${this.templateFn("part_title") ?? ""}
-         
-       </component-body>
-   </component-border>
-                `;
-        return this.templateBasic_render_structure(content );
-    }
-
-    template_render_title(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_title            =  data.hasOwnProperty("prop_title")               ?  data.prop_title            : [];
-            const prop_titleClass       =  data.hasOwnProperty("prop_titleClass")          ?  data.prop_titleClass       : {};
-            const prop_titleStyles      =  data.hasOwnProperty("prop_titleStyles")         ?  data.prop_titleStyles      : {};
-            /*col-8*/
-            return `
-<b data-part-name="${partName}" 
-         id="component-link-title-${this._COMPONENT_RANDOM_ID}"
-         class="${tools_public.renderListClass(prop_titleClass)} ">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-link-title-${this._COMPONENT_RANDOM_ID}{
-             ${tools_public.renderListStyle(prop_titleStyles)}
-         }
-     </style>
-     
-     ${prop_title}
-     
-</b>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_border(partName) {
-
-        const data = this.getPartProps(partName);
-
-        const prop_borderClass            =  data.hasOwnProperty("prop_borderClass")               ?  data.prop_borderClass            : [];
-        const prop_borderStyles           =  data.hasOwnProperty("prop_borderStyles")              ?  data.prop_borderStyles           : {};
-        const prop_borderHoverStyles      =  data.hasOwnProperty("prop_borderHoverStyles")         ?  data.prop_borderHoverStyles      : {};
-        const prop_linkHref               =  data.hasOwnProperty("prop_linkHref")                  ?  data.prop_linkHref               : null;
-
-        if (data != null){
-
-            new window.ComponentBorder(
-                `component-link-border-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_structureClass:  prop_borderClass ,
-                    prop_structureStyles: prop_borderStyles ,
-                    prop_structureHoverStyles: prop_borderHoverStyles ,
-
-                    prop_borderClass: [/*"row"*/],
-
-                    fn_callback  :  (event) => {
-                        this.fn_callbackLink(event,  prop_linkHref)
-                    } ,
-                }
-            )
-        }
-
-    }
-
-    componentFn_render_image(partName) {
-
-        const data = this.getPartProps(partName);
-
-        if (data != null){
-
-            const prop_imageSource            =  data.hasOwnProperty("prop_imageSource")               ?  data.prop_imageSource            : null;
-            const prop_imageTitle             =  data.hasOwnProperty("prop_imageTitle")                ?  data.prop_imageTitle             : null;
-            const prop_imageAlt               =  data.hasOwnProperty("prop_imageAlt")                  ?  data.prop_imageAlt               : null;
-            const prop_imageClass             =  data.hasOwnProperty("prop_imageClass")                ?  data.prop_imageClass             : null;
-            const prop_imageStyles            =  data.hasOwnProperty("prop_imageStyles")               ?  data.prop_imageStyles            : null;
-
-            if (prop_imageSource != null){
-                new window.ComponentImage(
-                    `component-link-image-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        classList:  [/*"col-4"*/ ] ,
-
-                        prop_structureClass:  [] ,
-                        prop_structureStyles: {} ,
-
-                        prop_imageTitle : prop_imageTitle ,
-                        prop_imageAlt : prop_imageAlt ,
-
-                        prop_imageSource  :  prop_imageSource,
-                        prop_imageClass   :  prop_imageClass,
-                        prop_imageStyles  :  prop_imageStyles,
-                    }
-                )
-            }
-            else {
-                const el = document.querySelector(`#component-link-image-${this._COMPONENT_RANDOM_ID}`);
-                if (el != null){
-                    el.remove();
-                }
-            }
-
-        }
-
-    }
-
-    componentFn_render_icon(partName) {
-
-        const data = this.getPartProps(partName);
-
-        if (data != null){
-
-            const prop_iconSource            =  data.hasOwnProperty("prop_iconSource")             ?  data.prop_iconSource           : null;
-            const prop_iconIsItalik          =  data.hasOwnProperty("prop_iconIsItalik")           ?  data.prop_iconIsItalik         : false;
-            const prop_iconClass             =  data.hasOwnProperty("prop_iconClass")              ?  data.prop_iconClass            : null;
-            const prop_iconStyles            =  data.hasOwnProperty("prop_iconStyles")             ?  data.prop_iconStyles           : null;
-
-            if (prop_iconSource != null){
-                new window.ComponentIcon(
-                    `component-link-icon-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        classList:  [/*"col-4" */] ,
-
-                        prop_structureClass:  [] ,
-                        prop_structureStyles: {} ,
-
-                        prop_icon : prop_iconSource ,
-                        prop_isItalik : prop_iconIsItalik ,
-
-                        prop_iconClass : prop_iconClass ,
-                        prop_iconStyles : prop_iconStyles
-                    }
-                )
-            }
-            else {
-                const el = document.querySelector(`#component-link-icon-${this._COMPONENT_RANDOM_ID}`);
-                if (el != null){
-                    el.remove();
-                }
-            }
-
-        }
-
-    }
-
-
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-    fn_callbackLink(event , prop_linkHref){
-        if (prop_linkHref != null){
-            window.open(prop_linkHref, '_blank');
-        }
-    }
-
-}
-
-
-
-
-/*-------------------------------------
- 01-06) Component Description
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_icon
-@prop_title
-
-@prop_description
-@prop_descriptionClass
-@prop_descriptionStyles
-
-@prop_buttonTitleMore
-@prop_buttonTitleLess
-
-
-@prop_height
-@prop_button   title_more|title_less|prop_show
+ 01-05) Component Description
 -------------------------------------*/
 class ComponentDescriptionBase extends ComponentBase{
 
@@ -2585,22 +2139,360 @@ window.ComponentDescription = class ComponentDescription extends ComponentDescri
 }
 
 
+/*-------------------------------------
+ 01-06) Component link
+-------------------------------------*/
+class ComponentLinkBase extends ComponentBase{
+
+
+
+    /* ---------------------------------------------
+     PROPERTYs Pattern
+   --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_borderClass: {
+            prop : "prop_borderClass",
+            default: ["row"  , "px-2" , "py-1" , "m-0" , "border" , "shadow-sm" , "rounded" , "rounded"]
+        } ,
+        prop_borderStyles: {
+            prop : "prop_borderStyles",
+            default: {
+                "cursor" : "pointer" ,
+                "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("normal") && tools_const.styles.elementLink.normal.hasOwnProperty("backgroundColor")  ? tools_const.styles.elementLink.normal.backgroundColor : ""
+            }
+        } ,
+        prop_borderHoverStyles: {
+            prop : "prop_borderHoverStyles",
+            default: {
+                "transition" : "background-color ease 300ms" ,
+                "background-color" :  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementLink") && tools_const.styles.elementLink.hasOwnProperty("hover") && tools_const.styles.elementLink.hover.hasOwnProperty("backgroundColor") ? tools_const.styles.elementLink.hover.backgroundColor : ""
+            }
+        } ,
+        prop_linkHref: {
+            prop : "prop_linkHref",
+            default: null
+        } ,
+        prop_imageSource: {
+            prop : "prop_imageSource",
+            default: null
+        } ,
+        prop_imageTitle: {
+            prop : "prop_imageTitle",
+            default: null
+        } ,
+        prop_imageAlt: {
+            prop : "prop_imageAlt",
+            default: null
+        } ,
+        prop_imageClass: {
+            prop : "prop_imageClass",
+            default: ["text-center"]
+        } ,
+        prop_imageStyles:  {
+            prop : "prop_imageStyles",
+            default: null
+        } ,
+
+        prop_iconSource: {
+            prop : "prop_iconSource",
+            default: null
+        } ,
+        prop_iconIsItalik: {
+            prop : "prop_iconIsItalik",
+            default: false
+        } ,
+        prop_iconClass: {
+            prop : "prop_iconClass",
+            default: ["text-center"]
+        } ,
+        prop_iconStyles: {
+            prop : "prop_iconStyles",
+            default: null
+        } ,
+
+        prop_title: {
+            prop : "prop_title",
+            default: ""
+        } ,
+        prop_titleClass: {
+            prop : "prop_titleClass",
+            default: []
+        } ,
+        prop_titleStyles: {
+            prop : "prop_titleStyles",
+            default: {
+                "height": "100%",
+                "line-height": "500%",
+                "text-align": "center"
+            }
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+      --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_border: [
+            this._COMPONENT_PATTERN.prop_borderClass ,
+            this._COMPONENT_PATTERN.prop_borderStyles ,
+            this._COMPONENT_PATTERN.prop_borderHoverStyles ,
+            this._COMPONENT_PATTERN.prop_linkHref ,
+        ] ,
+        part_image: [
+            this._COMPONENT_PATTERN.prop_imageSource ,
+            this._COMPONENT_PATTERN.prop_imageTitle ,
+            this._COMPONENT_PATTERN.prop_imageAlt ,
+            this._COMPONENT_PATTERN.prop_imageClass ,
+            this._COMPONENT_PATTERN.prop_imageStyles ,
+        ] ,
+        part_icon: [
+            this._COMPONENT_PATTERN.prop_iconSource ,
+            this._COMPONENT_PATTERN.prop_iconIsItalik ,
+            this._COMPONENT_PATTERN.prop_iconClass ,
+            this._COMPONENT_PATTERN.prop_iconStyles ,
+        ] ,
+        part_title: [
+            this._COMPONENT_PATTERN.prop_title ,
+            this._COMPONENT_PATTERN.prop_titleClass ,
+            this._COMPONENT_PATTERN.prop_titleStyles ,
+        ] ,
+    }
+
+
+    /* ---------------------------------------------
+     PROPERTYs Schema
+     --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_border: {
+                part_image: {} ,
+                part_icon: {} ,
+                part_title: {} ,
+            }
+        } ,
+    }
+
+}
+window.ComponentLink = class ComponentLink extends ComponentLinkBase{
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentLink.name] ,
+            elId
+        );
+        this.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_border");
+        this.templateFn("part_image");
+        this.templateFn("part_icon");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
+            case "part_image":
+                return this.componentFn_render_image(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
+            case "part_title":
+                return this.template_render_title(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+   <component-border id="component-link-border-${this._COMPONENT_RANDOM_ID}" class="row px-2 py-1 m-0">
+       <component-body>
+         
+          <component-icon id="component-link-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+         
+          <component-image id="component-link-image-${this._COMPONENT_RANDOM_ID}"></component-image>
+ 
+          ${this.templateFn("part_title") ?? ""}
+         
+       </component-body>
+   </component-border>
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_title(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title            =  data.hasOwnProperty("prop_title")               ?  data.prop_title            : [];
+            const prop_titleClass       =  data.hasOwnProperty("prop_titleClass")          ?  data.prop_titleClass       : {};
+            const prop_titleStyles      =  data.hasOwnProperty("prop_titleStyles")         ?  data.prop_titleStyles      : {};
+            /*col-8*/
+            return `
+<b data-part-name="${partName}" 
+         id="component-link-title-${this._COMPONENT_RANDOM_ID}"
+         class="${tools_public.renderListClass(prop_titleClass)} ">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-link-title-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_titleStyles)}
+         }
+     </style>
+     
+     ${prop_title}
+     
+</b>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_border(partName) {
+
+        const data = this.getPartProps(partName);
+
+        const prop_borderClass            =  data.hasOwnProperty("prop_borderClass")               ?  data.prop_borderClass            : [];
+        const prop_borderStyles           =  data.hasOwnProperty("prop_borderStyles")              ?  data.prop_borderStyles           : {};
+        const prop_borderHoverStyles      =  data.hasOwnProperty("prop_borderHoverStyles")         ?  data.prop_borderHoverStyles      : {};
+        const prop_linkHref               =  data.hasOwnProperty("prop_linkHref")                  ?  data.prop_linkHref               : null;
+
+        if (data != null){
+
+            new window.ComponentBorder(
+                `component-link-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_structureClass:  prop_borderClass ,
+                    prop_structureStyles: prop_borderStyles ,
+                    prop_structureHoverStyles: prop_borderHoverStyles ,
+
+                    prop_borderClass: [/*"row"*/],
+
+                    fn_callback  :  (event) => {
+                        this.fn_callbackLink(event,  prop_linkHref)
+                    } ,
+                }
+            )
+        }
+
+    }
+
+    componentFn_render_image(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_imageSource            =  data.hasOwnProperty("prop_imageSource")               ?  data.prop_imageSource            : null;
+            const prop_imageTitle             =  data.hasOwnProperty("prop_imageTitle")                ?  data.prop_imageTitle             : null;
+            const prop_imageAlt               =  data.hasOwnProperty("prop_imageAlt")                  ?  data.prop_imageAlt               : null;
+            const prop_imageClass             =  data.hasOwnProperty("prop_imageClass")                ?  data.prop_imageClass             : null;
+            const prop_imageStyles            =  data.hasOwnProperty("prop_imageStyles")               ?  data.prop_imageStyles            : null;
+
+            if (prop_imageSource != null){
+                new window.ComponentImage(
+                    `component-link-image-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList:  [/*"col-4"*/ ] ,
+
+                        prop_structureClass:  [] ,
+                        prop_structureStyles: {} ,
+
+                        prop_imageTitle : prop_imageTitle ,
+                        prop_imageAlt : prop_imageAlt ,
+
+                        prop_imageSource  :  prop_imageSource,
+                        prop_imageClass   :  prop_imageClass,
+                        prop_imageStyles  :  prop_imageStyles,
+                    }
+                )
+            }
+            else {
+                const el = document.querySelector(`#component-link-image-${this._COMPONENT_RANDOM_ID}`);
+                if (el != null){
+                    el.remove();
+                }
+            }
+
+        }
+
+    }
+
+    componentFn_render_icon(partName) {
+
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_iconSource            =  data.hasOwnProperty("prop_iconSource")             ?  data.prop_iconSource           : null;
+            const prop_iconIsItalik          =  data.hasOwnProperty("prop_iconIsItalik")           ?  data.prop_iconIsItalik         : false;
+            const prop_iconClass             =  data.hasOwnProperty("prop_iconClass")              ?  data.prop_iconClass            : null;
+            const prop_iconStyles            =  data.hasOwnProperty("prop_iconStyles")             ?  data.prop_iconStyles           : null;
+
+            if (prop_iconSource != null){
+                new window.ComponentIcon(
+                    `component-link-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList:  [/*"col-4" */] ,
+
+                        prop_structureClass:  [] ,
+                        prop_structureStyles: {} ,
+
+                        prop_icon : prop_iconSource ,
+                        prop_isItalik : prop_iconIsItalik ,
+
+                        prop_iconClass : prop_iconClass ,
+                        prop_iconStyles : prop_iconStyles
+                    }
+                )
+            }
+            else {
+                const el = document.querySelector(`#component-link-icon-${this._COMPONENT_RANDOM_ID}`);
+                if (el != null){
+                    el.remove();
+                }
+            }
+
+        }
+
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_callbackLink(event , prop_linkHref){
+        if (prop_linkHref != null){
+            window.open(prop_linkHref, '_blank');
+        }
+    }
+
+}
 
 
 /*-------------------------------------
  01-07) Component Info
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_icon
-@prop_iconClass
-@prop_iconStyles
-
-@prop_info
-@prop_infoClass
-@prop_infoStyles
 -------------------------------------*/
 class ComponentInfoBase extends ComponentBase{
 
@@ -2784,25 +2676,8 @@ window.ComponentInfo = class ComponentInfo extends ComponentInfoBase{
 }
 
 
-
-
 /*-------------------------------------
  01-08) Component Card
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_cardClass
-@prop_cardStyles
-
-@prop_header
-@prop_cardHeaderClassBackground
-@prop_cardHeaderClassColor
-
-@prop_body
-@prop_cardBodyClassBackground
-@prop_cardBodyClassColor
 -------------------------------------*/
 class ComponentCardBase extends ComponentBase{
 
@@ -3006,25 +2881,8 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
 }
 
 
-
-
 /*-------------------------------------
  01-08) Component Card
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_cardClass
-@prop_cardStyles
-
-@prop_header
-@prop_cardHeaderClassBackground
-@prop_cardHeaderClassColor
-
-@prop_body
-@prop_cardBodyClassBackground
-@prop_cardBodyClassColor
 -------------------------------------*/
 class ComponentCardInfoBase extends ComponentBase{
 
@@ -3326,13 +3184,8 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
 }
 
 
-
 /*-------------------------------------
  01-010) Component list selected
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
 -------------------------------------*/
 class ComponentListSelectedScrollerBase extends ComponentBase{
 
@@ -3702,20 +3555,13 @@ window.ComponentListSelectedScroller = class ComponentListSelectedScroller exten
 
 
 
-/* ===============================================================================================================
- [02] FETCH
-=============================================================================================================== */
+
+//===============================================================================================================
+// [01 - 10] basic ->  [02] Fetch
+//===============================================================================================================
 
 /*-------------------------------------
  02-01) Component Loading
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_type                       // circle[default] | null
-@prop_background_loading
-@prop_background_shadow
 -------------------------------------*/
 class ComponentLoadingBase extends ComponentBase{
 
@@ -3895,22 +3741,8 @@ window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
 }
 
 
-
-
 /*-------------------------------------
  02-02) Component 404
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_type            'simple_animation'
-@prop_width
-@prop_height
-
-@prop_btnRetry        {prop_type: "submit"  , prop_title: "Retry" , prop_btnClass: ["w-100"]}
-
-@fn_callback
 -------------------------------------*/
 class Component404Base extends ComponentBase{
 
@@ -4265,22 +4097,8 @@ window.Component404 = class Component404 extends Component404Base{
 }
 
 
-
 /*-------------------------------------
  02-03) Component Form
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_formClass
-@prop_formStyles
-
-@prop_btnSubmit    {prop_type , prop_title , prop_btnClass}
-
-@prop_forms
-@prop_url
-@prop_data
 -------------------------------------*/
 class ComponentFormBase extends ComponentBase{
 
@@ -4733,27 +4551,8 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
 }
 
 
-
 /*-------------------------------------
  02-04) Component Widget
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_widgetClass
-@prop_widgetStyles
-@prop_widgetMinHeight
-
-@prop_btnMore_icon
-@prop_btnMore_show
-@prop_btnMore_link
-
-@prop_error404   type   width   height
-@prop_fetch      url    data
-
-//call_fetchWidget
-//call_getComponentLayout
 -------------------------------------*/
 class ComponentWidgetBase extends ComponentBase{
 
@@ -5056,21 +4855,8 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
 }
 
 
-
 /*-------------------------------------
  02-04) Component Iframe
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_url
-@prop_width
-@prop_height
-@prop_iframeClass
-@prop_iframeStyles
-
-//call_getIframe
 -------------------------------------*/
 class ComponentIframeBase extends ComponentBase{
 
@@ -5265,30 +5051,12 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
 
 
 
-/* ===============================================================================================================
- [03] BUTTONs And INPUTs
-=============================================================================================================== */
+//===============================================================================================================
+// [10 - 19] button / inputs / tools -> [010] Button and Inputs
+//===============================================================================================================
 
 /*-------------------------------------
- 03-01) Component Button
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_type   // cancel  //submit   //back //null
-@prop_title
-@prop_size
-
-@prop_btnClass
-@prop_btnStyles
-@prop_btnHoverStyles
-
-@prop_btnBackgroundColor
-@prop_btnBackgroundColor_hover
-@prop_btnColor
-
-@fn_callback
+ 010-01) Component Button
 -------------------------------------*/
 class ComponentButtonBase extends ComponentBase{
 
@@ -5505,537 +5273,8 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
 }
 
 
-
 /*-------------------------------------
- 03-02) Component OTP
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_size
-
-@prop_name
-@prop_length
-@prop_input
-@prop_langs
-
-@fn_onGetNewToken
-
-//call_startCountdown
-//call_getValue
--------------------------------------*/
-class ComponentOtpBase extends ComponentBase{
-
-    /* ---------------------------------------------
-        PROPERTYs Pattern
-     --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_size: {
-            prop: "prop_size",
-            default: tools_css.standardSizes.m.name
-        },
-        prop_name: {
-            prop: "prop_name",
-            default: "otp"
-        },
-        prop_input: {
-            prop: "prop_input",
-            default: null
-        },
-        prop_langs: {
-            prop: "prop_langs",
-            default: {
-                _title_otp_description: "کد برای شماره/ایمیل زیر ارسال شد",
-                _text_timer_after_active_otp: "تا ارسال مجدد کد",
-                _text_timer_after_di_active_otp: "کد منقضی شده است",
-                _text_get_new_otp: "کد جدید"
-            }
-        },
-        prop_length: {
-            prop: "prop_length",
-            default: 6
-        },
-        var_countdown_text: {
-            prop: "var_countdown_text",
-            default: "00:00"
-        },
-        var_activeForm_class: {
-            prop: "var_activeForm_class",
-            default: ""
-        },
-        var_diActiveForm_class: {
-            prop: "var_diActiveForm_class",
-            default: "d-none"
-        }
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-
-        part_value: [
-
-        ],
-
-        part_elements: [],
-
-        part_label: [
-            this._COMPONENT_PATTERN.prop_name,
-            this._COMPONENT_PATTERN.prop_input,
-            this._COMPONENT_PATTERN.prop_langs,
-            this._COMPONENT_PATTERN.prop_size,
-        ],
-
-        part_inputs: [
-            this._COMPONENT_PATTERN.prop_name,
-            this._COMPONENT_PATTERN.prop_length,
-            this._COMPONENT_PATTERN.prop_size
-        ],
-
-        part_description: [
-            this._COMPONENT_PATTERN.prop_langs,
-            this._COMPONENT_PATTERN.var_countdown_text,
-            this._COMPONENT_PATTERN.var_activeForm_class,
-            this._COMPONENT_PATTERN.var_diActiveForm_class,
-            this._COMPONENT_PATTERN.prop_size
-        ]
-    };
-
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_value: {} ,
-            part_elements: {
-                part_label: {} ,
-                part_inputs: {} ,
-                part_description: {} ,
-            } ,
-        } ,
-    }
-
-}
-window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
-
-    _TIME_CURRENT = null;
-    _TIME_INTRVAl = null;
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentOtp.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-
-    /* ---------------------------------------------
-     TEMPLATEs
-    --------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_label");
-    }
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_value":
-                return this.template_render_value(partName);
-            case "part_elements":
-                return this.template_render_elements(partName);
-            case "part_inputs":
-                return this.template_render_inputs(partName);
-            case "part_label":
-                return this.componentFn_render_label(partName);
-            case "part_description":
-                return this.template_render_description(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-      ${this.templateFn("part_value") ?? ""}
-      
-      ${this.templateFn("part_elements") ?? ""}
-                `;
-        return this.templateBasic_render_structure(content);
-    }
-
-
-    template_render_value(partName) {
-
-        const data = this.getPartProps(partName)
-        if (data != null){
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-tabs-value-${ this._COMPONENT_RANDOM_ID}" 
-         class="" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-tabs-value-${ this._COMPONENT_RANDOM_ID}{
-         
-         }
-     </style>
-     
-     <input type="hidden" name="otp_value_${ this._COMPONENT_RANDOM_ID}" value=""/>
-     
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-
-    }
-
-    template_render_elements(partName){
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-otp-elements-${ this._COMPONENT_RANDOM_ID}" 
-         class="" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-otp-elements-${ this._COMPONENT_RANDOM_ID}{
-         
-         }
-     </style>
-     
-     <section class="component-element-structure mb-2">
-     
-          <component-label id="component-otp-label-${ this._COMPONENT_RANDOM_ID}"></component-label>
-
-          ${this.templateFn("part_inputs") ?? ""}
-          
-          ${this.templateFn("part_description") ?? ""}
-          
-     </section>
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_inputs(partName){
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_name             =   data.hasOwnProperty("prop_name")             ?  data.prop_name             :  "otp";
-            const prop_length           =   data.hasOwnProperty("prop_length")           ?  data.prop_length           :  6;
-            const prop_langs            =   data.hasOwnProperty("prop_langs")            ?  data.prop_langs            : {};
-            const prop_size             =   data.hasOwnProperty("prop_size")             ?  data.prop_size             : null;
-
-            const elHeight = tools_css.getHeightSize(prop_size);
-            const elfontSize = tools_css.getFontSize(prop_size);
-
-
-
-
-            let inputHtmls = "";
-            for (let num=0; num<prop_length; num++){
-
-                inputHtmls += `
-<input  id="component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num}" 
-        oninput="${this.getFn("fn_onMoveToNext" , "event" , (num < prop_length-1 ? `'component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num+1}'` : null) )}" 
-        onkeydown="${num > 0 ?  this.getFn("fn_onMoveToPrev" , "event" , `'component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num-1}'`)  : ''}" 
-        onfocus="${this.getFn("fn_onFocus" , "event" , `'component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num}'`)}"
-        type="text"  maxlength="1"
-        class="input-otp my-1 mx-2 text-center  form-control rounded-0  border rounded shadow-sm font-10pt"  />
-`;
-            }
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-otp-inputs-${ this._COMPONENT_RANDOM_ID}" 
-         class="" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-otp-inputs-${ this._COMPONENT_RANDOM_ID} .form-otp{
-             direction: ltr !important;
-          }
-         #${this._COMPONENT_ID} #component-otp-inputs-${ this._COMPONENT_RANDOM_ID} .input-otp{
-             height: ${elHeight}px;
-             line-height: ${elHeight}px;
-          }
-     </style>
-     
-     <div class="form-otp inputs d-flex flex-row justify-content-center">
-         ${inputHtmls}
-     </div>
-     
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_description(partName){
-
-        const data = this.getPartProps(partName)
-        if (data != null){
-
-            const prop_langs                 =   data.hasOwnProperty("prop_langs")                ?  data.prop_langs               : {};
-            const var_countdown_text         =   data.hasOwnProperty("var_countdown_text")        ?  data.var_countdown_text       : "00:00";
-            const var_activeForm_class       =   data.hasOwnProperty("var_activeForm_class")      ?  data.var_activeForm_class     : "";
-            const var_diActiveForm_class     =   data.hasOwnProperty("var_diActiveForm_class")    ?  data.var_diActiveForm_class   : "d-none";
-            const prop_size             =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               : 0;
-
-            const elHeight = tools_css.getHeightSize(prop_size);
-            const elfontSize = tools_css.getFontSize(prop_size);
-
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID}" 
-         class="" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID}{
-             line-height: ${elHeight}px;
-         }
-         #${this._COMPONENT_ID} #component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID} .btn-get-new-token{
-             cursor: pointer;
-             height: ${elHeight}px;
-             line-height: ${elHeight}px;
-         }
-     </style>
-     
-     <div class="mt-1  text-center">
-         <p  id="form-timer-otp"  class="d-inline-block">
-                 <span  class="countdown bg-secondary rounded-0 text-white px-2 mx-2">
-                     ${var_countdown_text}
-                 </span>
-
-                 <div class="pass_active_code_otp d-inline-block ${var_activeForm_class}">
-                     <span>
-                         ${prop_langs.hasOwnProperty("_text_timer_after_active_otp") ? prop_langs._text_timer_after_active_otp : ""}
-                     </span>
-                 </div>
-
-                 <div class="pass_di_active_code_otp d-inline-block ${var_diActiveForm_class}">
-                     <span class="">
-                         ${prop_langs.hasOwnProperty("_text_timer_after_di_active_otp") ? prop_langs._text_timer_after_di_active_otp : ""}
-                     </span>
-                     <span class="mx-1">
-                         |
-                     </span>
-                     <span class="btn-get-new-token mx-1 text-info cursor-pointer" onclick="${this.getFn("fn_onGetNewToken")}">
-                         ${prop_langs.hasOwnProperty("_text_get_new_otp") ? prop_langs._text_get_new_otp : ""}
-                     </span>
-                 </div>
-          </p>
-     </div>
-     
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-
-    }
-
-    componentFn_render_label(partName){
-
-        const data = this.getPartProps(partName)
-        if (data != null){
-
-            const prop_name             =   data.hasOwnProperty("prop_name")             ?  data.prop_name             :  "otp";
-            const prop_langs            =   data.hasOwnProperty("prop_langs")            ?  data.prop_langs            : {};
-            const prop_input            =   data.hasOwnProperty("prop_input")            ?  data.prop_input            :  null;
-
-            this.componentFneBasic_render_structure(
-                `component-otp-label-${ this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_title:
-                        `
-<p class="title-otp text-center  mb-0 px-2 ">
-    ${prop_langs.hasOwnProperty("_title_otp_description") ? prop_langs._title_otp_description : ""}
-    <b style="display:block; direction: ltr">
-       ${prop_input}
-    </b>
-</p>
-                `,
-                    prop_for:  `component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}0`,
-                }
-            );
-        }
-
-
-    }
-
-
-
-    /* ---------------------------------------------
-      FUNCTIONs
-     --------------------------------------------- */
-    fn_getElValue(){
-        return document.querySelector(` #${this._COMPONENT_ID} #component-tabs-value-${ this._COMPONENT_RANDOM_ID} input`);
-    }
-
-    fn_onGetValue(){
-        let resultExp = "";
-
-        const data = this._COMPONENT_CONFIG;
-
-        if ( data.hasOwnProperty("prop_length") && data.hasOwnProperty("prop_name") ){
-            const prop_length  = data.prop_length;
-            const prop_name    = data.prop_name;
-
-            for (let i=0 ; i<prop_length; i++){
-                const partEl = document.querySelector(`input#component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${i}`);
-                const partValue = partEl.value;
-                resultExp += partValue;
-            }
-        }
-
-        const elValue = this.fn_getElValue();
-        elValue.value = resultExp;
-
-        return resultExp;
-    }
-
-    fn_onGetNewToken(){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onGetNewToken") && typeof data.fn_onGetNewToken != null){
-            data.fn_onGetNewToken();
-        }
-    }
-
-    fn_onMoveToNext(event , nextFieldID){
-        if (event.key !== 'Backspace' && event.target.value !== '') {
-            if (nextFieldID !== '') {
-                const el = document.getElementById(nextFieldID);
-                if (el != null){
-                    el.focus();
-                }
-            }
-        }
-        this.fn_onGetValue();
-    }
-
-    fn_onMoveToPrev(event , prevFieldID){
-        if (event.key === 'Backspace' && event.target.value === '') {
-            if (prevFieldID !== '') {
-                const el = document.getElementById(prevFieldID);
-                if (el != null){
-                    el.focus();
-                }
-            }
-        }
-        this.fn_onGetValue();
-    }
-
-    fn_onFocus(event , myElId){
-        const el = document.getElementById(myElId);
-        if (el != null){
-            el.value = "";
-        }
-        this.fn_onGetValue();
-    }
-
-    fn_setTimeCurrent(){
-        this._TIME_CURRENT = new Date().getTime() ;
-    }
-
-    fn_calculateTimer(durationForEnd){
-        const timeCurrent =   this._TIME_CURRENT != null   ?    this._TIME_CURRENT  :  0;
-
-        const now = new Date().getTime();
-        return (timeCurrent + durationForEnd*60*1000) - now;
-    }
-
-    call_startCountdown(durationForEnd){
-        this.fn_setTimeCurrent();
-
-        this.set("var_activeForm_class" , "");
-        this.set("var_diActiveForm_class" , "d-none");
-
-        this._TIME_INTRVAl = setInterval(() => {
-            const distance = this.fn_calculateTimer(durationForEnd);
-
-            if (distance < 0) {
-                clearInterval(this._TIME_INTRVAl);
-                this.set("var_countdown_text" , "00:00");
-                this.set("var_activeForm_class" , "d-none");
-                this.set("var_diActiveForm_class" , "");
-                return;
-            }
-
-            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            minutes = minutes < 10 ? "0"+minutes : minutes;
-            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            seconds = seconds < 10 ? "0"+seconds : seconds;
-            this.set("var_countdown_text" , `${minutes}:${seconds}`);
-        }, 1000);
-    }
-
-    call_getValue(){
-        const elValue = this.fn_getElValue();
-        return elValue.value
-    }
-}
-
-
-
-
-/*-------------------------------------
- 03-03) Component Input
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_show_label
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-@prop_title
-@prop_size
-
-@prop_inputClass
-@prop_inputStyles
-@prop_type
-@prop_name
-@prop_value
-@prop_placeholder
-@prop_isDisable
-
-@prop_icon
-
-@fn_oninput
-@fn_onfocus
-@fn_onblur
-
-@fn_clickBtnTools
-//call_setValue
+ 010-02) Component Input
 -------------------------------------*/
 class ComponentInputBase extends ComponentBase{
 
@@ -6608,35 +5847,8 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
 }
 
 
-
 /*-------------------------------------
- 03-04) Component Input Price
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_show_label
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-@prop_title
-
-@prop_inputClass
-@prop_inputStyles
-@prop_type
-@prop_name
-@prop_value
-@prop_placeholder
-@prop_isDisable
-
-@prop_icon
-
-@fn_oninput
-@fn_onfocus
-@fn_onblur
-
-@fn_clickBtnTools
+ 010-03) Component Input Price
 -------------------------------------*/
 class ComponentInputPriceBase extends ComponentBase{
 
@@ -7418,40 +6630,1964 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
 }
 
 
+/*-------------------------------------
+ 010-04) Component Input email
+-------------------------------------*/
+class ComponentInputEmailBase extends ComponentBase{
+    /* ---------------------------------------------
+           PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_backgroundColorForm: {
+            prop: "prop_backgroundColorForm",
+            default: tools_const?.styles?.inputEmail?.backgroundColor_form ?? ""
+        },
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.inputEmail?.color_icon ?? ""
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "TITLE"
+        },
+        prop_inputClass: {
+            prop: "prop_inputClass",
+            default: ["form-control"]
+        },
+        prop_inputStyles: {
+            prop: "prop_inputStyles",
+            default: {}
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: null
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: null
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: null
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: null
+        },
+        prop_iconEmail: {
+            prop: "prop_icon",
+            default: tools_icons.icon_email
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_isAbsoluteRule: {
+            prop: "prop_isAbsoluteRule",
+            default: true
+        },
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        },
+        prop_msgRules: {
+            prop: "prop_msgRules",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_label: [
+
+        ],
+
+        part_body: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_backgroundColorForm,
+        ],
+
+        part_body_email: [
+            this._COMPONENT_PATTERN.prop_inputClass,
+            this._COMPONENT_PATTERN.prop_inputStyles,
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_placeholder,
+            this._COMPONENT_PATTERN.prop_iconEmail,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_size
+        ],
+
+        part_body_icon: [
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_colorIcon ,
+            this._COMPONENT_PATTERN.prop_size
+        ],
+
+        part_body_icon_clear: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_size
+        ],
+
+        part_body_validate: [
+            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.prop_msgRules,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_title
+        ]
+    };
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure:{
+            part_label : {} ,
+            part_body : {
+                part_body_email:{},
+                part_body_icon:{},
+                part_body_icon_clear:{},
+                part_body_validate:{},
+            },
+        } ,
+    }
+
+}
+window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEmailBase{
+
+    _STATUS_IS_SHOW = false;
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentInputEmail.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+   TEMPLATEs
+ --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_body_icon");
+        this.templateFn("part_body_icon_clear");
+        this.templateFn("part_body_icon_visit");
+        this.templateFn("part_body_validate");
+    }
+
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+
+            case "part_body":
+                return this.template_render_body(partName);
+
+            case "part_body_email":
+                return this.template_render_bodyEmail(partName);
+
+            case "part_label":
+                return this.componentFn_render_label(partName);
+
+            case "part_body_icon":
+                return this.componentFn_render_bodyIcon(partName);
+
+            case "part_body_icon_clear":
+                return this.componentFn_render_bodyIconClear(partName);
+
+            case "part_body_validate":
+                return this.componentFn_render_bodyValidate(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+
+        const content = `
+  
+     <component-label id="component-input-email-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
+
+     ${this.templateFn("part_body") ?? ""}
+     
+      <component-validate id="component-input-email-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
+      `;
+
+        return this.templateBasic_render_structure(content , []);
+    }
+
+    template_render_body(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                     =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                     : null;
+            const prop_backgroundColorForm      =   data.hasOwnProperty("prop_backgroundColorForm")      ?  data.prop_backgroundColorForm      : null;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-email-body-${this._COMPONENT_RANDOM_ID}"  
+          class="position-relative rounded-0 d-block" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-email-body-${this._COMPONENT_RANDOM_ID}{
+               height: ${elHeight}px;
+               background-color: ${prop_backgroundColorForm};
+         }
+         
+     </style>
+     
+     ${this.templateFn("part_body_email") ?? ""}
+     
+     <component-icon id="component-input-email-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-email-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+        
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyEmail(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const screanWidthType = tools_css.getScreenWidth();
+
+            const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
+            const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
+            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
+            const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
+            const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                                    : false;
+
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+            let elfontSize = tools_css.getFontSize(prop_size);
+
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
+            }
+
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-email-element-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-email-element-${this._COMPONENT_RANDOM_ID}{
+              
+         }
+         #${this._COMPONENT_ID} #component-input-email-${this._COMPONENT_RANDOM_ID}{
+              ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
+              ${directionRtl ? `right : 0` :`left : 0` };
+              width: calc( 100% - ${prop_icon != null ? "30px" : "0px"});
+            
+              ${prop_icon != null ? (directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important") : ""};
+              ${prop_icon != null ? (directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important") : ""};
+           
+              ${(directionRtl ? "border-top-left-radius: 0 !important" : "border-top-right-radius: 0 !important") };
+              ${(directionRtl ? "border-bottom-left-radius: 0 !important" : "border-bottom-right-radius: 0 !important")};
+           
+              height: ${elHeight}px;
+              line-height: ${elHeight}px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-size: ${elfontSize}px;
+              top: 0;
+              ${tools_public.renderListStyle(prop_inputStyles)}
+         }
+     </style>
+
+     <input id="component-input-email-${this._COMPONENT_RANDOM_ID}"   
+            class=" ${tools_public.renderListClass(prop_inputClass)} border-1"
+            name="${prop_name || "" }"  
+            type="email"  
+            value="${prop_value || ""}"
+            placeholder="${prop_placeholder || ""}"
+            ${prop_isDisable ? 'disabled' : ''}
+            onInput="${this.getFn("fn_onInputCallBack" , "event")}"
+            onblur=" ${this.getFn("fn_onBlurCallBack" , "event")}"
+            onfocus="${this.getFn("fn_onFocusCallBack" , "event")}"
+            />
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_bodyIcon(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+            const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
+
+            const elIconHeight = tools_css.getIconSize(prop_size);
+
+            let styles = {
+                "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }`,
+                "cursor" : "pointer",
+                "top" : "50%" ,
+                "color" : prop_colorIcon ,
+            }
+            if (directionRtl){
+                styles["right"]= "0"
+                styles["transform"]= "translate(-5px, -50%)"
+            }
+            else {
+                styles["left"]= "0"
+                styles["transform"]= "translate(5px, -50%)"
+            }
+
+            if (prop_icon != null){
+                new window.ComponentIcon(
+                    `component-input-email-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: typeof prop_icon == "function" ? prop_icon(elIconHeight , prop_colorIcon) : prop_icon,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onFocusInput" , "event")
+                        }
+                    }
+                )
+            }
+
+        }
+    }
+
+    componentFn_render_bodyIconClear(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+
+                let styles = {
+                    "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }`,
+                    "cursor" : "pointer",
+                    "top" : "50%" ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "0";
+                    styles["transform"]=  "translate(15px, -50%)" ;
+                }
+                else {
+                    styles["right"]= "0";
+                    styles["transform"]=  "translate(-15px, -50%)" ;
+                }
+
+                new window.ComponentIcon(
+                    `component-input-email-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        styles: {}  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : tools_icons.icon_clear(prop_size) ,
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onClearInput" , "event")
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_label(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            this.componentFneBasic_render_structure(
+                `component-input-email-label-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_for:  `component-input-email-${this._COMPONENT_RANDOM_ID}`,
+                    fn_callback: () => {
+
+                    } ,
+                }
+            );
+        }
+    }
+
+    componentFn_render_bodyValidate(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const data = this.getPartProps(partName)
+
+            if (data != null){
+                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+
+                if (!prop_isDisable){
+
+                    const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
+                    const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
+                    const prop_msgRules          =  data.hasOwnProperty("prop_msgRules")                  ?  data.prop_msgRules                      : null;
+                    const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
+                    const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+
+                    prop_listRules.push({
+                        description: "Must have email format",
+                        rule : "_is_email" ,
+                        params: {}
+                    })
+
+                    new window.ComponentValidate(
+                        `component-input-email-validate-${this._COMPONENT_RANDOM_ID}` ,
+                        {
+                            prop_reference: `component-input-email-${this._COMPONENT_RANDOM_ID}` ,
+                            prop_isAbsolute: prop_isAbsoluteRule ,
+                            prop_listRules ,
+                            prop_msgRules ,
+                            prop_title
+                        }
+                    );
+                }
+
+            }
+
+        }
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getInputElement(){
+        return   document.querySelector(`input#component-input-email-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+
+    fn_getInputValue(event){
+        const input = this.fn_getInputElement();
+        return input != null ? input.value : "";
+    }
+
+
+    fn_onHandleInput(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
+        }
+    }
+
+
+    fn_onInputCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_oninput") && typeof data.fn_oninput != null){
+            data.fn_oninput(event , this.fn_getValueInput());
+        }
+    }
+
+
+    fn_onFocusCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onfocus") && typeof data.fn_onfocus != null){
+            data.fn_onfocus(event , this.fn_getValueInput());
+        }
+    }
+
+
+    fn_onBlurCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onblur") && typeof data.fn_onblur != null){
+            data.fn_onblur(event , this.fn_getValueInput());
+        }
+    }
+
+
+    fn_onClearInput(event){
+        this.fn_getInputElement().value="";
+        this.fn_onInputCallBack(event);
+        this.fn_onFocusInput(event);
+    }
+
+
+    fn_onVisitInput(event){
+        this._STATUS_IS_SHOW = !this._STATUS_IS_SHOW;
+        this.templateFn("part_body_icon_visit");
+        this.fn_getInputElement().setAttribute("type" , this._STATUS_IS_SHOW ? "" : "password")
+    }
+
+
+    fn_onFocusInput(event){
+        const input = this.fn_getInputElement();
+        input.focus();
+        this.fn_onFocusCallBack();
+    }
+}
+
 
 /*-------------------------------------
- 03-05) Component Input Color
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
+ 010-05) Component Input Password
+-------------------------------------*/
+class ComponentInputPasswordBase extends ComponentBase{
+    /* ---------------------------------------------
+              PROPERTYs Pattern
+       --------------------------------------------- */
 
-@prop_name
-@prop_colorSelected
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_backgroundColorForm: {
+            prop: "prop_backgroundColorForm",
+            default: tools_const?.styles?.inputPassword?.backgroundColor_form ?? ""
+        },
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.inputPassword?.color_icon ?? ""
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "null"
+        },
+        prop_inputClass: {
+            prop: "prop_inputClass",
+            default: [" form-control"]
+        },
+        prop_inputStyles: {
+            prop: "prop_inputStyles",
+            default: {}
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: null
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: null
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: null
+        },
+        prop_icon: {
+            prop: "prop_icon",
+            default: tools_icons.icon_password
+        },
+        prop_isDisable: {
+            prop: "prop_isDisable",
+            default: false
+        },
+        prop_hasRules: {
+            prop: "prop_hasRules",
+            default: true
+        },
+        prop_isAbsoluteRule: {
+            prop: "prop_isAbsoluteRule",
+            default: true
+        },
+        prop_listRules: {
+            prop: "prop_listRules",
+            default: []
+        },
+        prop_msgRules: {
+            prop: "prop_msgRules",
+            default: null
+        },
+    };
 
-@prop_labelShow
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-@prop_title
 
-@prop_colorSelected
-@prop_isDisable
-@prop_borderColor
-@prop_formClass
-@prop_formStyles
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
 
-@prop_optionHeight
-@prop_optionWidth
-@prop_optionStyles
-@prop_positionTop
-@prop_backgroundColorBody
+        part_label: [
 
-@prop_colorBody
+        ],
 
-@prop_hasRules
-@prop_isAbsoluteRule
-@prop_listRules
+        part_body: [
+            this._COMPONENT_PATTERN.prop_backgroundColorForm ,
+            this._COMPONENT_PATTERN.prop_size ,
+        ],
+
+        part_body_password: [
+            this._COMPONENT_PATTERN.prop_inputClass ,
+            this._COMPONENT_PATTERN.prop_inputStyles ,
+            this._COMPONENT_PATTERN.prop_name ,
+            this._COMPONENT_PATTERN.prop_value ,
+            this._COMPONENT_PATTERN.prop_placeholder ,
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_isDisable ,
+            this._COMPONENT_PATTERN.prop_size ,
+        ],
+
+        part_body_icon: [
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_colorIcon
+        ],
+
+        part_body_icon_clear: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_size
+        ],
+
+        part_body_icon_visit: [
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_colorIcon
+        ],
+
+        part_body_validate: [
+            this._COMPONENT_PATTERN.prop_hasRules,
+            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
+            this._COMPONENT_PATTERN.prop_listRules,
+            this._COMPONENT_PATTERN.prop_msgRules,
+            this._COMPONENT_PATTERN.prop_isDisable,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_size,
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure:{
+            part_label : {} ,
+            part_body : {
+                part_body_password:{},
+                part_body_icon:{},
+                part_body_icon_clear:{},
+                part_body_icon_visit:{},
+                part_body_validate:{},
+            },
+        } ,
+    }
+
+}
+window.ComponentInputPassword = class ComponentInputPassword extends ComponentInputPasswordBase{
+
+    _STATUS_IS_SHOW = false;
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentInputPassword.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+   TEMPLATEs
+ --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_body_icon");
+        this.templateFn("part_body_icon_clear");
+        this.templateFn("part_body_icon_visit");
+        this.templateFn("part_body_validate");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+
+            case "part_body":
+                return this.template_render_body(partName);
+
+            case "part_body_password":
+                return this.template_render_bodyPassword(partName);
+
+            case "part_label":
+                return this.componentFn_render_label(partName);
+
+            case "part_body_icon":
+                return this.componentFn_render_bodyIcon(partName);
+
+            case "part_body_icon_clear":
+                return this.componentFn_render_bodyIconClear(partName);
+
+            case "part_body_icon_visit":
+                return this.componentFn_render_bodyIconVisit(partName);
+
+            case "part_body_validate":
+                return this.componentFn_render_bodyValidate(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+
+        const content = `
+  
+     <component-label id="component-input-password-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
+
+     ${this.templateFn("part_body") ?? ""}
+     
+      <component-validate id="component-input-password-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
+      `;
+
+        return this.templateBasic_render_structure(content , []);
+    }
+
+    template_render_body(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_size                     =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                     : null;
+            const prop_backgroundColorForm      =   data.hasOwnProperty("prop_backgroundColorForm")      ?  data.prop_backgroundColorForm      : null;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-password-body-${this._COMPONENT_RANDOM_ID}"  
+          class="position-relative d-block" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-password-body-${this._COMPONENT_RANDOM_ID}{
+               height: ${elHeight}px;
+               background-color: ${prop_backgroundColorForm};
+         }
+         
+     </style>
+     
+     ${this.templateFn("part_body_password") ?? ""}
+     
+     <component-icon id="component-input-password-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-password-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+     <component-icon id="component-input-password-icon-visit-${this._COMPONENT_RANDOM_ID}" ></component-icon>
+        
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyPassword(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const screanWidthType = tools_css.getScreenWidth();
+
+            const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
+            const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
+            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
+            const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
+            const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
+            const prop_isDisable     =   data.hasOwnProperty("prop_isDisable")                ?  data.prop_isDisable                                    : false;
+
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+
+            let elHeight = tools_css.getHeightSize(prop_size);
+            let elfontSize = tools_css.getFontSize(prop_size);
+
+            let padding = "180px"
+            if (screanWidthType == "xs"){
+                padding = "35px";
+            }
+
+            return `
+<section  data-part-name="${partName}"
+          id="component-input-password-element-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-password-element-${this._COMPONENT_RANDOM_ID}{
+            
+         }
+         #${this._COMPONENT_ID} #component-input-password-${this._COMPONENT_RANDOM_ID}{
+              ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
+              ${directionRtl ? "margin-left" : "margin-right"} : 30px ;
+              ${directionRtl ? `right : 0` :`left : 0` };
+              width: calc( 100% - 30px - ${prop_icon != null ? "30px" : "0px"});
+            
+              ${prop_icon != null ? (directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important") : ""};
+              ${prop_icon != null ? (directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important") : ""};
+           
+              ${(directionRtl ? "border-top-left-radius: 0 !important" : "border-top-right-radius: 0 !important") };
+              ${(directionRtl ? "border-bottom-left-radius: 0 !important" : "border-bottom-right-radius: 0 !important")};
+           
+              height: ${elHeight}px;
+              line-height: ${elHeight}px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-size: ${elfontSize}px;
+              top: 0;
+              ${tools_public.renderListStyle(prop_inputStyles)}
+         }
+     </style>
+
+     <input id="component-input-password-${this._COMPONENT_RANDOM_ID}"   
+            class=" ${tools_public.renderListClass(prop_inputClass)} border-1 position-absolute"
+            name="${prop_name || "" }"  
+            type="password"  
+            value="${prop_value || ""}"
+            placeholder="${prop_placeholder || ""}"
+            ${prop_isDisable ? 'disabled' : ''}
+            onInput="${this.getFn("fn_onInputCallBack" , "event")}"
+            onblur=" ${this.getFn("fn_onBlurCallBack" , "event")}"
+            onfocus="${this.getFn("fn_onFocusCallBack" , "event")}"
+            />
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_bodyIcon(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
+            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
+            const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
+
+            const elIconHeight = tools_css.getIconSize(prop_size);
+
+            let styles = {
+                "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 3) }`,
+                "cursor" : "pointer",
+                "top" : "50%" ,
+                "color" : prop_colorIcon ,
+            }
+            if (directionRtl){
+                styles["right"]= "0"
+                styles["transform"]= "translate(-5px, -50%)"
+            }
+            else {
+                styles["left"]= "0"
+                styles["transform"]= "translate(5px, -50%)"
+            }
+
+            if (prop_icon != null){
+                new window.ComponentIcon(
+                    `component-input-password-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(elIconHeight , prop_colorIcon) : prop_icon) : null ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+
+                        fn_callback: (event)=>{
+                            this.fn_onFocusInput(event);
+                        }
+                    }
+                )
+            }
+
+        }
+
+
+    }
+
+    componentFn_render_bodyIconClear(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
+
+                let styles = {
+                    "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 3) }`,
+                    "cursor" : "pointer",
+                    "top" : "50%" ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "0";
+                    styles["transform"]=  "translate(40px, -50%)" ;
+                }
+                else {
+                    styles["right"]= "0";
+                    styles["transform"]=  "translate(-40px, -50%)" ;
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-password-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        styles: {}  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : tools_icons.icon_clear(prop_size) ,
+
+                        fn_callback: ()=>{
+                            this.runFn("fn_onClearInput" , "event")
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_bodyIconVisit(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
+
+            if (!prop_isDisable){
+
+                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
+                const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
+
+                let styles = {
+                    "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 3) }`,
+                    "cursor" : "pointer",
+                    "top" : "50%" ,
+                    "color" : prop_colorIcon ,
+                };
+
+                if (directionRtl){
+                    styles["left"]= "0"
+                    styles["transform"]= "translate(5px, -50%)"
+                }
+                else {
+                    styles["right"]= "0"
+                    styles["transform"]= "translate(-5px, -50%)"
+                }
+
+
+                new window.ComponentIcon(
+                    `component-input-password-icon-visit-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList: []  ,
+                        styles: {
+
+                        }  ,
+
+                        prop_iconClass : ["position-absolute"] ,
+                        prop_iconStyles : styles ,
+                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit(prop_size , prop_colorIcon) : tools_icons.icon_un_visit(prop_size , prop_colorIcon),
+
+                        fn_callback: (event)=>{
+                            this.fn_onVisitInput(event);
+                        }
+                    }
+                )
+            }
+
+
+        }
+    }
+
+    componentFn_render_label(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            this.componentFneBasic_render_structure(
+                `component-input-password-label-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_for:  `component-input-password-${this._COMPONENT_RANDOM_ID}`,
+                    fn_callback: () => {
+
+                    } ,
+                }
+            );
+        }
+    }
+
+    componentFn_render_bodyValidate(partName) {
+        const data = this.getPartProps(partName)
+        if (data != null){
+
+            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
+            const prop_hasRules      =  data.hasOwnProperty("prop_hasRules")           ?  data.prop_hasRules               : true;
+            const prop_size          =   data.hasOwnProperty("prop_size")              ?  data.prop_size                   : null;
+
+            if (!prop_isDisable && prop_hasRules){
+
+                const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
+                const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
+                const prop_msgRules          =  data.hasOwnProperty("prop_msgRules")                  ?  data.prop_msgRules                      : null;
+                const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
+                const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+                new window.ComponentValidate(
+                    `component-input-password-validate-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_reference: `component-input-password-${this._COMPONENT_RANDOM_ID}` ,
+                        prop_isAbsolute: prop_isAbsoluteRule ,
+                        prop_listRules ,
+                        prop_msgRules ,
+                        prop_title ,
+                        prop_size
+                    }
+                );
+            }
+        }
+    }
+
+
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getInputElement(){
+        return   document.querySelector(`input#component-input-password-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+
+    fn_getInputValue(event){
+        const input = this.fn_getInputElement();
+        return input != null ? input.value : "";
+    }
+
+
+    fn_onHandleInput(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
+            this.fn_readyListRules(data.prop_listRules)
+        }
+    }
+
+
+    fn_onInputCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_oninput") && typeof data.fn_oninput != null){
+            data.fn_oninput(event , this.fn_getValueInput());
+        }
+    }
+
+
+    fn_onFocusCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onfocus") && typeof data.fn_onfocus != null){
+            data.fn_onfocus(event , this.fn_getValueInput());
+        }
+    }
+
+
+    fn_onBlurCallBack(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onblur") && typeof data.fn_onblur != null){
+            data.fn_onblur(event , this.fn_getValueInput());
+        }
+    }
+
+
+    fn_onClearInput(event){
+        this.fn_getInputElement().value="";
+        this.fn_onInputCallBack(event);
+        this.fn_onFocusInput(event);
+    }
+
+
+    fn_onVisitInput(event){
+        this._STATUS_IS_SHOW = !this._STATUS_IS_SHOW;
+        this.templateFn("part_body_icon_visit");
+        this.fn_getInputElement().setAttribute("type" , this._STATUS_IS_SHOW ? "" : "password")
+    }
+
+
+    fn_onFocusInput(event){
+        const input = this.fn_getInputElement();
+        input.focus();
+        this.fn_onFocusCallBack();
+    }
+
+}
+
+
+/*-------------------------------------
+ 010-06) Component Input File
+-------------------------------------*/
+class ComponentInputFileBase extends ComponentBase{
+
+    /* ---------------------------------------------
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_name: {
+            prop: "prop_name",
+            default: "NAME"
+        },
+        prop_accept: {
+            prop: "prop_accept",
+            default: "*"
+        },
+        prop_maxCount: {
+            prop: "prop_maxCount",
+            default: null
+        },
+        prop_maxSize: {
+            prop: "prop_maxSize",
+            default: null
+        },
+        prop_textValidateSize: {
+            prop: "prop_textValidateSize",
+            default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"
+        },
+        prop_textValidateAccept: {
+            prop: "prop_textValidateAccept",
+            default: "فرمت قابل پذیرش {{fileAccept}} می باشد"
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: null
+        },
+        prop_borderColor: {
+            prop: "prop_borderColor",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor") ? tools_const.styles.inputFile.boderColor : "red"
+        },
+        prop_borderColorHover: {
+            prop: "prop_borderColorHover",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColorHover") ? tools_const.styles.inputFile.boderColorHover : "red"
+        },
+        prop_borderHeight: {
+            prop: "prop_borderHeight",
+            default: "150px"
+        },
+        prop_textColor: {
+            prop: "prop_textColor",
+            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("textColor") ? tools_const.styles.inputFile.textColor : "red"
+        },
+        prop_text: {
+            prop: "prop_text",
+            default: "لطفا فایل خود را بکشید و رها کنید یا برای انتخاب کلیک کنید "
+        },
+        prop_showListFiles: {
+            prop: "prop_showListFiles",
+            default: true
+        },
+        var_fileIsValid: {
+            prop: "var_fileIsValid",
+            default: null
+        },
+        var_fileIsNotValid: {
+            prop: "var_fileIsNotValid",
+            default: null
+        },
+        prop_deleteBody: {
+            prop: "prop_deleteBody",
+            default: "آیا از حذف قایل مطمئن هستید"
+        },
+        prop_deleteBtnCancel: {
+            prop: "prop_deleteBtnCancel",
+            default: "لغو"
+        },
+        prop_deleteBtnAccept: {
+            prop: "prop_deleteBtnAccept",
+            default: "تایید"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_value: [
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_accept,
+            this._COMPONENT_PATTERN.prop_maxCount,
+            this._COMPONENT_PATTERN.prop_maxSize,
+            this._COMPONENT_PATTERN.prop_textValidateSize,
+            this._COMPONENT_PATTERN.prop_textValidateAccept
+        ],
+
+        part_label: [
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_maxCount,
+            this._COMPONENT_PATTERN.prop_maxSize,
+            this._COMPONENT_PATTERN.prop_textValidateSize,
+            this._COMPONENT_PATTERN.prop_textValidateAccept
+        ],
+
+        part_body: [
+            this._COMPONENT_PATTERN.prop_borderColor,
+            this._COMPONENT_PATTERN.prop_borderColorHover,
+            this._COMPONENT_PATTERN.prop_borderHeight
+        ],
+
+        part_body_text: [
+            this._COMPONENT_PATTERN.prop_textColor,
+            this._COMPONENT_PATTERN.prop_text
+        ],
+
+        part_footer: [],
+
+        part_footer_files: [
+            this._COMPONENT_PATTERN.prop_showListFiles,
+            this._COMPONENT_PATTERN.var_fileIsValid,
+            this._COMPONENT_PATTERN.var_fileIsNotValid
+        ],
+
+        part_footer_files_tooltips: [
+            this._COMPONENT_PATTERN.prop_showListFiles,
+            this._COMPONENT_PATTERN.var_fileIsNotValid
+        ],
+
+        part_window_confirm: [
+            this._COMPONENT_PATTERN.prop_deleteBody,
+            this._COMPONENT_PATTERN.prop_deleteBtnCancel,
+            this._COMPONENT_PATTERN.prop_deleteBtnAccept
+        ]
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure:{
+            part_label : {} ,
+            part_value : {} ,
+            part_body : {
+                part_body_text:{}
+            },
+            part_footer: {
+                part_footer_files:{}
+            },
+            part_window_confirm: {}
+        } ,
+    }
+
+}
+window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileBase{
+
+    _COMPONENT_WINDOW_DELETE = null;
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentInputFile.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+   TEMPLATEs
+ --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_window_confirm");
+        this.templateFn("part_footer_files_tooltips");
+
+        document.addEventListener("dragover", e => e.preventDefault());
+        document.addEventListener("drop", e => e.preventDefault());
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+
+            case "part_label":
+                return this.componentFn_render_label(partName);
+
+            case "part_value":
+                return this.template_render_value(partName);
+
+            case "part_body":
+                return this.template_render_body(partName);
+            case "part_body_text":
+                return this.template_render_bodyText(partName);
+
+            case "part_footer":
+                return this.template_render_bodyFooter(partName);
+            case "part_footer_files":
+                return this.template_render_bodyFooterFiles(partName);
+            case "part_footer_files_tooltips":
+                return this.template_render_bodyFooterFilesTooltips(partName);
+
+            case "part_window_confirm":
+                return this.componentFn_render_windowConfirmDelete(partName);
+
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+
+        const content = `
+  
+     <component-label id="component-input-file-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
+     
+     ${this.templateFn("part_value") ?? ""}
+     
+     ${this.templateFn("part_body") ?? ""}
+
+     ${this.templateFn("part_footer") ?? ""}
+     
+      <component-window-confirm id="component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}" ></component-window-confirm>
+        
+                `;
+        return this.templateBasic_render_structure(content , ["position-relative"]);
+    }
+
+    template_render_value(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name      =   data.hasOwnProperty("prop_name")               ?  data.prop_name                    :  "";
+            const prop_accept    =   data.hasOwnProperty("prop_accept")             ?  data.prop_accept                  :  "";
+            const prop_maxCount  =   data.hasOwnProperty("prop_maxCount")           ?  data.prop_maxCount                :  null;
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-value-${this._COMPONENT_RANDOM_ID}"  
+          class="" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-date-value-${this._COMPONENT_RANDOM_ID}{
+         
+         }
+     </style>
+
+     <input id="component-input-file-value-input-${this._COMPONENT_RANDOM_ID}" name="${prop_name}" 
+            type="file" 
+            class="d-none" 
+            onchange=" ${this.getFn("fn_onChangeFiles" , "event")};"
+            ${prop_maxCount != null && prop_maxCount > 1 ? "multiple" : ''}
+            accept="${prop_accept}"/>
+       
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_body(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_borderColor         =   data.hasOwnProperty("prop_borderColor")               ?  data.prop_borderColor                    :  "";
+            const prop_borderColorHover    =   data.hasOwnProperty("prop_borderColorHover")          ?  data.prop_borderColorHover               :  "";
+            const prop_borderHeight        =   data.hasOwnProperty("prop_borderHeight")              ?  data.prop_borderHeight                   :  "";
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-body-${this._COMPONENT_RANDOM_ID}"  
+          draggable="true"
+          onclick="${this.getFn("fn_clickToFileInput")}"
+          ondragover="${this.getFn("fn_onDragStart" , "event")}"
+          ondragenter="${this.getFn("fn_onDragStart" , "event")}"
+          ondragleave="${this.getFn("fn_onDragEnd" , "event")}"
+          ondrop=" ${this.getFn("fn_onDrap" , "event")};"
+          class="p-2 rounded position-relative" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}{
+             cursor: pointer;
+             border-style: dashed;
+             border-width: 2px;
+             border-color: ${prop_borderColor};
+             height: ${prop_borderHeight}
+         }
+         
+         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}:hover{
+             border-color: ${prop_borderColorHover} !important;
+         }
+     
+         #${this._COMPONENT_ID} .component-input-file-body-${this._COMPONENT_RANDOM_ID}-active{
+             border-color: ${prop_borderColorHover} !important;
+         }
+     </style>
+     
+     ${this.templateFn("part_body_text") ?? ""}
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyText(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_textColor    =   data.hasOwnProperty("prop_textColor")               ?  data.prop_textColor                    :  "";
+            const prop_text         =   data.hasOwnProperty("prop_text")                    ?  data.prop_text                         :  "";
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-body-text-${this._COMPONENT_RANDOM_ID}"  
+          class="position-absolute text-center" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-body-text-${this._COMPONENT_RANDOM_ID}{
+             color: ${prop_textColor};
+             font-size: 11pt;
+             transform: translate(-50% , -50%);
+             left: 50%;
+             top: 50%;
+         }
+     </style>
+
+     <b> ${prop_text} </b>
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_bodyFooter(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-footer-${this._COMPONENT_RANDOM_ID}"  
+          class="row" >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-footer-${this._COMPONENT_RANDOM_ID}{
+             
+         }
+     </style>
+
+     ${this.templateFn("part_footer_files") ?? ""}
+
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+    template_render_bodyFooterFiles(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
+            const var_fileIsValid        =   data.hasOwnProperty("var_fileIsValid")         ?  data.var_fileIsValid             :  null;
+            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
+
+            if (prop_showListFiles){
+
+                let counter = 1;
+
+                let htmlAcceptFiles = "";
+                if (var_fileIsValid != null){
+                    for (let i = 0; i < var_fileIsValid.length; i++) {
+                        const itemFile = var_fileIsValid[i];
+
+                        const formatted = (itemFile.size / 10000).toFixed(3);
+
+                        htmlAcceptFiles += `
+<div class="  shadow-sm bg-info rounded row px-1 py-1 mx-0 my-1">
+
+   <span class="counter col-1 bg-white rounded ">${counter}</span>
+   
+   <span class="fileName col-7 text-start ">  ${itemFile.name}</span>
+   
+   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
+      <span class="col-8">
+         ${formatted}
+      </span>
+      <span class="col-4">
+          KB
+      </span>
+   </span>
+   
+   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("fn_showWindowDelete" , "event" , `'${itemFile.name}'`)}"> &#x1F5D1; </span>
+  
+</div>
+                    `;
+
+                        counter ++;
+                    }
+                }
+
+
+                let htmlUnAcceptFiles = "";
+                if (var_fileIsNotValid != null){
+                    for (let i = 0; i < var_fileIsNotValid.length; i++) {
+                        const itemFile = var_fileIsNotValid[i];
+
+                        const formatted = (itemFile.size / 10000).toFixed(3);
+
+                        htmlUnAcceptFiles += `
+<div class="  shadow-sm bg-danger rounded row px-1 py-1 mx-0 my-1">
+
+   <span class="counter col-1 bg-white rounded ">${counter}</span>
+   
+   <span class="fileName col-7 text-start text-white  ">  ${itemFile.name}</span>
+   
+   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
+      <span class="col-8">
+         ${formatted}
+      </span>
+      <span class="col-4">
+          KB
+      </span>
+   </span>
+   
+    <component-tooltip-description  id="component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}"> </component-tooltip-description>
+  
+  
+</div>
+                    `;
+
+                        counter ++;
+                    }
+                }
+
+                return                                       `
+<section  data-part-name="${partName}"
+          id="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}"  
+          class=" " >
+          
+     <style>
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}{
+        
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .counter{
+         
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileName{
+              font-size: 10pt;
+              white-space: nowrap;        /* فقط یک خط */
+              overflow: hidden;           /* جلوگیری از overflow */
+              text-overflow: ellipsis;    /* نمایش سه نقطه ... */
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileSize{
+              font-size: 10pt;
+         }
+         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileDelete{
+              cursor: pointer;
+         }
+     </style>
+
+     ${htmlAcceptFiles}
+     ${htmlUnAcceptFiles}
+
+</section>
+        `;
+
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+    componentFn_render_label(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            let   prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")    ? data.prop_labelTooltipDescription     : null;
+
+            if (prop_labelTooltipDescription == null){
+
+                let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
+                let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
+                const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
+                let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
+
+                prop_maxSize = (prop_maxSize / 10000).toFixed(3);
+
+                prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
+                prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
+
+                prop_labelTooltipDescription = `
+     <div> - ${prop_textValidateSize} </div>
+     <div> - ${prop_textValidateAccept} </div>
+                `;
+
+            }
+
+
+            this.componentFneBasic_render_structure(
+                `component-input-file-label-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_for:  `component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`,
+                    prop_labelTooltipDescription: prop_labelTooltipDescription ,
+                    fn_callback: () => {
+                        this.fn_selectDate(event)
+                    } ,
+                }
+            );
+        }
+    }
+
+    componentFn_render_windowConfirmDelete(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_deleteBtnCancel            = data.hasOwnProperty("prop_deleteBtnCancel")            ? data.prop_deleteBtnCancel            : "";
+            const prop_deleteBtnAccept            = data.hasOwnProperty("prop_deleteBtnAccept")            ? data.prop_deleteBtnAccept            : "";
+            const prop_deleteBody                 = data.hasOwnProperty("prop_deleteBody")                 ? data.prop_deleteBody                 : "";
+
+            this._COMPONENT_WINDOW_DELETE = new window.ComponentWindowConfirm(
+                `component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_titleBtnCancel:  prop_deleteBtnCancel ,
+                    prop_titleBtnAccept  :  prop_deleteBtnAccept,
+                    prop_body  :  prop_deleteBody,
+                    prop_showBtnResize : false ,
+                    fn_callback: (event , data) => {
+                        this.fn_deleteFileSelected(event , data);
+                    } ,
+                }
+            )
+
+
+        }
+    }
+
+    template_render_bodyFooterFilesTooltips(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
+
+            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
+
+            if (prop_showListFiles && var_fileIsNotValid != null) {
+                for (let i = 0; i < var_fileIsNotValid.length; i++) {
+                    const itemFile = var_fileIsNotValid[i];
+
+                    let htmlError = "";
+                    if (itemFile.hasOwnProperty("errors")){
+                        for (const itemError of itemFile.errors) {
+                            htmlError += `<div> - ${itemError}</div>`
+                        }
+                    }
+
+                    new window.ComponentTooltipDescription(
+                        `component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}` ,
+                        {
+                            classList: "fileDelete col-1"  ,
+
+                            prop_icon: "?" ,
+                            prop_description: htmlError,
+                        }
+                    )
+                }
+            }
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_getInput(){
+        return document.querySelector(`input#component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_getDragArea(){
+        return document.querySelector(`section#component-input-file-body-${this._COMPONENT_RANDOM_ID}`);
+    }
+    fn_clickToFileInput(){
+        const elInput = this.fn_getInput();
+        if (elInput != null){
+            elInput.click();
+        }
+    }
+    fn_onDragStart(event){
+        event.preventDefault();
+        const elDrag = this.fn_getDragArea();
+        if (elDrag != null){
+            elDrag.classList.add(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
+        }
+    }
+    fn_onDragEnd(event){
+        event.preventDefault();
+        const elDrag = this.fn_getDragArea();
+        if (elDrag != null){
+            elDrag.classList.remove(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
+        }
+    }
+    fn_onDrap(event){
+        this.fn_onDragEnd(event);
+
+        const files = event.dataTransfer.files;
+        if (files) {
+            this.fn_onValidateCountFiles(files)
+        }
+    }
+
+
+    fn_onChangeFiles(event){
+        this.fn_onValidateCountFiles(event.target.files)
+    }
+    fn_onValidateCountFiles(files){
+        const data = this._COMPONENT_CONFIG;
+
+        const dataTransfer = new DataTransfer();
+        const filesAccepts = [];
+        const filesUnAccepts = [];
+
+        const elInput = this.fn_getInput();
+        if (elInput != null){
+
+            let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
+            let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
+            const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
+            let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
+
+            prop_maxSize = (prop_maxSize / 10000).toFixed(3);
+
+            prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
+            prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
+
+            let limit = files.length;
+            if (data.hasOwnProperty("prop_maxCount") && data.prop_maxCount != null){
+                limit = Math.min(files.length, data.prop_maxCount);
+            }
+
+            let numberAceppted = 0;
+            for (let i = 0; i < files.length; i++) {
+                const fileSelected = files[i];
+                fileSelected.errors = [];
+
+                const validateSize = this.fn_onValidateSizeFiles(fileSelected);
+                const validateAccept = this.fn_onIsAccepted(fileSelected);
+
+                let isValid = false;
+                if (validateSize && validateAccept){
+                    isValid = true;
+                }
+
+                if (!validateSize){
+                    fileSelected.errors.push(prop_textValidateSize);
+                    isValid = false;
+                }
+                if (!validateAccept){
+                    fileSelected.errors.push(prop_textValidateAccept);
+                    isValid = false;
+                }
+
+                if (isValid){
+                    dataTransfer.items.add(fileSelected);
+                    filesAccepts.push(fileSelected);
+                    numberAceppted++;
+                }
+                else{
+                    filesUnAccepts.push(fileSelected);
+                }
+
+                if(limit <= numberAceppted){
+                    break;
+                }
+            }
+
+            elInput.files = dataTransfer.files;
+
+            this.fn_callback(dataTransfer.files);
+        }
+
+        this.set("var_fileIsValid" , filesAccepts);
+        this.set("var_fileIsNotValid" , filesUnAccepts);
+    }
+    fn_onValidateSizeFiles(file){
+        const data = this._COMPONENT_CONFIG;
+
+        if (file != null){
+            if (data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null){
+                const sizeValidate =  data.prop_maxSize*1000;
+
+                if (file.size <= sizeValidate){
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    fn_onIsAccepted(file) {
+        const data = this._COMPONENT_CONFIG;
+        let accept = "";
+        if (data.hasOwnProperty("prop_accept") && data.prop_accept != null){
+            accept = data.prop_accept;
+        }
+
+        if (!accept) return true;
+
+        const mime = file.type;
+        const name = file.name;
+
+        return accept.split(',').some(type => {
+            type = type.trim();
+            if (type.endsWith('/*')) {
+                return mime.startsWith(type.replace('/*', ''));
+            } else if (type.startsWith('.')) {
+                return name.toLowerCase().endsWith(type.toLowerCase());
+            } else {
+                return mime === type;
+            }
+        });
+    }
+
+
+    fn_showWindowDelete(event , filename){
+        this._COMPONENT_WINDOW_DELETE.call_open(event , filename)
+    }
+    fn_deleteFileSelected(event , filename){
+
+        const elInput = this.fn_getInput();
+        if (elInput != null){
+            const dt = new DataTransfer();
+            const files = elInput.files;
+
+            Array.from(files).forEach((file, index) => {
+                if (file.name !== filename) {
+                    dt.items.add(file);
+                }
+            });
+
+            this.fn_onValidateCountFiles(dt.files);
+        }
+    }
+
+
+    fn_callback(files){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event , files);
+        }
+    }
+
+}
+
+
+/*-------------------------------------
+ 010-07) Component Input Color
 -------------------------------------*/
 class ComponentInputColorBase extends ComponentBase{
 
@@ -8644,37 +9780,8 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
 }
 
 
-
 /*-------------------------------------
- 03-06) Component Input size
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_title
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_icon
-
-@prop_inputClass
-@prop_inputStyles
-@prop_name
-@prop_value
-@prop_value
-@prop_placeholder
-@prop_icon
-@prop_isDisable
-@prop_min
-@prop_max
-
-@prop_iconPositive
-@prop_iconNegetive
-
-@prop_isAbsoluteRule
-@prop_listRules
+ 010-08) Component Input size
 -------------------------------------*/
 class ComponentInputSizeBase extends ComponentBase{
 
@@ -9394,14 +10501,8 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
 }
 
 
-
 /*-------------------------------------
- 03-06) Component Input size
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 010-09) Component Input size
 -------------------------------------*/
 class ComponentInputAclBase extends ComponentBase{
 
@@ -10797,2098 +11898,8 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
 }
 
 
-
 /*-------------------------------------
- 03-06) Component Input Password
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_show_label
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-@prop_title
-
-@prop_inputClass
-@prop_inputStyles
-@prop_name
-@prop_value
-@prop_placeholder
-@prop_isDisable
-
-@prop_icon
-
-@prop_hasRules
-@prop_listRules
-@prop_isAbsoluteRule
--------------------------------------*/
-class ComponentInputPasswordBase extends ComponentBase{
-    /* ---------------------------------------------
-              PROPERTYs Pattern
-       --------------------------------------------- */
-
-    _COMPONENT_PATTERN = {
-        prop_size: {
-            prop: "prop_size",
-            default: tools_css.standardSizes.m.name
-        },
-        prop_backgroundColorForm: {
-            prop: "prop_backgroundColorForm",
-            default: tools_const?.styles?.inputPassword?.backgroundColor_form ?? ""
-        },
-        prop_colorIcon: {
-            prop: "prop_colorIcon",
-            default: tools_const?.styles?.inputPassword?.color_icon ?? ""
-        },
-        prop_title: {
-            prop: "prop_title",
-            default: "null"
-        },
-        prop_inputClass: {
-            prop: "prop_inputClass",
-            default: [" form-control"]
-        },
-        prop_inputStyles: {
-            prop: "prop_inputStyles",
-            default: {}
-        },
-        prop_name: {
-            prop: "prop_name",
-            default: null
-        },
-        prop_value: {
-            prop: "prop_value",
-            default: null
-        },
-        prop_placeholder: {
-            prop: "prop_placeholder",
-            default: null
-        },
-        prop_icon: {
-            prop: "prop_icon",
-            default: tools_icons.icon_password
-        },
-        prop_isDisable: {
-            prop: "prop_isDisable",
-            default: false
-        },
-        prop_hasRules: {
-            prop: "prop_hasRules",
-            default: true
-        },
-        prop_isAbsoluteRule: {
-            prop: "prop_isAbsoluteRule",
-            default: true
-        },
-        prop_listRules: {
-            prop: "prop_listRules",
-            default: []
-        },
-        prop_msgRules: {
-            prop: "prop_msgRules",
-            default: null
-        },
-    };
-
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-
-        part_label: [
-
-        ],
-
-        part_body: [
-            this._COMPONENT_PATTERN.prop_backgroundColorForm ,
-            this._COMPONENT_PATTERN.prop_size ,
-        ],
-
-        part_body_password: [
-            this._COMPONENT_PATTERN.prop_inputClass ,
-            this._COMPONENT_PATTERN.prop_inputStyles ,
-            this._COMPONENT_PATTERN.prop_name ,
-            this._COMPONENT_PATTERN.prop_value ,
-            this._COMPONENT_PATTERN.prop_placeholder ,
-            this._COMPONENT_PATTERN.prop_icon ,
-            this._COMPONENT_PATTERN.prop_isDisable ,
-            this._COMPONENT_PATTERN.prop_size ,
-        ],
-
-        part_body_icon: [
-            this._COMPONENT_PATTERN.prop_icon ,
-            this._COMPONENT_PATTERN.prop_size ,
-            this._COMPONENT_PATTERN.prop_colorIcon
-        ],
-
-        part_body_icon_clear: [
-            this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_size
-        ],
-
-        part_body_icon_visit: [
-            this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_colorIcon
-        ],
-
-        part_body_validate: [
-            this._COMPONENT_PATTERN.prop_hasRules,
-            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
-            this._COMPONENT_PATTERN.prop_listRules,
-            this._COMPONENT_PATTERN.prop_msgRules,
-            this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_title,
-            this._COMPONENT_PATTERN.prop_size,
-        ]
-    };
-
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure:{
-            part_label : {} ,
-            part_body : {
-                part_body_password:{},
-                part_body_icon:{},
-                part_body_icon_clear:{},
-                part_body_icon_visit:{},
-                part_body_validate:{},
-            },
-        } ,
-    }
-
-}
-window.ComponentInputPassword = class ComponentInputPassword extends ComponentInputPasswordBase{
-
-    _STATUS_IS_SHOW = false;
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentInputPassword.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-
-    /* ---------------------------------------------
-   TEMPLATEs
- --------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_label");
-        this.templateFn("part_body_icon");
-        this.templateFn("part_body_icon_clear");
-        this.templateFn("part_body_icon_visit");
-        this.templateFn("part_body_validate");
-    }
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-
-            case "part_body":
-                return this.template_render_body(partName);
-
-            case "part_body_password":
-                return this.template_render_bodyPassword(partName);
-
-            case "part_label":
-                return this.componentFn_render_label(partName);
-
-            case "part_body_icon":
-                return this.componentFn_render_bodyIcon(partName);
-
-            case "part_body_icon_clear":
-                return this.componentFn_render_bodyIconClear(partName);
-
-            case "part_body_icon_visit":
-                return this.componentFn_render_bodyIconVisit(partName);
-
-            case "part_body_validate":
-                return this.componentFn_render_bodyValidate(partName);
-
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-
-        const content = `
-  
-     <component-label id="component-input-password-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
-
-     ${this.templateFn("part_body") ?? ""}
-     
-      <component-validate id="component-input-password-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
-      `;
-
-        return this.templateBasic_render_structure(content , []);
-    }
-
-    template_render_body(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_size                     =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                     : null;
-            const prop_backgroundColorForm      =   data.hasOwnProperty("prop_backgroundColorForm")      ?  data.prop_backgroundColorForm      : null;
-
-            let elHeight = tools_css.getHeightSize(prop_size);
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-password-body-${this._COMPONENT_RANDOM_ID}"  
-          class="position-relative d-block" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-password-body-${this._COMPONENT_RANDOM_ID}{
-               height: ${elHeight}px;
-               background-color: ${prop_backgroundColorForm};
-         }
-         
-     </style>
-     
-     ${this.templateFn("part_body_password") ?? ""}
-     
-     <component-icon id="component-input-password-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-     <component-icon id="component-input-password-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-     <component-icon id="component-input-password-icon-visit-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-        
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_bodyPassword(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const screanWidthType = tools_css.getScreenWidth();
-
-            const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
-            const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
-            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
-            const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
-            const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
-            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
-            const prop_isDisable     =   data.hasOwnProperty("prop_isDisable")                ?  data.prop_isDisable                                    : false;
-
-            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
-            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
-
-            let elHeight = tools_css.getHeightSize(prop_size);
-            let elfontSize = tools_css.getFontSize(prop_size);
-
-            let padding = "180px"
-            if (screanWidthType == "xs"){
-                padding = "35px";
-            }
-
-            return `
-<section  data-part-name="${partName}"
-          id="component-input-password-element-${this._COMPONENT_RANDOM_ID}"  
-          class="" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-password-element-${this._COMPONENT_RANDOM_ID}{
-            
-         }
-         #${this._COMPONENT_ID} #component-input-password-${this._COMPONENT_RANDOM_ID}{
-              ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
-              ${directionRtl ? "margin-left" : "margin-right"} : 30px ;
-              ${directionRtl ? `right : 0` :`left : 0` };
-              width: calc( 100% - 30px - ${prop_icon != null ? "30px" : "0px"});
-            
-              ${prop_icon != null ? (directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important") : ""};
-              ${prop_icon != null ? (directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important") : ""};
-           
-              ${(directionRtl ? "border-top-left-radius: 0 !important" : "border-top-right-radius: 0 !important") };
-              ${(directionRtl ? "border-bottom-left-radius: 0 !important" : "border-bottom-right-radius: 0 !important")};
-           
-              height: ${elHeight}px;
-              line-height: ${elHeight}px;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              font-size: ${elfontSize}px;
-              top: 0;
-              ${tools_public.renderListStyle(prop_inputStyles)}
-         }
-     </style>
-
-     <input id="component-input-password-${this._COMPONENT_RANDOM_ID}"   
-            class=" ${tools_public.renderListClass(prop_inputClass)} border-1 position-absolute"
-            name="${prop_name || "" }"  
-            type="password"  
-            value="${prop_value || ""}"
-            placeholder="${prop_placeholder || ""}"
-            ${prop_isDisable ? 'disabled' : ''}
-            onInput="${this.getFn("fn_onInputCallBack" , "event")}"
-            onblur=" ${this.getFn("fn_onBlurCallBack" , "event")}"
-            onfocus="${this.getFn("fn_onFocusCallBack" , "event")}"
-            />
-       
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_bodyIcon(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
-            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
-            const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
-
-            const elIconHeight = tools_css.getIconSize(prop_size);
-
-            let styles = {
-                "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 3) }`,
-                "cursor" : "pointer",
-                "top" : "50%" ,
-                "color" : prop_colorIcon ,
-            }
-            if (directionRtl){
-                styles["right"]= "0"
-                styles["transform"]= "translate(-5px, -50%)"
-            }
-            else {
-                styles["left"]= "0"
-                styles["transform"]= "translate(5px, -50%)"
-            }
-
-            if (prop_icon != null){
-                new window.ComponentIcon(
-                    `component-input-password-icon-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_icon: prop_icon != null ? (typeof prop_icon == "function" ? prop_icon(elIconHeight , prop_colorIcon) : prop_icon) : null ,
-
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-
-                        fn_callback: (event)=>{
-                            this.fn_onFocusInput(event);
-                        }
-                    }
-                )
-            }
-
-        }
-
-
-    }
-
-    componentFn_render_bodyIconClear(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
-
-            if (!prop_isDisable){
-
-                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
-
-                let styles = {
-                    "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 3) }`,
-                    "cursor" : "pointer",
-                    "top" : "50%" ,
-                };
-
-                if (directionRtl){
-                    styles["left"]= "0";
-                    styles["transform"]=  "translate(40px, -50%)" ;
-                }
-                else {
-                    styles["right"]= "0";
-                    styles["transform"]=  "translate(-40px, -50%)" ;
-                }
-
-
-                new window.ComponentIcon(
-                    `component-input-password-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        styles: {}  ,
-
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear(prop_size) ,
-
-                        fn_callback: ()=>{
-                            this.runFn("fn_onClearInput" , "event")
-                        }
-                    }
-                )
-            }
-
-
-        }
-    }
-
-    componentFn_render_bodyIconVisit(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
-
-            if (!prop_isDisable){
-
-                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
-                const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
-
-                let styles = {
-                    "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.icon_attach.name , 3) }`,
-                    "cursor" : "pointer",
-                    "top" : "50%" ,
-                    "color" : prop_colorIcon ,
-                };
-
-                if (directionRtl){
-                    styles["left"]= "0"
-                    styles["transform"]= "translate(5px, -50%)"
-                }
-                else {
-                    styles["right"]= "0"
-                    styles["transform"]= "translate(-5px, -50%)"
-                }
-
-
-                new window.ComponentIcon(
-                    `component-input-password-icon-visit-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        classList: []  ,
-                        styles: {
-
-                        }  ,
-
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit(prop_size , prop_colorIcon) : tools_icons.icon_un_visit(prop_size , prop_colorIcon),
-
-                        fn_callback: (event)=>{
-                            this.fn_onVisitInput(event);
-                        }
-                    }
-                )
-            }
-
-
-        }
-    }
-
-    componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            this.componentFneBasic_render_structure(
-                `component-input-password-label-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_for:  `component-input-password-${this._COMPONENT_RANDOM_ID}`,
-                    fn_callback: () => {
-
-                    } ,
-                }
-            );
-        }
-    }
-
-    componentFn_render_bodyValidate(partName) {
-        const data = this.getPartProps(partName)
-        if (data != null){
-
-            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
-            const prop_hasRules      =  data.hasOwnProperty("prop_hasRules")           ?  data.prop_hasRules               : true;
-            const prop_size          =   data.hasOwnProperty("prop_size")              ?  data.prop_size                   : null;
-
-            if (!prop_isDisable && prop_hasRules){
-
-                const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
-                const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
-                const prop_msgRules          =  data.hasOwnProperty("prop_msgRules")                  ?  data.prop_msgRules                      : null;
-                const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
-                const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-                new window.ComponentValidate(
-                    `component-input-password-validate-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_reference: `component-input-password-${this._COMPONENT_RANDOM_ID}` ,
-                        prop_isAbsolute: prop_isAbsoluteRule ,
-                        prop_listRules ,
-                        prop_msgRules ,
-                        prop_title ,
-                        prop_size
-                    }
-                );
-            }
-        }
-    }
-
-
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-
-    fn_getInputElement(){
-        return   document.querySelector(`input#component-input-password-${this._COMPONENT_RANDOM_ID}`);
-    }
-
-
-    fn_getInputValue(event){
-        const input = this.fn_getInputElement();
-        return input != null ? input.value : "";
-    }
-
-
-    fn_onHandleInput(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
-            this.fn_readyListRules(data.prop_listRules)
-        }
-    }
-
-
-    fn_onInputCallBack(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_oninput") && typeof data.fn_oninput != null){
-            data.fn_oninput(event , this.fn_getValueInput());
-        }
-    }
-
-
-    fn_onFocusCallBack(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onfocus") && typeof data.fn_onfocus != null){
-            data.fn_onfocus(event , this.fn_getValueInput());
-        }
-    }
-
-
-    fn_onBlurCallBack(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onblur") && typeof data.fn_onblur != null){
-            data.fn_onblur(event , this.fn_getValueInput());
-        }
-    }
-
-
-    fn_onClearInput(event){
-        this.fn_getInputElement().value="";
-        this.fn_onInputCallBack(event);
-        this.fn_onFocusInput(event);
-    }
-
-
-    fn_onVisitInput(event){
-        this._STATUS_IS_SHOW = !this._STATUS_IS_SHOW;
-        this.templateFn("part_body_icon_visit");
-        this.fn_getInputElement().setAttribute("type" , this._STATUS_IS_SHOW ? "" : "password")
-    }
-
-
-    fn_onFocusInput(event){
-        const input = this.fn_getInputElement();
-        input.focus();
-        this.fn_onFocusCallBack();
-    }
-
-}
-
-
-
-/*-------------------------------------
- 03-07) Component Input email
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_show_label
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-@prop_title
-
-@prop_inputClass
-@prop_inputStyles
-@prop_name
-@prop_value
-@prop_placeholder
-@prop_isDisable
-
-@prop_icon
-
-@prop_listRules
-@prop_isAbsoluteRule
--------------------------------------*/
-class ComponentInputEmailBase extends ComponentBase{
-    /* ---------------------------------------------
-           PROPERTYs Pattern
-    --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_size: {
-            prop: "prop_size",
-            default: tools_css.standardSizes.m.name
-        },
-        prop_backgroundColorForm: {
-            prop: "prop_backgroundColorForm",
-            default: tools_const?.styles?.inputEmail?.backgroundColor_form ?? ""
-        },
-        prop_colorIcon: {
-            prop: "prop_colorIcon",
-            default: tools_const?.styles?.inputEmail?.color_icon ?? ""
-        },
-        prop_title: {
-            prop: "prop_title",
-            default: "TITLE"
-        },
-        prop_inputClass: {
-            prop: "prop_inputClass",
-            default: ["form-control"]
-        },
-        prop_inputStyles: {
-            prop: "prop_inputStyles",
-            default: {}
-        },
-        prop_name: {
-            prop: "prop_name",
-            default: null
-        },
-        prop_value: {
-            prop: "prop_value",
-            default: null
-        },
-        prop_placeholder: {
-            prop: "prop_placeholder",
-            default: null
-        },
-        prop_icon: {
-            prop: "prop_icon",
-            default: null
-        },
-        prop_iconEmail: {
-            prop: "prop_icon",
-            default: tools_icons.icon_email
-        },
-        prop_isDisable: {
-            prop: "prop_isDisable",
-            default: false
-        },
-        prop_isAbsoluteRule: {
-            prop: "prop_isAbsoluteRule",
-            default: true
-        },
-        prop_listRules: {
-            prop: "prop_listRules",
-            default: []
-        },
-        prop_msgRules: {
-            prop: "prop_msgRules",
-            default: null
-        }
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-
-        part_label: [
-
-        ],
-
-        part_body: [
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_backgroundColorForm,
-        ],
-
-        part_body_email: [
-            this._COMPONENT_PATTERN.prop_inputClass,
-            this._COMPONENT_PATTERN.prop_inputStyles,
-            this._COMPONENT_PATTERN.prop_name,
-            this._COMPONENT_PATTERN.prop_value,
-            this._COMPONENT_PATTERN.prop_placeholder,
-            this._COMPONENT_PATTERN.prop_iconEmail,
-            this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_size
-        ],
-
-        part_body_icon: [
-            this._COMPONENT_PATTERN.prop_icon ,
-            this._COMPONENT_PATTERN.prop_colorIcon ,
-            this._COMPONENT_PATTERN.prop_size
-        ],
-
-        part_body_icon_clear: [
-            this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_size
-        ],
-
-        part_body_validate: [
-            this._COMPONENT_PATTERN.prop_isAbsoluteRule,
-            this._COMPONENT_PATTERN.prop_listRules,
-            this._COMPONENT_PATTERN.prop_msgRules,
-            this._COMPONENT_PATTERN.prop_isDisable,
-            this._COMPONENT_PATTERN.prop_title
-        ]
-    };
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure:{
-            part_label : {} ,
-            part_body : {
-                part_body_email:{},
-                part_body_icon:{},
-                part_body_icon_clear:{},
-                part_body_validate:{},
-            },
-        } ,
-    }
-
-}
-window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEmailBase{
-
-    _STATUS_IS_SHOW = false;
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentInputEmail.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-
-    /* ---------------------------------------------
-   TEMPLATEs
- --------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_label");
-        this.templateFn("part_body_icon");
-        this.templateFn("part_body_icon_clear");
-        this.templateFn("part_body_icon_visit");
-        this.templateFn("part_body_validate");
-    }
-
-
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-
-            case "part_body":
-                return this.template_render_body(partName);
-
-            case "part_body_email":
-                return this.template_render_bodyEmail(partName);
-
-            case "part_label":
-                return this.componentFn_render_label(partName);
-
-            case "part_body_icon":
-                return this.componentFn_render_bodyIcon(partName);
-
-            case "part_body_icon_clear":
-                return this.componentFn_render_bodyIconClear(partName);
-
-            case "part_body_validate":
-                return this.componentFn_render_bodyValidate(partName);
-
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-
-        const content = `
-  
-     <component-label id="component-input-email-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
-
-     ${this.templateFn("part_body") ?? ""}
-     
-      <component-validate id="component-input-email-validate-${this._COMPONENT_RANDOM_ID}"></component-validate>
-      `;
-
-        return this.templateBasic_render_structure(content , []);
-    }
-
-    template_render_body(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_size                     =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                     : null;
-            const prop_backgroundColorForm      =   data.hasOwnProperty("prop_backgroundColorForm")      ?  data.prop_backgroundColorForm      : null;
-
-            let elHeight = tools_css.getHeightSize(prop_size);
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-email-body-${this._COMPONENT_RANDOM_ID}"  
-          class="position-relative rounded-0 d-block" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-email-body-${this._COMPONENT_RANDOM_ID}{
-               height: ${elHeight}px;
-               background-color: ${prop_backgroundColorForm};
-         }
-         
-     </style>
-     
-     ${this.templateFn("part_body_email") ?? ""}
-     
-     <component-icon id="component-input-email-icon-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-     <component-icon id="component-input-email-icon-clear-${this._COMPONENT_RANDOM_ID}" ></component-icon>
-        
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_bodyEmail(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const screanWidthType = tools_css.getScreenWidth();
-
-            const prop_inputClass    =   data.hasOwnProperty("prop_inputClass")               ?  data.prop_inputClass                                   :  [];
-            const prop_inputStyles   =   data.hasOwnProperty("prop_inputStyles")              ?  data.prop_inputStyles                                  :  {};
-            const prop_name          =   data.hasOwnProperty("prop_name")                     ?  data.prop_name                                         :  null;
-            const prop_value         =   data.hasOwnProperty("prop_value")                    ?  tools_converter.convertPriceToString(data.prop_value)  :  null;
-            const prop_placeholder   =   data.hasOwnProperty("prop_placeholder")              ?  data.prop_placeholder                                  :  null;
-            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                                         :  null;
-            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                                    : false;
-
-            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl                     : false;
-            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
-
-            let elHeight = tools_css.getHeightSize(prop_size);
-            let elfontSize = tools_css.getFontSize(prop_size);
-
-            let padding = "180px"
-            if (screanWidthType == "xs"){
-                padding = "35px";
-            }
-
-            return `
-<section  data-part-name="${partName}"
-          id="component-input-email-element-${this._COMPONENT_RANDOM_ID}"  
-          class="" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-email-element-${this._COMPONENT_RANDOM_ID}{
-              
-         }
-         #${this._COMPONENT_ID} #component-input-email-${this._COMPONENT_RANDOM_ID}{
-              ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
-              ${directionRtl ? `right : 0` :`left : 0` };
-              width: calc( 100% - ${prop_icon != null ? "30px" : "0px"});
-            
-              ${prop_icon != null ? (directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important") : ""};
-              ${prop_icon != null ? (directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important") : ""};
-           
-              ${(directionRtl ? "border-top-left-radius: 0 !important" : "border-top-right-radius: 0 !important") };
-              ${(directionRtl ? "border-bottom-left-radius: 0 !important" : "border-bottom-right-radius: 0 !important")};
-           
-              height: ${elHeight}px;
-              line-height: ${elHeight}px;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              font-size: ${elfontSize}px;
-              top: 0;
-              ${tools_public.renderListStyle(prop_inputStyles)}
-         }
-     </style>
-
-     <input id="component-input-email-${this._COMPONENT_RANDOM_ID}"   
-            class=" ${tools_public.renderListClass(prop_inputClass)} border-1"
-            name="${prop_name || "" }"  
-            type="email"  
-            value="${prop_value || ""}"
-            placeholder="${prop_placeholder || ""}"
-            ${prop_isDisable ? 'disabled' : ''}
-            onInput="${this.getFn("fn_onInputCallBack" , "event")}"
-            onblur=" ${this.getFn("fn_onBlurCallBack" , "event")}"
-            onfocus="${this.getFn("fn_onFocusCallBack" , "event")}"
-            />
-       
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_bodyIcon(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-            const prop_icon          =   data.hasOwnProperty("prop_icon")                     ?  data.prop_icon                          :  null;
-            const prop_colorIcon     =   data.hasOwnProperty("prop_colorIcon")                ?  data.prop_colorIcon                     : null;
-            const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : null;
-
-            const elIconHeight = tools_css.getIconSize(prop_size);
-
-            let styles = {
-                "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }`,
-                "cursor" : "pointer",
-                "top" : "50%" ,
-                "color" : prop_colorIcon ,
-            }
-            if (directionRtl){
-                styles["right"]= "0"
-                styles["transform"]= "translate(-5px, -50%)"
-            }
-            else {
-                styles["left"]= "0"
-                styles["transform"]= "translate(5px, -50%)"
-            }
-
-            if (prop_icon != null){
-                new window.ComponentIcon(
-                    `component-input-email-icon-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        prop_icon: typeof prop_icon == "function" ? prop_icon(elIconHeight , prop_colorIcon) : prop_icon,
-
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-
-                        fn_callback: ()=>{
-                            this.runFn("fn_onFocusInput" , "event")
-                        }
-                    }
-                )
-            }
-
-        }
-    }
-
-    componentFn_render_bodyIconClear(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")                 ?  data.prop_isDisable                     : false;
-
-            if (!prop_isDisable){
-
-                const directionRtl       =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-                const prop_size          =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                                         : null;
-
-                let styles = {
-                    "z-index": `${ tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name , 10) }`,
-                    "cursor" : "pointer",
-                    "top" : "50%" ,
-                };
-
-                if (directionRtl){
-                    styles["left"]= "0";
-                    styles["transform"]=  "translate(15px, -50%)" ;
-                }
-                else {
-                    styles["right"]= "0";
-                    styles["transform"]=  "translate(-15px, -50%)" ;
-                }
-
-                new window.ComponentIcon(
-                    `component-input-email-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        styles: {}  ,
-
-                        prop_iconClass : ["position-absolute"] ,
-                        prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear(prop_size) ,
-
-                        fn_callback: ()=>{
-                            this.runFn("fn_onClearInput" , "event")
-                        }
-                    }
-                )
-            }
-
-
-        }
-    }
-
-    componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            this.componentFneBasic_render_structure(
-                `component-input-email-label-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_for:  `component-input-email-${this._COMPONENT_RANDOM_ID}`,
-                    fn_callback: () => {
-
-                    } ,
-                }
-            );
-        }
-    }
-
-    componentFn_render_bodyValidate(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const data = this.getPartProps(partName)
-
-            if (data != null){
-                const prop_isDisable     =  data.hasOwnProperty("prop_isDisable")          ?  data.prop_isDisable              : false;
-
-                if (!prop_isDisable){
-
-                    const prop_isAbsoluteRule    =  data.hasOwnProperty("prop_isAbsoluteRule")            ?  data.prop_isAbsoluteRule                : true;
-                    const prop_listRules         =  data.hasOwnProperty("prop_listRules")                 ?  data.prop_listRules                     : [];
-                    const prop_msgRules          =  data.hasOwnProperty("prop_msgRules")                  ?  data.prop_msgRules                      : null;
-                    const prop_title             =  data.hasOwnProperty("prop_title")                     ?  data.prop_title                         : [];
-                    const directionRtl           =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
-
-
-                    prop_listRules.push({
-                        description: "Must have email format",
-                        rule : "_is_email" ,
-                        params: {}
-                    })
-
-                    new window.ComponentValidate(
-                        `component-input-email-validate-${this._COMPONENT_RANDOM_ID}` ,
-                        {
-                            prop_reference: `component-input-email-${this._COMPONENT_RANDOM_ID}` ,
-                            prop_isAbsolute: prop_isAbsoluteRule ,
-                            prop_listRules ,
-                            prop_msgRules ,
-                            prop_title
-                        }
-                    );
-                }
-
-            }
-
-        }
-    }
-
-
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-
-    fn_getInputElement(){
-        return   document.querySelector(`input#component-input-email-${this._COMPONENT_RANDOM_ID}`);
-    }
-
-
-    fn_getInputValue(event){
-        const input = this.fn_getInputElement();
-        return input != null ? input.value : "";
-    }
-
-
-    fn_onHandleInput(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("prop_listRules") && typeof data.prop_listRules != null){
-            this.fn_readyListRules(data.prop_listRules)
-        }
-    }
-
-
-    fn_onInputCallBack(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_oninput") && typeof data.fn_oninput != null){
-            data.fn_oninput(event , this.fn_getValueInput());
-        }
-    }
-
-
-    fn_onFocusCallBack(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onfocus") && typeof data.fn_onfocus != null){
-            data.fn_onfocus(event , this.fn_getValueInput());
-        }
-    }
-
-
-    fn_onBlurCallBack(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onblur") && typeof data.fn_onblur != null){
-            data.fn_onblur(event , this.fn_getValueInput());
-        }
-    }
-
-
-    fn_onClearInput(event){
-        this.fn_getInputElement().value="";
-        this.fn_onInputCallBack(event);
-        this.fn_onFocusInput(event);
-    }
-
-
-    fn_onVisitInput(event){
-        this._STATUS_IS_SHOW = !this._STATUS_IS_SHOW;
-        this.templateFn("part_body_icon_visit");
-        this.fn_getInputElement().setAttribute("type" , this._STATUS_IS_SHOW ? "" : "password")
-    }
-
-
-    fn_onFocusInput(event){
-        const input = this.fn_getInputElement();
-        input.focus();
-        this.fn_onFocusCallBack();
-    }
-}
-
-
-
-/*-------------------------------------
- 03-08) Component Input File
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_name
-@prop_accept
-@prop_maxCount
-@prop_maxSize
-@prop_textValidateSize
-@prop_textValidateAccept
-@prop_labelTooltipDescription
-
-@prop_title
-@prop_labelShow
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_borderColor
-@prop_borderColorHover
-@prop_borderHeight
-
-@prop_textColor
-@prop_text
-
-@prop_showListFiles
-
-@prop_deleteBody
-@prop_deleteBtnCancel
-@prop_deleteBtnAccept
-
-@fn_callback
--------------------------------------*/
-class ComponentInputFileBase extends ComponentBase{
-
-    /* ---------------------------------------------
-       PROPERTYs Pattern
-    --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_name: {
-            prop: "prop_name",
-            default: "NAME"
-        },
-        prop_accept: {
-            prop: "prop_accept",
-            default: "*"
-        },
-        prop_maxCount: {
-            prop: "prop_maxCount",
-            default: null
-        },
-        prop_maxSize: {
-            prop: "prop_maxSize",
-            default: null
-        },
-        prop_textValidateSize: {
-            prop: "prop_textValidateSize",
-            default: "حداکثر سایر فایل، باید {{fileMaxSize}} کیلوبایت باشد"
-        },
-        prop_textValidateAccept: {
-            prop: "prop_textValidateAccept",
-            default: "فرمت قابل پذیرش {{fileAccept}} می باشد"
-        },
-        prop_title: {
-            prop: "prop_title",
-            default: null
-        },
-        prop_borderColor: {
-            prop: "prop_borderColor",
-            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColor") ? tools_const.styles.inputFile.boderColor : "red"
-        },
-        prop_borderColorHover: {
-            prop: "prop_borderColorHover",
-            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("boderColorHover") ? tools_const.styles.inputFile.boderColorHover : "red"
-        },
-        prop_borderHeight: {
-            prop: "prop_borderHeight",
-            default: "150px"
-        },
-        prop_textColor: {
-            prop: "prop_textColor",
-            default: tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("inputFile") && tools_const.styles.inputFile.hasOwnProperty("textColor") ? tools_const.styles.inputFile.textColor : "red"
-        },
-        prop_text: {
-            prop: "prop_text",
-            default: "لطفا فایل خود را بکشید و رها کنید یا برای انتخاب کلیک کنید "
-        },
-        prop_showListFiles: {
-            prop: "prop_showListFiles",
-            default: true
-        },
-        var_fileIsValid: {
-            prop: "var_fileIsValid",
-            default: null
-        },
-        var_fileIsNotValid: {
-            prop: "var_fileIsNotValid",
-            default: null
-        },
-        prop_deleteBody: {
-            prop: "prop_deleteBody",
-            default: "آیا از حذف قایل مطمئن هستید"
-        },
-        prop_deleteBtnCancel: {
-            prop: "prop_deleteBtnCancel",
-            default: "لغو"
-        },
-        prop_deleteBtnAccept: {
-            prop: "prop_deleteBtnAccept",
-            default: "تایید"
-        }
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-
-        part_value: [
-            this._COMPONENT_PATTERN.prop_name,
-            this._COMPONENT_PATTERN.prop_accept,
-            this._COMPONENT_PATTERN.prop_maxCount,
-            this._COMPONENT_PATTERN.prop_maxSize,
-            this._COMPONENT_PATTERN.prop_textValidateSize,
-            this._COMPONENT_PATTERN.prop_textValidateAccept
-        ],
-
-        part_label: [
-            this._COMPONENT_PATTERN.prop_title,
-            this._COMPONENT_PATTERN.prop_maxCount,
-            this._COMPONENT_PATTERN.prop_maxSize,
-            this._COMPONENT_PATTERN.prop_textValidateSize,
-            this._COMPONENT_PATTERN.prop_textValidateAccept
-        ],
-
-        part_body: [
-            this._COMPONENT_PATTERN.prop_borderColor,
-            this._COMPONENT_PATTERN.prop_borderColorHover,
-            this._COMPONENT_PATTERN.prop_borderHeight
-        ],
-
-        part_body_text: [
-            this._COMPONENT_PATTERN.prop_textColor,
-            this._COMPONENT_PATTERN.prop_text
-        ],
-
-        part_footer: [],
-
-        part_footer_files: [
-            this._COMPONENT_PATTERN.prop_showListFiles,
-            this._COMPONENT_PATTERN.var_fileIsValid,
-            this._COMPONENT_PATTERN.var_fileIsNotValid
-        ],
-
-        part_footer_files_tooltips: [
-            this._COMPONENT_PATTERN.prop_showListFiles,
-            this._COMPONENT_PATTERN.var_fileIsNotValid
-        ],
-
-        part_window_confirm: [
-            this._COMPONENT_PATTERN.prop_deleteBody,
-            this._COMPONENT_PATTERN.prop_deleteBtnCancel,
-            this._COMPONENT_PATTERN.prop_deleteBtnAccept
-        ]
-    };
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure:{
-            part_label : {} ,
-            part_value : {} ,
-            part_body : {
-                part_body_text:{}
-            },
-            part_footer: {
-                part_footer_files:{}
-            },
-            part_window_confirm: {}
-        } ,
-    }
-
-}
-window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileBase{
-
-    _COMPONENT_WINDOW_DELETE = null;
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentInputFile.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-
-    /* ---------------------------------------------
-   TEMPLATEs
- --------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_label");
-        this.templateFn("part_window_confirm");
-        this.templateFn("part_footer_files_tooltips");
-
-        document.addEventListener("dragover", e => e.preventDefault());
-        document.addEventListener("drop", e => e.preventDefault());
-    }
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-
-            case "part_label":
-                return this.componentFn_render_label(partName);
-
-            case "part_value":
-                return this.template_render_value(partName);
-
-            case "part_body":
-                return this.template_render_body(partName);
-            case "part_body_text":
-                return this.template_render_bodyText(partName);
-
-            case "part_footer":
-                return this.template_render_bodyFooter(partName);
-            case "part_footer_files":
-                return this.template_render_bodyFooterFiles(partName);
-            case "part_footer_files_tooltips":
-                return this.template_render_bodyFooterFilesTooltips(partName);
-
-            case "part_window_confirm":
-                return this.componentFn_render_windowConfirmDelete(partName);
-
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-
-        const content = `
-  
-     <component-label id="component-input-file-label-${this._COMPONENT_RANDOM_ID}" ></component-label>
-     
-     ${this.templateFn("part_value") ?? ""}
-     
-     ${this.templateFn("part_body") ?? ""}
-
-     ${this.templateFn("part_footer") ?? ""}
-     
-      <component-window-confirm id="component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}" ></component-window-confirm>
-        
-                `;
-        return this.templateBasic_render_structure(content , ["position-relative"]);
-    }
-
-    template_render_value(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_name      =   data.hasOwnProperty("prop_name")               ?  data.prop_name                    :  "";
-            const prop_accept    =   data.hasOwnProperty("prop_accept")             ?  data.prop_accept                  :  "";
-            const prop_maxCount  =   data.hasOwnProperty("prop_maxCount")           ?  data.prop_maxCount                :  null;
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-value-${this._COMPONENT_RANDOM_ID}"  
-          class="" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-date-value-${this._COMPONENT_RANDOM_ID}{
-         
-         }
-     </style>
-
-     <input id="component-input-file-value-input-${this._COMPONENT_RANDOM_ID}" name="${prop_name}" 
-            type="file" 
-            class="d-none" 
-            onchange=" ${this.getFn("fn_onChangeFiles" , "event")};"
-            ${prop_maxCount != null && prop_maxCount > 1 ? "multiple" : ''}
-            accept="${prop_accept}"/>
-       
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_body(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_borderColor         =   data.hasOwnProperty("prop_borderColor")               ?  data.prop_borderColor                    :  "";
-            const prop_borderColorHover    =   data.hasOwnProperty("prop_borderColorHover")          ?  data.prop_borderColorHover               :  "";
-            const prop_borderHeight        =   data.hasOwnProperty("prop_borderHeight")              ?  data.prop_borderHeight                   :  "";
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-body-${this._COMPONENT_RANDOM_ID}"  
-          draggable="true"
-          onclick="${this.getFn("fn_clickToFileInput")}"
-          ondragover="${this.getFn("fn_onDragStart" , "event")}"
-          ondragenter="${this.getFn("fn_onDragStart" , "event")}"
-          ondragleave="${this.getFn("fn_onDragEnd" , "event")}"
-          ondrop=" ${this.getFn("fn_onDrap" , "event")};"
-          class="p-2 rounded position-relative" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}{
-             cursor: pointer;
-             border-style: dashed;
-             border-width: 2px;
-             border-color: ${prop_borderColor};
-             height: ${prop_borderHeight}
-         }
-         
-         #${this._COMPONENT_ID} #component-input-file-body-${this._COMPONENT_RANDOM_ID}:hover{
-             border-color: ${prop_borderColorHover} !important;
-         }
-     
-         #${this._COMPONENT_ID} .component-input-file-body-${this._COMPONENT_RANDOM_ID}-active{
-             border-color: ${prop_borderColorHover} !important;
-         }
-     </style>
-     
-     ${this.templateFn("part_body_text") ?? ""}
-     
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_bodyText(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_textColor    =   data.hasOwnProperty("prop_textColor")               ?  data.prop_textColor                    :  "";
-            const prop_text         =   data.hasOwnProperty("prop_text")                    ?  data.prop_text                         :  "";
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-body-text-${this._COMPONENT_RANDOM_ID}"  
-          class="position-absolute text-center" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-file-body-text-${this._COMPONENT_RANDOM_ID}{
-             color: ${prop_textColor};
-             font-size: 11pt;
-             transform: translate(-50% , -50%);
-             left: 50%;
-             top: 50%;
-         }
-     </style>
-
-     <b> ${prop_text} </b>
-
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_bodyFooter(partName){
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-footer-${this._COMPONENT_RANDOM_ID}"  
-          class="row" >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-file-footer-${this._COMPONENT_RANDOM_ID}{
-             
-         }
-     </style>
-
-     ${this.templateFn("part_footer_files") ?? ""}
-
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-
-    }
-
-    template_render_bodyFooterFiles(partName){
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
-            const var_fileIsValid        =   data.hasOwnProperty("var_fileIsValid")         ?  data.var_fileIsValid             :  null;
-            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
-
-            if (prop_showListFiles){
-
-                let counter = 1;
-
-                let htmlAcceptFiles = "";
-                if (var_fileIsValid != null){
-                    for (let i = 0; i < var_fileIsValid.length; i++) {
-                        const itemFile = var_fileIsValid[i];
-
-                        const formatted = (itemFile.size / 10000).toFixed(3);
-
-                        htmlAcceptFiles += `
-<div class="  shadow-sm bg-info rounded row px-1 py-1 mx-0 my-1">
-
-   <span class="counter col-1 bg-white rounded ">${counter}</span>
-   
-   <span class="fileName col-7 text-start ">  ${itemFile.name}</span>
-   
-   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
-      <span class="col-8">
-         ${formatted}
-      </span>
-      <span class="col-4">
-          KB
-      </span>
-   </span>
-   
-   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("fn_showWindowDelete" , "event" , `'${itemFile.name}'`)}"> &#x1F5D1; </span>
-  
-</div>
-                    `;
-
-                        counter ++;
-                    }
-                }
-
-
-                let htmlUnAcceptFiles = "";
-                if (var_fileIsNotValid != null){
-                    for (let i = 0; i < var_fileIsNotValid.length; i++) {
-                        const itemFile = var_fileIsNotValid[i];
-
-                        const formatted = (itemFile.size / 10000).toFixed(3);
-
-                        htmlUnAcceptFiles += `
-<div class="  shadow-sm bg-danger rounded row px-1 py-1 mx-0 my-1">
-
-   <span class="counter col-1 bg-white rounded ">${counter}</span>
-   
-   <span class="fileName col-7 text-start text-white  ">  ${itemFile.name}</span>
-   
-   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
-      <span class="col-8">
-         ${formatted}
-      </span>
-      <span class="col-4">
-          KB
-      </span>
-   </span>
-   
-    <component-tooltip-description  id="component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}"> </component-tooltip-description>
-  
-  
-</div>
-                    `;
-
-                        counter ++;
-                    }
-                }
-
-                return                                       `
-<section  data-part-name="${partName}"
-          id="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}"  
-          class=" " >
-          
-     <style>
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}{
-        
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .counter{
-         
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileName{
-              font-size: 10pt;
-              white-space: nowrap;        /* فقط یک خط */
-              overflow: hidden;           /* جلوگیری از overflow */
-              text-overflow: ellipsis;    /* نمایش سه نقطه ... */
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileSize{
-              font-size: 10pt;
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileDelete{
-              cursor: pointer;
-         }
-     </style>
-
-     ${htmlAcceptFiles}
-     ${htmlUnAcceptFiles}
-
-</section>
-        `;
-
-            }
-
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-
-    }
-
-    componentFn_render_label(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            let   prop_labelTooltipDescription     = data.hasOwnProperty("prop_labelTooltipDescription")    ? data.prop_labelTooltipDescription     : null;
-
-            if (prop_labelTooltipDescription == null){
-
-                let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
-                let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
-                const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
-                let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
-
-                prop_maxSize = (prop_maxSize / 10000).toFixed(3);
-
-                prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
-                prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
-
-                prop_labelTooltipDescription = `
-     <div> - ${prop_textValidateSize} </div>
-     <div> - ${prop_textValidateAccept} </div>
-                `;
-
-            }
-
-
-            this.componentFneBasic_render_structure(
-                `component-input-file-label-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_for:  `component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`,
-                    prop_labelTooltipDescription: prop_labelTooltipDescription ,
-                    fn_callback: () => {
-                        this.fn_selectDate(event)
-                    } ,
-                }
-            );
-        }
-    }
-
-    componentFn_render_windowConfirmDelete(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_deleteBtnCancel            = data.hasOwnProperty("prop_deleteBtnCancel")            ? data.prop_deleteBtnCancel            : "";
-            const prop_deleteBtnAccept            = data.hasOwnProperty("prop_deleteBtnAccept")            ? data.prop_deleteBtnAccept            : "";
-            const prop_deleteBody                 = data.hasOwnProperty("prop_deleteBody")                 ? data.prop_deleteBody                 : "";
-
-            this._COMPONENT_WINDOW_DELETE = new window.ComponentWindowConfirm(
-                `component-input-file-window-confirm-delete-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_titleBtnCancel:  prop_deleteBtnCancel ,
-                    prop_titleBtnAccept  :  prop_deleteBtnAccept,
-                    prop_body  :  prop_deleteBody,
-                    prop_showBtnResize : false ,
-                    fn_callback: (event , data) => {
-                        this.fn_deleteFileSelected(event , data);
-                    } ,
-                }
-            )
-
-
-        }
-    }
-
-    template_render_bodyFooterFilesTooltips(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
-
-            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
-
-            if (prop_showListFiles && var_fileIsNotValid != null) {
-                for (let i = 0; i < var_fileIsNotValid.length; i++) {
-                    const itemFile = var_fileIsNotValid[i];
-
-                    let htmlError = "";
-                    if (itemFile.hasOwnProperty("errors")){
-                        for (const itemError of itemFile.errors) {
-                            htmlError += `<div> - ${itemError}</div>`
-                        }
-                    }
-
-                    new window.ComponentTooltipDescription(
-                        `component-input-file-footer-files-tooltip-${this._COMPONENT_RANDOM_ID}-${i}` ,
-                        {
-                            classList: "fileDelete col-1"  ,
-
-                            prop_icon: "?" ,
-                            prop_description: htmlError,
-                        }
-                    )
-                }
-            }
-
-        }
-    }
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-    fn_getInput(){
-        return document.querySelector(`input#component-input-file-value-input-${this._COMPONENT_RANDOM_ID}`);
-    }
-    fn_getDragArea(){
-        return document.querySelector(`section#component-input-file-body-${this._COMPONENT_RANDOM_ID}`);
-    }
-    fn_clickToFileInput(){
-        const elInput = this.fn_getInput();
-        if (elInput != null){
-            elInput.click();
-        }
-    }
-    fn_onDragStart(event){
-        event.preventDefault();
-        const elDrag = this.fn_getDragArea();
-        if (elDrag != null){
-            elDrag.classList.add(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
-        }
-    }
-    fn_onDragEnd(event){
-        event.preventDefault();
-        const elDrag = this.fn_getDragArea();
-        if (elDrag != null){
-            elDrag.classList.remove(`component-input-file-body-${this._COMPONENT_RANDOM_ID}-active`);
-        }
-    }
-    fn_onDrap(event){
-        this.fn_onDragEnd(event);
-
-        const files = event.dataTransfer.files;
-        if (files) {
-            this.fn_onValidateCountFiles(files)
-        }
-    }
-
-
-    fn_onChangeFiles(event){
-        this.fn_onValidateCountFiles(event.target.files)
-    }
-    fn_onValidateCountFiles(files){
-        const data = this._COMPONENT_CONFIG;
-
-        const dataTransfer = new DataTransfer();
-        const filesAccepts = [];
-        const filesUnAccepts = [];
-
-        const elInput = this.fn_getInput();
-        if (elInput != null){
-
-            let prop_textValidateSize   = data.hasOwnProperty("prop_textValidateSize") && data.prop_textValidateSize != null       ? data.prop_textValidateSize     : "Error File Size";
-            let prop_textValidateAccept = data.hasOwnProperty("prop_textValidateAccept") && data.prop_textValidateAccept != null   ? data.prop_textValidateAccept   : "Error File Accept";
-            const prop_accept             = data.hasOwnProperty("prop_accept") && data.prop_accept != null                           ? data.prop_accept               : "";
-            let prop_maxSize            = data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null                         ? data.prop_maxSize              : "";
-
-            prop_maxSize = (prop_maxSize / 10000).toFixed(3);
-
-            prop_textValidateSize = prop_textValidateSize.replace("{{fileMaxSize}}", prop_maxSize);
-            prop_textValidateAccept = prop_textValidateAccept.replace("{{fileAccept}}", prop_accept);
-
-            let limit = files.length;
-            if (data.hasOwnProperty("prop_maxCount") && data.prop_maxCount != null){
-                limit = Math.min(files.length, data.prop_maxCount);
-            }
-
-            let numberAceppted = 0;
-            for (let i = 0; i < files.length; i++) {
-                const fileSelected = files[i];
-                fileSelected.errors = [];
-
-                const validateSize = this.fn_onValidateSizeFiles(fileSelected);
-                const validateAccept = this.fn_onIsAccepted(fileSelected);
-
-                let isValid = false;
-                if (validateSize && validateAccept){
-                    isValid = true;
-                }
-
-                if (!validateSize){
-                    fileSelected.errors.push(prop_textValidateSize);
-                    isValid = false;
-                }
-                if (!validateAccept){
-                    fileSelected.errors.push(prop_textValidateAccept);
-                    isValid = false;
-                }
-
-                if (isValid){
-                    dataTransfer.items.add(fileSelected);
-                    filesAccepts.push(fileSelected);
-                    numberAceppted++;
-                }
-                else{
-                    filesUnAccepts.push(fileSelected);
-                }
-
-                if(limit <= numberAceppted){
-                    break;
-                }
-            }
-
-            elInput.files = dataTransfer.files;
-
-            this.fn_callback(dataTransfer.files);
-        }
-
-        this.set("var_fileIsValid" , filesAccepts);
-        this.set("var_fileIsNotValid" , filesUnAccepts);
-    }
-    fn_onValidateSizeFiles(file){
-        const data = this._COMPONENT_CONFIG;
-
-        if (file != null){
-            if (data.hasOwnProperty("prop_maxSize") && data.prop_maxSize != null){
-                const sizeValidate =  data.prop_maxSize*1000;
-
-                if (file.size <= sizeValidate){
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-    fn_onIsAccepted(file) {
-        const data = this._COMPONENT_CONFIG;
-        let accept = "";
-        if (data.hasOwnProperty("prop_accept") && data.prop_accept != null){
-            accept = data.prop_accept;
-        }
-
-        if (!accept) return true;
-
-        const mime = file.type;
-        const name = file.name;
-
-        return accept.split(',').some(type => {
-            type = type.trim();
-            if (type.endsWith('/*')) {
-                return mime.startsWith(type.replace('/*', ''));
-            } else if (type.startsWith('.')) {
-                return name.toLowerCase().endsWith(type.toLowerCase());
-            } else {
-                return mime === type;
-            }
-        });
-    }
-
-
-    fn_showWindowDelete(event , filename){
-        this._COMPONENT_WINDOW_DELETE.call_open(event , filename)
-    }
-    fn_deleteFileSelected(event , filename){
-
-        const elInput = this.fn_getInput();
-        if (elInput != null){
-            const dt = new DataTransfer();
-            const files = elInput.files;
-
-            Array.from(files).forEach((file, index) => {
-                if (file.name !== filename) {
-                    dt.items.add(file);
-                }
-            });
-
-            this.fn_onValidateCountFiles(dt.files);
-        }
-    }
-
-
-    fn_callback(files){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(event , files);
-        }
-    }
-
-}
-
-
-
-/*-------------------------------------
- 03-09) Component Date
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_backgroundMain
-
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-@prop_title
-
-@prop_name
-@prop_value
-
-@prop_prevYears
-@prop_nextYears
-
-@prop_backgroundRowSelected
-@prop_backgroundColumnSelected
-@prop_colorColumnSelected
-
-@prop_titleBtnAccept
-@prop_backgroundBtnAccept
-@prop_backgroundBtnHoverAccept
-@prop_colorBtnAccept
-
-@prop_titleBtnNow
-@prop_backgroundBtnNow
-@prop_backgroundBtnHoverNow
-@prop_colorBtnNow
-
-@prop_titleMonth0
-@prop_titleMonth1
-@prop_titleMonth2
-@prop_titleMonth3
-@prop_titleMonth4
-@prop_titleMonth5
-@prop_titleMonth6
-@prop_titleMonth7
-@prop_titleMonth8
-@prop_titleMonth9
-@prop_titleMonth10
-@prop_titleMonth11
-
-@prop_titleDay0
-@prop_titleDay1
-@prop_titleDay2
-@prop_titleDay3
-@prop_titleDay4
-@prop_titleDay5
-@prop_titleDay6
+ 010-010) Component Date
 -------------------------------------*/
 class ComponentDateBase extends ComponentBase{
 
@@ -14955,55 +13966,490 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
 }
 
 
+/*-------------------------------------
+ 010-011) Component OTP
+-------------------------------------*/
+class ComponentOtpBase extends ComponentBase{
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: "otp"
+        },
+        prop_input: {
+            prop: "prop_input",
+            default: null
+        },
+        prop_langs: {
+            prop: "prop_langs",
+            default: {
+                _title_otp_description: "کد برای شماره/ایمیل زیر ارسال شد",
+                _text_timer_after_active_otp: "تا ارسال مجدد کد",
+                _text_timer_after_di_active_otp: "کد منقضی شده است",
+                _text_get_new_otp: "کد جدید"
+            }
+        },
+        prop_length: {
+            prop: "prop_length",
+            default: 6
+        },
+        var_countdown_text: {
+            prop: "var_countdown_text",
+            default: "00:00"
+        },
+        var_activeForm_class: {
+            prop: "var_activeForm_class",
+            default: ""
+        },
+        var_diActiveForm_class: {
+            prop: "var_diActiveForm_class",
+            default: "d-none"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_value: [
+
+        ],
+
+        part_elements: [],
+
+        part_label: [
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_input,
+            this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+
+        part_inputs: [
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_length,
+            this._COMPONENT_PATTERN.prop_size
+        ],
+
+        part_description: [
+            this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.var_countdown_text,
+            this._COMPONENT_PATTERN.var_activeForm_class,
+            this._COMPONENT_PATTERN.var_diActiveForm_class,
+            this._COMPONENT_PATTERN.prop_size
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_value: {} ,
+            part_elements: {
+                part_label: {} ,
+                part_inputs: {} ,
+                part_description: {} ,
+            } ,
+        } ,
+    }
+
+}
+window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
+
+    _TIME_CURRENT = null;
+    _TIME_INTRVAl = null;
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentOtp.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+     TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_value":
+                return this.template_render_value(partName);
+            case "part_elements":
+                return this.template_render_elements(partName);
+            case "part_inputs":
+                return this.template_render_inputs(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_description":
+                return this.template_render_description(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+      ${this.templateFn("part_value") ?? ""}
+      
+      ${this.templateFn("part_elements") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+    template_render_value(partName) {
+
+        const data = this.getPartProps(partName)
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-tabs-value-${ this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-tabs-value-${ this._COMPONENT_RANDOM_ID}{
+         
+         }
+     </style>
+     
+     <input type="hidden" name="otp_value_${ this._COMPONENT_RANDOM_ID}" value=""/>
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+    template_render_elements(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-otp-elements-${ this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-otp-elements-${ this._COMPONENT_RANDOM_ID}{
+         
+         }
+     </style>
+     
+     <section class="component-element-structure mb-2">
+     
+          <component-label id="component-otp-label-${ this._COMPONENT_RANDOM_ID}"></component-label>
+
+          ${this.templateFn("part_inputs") ?? ""}
+          
+          ${this.templateFn("part_description") ?? ""}
+          
+     </section>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_inputs(partName){
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name             =   data.hasOwnProperty("prop_name")             ?  data.prop_name             :  "otp";
+            const prop_length           =   data.hasOwnProperty("prop_length")           ?  data.prop_length           :  6;
+            const prop_langs            =   data.hasOwnProperty("prop_langs")            ?  data.prop_langs            : {};
+            const prop_size             =   data.hasOwnProperty("prop_size")             ?  data.prop_size             : null;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elfontSize = tools_css.getFontSize(prop_size);
+
+
+
+
+            let inputHtmls = "";
+            for (let num=0; num<prop_length; num++){
+
+                inputHtmls += `
+<input  id="component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num}" 
+        oninput="${this.getFn("fn_onMoveToNext" , "event" , (num < prop_length-1 ? `'component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num+1}'` : null) )}" 
+        onkeydown="${num > 0 ?  this.getFn("fn_onMoveToPrev" , "event" , `'component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num-1}'`)  : ''}" 
+        onfocus="${this.getFn("fn_onFocus" , "event" , `'component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${num}'`)}"
+        type="text"  maxlength="1"
+        class="input-otp my-1 mx-2 text-center  form-control rounded-0  border rounded shadow-sm font-10pt"  />
+`;
+            }
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-otp-inputs-${ this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-otp-inputs-${ this._COMPONENT_RANDOM_ID} .form-otp{
+             direction: ltr !important;
+          }
+         #${this._COMPONENT_ID} #component-otp-inputs-${ this._COMPONENT_RANDOM_ID} .input-otp{
+             height: ${elHeight}px;
+             line-height: ${elHeight}px;
+          }
+     </style>
+     
+     <div class="form-otp inputs d-flex flex-row justify-content-center">
+         ${inputHtmls}
+     </div>
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_description(partName){
+
+        const data = this.getPartProps(partName)
+        if (data != null){
+
+            const prop_langs                 =   data.hasOwnProperty("prop_langs")                ?  data.prop_langs               : {};
+            const var_countdown_text         =   data.hasOwnProperty("var_countdown_text")        ?  data.var_countdown_text       : "00:00";
+            const var_activeForm_class       =   data.hasOwnProperty("var_activeForm_class")      ?  data.var_activeForm_class     : "";
+            const var_diActiveForm_class     =   data.hasOwnProperty("var_diActiveForm_class")    ?  data.var_diActiveForm_class   : "d-none";
+            const prop_size             =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               : 0;
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elfontSize = tools_css.getFontSize(prop_size);
+
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID}" 
+         class="" >
+         
+     <style>
+         #${this._COMPONENT_ID} #component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID}{
+             line-height: ${elHeight}px;
+         }
+         #${this._COMPONENT_ID} #component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID} .btn-get-new-token{
+             cursor: pointer;
+             height: ${elHeight}px;
+             line-height: ${elHeight}px;
+         }
+     </style>
+     
+     <div class="mt-1  text-center">
+         <p  id="form-timer-otp"  class="d-inline-block">
+                 <span  class="countdown bg-secondary rounded-0 text-white px-2 mx-2">
+                     ${var_countdown_text}
+                 </span>
+
+                 <div class="pass_active_code_otp d-inline-block ${var_activeForm_class}">
+                     <span>
+                         ${prop_langs.hasOwnProperty("_text_timer_after_active_otp") ? prop_langs._text_timer_after_active_otp : ""}
+                     </span>
+                 </div>
+
+                 <div class="pass_di_active_code_otp d-inline-block ${var_diActiveForm_class}">
+                     <span class="">
+                         ${prop_langs.hasOwnProperty("_text_timer_after_di_active_otp") ? prop_langs._text_timer_after_di_active_otp : ""}
+                     </span>
+                     <span class="mx-1">
+                         |
+                     </span>
+                     <span class="btn-get-new-token mx-1 text-info cursor-pointer" onclick="${this.getFn("fn_onGetNewToken")}">
+                         ${prop_langs.hasOwnProperty("_text_get_new_otp") ? prop_langs._text_get_new_otp : ""}
+                     </span>
+                 </div>
+          </p>
+     </div>
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+
+    }
+
+    componentFn_render_label(partName){
+
+        const data = this.getPartProps(partName)
+        if (data != null){
+
+            const prop_name             =   data.hasOwnProperty("prop_name")             ?  data.prop_name             :  "otp";
+            const prop_langs            =   data.hasOwnProperty("prop_langs")            ?  data.prop_langs            : {};
+            const prop_input            =   data.hasOwnProperty("prop_input")            ?  data.prop_input            :  null;
+
+            this.componentFneBasic_render_structure(
+                `component-otp-label-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_title:
+                        `
+<p class="title-otp text-center  mb-0 px-2 ">
+    ${prop_langs.hasOwnProperty("_title_otp_description") ? prop_langs._title_otp_description : ""}
+    <b style="display:block; direction: ltr">
+       ${prop_input}
+    </b>
+</p>
+                `,
+                    prop_for:  `component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}0`,
+                }
+            );
+        }
+
+
+    }
+
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+     --------------------------------------------- */
+    fn_getElValue(){
+        return document.querySelector(` #${this._COMPONENT_ID} #component-tabs-value-${ this._COMPONENT_RANDOM_ID} input`);
+    }
+
+    fn_onGetValue(){
+        let resultExp = "";
+
+        const data = this._COMPONENT_CONFIG;
+
+        if ( data.hasOwnProperty("prop_length") && data.hasOwnProperty("prop_name") ){
+            const prop_length  = data.prop_length;
+            const prop_name    = data.prop_name;
+
+            for (let i=0 ; i<prop_length; i++){
+                const partEl = document.querySelector(`input#component-otp-inputs-${ this._COMPONENT_RANDOM_ID}-${prop_name}${i}`);
+                const partValue = partEl.value;
+                resultExp += partValue;
+            }
+        }
+
+        const elValue = this.fn_getElValue();
+        elValue.value = resultExp;
+
+        return resultExp;
+    }
+
+    fn_onGetNewToken(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onGetNewToken") && typeof data.fn_onGetNewToken != null){
+            data.fn_onGetNewToken();
+        }
+    }
+
+    fn_onMoveToNext(event , nextFieldID){
+        if (event.key !== 'Backspace' && event.target.value !== '') {
+            if (nextFieldID !== '') {
+                const el = document.getElementById(nextFieldID);
+                if (el != null){
+                    el.focus();
+                }
+            }
+        }
+        this.fn_onGetValue();
+    }
+
+    fn_onMoveToPrev(event , prevFieldID){
+        if (event.key === 'Backspace' && event.target.value === '') {
+            if (prevFieldID !== '') {
+                const el = document.getElementById(prevFieldID);
+                if (el != null){
+                    el.focus();
+                }
+            }
+        }
+        this.fn_onGetValue();
+    }
+
+    fn_onFocus(event , myElId){
+        const el = document.getElementById(myElId);
+        if (el != null){
+            el.value = "";
+        }
+        this.fn_onGetValue();
+    }
+
+    fn_setTimeCurrent(){
+        this._TIME_CURRENT = new Date().getTime() ;
+    }
+
+    fn_calculateTimer(durationForEnd){
+        const timeCurrent =   this._TIME_CURRENT != null   ?    this._TIME_CURRENT  :  0;
+
+        const now = new Date().getTime();
+        return (timeCurrent + durationForEnd*60*1000) - now;
+    }
+
+    call_startCountdown(durationForEnd){
+        this.fn_setTimeCurrent();
+
+        this.set("var_activeForm_class" , "");
+        this.set("var_diActiveForm_class" , "d-none");
+
+        this._TIME_INTRVAl = setInterval(() => {
+            const distance = this.fn_calculateTimer(durationForEnd);
+
+            if (distance < 0) {
+                clearInterval(this._TIME_INTRVAl);
+                this.set("var_countdown_text" , "00:00");
+                this.set("var_activeForm_class" , "d-none");
+                this.set("var_diActiveForm_class" , "");
+                return;
+            }
+
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            minutes = minutes < 10 ? "0"+minutes : minutes;
+            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            seconds = seconds < 10 ? "0"+seconds : seconds;
+            this.set("var_countdown_text" , `${minutes}:${seconds}`);
+        }, 1000);
+    }
+
+    call_getValue(){
+        const elValue = this.fn_getElValue();
+        return elValue.value
+    }
+}
+
 
 /*-------------------------------------
- 03-010) Component Select Option
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_name
-@prop_itemSelected
-
-@prop_title
-@prop_size
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_titleClass
-@prop_titleStyles
-
-@prop_icon
-
-@prop_options
-@prop_placeholder
-
-@prop_btnAddStatus
-@prop_btnAddIcon
-@prop_btnAddClass
-@prop_btnAddTitle
-
-@prop_optionHeight
-@prop_optionWidth
-@prop_optionStyles
-@prop_positionTop
-@prop_positionLeft
-@prop_positionBottom
-@prop_positionRight
-
-@prop_listIcons      [{icon ,name ,  method} , ...]
-@prop_options
-@prop_optionStyles
-@prop_optionWidth
-@prop_optionItemNotSelectedBackground
-@prop_optionItemHoverBackground
-@prop_optionItemSelectedBackground
-
-@prop_firstCallback
-@fn_callback
-@fn_clickBtnTools
+ 010-012) Component Select Option
 -------------------------------------*/
 class ComponentSelectOptionBase extends ComponentBase{
 
@@ -15924,14 +15370,8 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
 }
 
 
-
 /*-------------------------------------
- 03-011) Component Select Icon
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 010-013) Component Select Icon
 -------------------------------------*/
 class ComponentSelectIconBase extends ComponentBase{
 
@@ -16143,33 +15583,7 @@ window.ComponentSelectIcon = class ComponentSelectIcon extends ComponentSelectIc
 
 
 /*-------------------------------------
- 03-012) Component check box
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_name
-@prop_isSelected
-
-@prop_title
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_borderColor
-@prop_backgroundColor_unSelected
-@prop_backgroundColor_selected
-@prop_backgroundColor_disable
-@prop_formClass
-@prop_formStyles
-@prop_isDisable
-
-@prop_icon
-
-@prop_isAbsoluteRule
-@prop_listRules
-
+ 010-04) Component check box
 -------------------------------------*/
 class ComponentCheckBoxBase extends ComponentBase{
 
@@ -16628,13 +16042,1199 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
 
 
 
-/*-------------------------------------
- 03-012) Component check box
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
 
+
+//===============================================================================================================
+// [10 - 19] button / inputs / tools -> [011] QR CODE
+//===============================================================================================================
+
+/*-------------------------------------
+ 011-01) Component Qr Code
+-------------------------------------*/
+class ComponentQrCodeBase extends ComponentBase{
+
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formClass: {
+            prop: "prop_formClass",
+            default: ["border", "rounded", "shadow-sm", "text-center"]
+        },
+        prop_formStyles: {
+            prop: "prop_formStyles",
+            default: {}
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: ""
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: 4
+        },
+        prop_version: {
+            prop: "prop_version",
+            default: 3
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+        part_label: [],
+        part_qr_code_element: [
+            this._COMPONENT_PATTERN.prop_formClass,
+            this._COMPONENT_PATTERN.prop_formStyles
+        ],
+        part_qr_code_view: [
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_version
+        ],
+        part_qr_code_bottom: [],
+        part_qr_code_bottom_text: [
+            this._COMPONENT_PATTERN.prop_value
+        ],
+        part_qr_code_bottom_icon: []
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label:{} ,
+            part_qr_code_element: {
+                part_qr_code_view: {} ,
+                part_qr_code_bottom: {
+                    part_qr_code_bottom_text: {} ,
+                    part_qr_code_bottom_icon: {} ,
+                } ,
+            }
+        } ,
+    }
+
+}
+window.ComponentQrCode = class ComponentQrCode extends ComponentQrCodeBase{
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentQrCode.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+    /* ---------------------------------------------
+TEMPLATEs
+--------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_qr_code_view");
+        this.templateFn("part_qr_code_bottom_icon");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_qr_code_element":
+                return this.template_render_qrCodeElement(partName);
+            case "part_qr_code_view":
+                return this.componentFn_render_qrCodeView(partName);
+            case "part_qr_code_bottom":
+                return this.template_render_qrCodeBottom(partName);
+            case "part_qr_code_bottom_text":
+                return this.template_render_qrCodeBottomText(partName);
+            case "part_qr_code_bottom_icon":
+                return this.componentFn_render_qrCodeBottomIcon(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+  <component-label id="component-qr-code-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+        
+  ${this.templateFn("part_qr_code_element") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_qrCodeElement(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_formClass     =  data.hasOwnProperty("prop_formClass")      ?  data.prop_formClass     : [];
+            const prop_formStyles    =  data.hasOwnProperty("prop_formStyles")     ?  data.prop_formStyles    : {};
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-qr-code-element-${this._COMPONENT_RANDOM_ID}"
+         class="${tools_public.renderListClass(prop_formClass)}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-qr-code-element-${this._COMPONENT_RANDOM_ID}{
+               ${tools_public.renderListStyle(prop_formStyles)}
+         }
+     </style>
+     
+     <div id="component-qr-code-view-${this._COMPONENT_RANDOM_ID}"></div>
+     
+       ${this.templateFn("part_qr_code_bottom") ?? ""}
+      
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_qrCodeBottom(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-qr-code-bottom-${this._COMPONENT_RANDOM_ID}"
+         onclick="${this.getFn("fn_onCLickCopy")}"
+         class="mx-2 mb-1 rounded bg-dark text-white position-relative py-1">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-qr-code-bottom-${this._COMPONENT_RANDOM_ID}{
+             cursor: pointer;
+         }
+     </style>
+     
+     ${this.templateFn("part_qr_code_bottom_text") ?? ""}
+     
+     <component-icon id="component-qr-code-bottom-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+      
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_qrCodeBottomText(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_value     =  data.hasOwnProperty("prop_value")      ?  data.prop_value     : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-qr-code-bottom-text-${this._COMPONENT_RANDOM_ID}" 
+         title="COPY"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-qr-code-bottom-text-${this._COMPONENT_RANDOM_ID}{
+             font-size: 10pt;
+             padding-left: 35px;
+             padding-right: 35px;
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
+         }
+     </style>
+     
+     ${prop_value}
+     
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label(partName) {
+        this.componentFneBasic_render_structure(
+            `component-qr-code-label-${this._COMPONENT_RANDOM_ID}` ,
+            {
+                prop_for:  `component-input-input-${ this._COMPONENT_RANDOM_ID}`
+            }
+        );
+    }
+
+    componentFn_render_qrCodeView(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_value     =  data.hasOwnProperty("prop_value")      ?  data.prop_value     : "";
+            const prop_size      =  data.hasOwnProperty("prop_size")       ?  data.prop_size      : 4;
+            const prop_version   =  data.hasOwnProperty("prop_version")    ?  data.prop_version   : 3;
+
+            var qr = qrcode(prop_version, 'L')
+            qr.addData(prop_value);
+            qr.make();
+
+            const el = document.querySelector(`div#component-qr-code-view-${this._COMPONENT_RANDOM_ID}`);
+            if (el != null){
+                el.innerHTML = qr.createSvgTag(prop_size)
+            }
+        }
+    }
+
+    componentFn_render_qrCodeBottomIcon(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const styles = {
+                "top" : "0" ,
+            }
+            styles[ this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl ? "right" : "left"] = "5px";
+
+            new window.ComponentIcon(
+                `component-qr-code-bottom-icon-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: [ "position-absolute" ] ,
+                    styles: styles,
+
+                    prop_icon : "&#x1F4CB;" ,
+                    prop_iconClass : [] ,
+                    prop_iconStyles : {
+                        "font-size" : "14pt",
+                    } ,
+                }
+            )
+        }
+
+    }
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickCopy(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("prop_value")){
+            navigator.clipboard.writeText(data.prop_value).then(() => {
+                alert("copied")
+                console.log('متن کپی شد: ' , data.prop_value);
+            }).catch(err => {
+                console.error('خطا در کپی کردن متن: ', err);
+            });
+        }
+    }
+}
+
+
+/*-------------------------------------
+ 011-02) Component Camera Qr Code Reader
+-------------------------------------*/
+class ComponentCameraQrCodeReaderBase extends ComponentBase{
+
+
+    /* ---------------------------------------------
+       PROPERTYs Pattern
+--------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formMinHight: {
+            prop: "prop_formMinHight",
+            default: "150px"
+        },
+        prop_fps: {
+            prop: "prop_fps",
+            default: 10
+        },
+        prop_qrbox: {
+            prop: "prop_qrbox",
+            default: 250
+        },
+        prop_titleErrorExistCamera: {
+            prop: "prop_titleErrorExistCamera",
+            default: "دوربینی در دستگاه شما یافت نشد"
+        },
+        prop_titleBtnRetry: {
+            prop: "prop_titleBtnRetry",
+            default: "تلاش مجدد"
+        },
+        prop_titleErrorPermisionCamera: {
+            prop: "prop_titleErrorPermisionCamera",
+            default: "مجوز برای درخواست دوربین تایید نشد"
+        },
+        prop_showInput: {
+            prop: "prop_showInput",
+            default: true
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: "camera_qr_code"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+        part_label: [],
+        part_form: [
+            this._COMPONENT_PATTERN.prop_formMinHight
+        ],
+        part_element: [
+            this._COMPONENT_PATTERN.prop_fps,
+            this._COMPONENT_PATTERN.prop_qrbox
+        ],
+        part_error_exist_camera: [
+            this._COMPONENT_PATTERN.prop_titleErrorExistCamera,
+            this._COMPONENT_PATTERN.prop_titleBtnRetry
+        ],
+        part_error_permision_camera: [
+            this._COMPONENT_PATTERN.prop_titleErrorPermisionCamera,
+            this._COMPONENT_PATTERN.prop_titleBtnRetry
+        ],
+        part_input: [
+            this._COMPONENT_PATTERN.prop_showInput,
+            this._COMPONENT_PATTERN.prop_name
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label:{} ,
+            part_form:{
+                part_element:{},
+                part_error_exist_camera:{},
+                part_error_permision_camera:{},
+            } ,
+            part_input:{}
+        }
+    }
+
+}
+window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends ComponentCameraQrCodeReaderBase{
+
+    _COMPONENT_CAMERA = null;
+    _COMPONENT_ERROR_EXIST_CAMERA = null;
+    _COMPONENT_ERROR_PERMISION_CAMERA = null;
+    _COMPONENT_INPUT = null;
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentCameraQrCodeReader.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_label");
+        this.templateFn("part_element");
+        this.templateFn("part_input");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_form":
+                return this.template_render_form(partName);
+            case "part_element":
+                return this.componentFn_render_formElement(partName);
+            case "part_error_exist_camera":
+                return this.componentFn_render_formErrorExistCamera(partName);
+            case "part_error_permision_camera":
+                return this.componentFn_render_formErrorPermisionCamera(partName);
+            case "part_input":
+                return this.componentFn_render_input(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+  
+  <component-label id="component-camera-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+  
+   ${this.templateFn("part_form") ?? ""}
+  
+  <component-input id="component-camera-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
+
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_form(partName){
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_formMinHight          = data.hasOwnProperty("prop_formMinHight")                      ? data.prop_formMinHight          : "";
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-camera-qr-code-reader-form-${this._COMPONENT_RANDOM_ID}"
+         class="border rounded my-2 px-2">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-camera-qr-code-reader-form-${this._COMPONENT_RANDOM_ID}{
+             min-height: ${prop_formMinHight};
+         }
+     </style>
+     
+     <component-is-empty id="component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}"></component-is-empty>
+      
+     <component-is-empty id="component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}"></component-is-empty>
+  
+     <section id="component-camera-qr-code-reader-element-${this._COMPONENT_RANDOM_ID}" ></section>
+ 
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label(partName) {
+        this.componentFneBasic_render_structure(
+            `component-camera-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
+        );
+    }
+
+    componentFn_render_formElement(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_fps            = data.hasOwnProperty("prop_fps")                        ? data.prop_fps            : 10;
+            const prop_qrbox          = data.hasOwnProperty("prop_qrbox")                      ? data.prop_qrbox          : 250;
+
+            let  cameraExist = false;
+
+            this._COMPONENT_CAMERA = new Html5Qrcode(
+                `component-camera-qr-code-reader-element-${this._COMPONENT_RANDOM_ID}`
+            );
+            Html5Qrcode.getCameras().then(devices => {
+
+                for (const device of devices) {
+                    if (device.hasOwnProperty("id") && device.id != ""){
+
+                        html5QrCode.start(
+                            cameraId,
+                            {
+                                fps: prop_fps,
+                                qrbox: prop_qrbox,
+                            },
+                            (decodedText, decodedResult) => {
+                                this.fn_onScanSuccess(decodedText, decodedResult);
+                            },
+                            (errorMessage) => {
+                                console.log(errorMessage);
+                            }
+                        ).catch(err => {
+                            console.log(err);
+                        });
+
+                        cameraExist = true;
+                        break;
+                    }
+                }
+
+            }).catch(err => {
+                this.templateFn("part_error_permision_camera");
+                this.fn_hiddenErrorExistCamera();
+                cameraExist = true;
+            });
+
+            if (!cameraExist){
+                this.templateFn("part_error_exist_camera");
+                this.fn_hiddenErrorPermoisionCamera();
+            }
+
+        }
+    }
+
+    componentFn_render_formErrorExistCamera(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_titleErrorExistCamera    = data.hasOwnProperty("prop_titleErrorExistCamera")    ? data.prop_titleErrorExistCamera      : "";
+            const prop_titleBtnRetry            = data.hasOwnProperty("prop_titleBtnRetry")            ? data.prop_titleBtnRetry              : "";
+
+            this._COMPONENT_ERROR_EXIST_CAMERA = new window.ComponentIsEmpty(
+                `component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: "m-2"  ,
+
+                    prop_title:  prop_titleErrorExistCamera ,
+                    prop_btnAddStatus: true,
+                    prop_btnAddTitle:  prop_titleBtnRetry ,
+
+                    fn_callback: () => {
+                        this.templateFn("part_element");
+                    } ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_formErrorPermisionCamera(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_titleErrorPermisionCamera            = data.hasOwnProperty("prop_titleErrorPermisionCamera")                        ? data.prop_titleErrorPermisionCamera            : "";
+            const prop_titleBtnRetry            = data.hasOwnProperty("prop_titleBtnRetry")            ? data.prop_titleBtnRetry              : "";
+
+            this._COMPONENT_ERROR_PERMISION_CAMERA = new window.ComponentIsEmpty(
+                `component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: "m-2"  ,
+
+                    prop_title:  prop_titleErrorPermisionCamera ,
+
+                    prop_btnAddStatus: true,
+                    prop_btnAddTitle:  prop_titleBtnRetry ,
+
+                    fn_callback: () => {
+                        this.templateFn("part_element");
+                    } ,
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_input(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+            const prop_showInput       = data.hasOwnProperty("prop_showInput")       ? data.prop_showInput         : true;
+
+            this._COMPONENT_INPUT = new window.ComponentInput(
+                `component-camera-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: [prop_showInput ? "" : "d-none"]  ,
+
+                    prop_type:"string" ,
+                    prop_icon:"&#x25A3;" ,
+                    prop_name: prop_name ,
+                    prop_isDisable: true ,
+
+                }
+            )
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onScanSuccess(decodedText, decodedResult) {
+        this._COMPONENT_INPUT.set("prop_value" , decodedText);
+        this.fn_onCallback(decodedText);
+    }
+
+    fn_hiddenErrorExistCamera() {
+        document.querySelector(`#component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}`).innerHTML=""
+    }
+    fn_hiddenErrorPermoisionCamera() {
+        document.querySelector(`#component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}`).innerHTML=""
+    }
+
+
+    fn_onCallback(qrCodde){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(qrCodde);
+        }
+    }
+
+
+}
+
+
+/*-------------------------------------
+ 011-03) Component Upload Qr Code Reader
+-------------------------------------*/
+class ComponentUploadQrCodeReaderBase extends ComponentBase{
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formHight: {
+            prop: "prop_formHight",
+            default: 150
+        },
+        prop_showInput: {
+            prop: "prop_showInput",
+            default: true
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: "upload_qr_code"
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+        part_label: [],
+        part_element: [
+            this._COMPONENT_PATTERN.prop_formHight
+        ],
+        part_input: [
+            this._COMPONENT_PATTERN.prop_showInput,
+            this._COMPONENT_PATTERN.prop_name
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label: {},
+            part_element: {},
+            part_input: {}
+        }
+    }
+
+}
+window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends ComponentUploadQrCodeReaderBase {
+
+    _COMPONENT_INPUT_FILE = null;
+    _COMPONENT_ERROR_EXIST_CAMERA = null;
+    _COMPONENT_ERROR_PERMISION_CAMERA = null;
+    _COMPONENT_INPUT = null;
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentUploadQrCodeReader.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+        this.templateFn("part_label");
+        this.templateFn("part_element");
+        this.templateFn("part_input");
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_element":
+                return this.componentFn_render_formElement(partName);
+            case "part_input":
+                return this.componentFn_render_input(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+  
+  <component-label id="component-upload-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+  
+  <div id="component-upload-qr-code-reader-input-reader-${this._COMPONENT_RANDOM_ID}" style="display: none"></div>
+  <component-input-file id="component-upload-qr-code-reader-input-file-${this._COMPONENT_RANDOM_ID}"></component-input-file>
+  
+  <component-input id="component-upload-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
+
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+
+    componentFn_render_label(partName) {
+        this.componentFneBasic_render_structure(
+            `component-upload-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
+        );
+    }
+
+    componentFn_render_formElement(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_formHight     = data.hasOwnProperty("prop_formHight")                 ? data.prop_formHight     : 150;
+
+            new window.ComponentInputFile(
+                `component-upload-qr-code-reader-input-file-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_labelShow: false ,
+
+                    prop_accept:  "image/*" ,
+                    prop_maxCount: 1 ,
+                    prop_borderHeight: prop_formHight+"px" ,
+                    prop_showListFiles: false ,
+
+                    fn_callback: (event , files) => {
+                        if (files != null && files.length > 0){
+                            this.fn_onScanSuccess(files[0]);
+                        }
+                    } ,
+
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_input(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+            const prop_showInput       = data.hasOwnProperty("prop_showInput")       ? data.prop_showInput         : true;
+
+            this._COMPONENT_INPUT = new window.ComponentInput(
+                `component-upload-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: [prop_showInput ? "" : "d-none"]  ,
+
+                    prop_type:"string" ,
+                    prop_icon:"&#x25A3;" ,
+                    prop_name: prop_name ,
+                    prop_isDisable: true ,
+
+                }
+            )
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onScanSuccess(file) {
+        const html5Qr = new Html5Qrcode(
+            `component-upload-qr-code-reader-input-reader-${this._COMPONENT_RANDOM_ID}`
+        );
+        html5Qr.scanFile(file, true)
+            .then(decodedText => {
+                this._COMPONENT_INPUT.set("prop_value" , decodedText);
+                this.fn_onCallback(decodedText);
+            })
+            .catch(err => {
+                console.log("خطا در خواندن QR: " + err)
+            });
+    }
+
+
+    fn_onCallback(qrCodde){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(qrCodde);
+        }
+    }
+
+
+}
+
+
+/*-------------------------------------
+ 011-04) Component Qr Code Reader
+-------------------------------------*/
+class ComponentQrCodeReaderBase extends ComponentBase{
+
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_titleTabCamera: {
+            prop: "prop_titleTabCamera",
+            default: "دوربین"
+        },
+        prop_titleTabFile: {
+            prop: "prop_titleTabFile",
+            default: "فایل"
+        },
+        prop_titleTabInput: {
+            prop: "prop_titleTabInput",
+            default: "ورودی"
+        },
+        prop_name: {
+            prop: "prop_name",
+            default: ""
+        },
+        prop_value: {
+            prop: "prop_value",
+            default: ""
+        },
+        prop_placeholder: {
+            prop: "prop_placeholder",
+            default: ""
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+        part_label: [],
+        part_tabs: [
+            this._COMPONENT_PATTERN.prop_titleTabCamera,
+            this._COMPONENT_PATTERN.prop_titleTabFile,
+            this._COMPONENT_PATTERN.prop_titleTabInput
+        ],
+        part_qr_code: [],
+        part_qr_code_file: [],
+        part_qr_code_camera: [],
+        part_input: [
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_value,
+            this._COMPONENT_PATTERN.prop_placeholder
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_label: {},
+            part_tabs: {},
+            part_qr_code: {
+                part_qr_code_file: {} ,
+                part_qr_code_camera: {} ,
+            },
+            part_input: {}
+        }
+    }
+
+}
+window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCodeReaderBase {
+
+    _COMPONENT_LABEL = null;
+    _COMPONENT_TABS = null;
+    _COMPONENT_INPUT = null;
+    _COMPONENT_QR_CODE_CAMERA = null;
+    _COMPONENT_QR_CODE_UPLOAD = null;
+
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentQrCodeReader.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+    --------------------------------------------- */
+    componentFn() {
+        this.templateFn("part_label");
+        this.templateFn("part_tabs");
+        this.templateFn("part_tabs");
+        this.templateFn("part_input");
+
+        this.fn_onSelectTab(1);
+    }
+
+    templateFn(partName = null) {
+        switch (partName) {
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_label":
+                return this.componentFn_render_label(partName);
+            case "part_tabs":
+                return this.componentFn_render_tabs(partName);
+            case "part_qr_code":
+                return this.template_render_qrCode(partName);
+            case "part_qr_code_camera":
+                return this.componentFn_render_qrCodeCamera(partName);
+            case "part_qr_code_file":
+                return this.componentFn_render_qrCodeFile(partName);
+            case "part_input":
+                return this.componentFn_render_input(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+
+    template_render_structure(partName) {
+        const content = `
+  
+  <component-label id="component-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
+
+  <component-tabs id="component-qr-code-reader-tabs-${this._COMPONENT_RANDOM_ID}"></component-tabs>
+  
+   ${this.templateFn("part_qr_code") ?? ""}
+  
+  <component-input id="component-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
+  
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_qrCode(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-qr-code-reader-qr-code-${this._COMPONENT_RANDOM_ID}"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-qr-code-reader-qr-code-${this._COMPONENT_RANDOM_ID}{
+        
+         }
+     </style>
+     
+     
+     <component-camera-qr-code-reader  id="component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}"></component-camera-qr-code-reader>
+     
+     <component-upload-qr-code-reader  id="component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}"></component-upload-qr-code-reader>
+      
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_label(partName) {
+        this.componentFneBasic_render_structure(
+            `component-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
+        );
+    }
+
+    componentFn_render_tabs(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_titleTabCamera        = data.hasOwnProperty("prop_titleTabCamera")          ? data.prop_titleTabCamera                   : "";
+            const prop_titleTabFile          = data.hasOwnProperty("prop_titleTabFile")            ? data.prop_titleTabFile                     : "";
+            const prop_titleTabInput         = data.hasOwnProperty("prop_titleTabInput")           ? data.prop_titleTabInput                    : "";
+
+            this._COMPONENT_TABS = new window.ComponentTabs(
+                `component-qr-code-reader-tabs-${this._COMPONENT_RANDOM_ID}` ,
+                {
+
+                    prop_type: 0 ,
+                    prop_tabSelected: 1 ,
+                    prop_firstCallBack: false ,
+                    prop_tabs: [
+                        {id:1 , title: prop_titleTabCamera } ,
+                        {id:2 , title: prop_titleTabFile   },
+                        {id:3 , title: prop_titleTabInput  }
+                    ] ,
+                    fn_callback: (event , tabIndex) =>{
+                        this.fn_onSelectTab(tabIndex)
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_input(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+            const prop_value           = data.hasOwnProperty("prop_value")           ? data.prop_value             : "";
+            const prop_placeholder     = data.hasOwnProperty("prop_placeholder")     ? data.prop_placeholder       : "";
+
+            this._COMPONENT_INPUT = new window.ComponentInput(
+                `component-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_type:"string" ,
+                    prop_icon:"&#x25A3;" ,
+                    prop_name: prop_name ,
+                    prop_value: prop_value ,
+                    prop_placeholder: prop_placeholder ,
+                    prop_isDisable: true ,
+
+                    fn_onblur: (event , qrCode) => {
+                        this.fn_onScanSuccess(qrCode);
+                    } ,
+
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_qrCodeCamera(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+
+            this._COMPONENT_QR_CODE_CAMERA = new window.ComponentCameraQrCodeReader(
+                `component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_labelShow: false ,
+                    prop_showInput: false ,
+
+                    fn_callback: (qrCode)=>{
+                        this.fn_onScanSuccess(qrCode);
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_qrCodeFile(partName) {
+
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
+
+            this._COMPONENT_QR_CODE_UPLOAD = new window.ComponentUploadQrCodeReader(
+                `component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_labelShow: false ,
+                    prop_showInput: false ,
+
+                    fn_callback: (qrCode)=>{
+                        this.fn_onScanSuccess(qrCode);
+                    }
+                }
+            )
+
+        }
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+
+    fn_onSelectTab(tabId) {
+        const tabCamera = document.querySelector(`#component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}`);
+        const tabUpload = document.querySelector(`#component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}`);
+
+        tabCamera.innerHTML = "";
+        tabUpload.innerHTML = "";
+        this._COMPONENT_INPUT.set("prop_isDisable" , true);
+
+        if (tabId == 1){
+            this.templateFn("part_qr_code_camera");
+        }
+        else if (tabId == 2){
+            this.templateFn("part_qr_code_file");
+        }
+        else if (tabId == 3){
+            this._COMPONENT_INPUT.set("prop_isDisable" , false);
+        }
+    }
+
+    fn_onScanSuccess(decodedText) {
+        this._COMPONENT_INPUT.set("prop_value" , decodedText);
+        this.fn_onCallback(decodedText);
+    }
+
+    fn_onCallback(qrCodde){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(qrCodde);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+//===============================================================================================================
+// [10 - 19] button / inputs / tools -> [012] Inputs Tools
+//===============================================================================================================
+
+/*-------------------------------------
+ 012-01) Component check box
 -------------------------------------*/
 class ComponentAcceptTermsBase extends ComponentBase{
 
@@ -17043,14 +17643,8 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
 }
 
 
-
 /*-------------------------------------
- 03-012) Component check box
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 012-02) Component check box
 -------------------------------------*/
 class ComponentSelectColumnsBase extends ComponentBase{
 
@@ -17733,19 +18327,8 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
 }
 
 
-
 /*-------------------------------------
- 03-013) Component Validate
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_isAbsolute
-@prop_reference
-@prop_listRules
-@prop_title
-
+ 012-03) Component Validate
 -------------------------------------*/
 class ComponentValidateBase extends ComponentBase{
 
@@ -18112,28 +18695,8 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
 }
 
 
-
-
-
-/* ===============================================================================================================
- [04] Tooltips
-=============================================================================================================== */
-
 /*-------------------------------------
- 04-01) Component tooltips description
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_icon
-@prop_iconClass
-@prop_iconStyles
-
-@prop_descriptionBackground
-@prop_descriptionColor
-@prop_description
-@prop_descriptionWidth
+ 012-04) Component tooltips description
 -------------------------------------*/
 class ComponentTooltipDescriptionBase extends ComponentBase{
 
@@ -18414,47 +18977,15 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
 
 
 
-/* ===============================================================================================================
- [10] Tables
-=============================================================================================================== */
+
+
+
+//===============================================================================================================
+// [20 - 29] tables and tab view  [020] Tables
+//===============================================================================================================
 
 /*-------------------------------------
- 10-01) Component Table
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_tableClass
-@prop_tableStyles
-@prop_tableType                      // 1) table-dark  |  2) table-primary  | 3) table-secondary  | 4) table-success  | 5) table-danger  | 6) table-warning  | 7) table-info  | 8) table-light  | 0(default)
-@prop_tableBordered                  // 1) border-dark |  2) border-primary | 3) border-secondary | 4) border-success | 5) border-danger | 6) border-warning | 7) border-info | 8) border-light | 0(default)
-@prop_tableStriped
-@prop_tableHover
-@prop_tableBorderless
-
-@prop_tableHeadClass
-@prop_tableHeadStyles
-@prop_tableItemHeadClass
-@prop_tableItemHeadStyles
-
-@prop_order
-@prop_data
-@prop_header
-
-@prop_tableBodyClass
-@prop_tableBodyStyles
-@prop_tableItemBodyClass
-@prop_tableItemBodyStyles
-@prop_tableItemBodyHoverStyles
-
-@prop_valueType
-@prop_valueRow_backgroundColor
-@prop_valueCol_backgroundColor
-@prop_valueCol_textColor
-
-@prop_valueRow
-@prop_valueCol
+ 020-01) Component Table
 -------------------------------------*/
 class ComponentTableBase extends ComponentBase{
 
@@ -19469,12 +20000,7 @@ ${itemRowOptions}
 
 
 /*-------------------------------------
- 10-02) Component Table resposible
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 020-02) Component Table resposible
 -------------------------------------*/
 class ComponentTableResponsibleBase extends ComponentBase{
 
@@ -19992,16 +20518,12 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
 
 
 
-
-
+//===============================================================================================================
+// [20 - 29] tables and tab view  [021] page number
+//===============================================================================================================
 
 /*-------------------------------------
- 10-02) Component page number
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 021-01) Component page number
 -------------------------------------*/
 class ComponentPageNumberBase extends ComponentBase{
 
@@ -20531,14 +21053,8 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
 }
 
 
-
 /*-------------------------------------
- 10-02) Component page Data
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 021-02) Component page Data
 -------------------------------------*/
 class ComponentPageDataBase extends ComponentBase{
 
@@ -20814,24 +21330,15 @@ window.ComponentPageData = class ComponentPageData extends ComponentPageDataBase
 
 
 
-/* ===============================================================================================================
- [11] Tabs
-=============================================================================================================== */
+
+
+
+//===============================================================================================================
+// [20 - 29] tables and tab view  [022] Tabs
+//===============================================================================================================
 
 /*-------------------------------------
- 11-01) Component Tabs
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_type           0 | 1
-@prop_tabs           {id  name  icon}
-@prop_tabSelected
-
-@prop_firstCallBack
-
-@fn_callback
+ 022-01) Component Tabs
 -------------------------------------*/
 class ComponentTabsBase extends ComponentBase{
 
@@ -21133,19 +21640,8 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
 }
 
 
-
 /*-------------------------------------
- 11-02) Component Tabs
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_backgroundColor_unSelected
-@prop_backgroundColor_selected
-@prop_list
-@prop_itemSelected
-
+ 022-02) Component Tabs
 -------------------------------------*/
 class ComponentTreeBase extends ComponentBase{
 
@@ -21425,22 +21921,1331 @@ window.ComponentTree = class ComponentTree extends ComponentTreeBase{
 
 
 
-/* ===============================================================================================================
- [12] Collapse
-=============================================================================================================== */
+
+
+//===============================================================================================================
+// [20 - 29] tables and tab view  [023] Charts
+//===============================================================================================================
 
 /*-------------------------------------
- 12-01) Component Collapse
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
+ 023-01) Component Chart
+-------------------------------------*/
+class ComponentChartBase extends ComponentBase{
 
-@prop_title
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type: {
+            prop: "prop_type",
+            default: 0
+        },
+        prop_TypeDirection: {
+            prop: "prop_TypeDirection",
+            default: 0
+        },
+        prop_height: {
+            prop: "prop_height",
+            default: null
+        },
+        prop_title_text: {
+            prop: "prop_title_text",
+            default: null
+        },
+        prop_title_align: {
+            prop: "prop_title_align",
+            default: "left"
+        },
+        prop_x_title_text: {
+            prop: "prop_x_title_text",
+            default: null
+        },
+        prop_x_title_align: {
+            prop: "prop_x_title_align",
+            default: "left"
+        },
+        prop_categories: {
+            prop: "prop_categories",
+            default: []
+        },
+        prop_series: {
+            prop: "prop_series",
+            default: []
+        },
+        prop_tooltip_header: {
+            prop: "prop_tooltip_header",
+            default: `<b>{series.name}</b><br />`
+        },
+        prop_tooltip_format: {
+            prop: "prop_tooltip_format",
+            default: `{point.y}`
+        }
+    };
 
-@prop_bodyBackgroundColor
-@prop_body
-@prop_bodyShow
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+        part_chart_element: [],
+        part_chart_view: [
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_TypeDirection,
+            this._COMPONENT_PATTERN.prop_height,
+            this._COMPONENT_PATTERN.prop_title_text,
+            this._COMPONENT_PATTERN.prop_title_align,
+            this._COMPONENT_PATTERN.prop_x_title_text,
+            this._COMPONENT_PATTERN.prop_x_title_align,
+            this._COMPONENT_PATTERN.prop_categories,
+            this._COMPONENT_PATTERN.prop_series,
+            this._COMPONENT_PATTERN.prop_tooltip_header,
+            this._COMPONENT_PATTERN.prop_tooltip_format
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_chart_element: {
+                part_chart_view: {}
+            }
+        } ,
+    }
+
+}
+window.ComponentChart = class ComponentChart extends ComponentChartBase{
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentChart.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+    /* ---------------------------------------------
+    TEMPLATEs
+   --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_chart_view");
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_chart_element":
+                return this.template_render_chartElement(partName);
+            case "part_chart_view":
+                return this.componentFn_render_chartView(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+  ${this.templateFn("part_chart_element") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    template_render_chartElement(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-chart-element-${this._COMPONENT_RANDOM_ID}"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-chart-element-${this._COMPONENT_RANDOM_ID}{
+        
+         }
+     </style>
+     
+     <div id="component-chart-view-${this._COMPONENT_RANDOM_ID}"></div>
+      
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_chartView(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const prop_type            =  data.hasOwnProperty("prop_type")            ?  data.prop_type           : 0;
+            let typeStr = null;
+            switch (prop_type){
+                case 0: typeStr = "line";       break;
+                case 1: typeStr = "column";     break;
+                case 2: typeStr = "bar";        break;
+                case 3: typeStr = "pie";        break;
+                case 4: typeStr = "area";       break;
+                case 5: typeStr = "spline";     break;
+                case 6: typeStr = "scatter";    break;
+                case 7: typeStr = "areaspline"; break;
+                case 8: typeStr = "heatmap";    break;
+            }
+
+            const prop_TypeDirection   =  data.hasOwnProperty("prop_TypeDirection")   ?  data.prop_TypeDirection  : 0;
+            const prop_height          =  data.hasOwnProperty("prop_height")          ?  data.prop_height         : null;
+
+            const prop_title_text      =  data.hasOwnProperty("prop_title_text")      ?  data.prop_title_text     : null;
+            const prop_title_align     =  data.hasOwnProperty("prop_title_align")     ?  data.prop_title_align    : "left";
+
+            const prop_x_title_text    =  data.hasOwnProperty("prop_x_title_text")    ?  data.prop_x_title_text   : null;
+            const prop_x_title_align   =  data.hasOwnProperty("prop_x_title_align")   ?  data.prop_x_title_align  : "left";
+
+            const prop_y_title_text    =  data.hasOwnProperty("prop_y_title_text")    ?  data.prop_y_title_text   : null;
+            const prop_y_title_align   =  data.hasOwnProperty("prop_y_title_align")   ?  data.prop_y_title_align  : "left";
+
+            const prop_categories      =  data.hasOwnProperty("prop_categories")      ?  data.prop_categories     : [];
+            const prop_series          =  data.hasOwnProperty("prop_series")          ?  data.prop_series         : [];
+
+            const prop_tooltip_header  =  data.hasOwnProperty("prop_tooltip_header")  ?  data.prop_tooltip_header : '<b>{series.name}</b><br />';
+            const prop_tooltip_format  =  data.hasOwnProperty("prop_tooltip_format")  ?  data.prop_tooltip_format : '{point.y}';
+
+
+
+            const chartOptions = {
+                chart: {
+                    height: prop_height,
+                },
+                title: {
+                    text: prop_title_text ,
+                    align: prop_title_align ,
+                },
+                series: prop_series ,
+                tooltip: {
+                    headerFormat: prop_tooltip_header,
+                    pointFormat: prop_tooltip_format
+                },
+            }
+
+
+
+            if ( typeStr != null){
+                chartOptions["chart"]["type"] =  typeStr
+            }
+
+            if ( prop_TypeDirection != null && prop_TypeDirection == 0){
+                chartOptions["xAxis"] =  {
+                    title: {
+                        text: prop_x_title_text ,
+                        align: prop_x_title_align ,
+                    },
+                    categories: prop_categories
+                }
+            }
+            if ( prop_TypeDirection != null && prop_TypeDirection == 1){
+                chartOptions["yAxis"] =  {
+                    title: {
+                        text: prop_y_title_text ,
+                        align: prop_y_title_align ,
+                    } ,
+                    categories: prop_categories
+                }
+            }
+
+
+            Highcharts.chart(`component-chart-view-${this._COMPONENT_RANDOM_ID}`, chartOptions );
+
+        }
+
+    }
+
+}
+
+
+/*-------------------------------------
+ 023-02) Component Chart Tree Y
+-------------------------------------*/
+class ComponentChartTreeYBase extends ComponentBase{
+
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_formScrollerHeight: {
+            prop: "prop_formScrollerHeight",
+            default: "450px"
+        },
+        prop_svgWGap: {
+            prop: "prop_svgWGap",
+            default: 1000
+        },
+        prop_svgHGap: {
+            prop: "prop_svgHGap",
+            default: 1000
+        },
+        prop_objects: {
+            prop: "prop_objects",
+            default: []
+        },
+        prop_objectsLevelClose: {
+            prop: "prop_objectsLevelClose",
+            default: null
+        },
+        prop_template: {
+            prop: "prop_template",
+            default: ""
+        },
+        prop_templateWidth: {
+            prop: "prop_templateWidth",
+            default: 100
+        },
+        prop_templateHeight: {
+            prop: "prop_templateHeight",
+            default: 100
+        },
+        prop_templateHeightPoint: {
+            prop: "prop_templateHeightPoint",
+            default: 30
+        },
+        prop_templateHeightGap: {
+            prop: "prop_templateHeightGap",
+            default: 30
+        },
+        prop_lineHeightMin: {
+            prop: "prop_lineHeightMin",
+            default: 20
+        },
+        prop_lineWidth: {
+            prop: "prop_lineWidth",
+            default: 3
+        },
+        prop_lineDurationAnim: {
+            prop: "prop_lineDurationAnim",
+            default: 250
+        },
+        prop_lineColor: {
+            prop: "prop_lineColor",
+            default: "#c2c2c2"
+        },
+        prop_lineMarkerStart: {
+            prop: "prop_lineMarkerStart",
+            default: "circle"
+        },
+        prop_lineMarkerEnd: {
+            prop: "prop_lineMarkerEnd",
+            default: "arrow"
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+        part_layout_mouse_scroller: [
+            this._COMPONENT_PATTERN.prop_formScrollerHeight
+        ],
+        part_layout_svg: [
+            this._COMPONENT_PATTERN.prop_svgWGap,
+            this._COMPONENT_PATTERN.prop_svgHGap,
+            this._COMPONENT_PATTERN.prop_objects,
+            this._COMPONENT_PATTERN.prop_objectsLevelClose,
+            this._COMPONENT_PATTERN.prop_template,
+            this._COMPONENT_PATTERN.prop_templateWidth,
+            this._COMPONENT_PATTERN.prop_templateHeight,
+            this._COMPONENT_PATTERN.prop_templateHeightPoint,
+            this._COMPONENT_PATTERN.prop_templateHeightGap,
+            this._COMPONENT_PATTERN.prop_lineHeightMin,
+            this._COMPONENT_PATTERN.prop_lineWidth,
+            this._COMPONENT_PATTERN.prop_lineDurationAnim,
+            this._COMPONENT_PATTERN.prop_lineColor,
+            this._COMPONENT_PATTERN.prop_lineMarkerStart,
+            this._COMPONENT_PATTERN.prop_lineMarkerEnd
+        ]
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_layout_mouse_scroller: {
+                part_layout_svg: {}
+            }
+        } ,
+    }
+
+}
+window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentChartTreeYBase{
+
+    _ZOOM_CENTER = true;
+    _OBJECTS = null;
+
+    _COMPONENT_MOUSE_SCROLLER = null;
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentChartTreeY.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+    /* ---------------------------------------------
+    TEMPLATEs
+   --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_layout_mouse_scroller");
+
+        this.onRegisterFinish().then(el => {
+            this.fn_chartInit();
+        })
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_layout_svg":
+                return this.template_render_layoutSvg(partName);
+            case "part_layout_mouse_scroller":
+                return this.componentFn_render_layoutMouseScroller(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+                  <component-mouse-scroller id="component-chart-tree-y-layout-mouse-scroller-${this._COMPONENT_RANDOM_ID}">
+                      <component-body>
+                            ${this.templateFn("part_layout_svg") ?? ""}
+                      </component-body>
+                  </component-mouse-scroller>
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+    componentFn_render_layoutMouseScroller(partName) {
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_formScrollerHeight     =  data.hasOwnProperty("prop_formScrollerHeight")      ?  data.prop_formScrollerHeight     : "";
+
+            this._COMPONENT_MOUSE_SCROLLER = new window.ComponentMouseScroller(
+                `component-chart-tree-y-layout-mouse-scroller-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_scrollerHeight: prop_formScrollerHeight ,
+                }
+            )
+        }
+
+    }
+
+    template_render_layoutSvg(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            return `
+<div data-part-name="${partName}" 
+         id="component-chart-tree-y-layout-svg-${this._COMPONENT_RANDOM_ID}"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-chart-tree-y-layout-svg-${this._COMPONENT_RANDOM_ID}{
+            
+         }
+     </style>
+     
+     <svg id="component-chart-tree-y-svg-${this._COMPONENT_RANDOM_ID}" width="1000" height="1000" >
+      <defs></defs>
+    </svg>
+      
+</div>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    /* ---------------------------------------------
+        FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getElementSvg(){
+        return document.querySelector(`#component-chart-tree-y-svg-${this._COMPONENT_RANDOM_ID}`);
+    }
+
+    fn_readyElementSvg(){
+        const svg = this.fn_getElementSvg();
+        svg.innerHTML = "<defs></defs>"
+        svg.style.border = "none";
+    }
+
+    fn_buildTree(data, parentId = 0) {
+        return data
+            .filter(item => item.parent === parentId)
+            .map(item => ({
+                ...item,
+                children: this.fn_buildTree(data, item.id)
+            }));
+    }
+
+    fn_assignPositions(node, depth = 0, colCounter = { value: 1 }) {
+        node.row = depth;
+
+        if (node.children.length === 0) {
+            node.col = colCounter.value;
+            colCounter.value += 2;
+        } else {
+            node.children.forEach(child => this.fn_assignPositions(child, depth + 1, colCounter));
+            const minCol = node.children[0].col;
+            const maxCol = node.children[node.children.length - 1].col;
+            node.col = Math.floor((minCol + maxCol) / 2);
+        }
+    }
+
+    fn_flatten(tree, out = []) {
+        tree.forEach(node => {
+            out.push(node);
+            this.fn_flatten(node.children, out);
+        });
+        return out;
+    }
+
+    fn_closeLevelDefault(objects){
+        const data = this._COMPONENT_CONFIG;
+        const prop_objectsLevelClose = data.hasOwnProperty("prop_objectsLevelClose") ? data.prop_objectsLevelClose : null;
+        if (prop_objectsLevelClose != null){
+            for (let i = 0; i < objects.length; i++) {
+                const item = objects[i];
+
+                if (item !=null && item.hasOwnProperty("row") && item.row == prop_objectsLevelClose-1 && item.hasOwnProperty("children") && item.children.length >0){
+                    objects[i].isOpen = false;
+                }
+            }
+        }
+        return objects;
+    }
+
+    fn_getPosition(objects) {
+        const data = this._COMPONENT_CONFIG;
+        const Width =   data.hasOwnProperty("prop_templateWidth")  ? data.prop_templateWidth  : 100;
+        const Height =  data.hasOwnProperty("prop_templateHeight")  ? data.prop_templateHeight  : 100;
+        const h =       data.hasOwnProperty("prop_templateHeightPoint")  ? data.prop_templateHeightPoint  : 30;
+        const dHeight = data.hasOwnProperty("prop_templateHeightGap") ? data.prop_templateHeightGap : 50;
+
+        for (let i = 0; i < objects.length ; i++) {
+            const itemObject = objects[i];
+            if (itemObject.hasOwnProperty("row") && itemObject.hasOwnProperty("col")){
+                objects[i].x = itemObject.col*(Width) + ((Width)/2);
+                objects[i].y = (itemObject.row)*(Height+2*dHeight) + (dHeight + h);
+            }
+        }
+        return objects;
+    }
+
+    fn_getTemplate(objects) {
+        const data = this._COMPONENT_CONFIG;
+        const template =   data.hasOwnProperty("prop_template")  ? data.prop_template  : "";
+
+        for (let i = 0; i < objects.length ; i++) {
+            const itemObject = objects[i];
+            const tags = itemObject.hasOwnProperty("tags") ? itemObject.tags : {};
+            tags["id"] = itemObject.id
+            tags["parent"] = itemObject.parent;
+            tags["elementShow"]= `
+            <div style="border-radius: 100%; width:40px; height:40px; cursor: pointer; transform: translate(-50%, 0); bottom: -20px; left: 50%; line-height: 35px"
+                 class="${itemObject.hasOwnProperty("children") && Array.isArray(itemObject.children) && itemObject.children.length > 0 ? "" : "d-none"}
+                        item-arrow-chart-tree border border-2 border-dark  position-absolute p-0 text-center d-block bg-white"
+                 onclick="${this.getFn("call_showOrHideChild" , itemObject.id)}">
+                    ${(itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || (!itemObject.hasOwnProperty("isOpen"))  ? "&#x25BC;" : "&#x25B2;"}
+           </div>
+            `;
+
+            objects[i].template = template.replace(/{{(.*?)}}/g, (match, key) => {
+                return tags[key.trim()] ?? "";
+            });
+
+        }
+        return objects;
+    }
+
+    fn_drawShape(objects) {
+        const data = this._COMPONENT_CONFIG;
+        const svg = this.fn_getElementSvg();
+        const scroller = this._COMPONENT_MOUSE_SCROLLER.fn_getElementScroller();
+
+        const Width = data.hasOwnProperty("prop_templateWidth") ? data.prop_templateWidth : 100;
+        const Height = data.hasOwnProperty("prop_templateHeight") ? data.prop_templateHeight : 100;
+        const marginX =  data.hasOwnProperty("prop_svgWGap") ? data.prop_svgWGap : 100;
+        const marginY =  data.hasOwnProperty("prop_svgHGap") ? data.prop_svgHGap : 100;
+
+        let objectStatus = this.fn_drawStatus(objects);
+        for (let i = 0; i < objectStatus.length ; i++) {
+            const itemObject = objectStatus[i];
+
+            if (itemObject != null && ((itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || !itemObject.hasOwnProperty("isOpen"))){
+
+                if (itemObject.hasOwnProperty("template") && itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y")){
+                    const template = itemObject.template;
+                    const x = itemObject.x + marginX;
+                    const y = itemObject.y + marginY;
+
+                    tools_svg.createHtmlOnPoint(
+                        svg,
+                        template ,
+                        { x: x-(Width/2) , y: y  , width:Width+5 , height:Height+5}
+                    )
+
+                    if (this._ZOOM_CENTER && i==0){
+                        this._COMPONENT_MOUSE_SCROLLER._SCROLL_CENTER_X = x - scroller.clientWidth  / 2 ;
+                        this._COMPONENT_MOUSE_SCROLLER._SCROLL_CENTER_Y = y - scroller.clientHeight / 2 + 200 ;
+                        this._COMPONENT_MOUSE_SCROLLER.call_applyScroll() ;
+                        this._ZOOM_CENTER = false;
+                    }
+                }
+
+            }
+
+        }
+        return objects;
+    }
+
+    fn_drawLine(objects) {
+        const data = this._COMPONENT_CONFIG;
+
+        const Height =        data.hasOwnProperty("prop_templateHeight")            ? data.prop_templateHeight               : 100;
+        const marginX =       data.hasOwnProperty("prop_svgWGap")                   ? data.prop_svgWGap                      : 100;
+        const marginY =       data.hasOwnProperty("prop_svgHGap")                   ? data.prop_svgHGap                      : 100;
+        const lYMin =         data.hasOwnProperty("prop_lineHeightMin")             ? data.prop_lineHeightMin                : 20;
+        const lineWidth =     data.hasOwnProperty("prop_lineWidth")                 ? data.prop_lineWidth                    : 2;
+        const animDuration =  data.hasOwnProperty("prop_lineDurationAnim")          ? data.prop_lineDurationAnim             : 250;
+        const bgColor =       data.hasOwnProperty("prop_lineColor")                 ? data.prop_lineColor                    : "#9b9b9b";
+        const markerEnd =     data.hasOwnProperty("prop_lineMarkerEnd")             ? data.prop_lineMarkerEnd                : "arrow";
+        const markerStat =    data.hasOwnProperty("prop_lineMarkerStart")           ? data.prop_lineMarkerStart              : "circle";
+
+        let objectStatus = this.fn_drawStatus(objects , true);
+        for (let i = 0; i < objectStatus.length ; i++) {
+            const itemObject = objectStatus[i];
+
+            if (itemObject != null && ((itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || !itemObject.hasOwnProperty("isOpen"))){
+                if (itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y") && itemObject.hasOwnProperty("children")){
+                    const children = itemObject.children;
+                    const positionX1 = itemObject.x + marginX;
+                    const positionY1 = itemObject.y + Height + marginY;
+
+                    for (let j = 0; j < children.length; j++) {
+                        const itemChild = children[j];
+                        if (itemChild.hasOwnProperty("x") && itemChild.hasOwnProperty("y")){
+                            const positionX2 = itemChild.x + marginX;
+                            const positionY2 = itemChild.y - 10 + marginY;
+
+                            this.fn_connectTwoPointWithTreeHierarchy(
+                                {x: positionX1 , y:positionY1} ,
+                                {x: positionX2 , y:positionY2} ,
+                                lYMin , lineWidth , animDuration , bgColor ,
+                                {
+                                    start: markerStat , end:markerEnd
+                                }
+                            );
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+        return objects;
+    }
+
+    fn_connectTwoPointWithTreeHierarchy(objectA , objectB , LYmin=20 , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"  , markers={ start:"" , end:"arrow"}   ){
+        const svg = this.fn_getElementSvg();
+
+        let points = null
+        if (objectA.x  != objectB.x){
+
+            if (objectB.y >= objectA.y + LYmin){
+                const mid = ((objectB.y - objectA.y)/2);
+                points = [
+                    { x: objectA.x , y: objectA.y                   , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+                    { x: objectA.x , y: objectA.y + mid                } ,
+                    { x: objectB.x , y: objectB.y - mid                } ,
+                    { x: objectB.x , y: objectB.y                   , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
+                ]
+            }
+            else{
+                const mid = ((objectB.x - objectA.x)/2);
+                points = [
+                    {x: objectA.x         , y: objectA.y            , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+                    { x: objectA.x        , y: objectA.y + LYmin                 },
+                    { x: objectA.x + mid  , y: objectA.y + LYmin                 },
+                    { x: objectB.x - mid  , y: objectB.y - LYmin                 },
+                    { x: objectB.x        , y: objectB.y - LYmin                 },
+                    { x: objectB.x        , y: objectB.y            , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
+                ]
+            }
+        }
+        else {
+            points = [
+                { x: objectA.x , y: objectA.y                    , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
+                { x: objectB.x , y: objectB.y                    , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
+            ]
+        }
+
+        tools_svg.connectDirectionPoint(svg , points , lineWidth ,animDuration , bgColor);
+    }
+
+    fn_drawStatus(objects, topDoClose = false) {
+        // کپی سطحی از آبجکت‌ها (اگر نیاز به کپی عمیق‌تری داری،
+        // از JSON.parse(JSON.stringify(objects)) یا روش دلخواه استفاده کن)
+        const objectsCopy = objects.map(item => ({ ...item, tags: { ...item.tags } }));
+
+        // نقشه id -> node برای دسترسی سریع
+        const map = {};
+        objectsCopy.forEach(item => map[item.id] = item);
+
+        // نقشه parent -> [children]
+        const childrenMap = {};
+        objectsCopy.forEach(item => {
+            if (!childrenMap[item.parent]) childrenMap[item.parent] = [];
+            childrenMap[item.parent].push(item);
+        });
+
+        // تابعی برای بستن تمام فرزندان (بازگشتی)
+        function closeChildren(node) {
+            const children = childrenMap[node.id] || [];
+            children.forEach(child => {
+                child.isOpen = false;
+                closeChildren(child);
+            });
+        }
+
+        // همه نودهایی که فعلاً isOpen === false هستند
+        const closedNodes = objectsCopy.filter(n => n.isOpen === false);
+
+        // فیلتر کردن: فقط نودهایی که بالاترین نود بسته در شاخهٔ خود هستند
+        // (یعنی هیچ یک از والدهایشان isOpen === false نباشد)
+        const topClosedNodes = closedNodes.filter(node => {
+            let p = map[node.parent];
+            while (p) {
+                if (p.isOpen === false) {
+                    // اگر یک والد بسته پیدا شد، این node دیگر top-most نیست
+                    return false;
+                }
+                p = map[p.parent];
+            }
+            return true; // هیچ والد بسته‌ای نبود => این top-most است
+        });
+
+        // حالا فقط همین top-most ها را پردازش کن
+        topClosedNodes.forEach(topClosed => {
+            // اگر بخواهیم بالاترین را باز/بسته کنیم:
+            topClosed.isOpen = !topDoClose; // اگر topDoClose=false → باز شود (true)
+            // و سپس همهٔ فرزندان آن را ببندیم
+            closeChildren(topClosed);
+        });
+
+        return objectsCopy;
+    }
+
+    fn_setSizeChart(objects) {
+        const data = this._COMPONENT_CONFIG;
+        const svg = this.fn_getElementSvg();
+
+        const Width =    data.hasOwnProperty("prop_templateWidth")       ? data.prop_templateWidth       : 100;
+        const Height =   data.hasOwnProperty("prop_templateHeight")      ? data.prop_templateHeight      : 100;
+        const dHeight =  data.hasOwnProperty("prop_templateHeightGap")   ? data.prop_templateHeightGap   : 50;
+        const marginX =  data.hasOwnProperty("prop_svgWGap")             ? data.prop_svgWGap             : 100;
+        const marginY =  data.hasOwnProperty("prop_svgHGap")             ? data.prop_svgHGap             : 100;
+
+        let width = 0;
+        let height = 0;
+        for (let i = 0; i < objects.length ; i++) {
+            const itemObject = objects[i];
+            if (itemObject.hasOwnProperty("row") && itemObject.hasOwnProperty("col")){
+                const itemWidth  = itemObject.col*(Width) + Width;
+                const itemHeight = (itemObject.row)*(Height+2*dHeight) + (Height+2*dHeight);
+                if (itemWidth > width ){
+                    width = itemWidth
+                }
+                if (itemHeight > height ){
+                    height = itemHeight
+                }
+            }
+        }
+
+        svg.setAttribute("width", width + 2*marginX);
+        svg.setAttribute("height", height + 2*marginY);
+    }
+
+    fn_chartInit(isFirstRendder=true){
+
+        const data = this._COMPONENT_CONFIG;
+        if (isFirstRendder && data.hasOwnProperty("prop_objects")) this._OBJECTS = data.prop_objects;
+
+        if (this._OBJECTS != null){
+            this.fn_readyElementSvg();
+
+            const tree = this.fn_buildTree(this._OBJECTS);
+            this.fn_assignPositions(tree[0]);
+            this._OBJECTS = this.fn_flatten(tree);
+            this.fn_setSizeChart(this._OBJECTS);
+            this._OBJECTS = this.fn_closeLevelDefault(this._OBJECTS);
+            this._OBJECTS = this.fn_getPosition(this._OBJECTS);
+            this._OBJECTS = this.fn_getTemplate(this._OBJECTS);
+            this._OBJECTS = this.fn_drawShape(this._OBJECTS);
+            this._OBJECTS = this.fn_drawLine( this._OBJECTS);
+        }
+    }
+
+    call_showOrHideChild(id){
+        for (let i = 0; i <this._OBJECTS.length ; i++) {
+            const item = this._OBJECTS[i];
+            if (item.hasOwnProperty("id") && item.id == id && item.hasOwnProperty("children") && item.children.length > 0){
+                this._OBJECTS[i].isOpen = item.hasOwnProperty("isOpen")? !item.isOpen : false;
+                const keysToKeep = ["id", "parent", "tags" , "isOpen"];
+
+                this._OBJECTS = this._OBJECTS.map(obj =>
+                    Object.fromEntries(
+                        keysToKeep
+                            .filter(key => key in obj) // ✅ شرط وجود کلید
+                            .map(key => [key, obj[key]])
+                    )
+                );
+
+                this.fn_chartInit(false);
+                break;
+            }
+        }
+    }
+
+    call_hasChild(id){
+        console.log(id)
+    }
+
+}
+
+
+
+
+
+
+
+//===============================================================================================================
+// [20 - 29] tables and tab view  [024] Steppers
+//===============================================================================================================
+
+/*-------------------------------------
+ 024-01) Component Stepper
+-------------------------------------*/
+class ComponentStepperBase extends ComponentBase{
+
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+  --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size : {
+            prop: "prop_size" ,
+            default: tools_css.standardSizes.m.name
+        } ,
+        prop_steps: {
+            prop: "prop_steps",
+            default: []
+        },
+        prop_body: {
+            prop: "prop_body",
+            default: null
+        },
+        prop_unSelectedBackground: {
+            prop: "prop_unSelectedBackground",
+            default:  tools_const.styles?.stepper?.color_unSelected ?? "red"
+        },
+        prop_selectedBackground: {
+            prop: "prop_selectedBackground",
+            default:  tools_const.styles?.stepper?.color_selected ?? "green"
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_steps ,
+            this._COMPONENT_PATTERN.prop_unSelectedBackground ,
+            this._COMPONENT_PATTERN.prop_selectedBackground ,
+        ] ,
+    };
+
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form: {
+
+            }
+        } ,
+    }
+
+}
+window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
+
+    _ZOOM_CENTER = true;
+    _OBJECTS = null;
+
+    _COMPONENT_MOUSE_SCROLLER = null;
+
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentStepper.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+    /* ---------------------------------------------
+    TEMPLATEs
+   --------------------------------------------- */
+    componentFn(){
+
+        this.onRegisterFinish().then(el => {
+            this.fn_check();
+        })
+    }
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_form":
+                return this.template_render_form(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+                  ${this.templateFn("part_form")}
+                `;
+        return this.templateBasic_render_structure(content );
+    }
+
+
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+            const prop_size                     =   this._COMPONENT_CONFIG.hasOwnProperty("prop_size")           ? this._COMPONENT_CONFIG.prop_size       : null;
+            const directionRtl                  =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")        ? this._COMPONENT_CONFIG.directionRtl    : false;
+            const prop_body                     =   data.hasOwnProperty("prop_body")  && data.prop_body != null  ?  data.prop_body                        : this._COMPONENT_SLOTS?.body ?? [];
+            const prop_steps                    =   data.hasOwnProperty("prop_steps")                            ?  data.prop_steps                       :  []
+            const prop_unSelectedBackground     =   data.hasOwnProperty("prop_unSelectedBackground")             ?  data.prop_unSelectedBackground        :  ""
+            const prop_selectedBackground       =   data.hasOwnProperty("prop_selectedBackground")               ?  data.prop_selectedBackground          :  ""
+
+            const stepsHtml = this.fn_renderSteps(prop_steps , prop_body );
+
+
+            const elHeight =tools_css.getHeightSize(prop_size);
+            const elFontSize =tools_css.getFontSize(prop_size);
+
+
+
+            return `
+<div data-part-name="${partName}" 
+         id="component-steps-from-${this._COMPONENT_RANDOM_ID}"
+         class="">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID}{
+            
+         }
+         
+         
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_bgColor_active{
+                background-color: ${prop_selectedBackground} !important;
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_color_active{
+                color: ${prop_selectedBackground} !important;
+         }
+         
+         
+       
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_bgColor_diactive{
+                background-color: ${prop_unSelectedBackground};
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_color_diactive{
+                color: ${prop_unSelectedBackground} ;
+         }
+         
+         
+         
+         
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-${this._COMPONENT_RANDOM_ID}{
+             display:          flex;
+         }
+         
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-div-number-${this._COMPONENT_RANDOM_ID}{
+             float:            ${directionRtl ? 'right' : 'left'};
+             width:            60px;
+             height:           ${elHeight + 10}px;
+         }
+         
+       
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-section-number-${this._COMPONENT_RANDOM_ID}{
+             float:            ${directionRtl ? 'right' : 'left'};
+             width:            60px;
+             position:         relative;
+             flex: 1;
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-section-number-line-${this._COMPONENT_RANDOM_ID}{
+             position:         absolute;
+             width:            2px;
+             height:           calc(100%);
+             left:             50%;
+             top:              ${(elHeight + 10)/2}px;
+             transform:        translate(-50% , 0);
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-section-number-txt-${this._COMPONENT_RANDOM_ID}{
+             position:         absolute;
+             width:            ${elHeight}px;
+             height:           ${elHeight}px;
+             left:             50%;
+             top:              5px;
+             transform:        translate(-50% , 0);
+             line-height:      ${elHeight}px;
+             text-align:       center;
+             color:            white;
+         }
+         
+         
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-section-info-${this._COMPONENT_RANDOM_ID}{
+             float:       ${directionRtl ? 'left' : 'right'};
+             width:       calc(100% - 60px);
+         }
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-${this._COMPONENT_RANDOM_ID}{
+             display:     flow-root;
+             height:      ${elHeight + 10}px;
+         }
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-div-title-${this._COMPONENT_RANDOM_ID}{
+             float:       ${directionRtl ? 'right' : 'left'};
+             width:       200px;
+             height:      ${elHeight + 10}px;
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-div-title-inside-${this._COMPONENT_RANDOM_ID}{
+         
+            ${directionRtl ? "padding-right" : "padding-left"} :  10px;
+            line-height:     ${elHeight + 10}px;
+            height:          ${elHeight + 10}px;
+            font-size:       ${elFontSize}px;
+            display:         block;
+            width:           100%;
+         }
+         
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-div-space-${this._COMPONENT_RANDOM_ID}{
+             float:            ${directionRtl ? 'left' : 'right'};
+             width:            calc(100% - 200px);
+             position:         relative;
+             height:           ${elHeight + 10}px;
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-div-space-inside-${this._COMPONENT_RANDOM_ID}{
+             position:         absolute;
+             width:            100%;
+             height:           1px;
+             left:             0;
+             top:              50%;
+             transform:        translate(0 , -50%);
+         }
+  
+         
+         
+         
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-body-${this._COMPONENT_RANDOM_ID}{
+             display:     flow-root;
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-body-div-body-${this._COMPONENT_RANDOM_ID}{
+             float:       ${directionRtl ? 'left' : 'right'};
+             width:       calc(100% - 60px);
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-body-div-body-inside-${this._COMPONENT_RANDOM_ID}{
+             ${directionRtl ? "padding-right" : "padding-left"} :  10px;
+             display:         block;
+             width:           100%;
+         }
+         
+     </style>
+     
+     ${stepsHtml}
+      
+</div>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    /* ---------------------------------------------
+        FUNCTIONs
+    --------------------------------------------- */
+
+    fn_getElStepSelected(stepName , index){
+        return {
+            step:                  `#${this._COMPONENT_ID} .component-steps-from-item-step-${this._COMPONENT_RANDOM_ID}[name=${stepName}]` ,
+            lineVertical:           ` .component-steps-from-item-step-section-number-line-${this._COMPONENT_RANDOM_ID}` ,
+            number:                 ` .component-steps-from-item-step-section-number-txt-${this._COMPONENT_RANDOM_ID}` ,
+            title:                  ` .component-steps-from-item-step-part-info-div-title-inside-${this._COMPONENT_RANDOM_ID}` ,
+            lineHorizontal:         ` .component-steps-from-item-step-part-info-div-space-inside-${this._COMPONENT_RANDOM_ID}` ,
+            body:                   ` .component-steps-from-item-step-part-body-div-body-inside-${this._COMPONENT_RANDOM_ID}` ,
+            msg:                    `component-steps-from-item-step-part-body-div-body-message-${this._COMPONENT_RANDOM_ID}-${index}` ,
+            error:                  `component-steps-from-item-step-part-body-div-body-is-empty-${this._COMPONENT_RANDOM_ID}-${index}` ,
+        };
+    }
+
+    fn_renderSteps(prop_steps , prop_body ){
+        let html = "";
+
+        let stepBreak = true;
+        if (prop_steps != null && Array.isArray(prop_steps)){
+            for (let i = 0; i < prop_steps.length; i++) {
+                const itemStep =  prop_steps[i];
+
+                const stepBody =  this.fn_getStepBody(itemStep , prop_body)  ;
+                const stepName =  itemStep?.name ?? "";
+                const stepTitle = itemStep?.title ?? "";
+                const msg =       itemStep?.msg ?? null;
+                const error =     itemStep?.error ?? null;
+                stepBreak =       stepBreak ? (itemStep?.condition() ?? false) : stepBreak;
+
+                let lineHtml = "";
+                if (i < prop_steps.length - 1){
+                    lineHtml = `
+                        <div class="component-steps-from-item-step-section-number-line-${this._COMPONENT_RANDOM_ID} step_bgColor_diactive"></div>
+                    `;
+                }
+
+
+                html += `
+<section class="component-steps-from-item-step-${this._COMPONENT_RANDOM_ID}" name="${stepName}">
+
+     <div class="component-steps-from-item-step-section-number-${this._COMPONENT_RANDOM_ID}">
+          ${lineHtml}
+          <b class="component-steps-from-item-step-section-number-txt-${this._COMPONENT_RANDOM_ID} rounded step_bgColor_diactive">${i+1}</b>
+     </div>
+
+     <div class="component-steps-from-item-step-section-info-${this._COMPONENT_RANDOM_ID}">
+          
+          <div class="component-steps-from-item-step-part-info-${this._COMPONENT_RANDOM_ID}">
+              <div class="component-steps-from-item-step-part-info-div-title-${this._COMPONENT_RANDOM_ID}">
+                    <b class="component-steps-from-item-step-part-info-div-title-inside-${this._COMPONENT_RANDOM_ID} step_color_diactive ">
+                       ${stepTitle}
+                    </b>
+               </div>
+               <div class="component-steps-from-item-step-part-info-div-space-${this._COMPONENT_RANDOM_ID}">
+                    <div class="component-steps-from-item-step-part-info-div-space-inside-${this._COMPONENT_RANDOM_ID} step_bgColor_diactive"></div>
+               </div>
+          </div>
+          <div class="component-steps-from-item-step-part-body-${this._COMPONENT_RANDOM_ID} ">
+              <component-messages id="component-steps-from-item-step-part-body-div-body-message-${this._COMPONENT_RANDOM_ID}-${i}"></component-messages>
+            
+              <div class="component-steps-from-item-step-part-body-div-body-inside-${this._COMPONENT_RANDOM_ID} d-none">
+                  ${stepBody}
+              </div>
+              
+              <component-is-empty id="component-steps-from-item-step-part-body-div-body-is-empty-${this._COMPONENT_RANDOM_ID}-${i}"></component-is-empty>
+          </div>
+     </div>
+
+</section>
+                `;
+
+            }
+        }
+
+
+
+        return html;
+    }
+
+    fn_getStepBody(itemStep , prop_body){
+        let body = null;
+        if (itemStep != null){
+            if (itemStep.hasOwnProperty("body")){
+                return itemStep.body;
+            }
+            else {
+                if (itemStep.hasOwnProperty("name") && prop_body != null && Array.isArray(prop_body)){
+                    const stepName = itemStep.name;
+                    for (let i = 0; i < prop_body.length; i++) {
+                        const itemBody = prop_body[i];
+                        if (itemBody != null && itemBody.hasOwnProperty("html")  && itemBody.hasOwnProperty("attrs") && itemBody.attrs.hasOwnProperty("name") && itemBody.attrs.name == stepName){
+                            body = itemBody.html;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return body;
+    }
+
+
+
+
+    fn_check(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_steps                    =   data.hasOwnProperty("prop_steps")                            ?  data.prop_steps                       :  [];
+
+        let stepBreak = false;
+        if (prop_steps != null && Array.isArray(prop_steps)){
+            for (let i = 0; i < prop_steps.length; i++) {
+                const itemStep =  prop_steps[i];
+
+                const msg =             itemStep?.msg ?? null;
+                const error =           itemStep?.error ?? null;
+
+                const stepName =        itemStep?.name ?? "";
+                const stepElements =    this.fn_getElStepSelected(stepName , i);
+
+                if (stepElements.hasOwnProperty("step")){
+                    const stepQuery = stepElements.step;
+
+                    let stepActive = false;
+                    if (!stepBreak){
+                        let condition =       (itemStep?.condition() ?? false);
+
+                        if (condition){
+                            stepActive = true;
+                        }
+                        else{
+                            stepBreak = true;
+                        }
+                    }
+
+                    const elStep =           document.querySelector(stepQuery);
+                    const elLineVertical =   elStep?.querySelector(stepElements?.lineVertical);
+                    const elNumber =         elStep?.querySelector(stepElements?.number);
+                    const elTitle =          elStep?.querySelector(stepElements?.title);
+                    const elLineHorizontal = elStep?.querySelector(stepElements?.lineHorizontal);
+                    const elBody =           elStep?.querySelector(stepElements?.body);
+
+                    if (stepActive){
+                        elLineVertical?.classList?.add("step_bgColor_active")
+                        elNumber?.classList?.add("step_bgColor_active")
+                        elTitle?.classList?.add("step_color_active")
+                        elLineHorizontal?.classList?.add("step_bgColor_active")
+                        elBody?.classList?.remove("d-none");
+
+                        elNumber.innerHTML = tools_icons.icon_is_true(20 , "#fff")
+
+                        const elError = document.querySelector(stepElements?.error);
+                        if (elError != null){
+                            elError.innerHtml = "";
+                        }
+
+                        if (msg != null){
+                            new window.ComponentMessages(
+                                stepElements?.msg ,
+                                {
+                                    prop_type: "warning" ,
+                                    prop_messages: [ msg ]
+                                }
+                            );
+                        }
+
+
+                        if (data.hasOwnProperty("fn_onStepCreated") && typeof data.fn_onStepCreated != null){
+                            data.fn_onStepCreated(stepName);
+                        }
+                    }
+                    else{
+                        elLineVertical?.classList?.remove("step_bgColor_active")
+                        elNumber?.classList?.remove("step_bgColor_active")
+                        elTitle?.classList?.remove("step_color_active")
+                        elLineHorizontal?.classList?.remove("step_bgColor_active")
+                        elBody?.classList?.add("d-none")
+
+                        elNumber.innerHTML = i;
+
+                        const elMsg = document.querySelector(stepElements?.msg);
+                        if (elMsg != null){
+                            elMsg.innerHtml = "";
+                        }
+
+                        if (error != null){
+                            new window.ComponentIsEmpty(
+                                stepElements?.error,
+                                {
+                                    prop_title: error,
+                                }
+                            )
+                        }
+                    }
+
+                }
+
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+//===============================================================================================================
+// [30 - 39] collapse and windows -> [030] Collapse
+//===============================================================================================================
+
+/*-------------------------------------
+ 030-01) Component Collapse
 -------------------------------------*/
 class ComponentCollapseBase extends ComponentBase{
 
@@ -21794,36 +23599,14 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
 
 
 
-/* ===============================================================================================================
- [13] Window
-=============================================================================================================== */
+
+
+//===============================================================================================================
+// [30 - 39] collapse and windows-> [031] Window
+//===============================================================================================================
 
 /*-------------------------------------
- 13-01) Component Window
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_blurBackgroundColor
-
-@prop_windowBackgroundColor
-@prop_windowWidth
-@prop_windowHeight
-@prop_windowRound
-
-@prop_showBtnResize
-
-@prop_header   [or component-header]
-
-@prop_body     [or component-body]
-
-@prop_footer   [or component-footer]
-
-// call_close
-// call_open
-// call_resize
-// call_minimize
+ 031-01) Component Window
 -------------------------------------*/
 class ComponentWindowBase extends ComponentBase{
 
@@ -22505,26 +24288,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
 
 
 /*-------------------------------------
- 13-02) Component Window Confirm
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_header   [or component-header]
-
-@prop_body     [or component-body]
-
-@prop_showBtnResize
-
-@prop_titleBtnCancel
-@prop_titleBtnAccept
-
-@fn_callback
-// call_close
-// call_open
-// call_resize
-// call_minimize
+ 031-02) Component Window Confirm
 -------------------------------------*/
 class ComponentWindowConfirmBase extends ComponentBase{
 
@@ -22858,29 +24622,17 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWi
 }
 
 
-/* ===============================================================================================================
- [14] Slider Shows
-=============================================================================================================== */
+
+
+
+
+//===============================================================================================================
+// [30 - 39] collapse and windows->  [032] Slider Shows
+//===============================================================================================================
+
 /*-------------------------------------
- 14-01) Slider Show Overlapping
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_title
-@prop_labelShow
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_borderClass
-@prop_borderStyles
-
-@prop_imageDuration
-@prop_imageSelected
-@prop_images
--------------------------------------*/
+ 032-01) Slider Show Overlapping
+--------------------------------------*/
 class ComponentSliderShowOverlappingBase extends ComponentBase{
 
 
@@ -23338,22 +25090,14 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
 }
 
 
-/* ===============================================================================================================
- [15] Breadcrums
-=============================================================================================================== */
+
+
+//===============================================================================================================
+// [30 - 39] collapse and windows -> [033] Breadcrumb
+//===============================================================================================================
+
 /*-------------------------------------
- 15-01) Breadcrumb
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_unactiveBreadcrumb
-@prop_activeBreadcrumb
-@prop_breadcrumbs
-
-@fn_callback
-@fn_onBackClick
+ 033-01) Breadcrumb
 -------------------------------------*/
 class ComponentBreadcrumbBase extends ComponentBase{
 
@@ -23751,21 +25495,8 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
 }
 
 
-
-
 /*-------------------------------------
- 15-01) Breadcrumb wuth arrow
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_unactiveBreadcrumb
-@prop_activeBreadcrumb
-@prop_breadcrumbs
-
-@fn_callback
-@fn_onBackClick
+ 033-02) Breadcrumb wuth arrow
 -------------------------------------*/
 class ComponentBreadcrumbWithArrowBase extends ComponentBase{
 
@@ -24349,2153 +26080,15 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
 
 
 
-/* ===============================================================================================================
- [20] Charts
-=============================================================================================================== */
+
+
+//===============================================================================================================
+// [80 - 89] views tools ->  [080] elements page
+//===============================================================================================================
 
 /*-------------------------------------
- 20-01) Component Chart
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_type
-@prop_TypeDirection
-
-@prop_title_text
-@prop_title_align
-
-@prop_description_text
-@prop_description_align
-
-@prop_y_title_text
-@prop_y_title_align
-
-@prop_x_title_text
-@prop_x_title_align
-
-@prop_categories
-@prop_series
-
-@prop_tooltip_header
-@prop_tooltip_format
+ 080-01) change page
 -------------------------------------*/
-class ComponentChartBase extends ComponentBase{
-
-    /* ---------------------------------------------
-         PROPERTYs Pattern
-  --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_type: {
-            prop: "prop_type",
-            default: 0
-        },
-        prop_TypeDirection: {
-            prop: "prop_TypeDirection",
-            default: 0
-        },
-        prop_height: {
-            prop: "prop_height",
-            default: null
-        },
-        prop_title_text: {
-            prop: "prop_title_text",
-            default: null
-        },
-        prop_title_align: {
-            prop: "prop_title_align",
-            default: "left"
-        },
-        prop_x_title_text: {
-            prop: "prop_x_title_text",
-            default: null
-        },
-        prop_x_title_align: {
-            prop: "prop_x_title_align",
-            default: "left"
-        },
-        prop_categories: {
-            prop: "prop_categories",
-            default: []
-        },
-        prop_series: {
-            prop: "prop_series",
-            default: []
-        },
-        prop_tooltip_header: {
-            prop: "prop_tooltip_header",
-            default: `<b>{series.name}</b><br />`
-        },
-        prop_tooltip_format: {
-            prop: "prop_tooltip_format",
-            default: `{point.y}`
-        }
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-        part_chart_element: [],
-        part_chart_view: [
-            this._COMPONENT_PATTERN.prop_type,
-            this._COMPONENT_PATTERN.prop_TypeDirection,
-            this._COMPONENT_PATTERN.prop_height,
-            this._COMPONENT_PATTERN.prop_title_text,
-            this._COMPONENT_PATTERN.prop_title_align,
-            this._COMPONENT_PATTERN.prop_x_title_text,
-            this._COMPONENT_PATTERN.prop_x_title_align,
-            this._COMPONENT_PATTERN.prop_categories,
-            this._COMPONENT_PATTERN.prop_series,
-            this._COMPONENT_PATTERN.prop_tooltip_header,
-            this._COMPONENT_PATTERN.prop_tooltip_format
-        ]
-    };
-
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_chart_element: {
-                part_chart_view: {}
-            }
-        } ,
-    }
-
-}
-window.ComponentChart = class ComponentChart extends ComponentChartBase{
-
-    /* ---------------------------------------------
-       SETUP
-    --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentChart.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-    /* ---------------------------------------------
-    TEMPLATEs
-   --------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_chart_view");
-    }
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_chart_element":
-                return this.template_render_chartElement(partName);
-            case "part_chart_view":
-                return this.componentFn_render_chartView(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-  ${this.templateFn("part_chart_element") ?? ""}
-                `;
-        return this.templateBasic_render_structure(content );
-    }
-
-    template_render_chartElement(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-chart-element-${this._COMPONENT_RANDOM_ID}"
-         class="">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-chart-element-${this._COMPONENT_RANDOM_ID}{
-        
-         }
-     </style>
-     
-     <div id="component-chart-view-${this._COMPONENT_RANDOM_ID}"></div>
-      
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_chartView(partName) {
-        const data = this.getPartProps(partName);
-
-        if (data != null){
-
-            const prop_type            =  data.hasOwnProperty("prop_type")            ?  data.prop_type           : 0;
-            let typeStr = null;
-            switch (prop_type){
-                case 0: typeStr = "line";       break;
-                case 1: typeStr = "column";     break;
-                case 2: typeStr = "bar";        break;
-                case 3: typeStr = "pie";        break;
-                case 4: typeStr = "area";       break;
-                case 5: typeStr = "spline";     break;
-                case 6: typeStr = "scatter";    break;
-                case 7: typeStr = "areaspline"; break;
-                case 8: typeStr = "heatmap";    break;
-            }
-
-            const prop_TypeDirection   =  data.hasOwnProperty("prop_TypeDirection")   ?  data.prop_TypeDirection  : 0;
-            const prop_height          =  data.hasOwnProperty("prop_height")          ?  data.prop_height         : null;
-
-            const prop_title_text      =  data.hasOwnProperty("prop_title_text")      ?  data.prop_title_text     : null;
-            const prop_title_align     =  data.hasOwnProperty("prop_title_align")     ?  data.prop_title_align    : "left";
-
-            const prop_x_title_text    =  data.hasOwnProperty("prop_x_title_text")    ?  data.prop_x_title_text   : null;
-            const prop_x_title_align   =  data.hasOwnProperty("prop_x_title_align")   ?  data.prop_x_title_align  : "left";
-
-            const prop_y_title_text    =  data.hasOwnProperty("prop_y_title_text")    ?  data.prop_y_title_text   : null;
-            const prop_y_title_align   =  data.hasOwnProperty("prop_y_title_align")   ?  data.prop_y_title_align  : "left";
-
-            const prop_categories      =  data.hasOwnProperty("prop_categories")      ?  data.prop_categories     : [];
-            const prop_series          =  data.hasOwnProperty("prop_series")          ?  data.prop_series         : [];
-
-            const prop_tooltip_header  =  data.hasOwnProperty("prop_tooltip_header")  ?  data.prop_tooltip_header : '<b>{series.name}</b><br />';
-            const prop_tooltip_format  =  data.hasOwnProperty("prop_tooltip_format")  ?  data.prop_tooltip_format : '{point.y}';
-
-
-
-            const chartOptions = {
-                chart: {
-                    height: prop_height,
-                },
-                title: {
-                    text: prop_title_text ,
-                    align: prop_title_align ,
-                },
-                series: prop_series ,
-                tooltip: {
-                    headerFormat: prop_tooltip_header,
-                    pointFormat: prop_tooltip_format
-                },
-            }
-
-
-
-            if ( typeStr != null){
-                chartOptions["chart"]["type"] =  typeStr
-            }
-
-            if ( prop_TypeDirection != null && prop_TypeDirection == 0){
-                chartOptions["xAxis"] =  {
-                    title: {
-                        text: prop_x_title_text ,
-                        align: prop_x_title_align ,
-                    },
-                    categories: prop_categories
-                }
-            }
-            if ( prop_TypeDirection != null && prop_TypeDirection == 1){
-                chartOptions["yAxis"] =  {
-                    title: {
-                        text: prop_y_title_text ,
-                        align: prop_y_title_align ,
-                    } ,
-                    categories: prop_categories
-                }
-            }
-
-
-            Highcharts.chart(`component-chart-view-${this._COMPONENT_RANDOM_ID}`, chartOptions );
-
-        }
-
-    }
-
-}
-
-
-
-/*-------------------------------------
- 20-02) Component Chart Tree Y
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_formScrollerHeight
-
-@prop_svgWGap
-@prop_svgHGap
-
-@prop_objects
-@prop_objectsLevelClose
-
-@prop_template
-@prop_templateWidth
-@prop_templateHeight
-@prop_templateHeightPoint
-@prop_templateHeightGap
-
-@prop_lineHeightMin
-@prop_lineWidth
-@prop_lineDurationAnim
-@prop_lineColor
-@prop_lineMarkerStart
-@prop_lineMarkerEnd
--------------------------------------*/
-class ComponentChartTreeYBase extends ComponentBase{
-
-    /* ---------------------------------------------
-         PROPERTYs Pattern
-  --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_formScrollerHeight: {
-            prop: "prop_formScrollerHeight",
-            default: "450px"
-        },
-        prop_svgWGap: {
-            prop: "prop_svgWGap",
-            default: 1000
-        },
-        prop_svgHGap: {
-            prop: "prop_svgHGap",
-            default: 1000
-        },
-        prop_objects: {
-            prop: "prop_objects",
-            default: []
-        },
-        prop_objectsLevelClose: {
-            prop: "prop_objectsLevelClose",
-            default: null
-        },
-        prop_template: {
-            prop: "prop_template",
-            default: ""
-        },
-        prop_templateWidth: {
-            prop: "prop_templateWidth",
-            default: 100
-        },
-        prop_templateHeight: {
-            prop: "prop_templateHeight",
-            default: 100
-        },
-        prop_templateHeightPoint: {
-            prop: "prop_templateHeightPoint",
-            default: 30
-        },
-        prop_templateHeightGap: {
-            prop: "prop_templateHeightGap",
-            default: 30
-        },
-        prop_lineHeightMin: {
-            prop: "prop_lineHeightMin",
-            default: 20
-        },
-        prop_lineWidth: {
-            prop: "prop_lineWidth",
-            default: 3
-        },
-        prop_lineDurationAnim: {
-            prop: "prop_lineDurationAnim",
-            default: 250
-        },
-        prop_lineColor: {
-            prop: "prop_lineColor",
-            default: "#c2c2c2"
-        },
-        prop_lineMarkerStart: {
-            prop: "prop_lineMarkerStart",
-            default: "circle"
-        },
-        prop_lineMarkerEnd: {
-            prop: "prop_lineMarkerEnd",
-            default: "arrow"
-        },
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-        part_layout_mouse_scroller: [
-            this._COMPONENT_PATTERN.prop_formScrollerHeight
-        ],
-        part_layout_svg: [
-            this._COMPONENT_PATTERN.prop_svgWGap,
-            this._COMPONENT_PATTERN.prop_svgHGap,
-            this._COMPONENT_PATTERN.prop_objects,
-            this._COMPONENT_PATTERN.prop_objectsLevelClose,
-            this._COMPONENT_PATTERN.prop_template,
-            this._COMPONENT_PATTERN.prop_templateWidth,
-            this._COMPONENT_PATTERN.prop_templateHeight,
-            this._COMPONENT_PATTERN.prop_templateHeightPoint,
-            this._COMPONENT_PATTERN.prop_templateHeightGap,
-            this._COMPONENT_PATTERN.prop_lineHeightMin,
-            this._COMPONENT_PATTERN.prop_lineWidth,
-            this._COMPONENT_PATTERN.prop_lineDurationAnim,
-            this._COMPONENT_PATTERN.prop_lineColor,
-            this._COMPONENT_PATTERN.prop_lineMarkerStart,
-            this._COMPONENT_PATTERN.prop_lineMarkerEnd
-        ]
-    };
-
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_layout_mouse_scroller: {
-                part_layout_svg: {}
-            }
-        } ,
-    }
-
-}
-window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentChartTreeYBase{
-
-    _ZOOM_CENTER = true;
-    _OBJECTS = null;
-
-    _COMPONENT_MOUSE_SCROLLER = null;
-
-
-
-    /* ---------------------------------------------
-       SETUP
-    --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentChartTreeY.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-    /* ---------------------------------------------
-    TEMPLATEs
-   --------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_layout_mouse_scroller");
-
-        this.onRegisterFinish().then(el => {
-            this.fn_chartInit();
-        })
-    }
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_layout_svg":
-                return this.template_render_layoutSvg(partName);
-            case "part_layout_mouse_scroller":
-                return this.componentFn_render_layoutMouseScroller(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-                  <component-mouse-scroller id="component-chart-tree-y-layout-mouse-scroller-${this._COMPONENT_RANDOM_ID}">
-                      <component-body>
-                            ${this.templateFn("part_layout_svg") ?? ""}
-                      </component-body>
-                  </component-mouse-scroller>
-                `;
-        return this.templateBasic_render_structure(content );
-    }
-
-    componentFn_render_layoutMouseScroller(partName) {
-        const data = this.getPartProps(partName);
-
-        if (data != null){
-            const prop_formScrollerHeight     =  data.hasOwnProperty("prop_formScrollerHeight")      ?  data.prop_formScrollerHeight     : "";
-
-            this._COMPONENT_MOUSE_SCROLLER = new window.ComponentMouseScroller(
-                `component-chart-tree-y-layout-mouse-scroller-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_scrollerHeight: prop_formScrollerHeight ,
-                }
-            )
-        }
-
-    }
-
-    template_render_layoutSvg(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null) {
-
-            return `
-<div data-part-name="${partName}" 
-         id="component-chart-tree-y-layout-svg-${this._COMPONENT_RANDOM_ID}"
-         class="">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-chart-tree-y-layout-svg-${this._COMPONENT_RANDOM_ID}{
-            
-         }
-     </style>
-     
-     <svg id="component-chart-tree-y-svg-${this._COMPONENT_RANDOM_ID}" width="1000" height="1000" >
-      <defs></defs>
-    </svg>
-      
-</div>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-
-
-    /* ---------------------------------------------
-        FUNCTIONs
-    --------------------------------------------- */
-
-    fn_getElementSvg(){
-        return document.querySelector(`#component-chart-tree-y-svg-${this._COMPONENT_RANDOM_ID}`);
-    }
-
-    fn_readyElementSvg(){
-        const svg = this.fn_getElementSvg();
-        svg.innerHTML = "<defs></defs>"
-        svg.style.border = "none";
-    }
-
-    fn_buildTree(data, parentId = 0) {
-        return data
-            .filter(item => item.parent === parentId)
-            .map(item => ({
-                ...item,
-                children: this.fn_buildTree(data, item.id)
-            }));
-    }
-
-    fn_assignPositions(node, depth = 0, colCounter = { value: 1 }) {
-        node.row = depth;
-
-        if (node.children.length === 0) {
-            node.col = colCounter.value;
-            colCounter.value += 2;
-        } else {
-            node.children.forEach(child => this.fn_assignPositions(child, depth + 1, colCounter));
-            const minCol = node.children[0].col;
-            const maxCol = node.children[node.children.length - 1].col;
-            node.col = Math.floor((minCol + maxCol) / 2);
-        }
-    }
-
-    fn_flatten(tree, out = []) {
-        tree.forEach(node => {
-            out.push(node);
-            this.fn_flatten(node.children, out);
-        });
-        return out;
-    }
-
-    fn_closeLevelDefault(objects){
-        const data = this._COMPONENT_CONFIG;
-        const prop_objectsLevelClose = data.hasOwnProperty("prop_objectsLevelClose") ? data.prop_objectsLevelClose : null;
-        if (prop_objectsLevelClose != null){
-            for (let i = 0; i < objects.length; i++) {
-                const item = objects[i];
-
-                if (item !=null && item.hasOwnProperty("row") && item.row == prop_objectsLevelClose-1 && item.hasOwnProperty("children") && item.children.length >0){
-                    objects[i].isOpen = false;
-                }
-            }
-        }
-        return objects;
-    }
-
-    fn_getPosition(objects) {
-        const data = this._COMPONENT_CONFIG;
-        const Width =   data.hasOwnProperty("prop_templateWidth")  ? data.prop_templateWidth  : 100;
-        const Height =  data.hasOwnProperty("prop_templateHeight")  ? data.prop_templateHeight  : 100;
-        const h =       data.hasOwnProperty("prop_templateHeightPoint")  ? data.prop_templateHeightPoint  : 30;
-        const dHeight = data.hasOwnProperty("prop_templateHeightGap") ? data.prop_templateHeightGap : 50;
-
-        for (let i = 0; i < objects.length ; i++) {
-            const itemObject = objects[i];
-            if (itemObject.hasOwnProperty("row") && itemObject.hasOwnProperty("col")){
-                objects[i].x = itemObject.col*(Width) + ((Width)/2);
-                objects[i].y = (itemObject.row)*(Height+2*dHeight) + (dHeight + h);
-            }
-        }
-        return objects;
-    }
-
-    fn_getTemplate(objects) {
-        const data = this._COMPONENT_CONFIG;
-        const template =   data.hasOwnProperty("prop_template")  ? data.prop_template  : "";
-
-        for (let i = 0; i < objects.length ; i++) {
-            const itemObject = objects[i];
-            const tags = itemObject.hasOwnProperty("tags") ? itemObject.tags : {};
-            tags["id"] = itemObject.id
-            tags["parent"] = itemObject.parent;
-            tags["elementShow"]= `
-            <div style="border-radius: 100%; width:40px; height:40px; cursor: pointer; transform: translate(-50%, 0); bottom: -20px; left: 50%; line-height: 35px"
-                 class="${itemObject.hasOwnProperty("children") && Array.isArray(itemObject.children) && itemObject.children.length > 0 ? "" : "d-none"}
-                        item-arrow-chart-tree border border-2 border-dark  position-absolute p-0 text-center d-block bg-white"
-                 onclick="${this.getFn("call_showOrHideChild" , itemObject.id)}">
-                    ${(itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || (!itemObject.hasOwnProperty("isOpen"))  ? "&#x25BC;" : "&#x25B2;"}
-           </div>
-            `;
-
-            objects[i].template = template.replace(/{{(.*?)}}/g, (match, key) => {
-                return tags[key.trim()] ?? "";
-            });
-
-        }
-        return objects;
-    }
-
-    fn_drawShape(objects) {
-        const data = this._COMPONENT_CONFIG;
-        const svg = this.fn_getElementSvg();
-        const scroller = this._COMPONENT_MOUSE_SCROLLER.fn_getElementScroller();
-
-        const Width = data.hasOwnProperty("prop_templateWidth") ? data.prop_templateWidth : 100;
-        const Height = data.hasOwnProperty("prop_templateHeight") ? data.prop_templateHeight : 100;
-        const marginX =  data.hasOwnProperty("prop_svgWGap") ? data.prop_svgWGap : 100;
-        const marginY =  data.hasOwnProperty("prop_svgHGap") ? data.prop_svgHGap : 100;
-
-        let objectStatus = this.fn_drawStatus(objects);
-        for (let i = 0; i < objectStatus.length ; i++) {
-            const itemObject = objectStatus[i];
-
-            if (itemObject != null && ((itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || !itemObject.hasOwnProperty("isOpen"))){
-
-                if (itemObject.hasOwnProperty("template") && itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y")){
-                    const template = itemObject.template;
-                    const x = itemObject.x + marginX;
-                    const y = itemObject.y + marginY;
-
-                    tools_svg.createHtmlOnPoint(
-                        svg,
-                        template ,
-                        { x: x-(Width/2) , y: y  , width:Width+5 , height:Height+5}
-                    )
-
-                    if (this._ZOOM_CENTER && i==0){
-                        this._COMPONENT_MOUSE_SCROLLER._SCROLL_CENTER_X = x - scroller.clientWidth  / 2 ;
-                        this._COMPONENT_MOUSE_SCROLLER._SCROLL_CENTER_Y = y - scroller.clientHeight / 2 + 200 ;
-                        this._COMPONENT_MOUSE_SCROLLER.call_applyScroll() ;
-                        this._ZOOM_CENTER = false;
-                    }
-                }
-
-            }
-
-        }
-        return objects;
-    }
-
-    fn_drawLine(objects) {
-        const data = this._COMPONENT_CONFIG;
-
-        const Height =        data.hasOwnProperty("prop_templateHeight")            ? data.prop_templateHeight               : 100;
-        const marginX =       data.hasOwnProperty("prop_svgWGap")                   ? data.prop_svgWGap                      : 100;
-        const marginY =       data.hasOwnProperty("prop_svgHGap")                   ? data.prop_svgHGap                      : 100;
-        const lYMin =         data.hasOwnProperty("prop_lineHeightMin")             ? data.prop_lineHeightMin                : 20;
-        const lineWidth =     data.hasOwnProperty("prop_lineWidth")                 ? data.prop_lineWidth                    : 2;
-        const animDuration =  data.hasOwnProperty("prop_lineDurationAnim")          ? data.prop_lineDurationAnim             : 250;
-        const bgColor =       data.hasOwnProperty("prop_lineColor")                 ? data.prop_lineColor                    : "#9b9b9b";
-        const markerEnd =     data.hasOwnProperty("prop_lineMarkerEnd")             ? data.prop_lineMarkerEnd                : "arrow";
-        const markerStat =    data.hasOwnProperty("prop_lineMarkerStart")           ? data.prop_lineMarkerStart              : "circle";
-
-        let objectStatus = this.fn_drawStatus(objects , true);
-        for (let i = 0; i < objectStatus.length ; i++) {
-            const itemObject = objectStatus[i];
-
-            if (itemObject != null && ((itemObject.hasOwnProperty("isOpen") && itemObject.isOpen) || !itemObject.hasOwnProperty("isOpen"))){
-                if (itemObject.hasOwnProperty("x") && itemObject.hasOwnProperty("y") && itemObject.hasOwnProperty("children")){
-                    const children = itemObject.children;
-                    const positionX1 = itemObject.x + marginX;
-                    const positionY1 = itemObject.y + Height + marginY;
-
-                    for (let j = 0; j < children.length; j++) {
-                        const itemChild = children[j];
-                        if (itemChild.hasOwnProperty("x") && itemChild.hasOwnProperty("y")){
-                            const positionX2 = itemChild.x + marginX;
-                            const positionY2 = itemChild.y - 10 + marginY;
-
-                            this.fn_connectTwoPointWithTreeHierarchy(
-                                {x: positionX1 , y:positionY1} ,
-                                {x: positionX2 , y:positionY2} ,
-                                lYMin , lineWidth , animDuration , bgColor ,
-                                {
-                                    start: markerStat , end:markerEnd
-                                }
-                            );
-                        }
-
-                    }
-
-                }
-            }
-
-        }
-        return objects;
-    }
-
-    fn_connectTwoPointWithTreeHierarchy(objectA , objectB , LYmin=20 , lineWidth=2 , animDuration=250 , bgColor="#9b9b9b"  , markers={ start:"" , end:"arrow"}   ){
-        const svg = this.fn_getElementSvg();
-
-        let points = null
-        if (objectA.x  != objectB.x){
-
-            if (objectB.y >= objectA.y + LYmin){
-                const mid = ((objectB.y - objectA.y)/2);
-                points = [
-                    { x: objectA.x , y: objectA.y                   , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
-                    { x: objectA.x , y: objectA.y + mid                } ,
-                    { x: objectB.x , y: objectB.y - mid                } ,
-                    { x: objectB.x , y: objectB.y                   , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
-                ]
-            }
-            else{
-                const mid = ((objectB.x - objectA.x)/2);
-                points = [
-                    {x: objectA.x         , y: objectA.y            , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
-                    { x: objectA.x        , y: objectA.y + LYmin                 },
-                    { x: objectA.x + mid  , y: objectA.y + LYmin                 },
-                    { x: objectB.x - mid  , y: objectB.y - LYmin                 },
-                    { x: objectB.x        , y: objectB.y - LYmin                 },
-                    { x: objectB.x        , y: objectB.y            , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
-                ]
-            }
-        }
-        else {
-            points = [
-                { x: objectA.x , y: objectA.y                    , markerStart:markers != null && markers.hasOwnProperty("start") ? markers.start: null} ,
-                { x: objectB.x , y: objectB.y                    , markerEnd:markers != null && markers.hasOwnProperty("end") ? markers.end: null} ,
-            ]
-        }
-
-        tools_svg.connectDirectionPoint(svg , points , lineWidth ,animDuration , bgColor);
-    }
-
-    fn_drawStatus(objects, topDoClose = false) {
-        // کپی سطحی از آبجکت‌ها (اگر نیاز به کپی عمیق‌تری داری،
-        // از JSON.parse(JSON.stringify(objects)) یا روش دلخواه استفاده کن)
-        const objectsCopy = objects.map(item => ({ ...item, tags: { ...item.tags } }));
-
-        // نقشه id -> node برای دسترسی سریع
-        const map = {};
-        objectsCopy.forEach(item => map[item.id] = item);
-
-        // نقشه parent -> [children]
-        const childrenMap = {};
-        objectsCopy.forEach(item => {
-            if (!childrenMap[item.parent]) childrenMap[item.parent] = [];
-            childrenMap[item.parent].push(item);
-        });
-
-        // تابعی برای بستن تمام فرزندان (بازگشتی)
-        function closeChildren(node) {
-            const children = childrenMap[node.id] || [];
-            children.forEach(child => {
-                child.isOpen = false;
-                closeChildren(child);
-            });
-        }
-
-        // همه نودهایی که فعلاً isOpen === false هستند
-        const closedNodes = objectsCopy.filter(n => n.isOpen === false);
-
-        // فیلتر کردن: فقط نودهایی که بالاترین نود بسته در شاخهٔ خود هستند
-        // (یعنی هیچ یک از والدهایشان isOpen === false نباشد)
-        const topClosedNodes = closedNodes.filter(node => {
-            let p = map[node.parent];
-            while (p) {
-                if (p.isOpen === false) {
-                    // اگر یک والد بسته پیدا شد، این node دیگر top-most نیست
-                    return false;
-                }
-                p = map[p.parent];
-            }
-            return true; // هیچ والد بسته‌ای نبود => این top-most است
-        });
-
-        // حالا فقط همین top-most ها را پردازش کن
-        topClosedNodes.forEach(topClosed => {
-            // اگر بخواهیم بالاترین را باز/بسته کنیم:
-            topClosed.isOpen = !topDoClose; // اگر topDoClose=false → باز شود (true)
-            // و سپس همهٔ فرزندان آن را ببندیم
-            closeChildren(topClosed);
-        });
-
-        return objectsCopy;
-    }
-
-    fn_setSizeChart(objects) {
-        const data = this._COMPONENT_CONFIG;
-        const svg = this.fn_getElementSvg();
-
-        const Width =    data.hasOwnProperty("prop_templateWidth")       ? data.prop_templateWidth       : 100;
-        const Height =   data.hasOwnProperty("prop_templateHeight")      ? data.prop_templateHeight      : 100;
-        const dHeight =  data.hasOwnProperty("prop_templateHeightGap")   ? data.prop_templateHeightGap   : 50;
-        const marginX =  data.hasOwnProperty("prop_svgWGap")             ? data.prop_svgWGap             : 100;
-        const marginY =  data.hasOwnProperty("prop_svgHGap")             ? data.prop_svgHGap             : 100;
-
-        let width = 0;
-        let height = 0;
-        for (let i = 0; i < objects.length ; i++) {
-            const itemObject = objects[i];
-            if (itemObject.hasOwnProperty("row") && itemObject.hasOwnProperty("col")){
-                const itemWidth  = itemObject.col*(Width) + Width;
-                const itemHeight = (itemObject.row)*(Height+2*dHeight) + (Height+2*dHeight);
-                if (itemWidth > width ){
-                    width = itemWidth
-                }
-                if (itemHeight > height ){
-                    height = itemHeight
-                }
-            }
-        }
-
-        svg.setAttribute("width", width + 2*marginX);
-        svg.setAttribute("height", height + 2*marginY);
-    }
-
-    fn_chartInit(isFirstRendder=true){
-
-        const data = this._COMPONENT_CONFIG;
-        if (isFirstRendder && data.hasOwnProperty("prop_objects")) this._OBJECTS = data.prop_objects;
-
-        if (this._OBJECTS != null){
-            this.fn_readyElementSvg();
-
-            const tree = this.fn_buildTree(this._OBJECTS);
-            this.fn_assignPositions(tree[0]);
-            this._OBJECTS = this.fn_flatten(tree);
-            this.fn_setSizeChart(this._OBJECTS);
-            this._OBJECTS = this.fn_closeLevelDefault(this._OBJECTS);
-            this._OBJECTS = this.fn_getPosition(this._OBJECTS);
-            this._OBJECTS = this.fn_getTemplate(this._OBJECTS);
-            this._OBJECTS = this.fn_drawShape(this._OBJECTS);
-            this._OBJECTS = this.fn_drawLine( this._OBJECTS);
-        }
-    }
-
-    call_showOrHideChild(id){
-        for (let i = 0; i <this._OBJECTS.length ; i++) {
-            const item = this._OBJECTS[i];
-            if (item.hasOwnProperty("id") && item.id == id && item.hasOwnProperty("children") && item.children.length > 0){
-                this._OBJECTS[i].isOpen = item.hasOwnProperty("isOpen")? !item.isOpen : false;
-                const keysToKeep = ["id", "parent", "tags" , "isOpen"];
-
-                this._OBJECTS = this._OBJECTS.map(obj =>
-                    Object.fromEntries(
-                        keysToKeep
-                            .filter(key => key in obj) // ✅ شرط وجود کلید
-                            .map(key => [key, obj[key]])
-                    )
-                );
-
-                this.fn_chartInit(false);
-                break;
-            }
-        }
-    }
-
-    call_hasChild(id){
-        console.log(id)
-    }
-
-}
-
-
-
-
-
-
-/* ===============================================================================================================
- [21] QR CODE
-=============================================================================================================== */
-
-
-/*-------------------------------------
- 21-01) Component Qr Code
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_title
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_formClass
-@prop_formStyles
-
-@prop_value
-@prop_size
-@prop_version
--------------------------------------*/
-class ComponentQrCodeBase extends ComponentBase{
-
-    /* ---------------------------------------------
-         PROPERTYs Pattern
-  --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_formClass: {
-            prop: "prop_formClass",
-            default: ["border", "rounded", "shadow-sm", "text-center"]
-        },
-        prop_formStyles: {
-            prop: "prop_formStyles",
-            default: {}
-        },
-        prop_value: {
-            prop: "prop_value",
-            default: ""
-        },
-        prop_size: {
-            prop: "prop_size",
-            default: 4
-        },
-        prop_version: {
-            prop: "prop_version",
-            default: 3
-        }
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-        part_label: [],
-        part_qr_code_element: [
-            this._COMPONENT_PATTERN.prop_formClass,
-            this._COMPONENT_PATTERN.prop_formStyles
-        ],
-        part_qr_code_view: [
-            this._COMPONENT_PATTERN.prop_value,
-            this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_version
-        ],
-        part_qr_code_bottom: [],
-        part_qr_code_bottom_text: [
-            this._COMPONENT_PATTERN.prop_value
-        ],
-        part_qr_code_bottom_icon: []
-    };
-
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_label:{} ,
-            part_qr_code_element: {
-                part_qr_code_view: {} ,
-                part_qr_code_bottom: {
-                    part_qr_code_bottom_text: {} ,
-                    part_qr_code_bottom_icon: {} ,
-                } ,
-            }
-        } ,
-    }
-
-}
-window.ComponentQrCode = class ComponentQrCode extends ComponentQrCodeBase{
-
-    /* ---------------------------------------------
-       SETUP
-    --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentQrCode.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-    /* ---------------------------------------------
-TEMPLATEs
---------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_label");
-        this.templateFn("part_qr_code_view");
-        this.templateFn("part_qr_code_bottom_icon");
-    }
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_label":
-                return this.componentFn_render_label(partName);
-            case "part_qr_code_element":
-                return this.template_render_qrCodeElement(partName);
-            case "part_qr_code_view":
-                return this.componentFn_render_qrCodeView(partName);
-            case "part_qr_code_bottom":
-                return this.template_render_qrCodeBottom(partName);
-            case "part_qr_code_bottom_text":
-                return this.template_render_qrCodeBottomText(partName);
-            case "part_qr_code_bottom_icon":
-                return this.componentFn_render_qrCodeBottomIcon(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-  <component-label id="component-qr-code-label-${this._COMPONENT_RANDOM_ID}"></component-label>
-        
-  ${this.templateFn("part_qr_code_element") ?? ""}
-                `;
-        return this.templateBasic_render_structure(content );
-    }
-
-    template_render_qrCodeElement(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_formClass     =  data.hasOwnProperty("prop_formClass")      ?  data.prop_formClass     : [];
-            const prop_formStyles    =  data.hasOwnProperty("prop_formStyles")     ?  data.prop_formStyles    : {};
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-qr-code-element-${this._COMPONENT_RANDOM_ID}"
-         class="${tools_public.renderListClass(prop_formClass)}">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-qr-code-element-${this._COMPONENT_RANDOM_ID}{
-               ${tools_public.renderListStyle(prop_formStyles)}
-         }
-     </style>
-     
-     <div id="component-qr-code-view-${this._COMPONENT_RANDOM_ID}"></div>
-     
-       ${this.templateFn("part_qr_code_bottom") ?? ""}
-      
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_qrCodeBottom(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-qr-code-bottom-${this._COMPONENT_RANDOM_ID}"
-         onclick="${this.getFn("fn_onCLickCopy")}"
-         class="mx-2 mb-1 rounded bg-dark text-white position-relative py-1">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-qr-code-bottom-${this._COMPONENT_RANDOM_ID}{
-             cursor: pointer;
-         }
-     </style>
-     
-     ${this.templateFn("part_qr_code_bottom_text") ?? ""}
-     
-     <component-icon id="component-qr-code-bottom-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
-      
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    template_render_qrCodeBottomText(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_value     =  data.hasOwnProperty("prop_value")      ?  data.prop_value     : "";
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-qr-code-bottom-text-${this._COMPONENT_RANDOM_ID}" 
-         title="COPY"
-         class="">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-qr-code-bottom-text-${this._COMPONENT_RANDOM_ID}{
-             font-size: 10pt;
-             padding-left: 35px;
-             padding-right: 35px;
-             white-space: nowrap;
-             overflow: hidden;
-             text-overflow: ellipsis;
-         }
-     </style>
-     
-     ${prop_value}
-     
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_label(partName) {
-        this.componentFneBasic_render_structure(
-            `component-qr-code-label-${this._COMPONENT_RANDOM_ID}` ,
-            {
-                prop_for:  `component-input-input-${ this._COMPONENT_RANDOM_ID}`
-            }
-        );
-    }
-
-    componentFn_render_qrCodeView(partName) {
-        const data = this.getPartProps(partName);
-
-        if (data != null){
-            const prop_value     =  data.hasOwnProperty("prop_value")      ?  data.prop_value     : "";
-            const prop_size      =  data.hasOwnProperty("prop_size")       ?  data.prop_size      : 4;
-            const prop_version   =  data.hasOwnProperty("prop_version")    ?  data.prop_version   : 3;
-
-            var qr = qrcode(prop_version, 'L')
-            qr.addData(prop_value);
-            qr.make();
-
-            const el = document.querySelector(`div#component-qr-code-view-${this._COMPONENT_RANDOM_ID}`);
-            if (el != null){
-                el.innerHTML = qr.createSvgTag(prop_size)
-            }
-        }
-    }
-
-    componentFn_render_qrCodeBottomIcon(partName) {
-        const data = this.getPartProps(partName);
-
-        if (data != null){
-
-            const styles = {
-                "top" : "0" ,
-            }
-            styles[ this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") && this._COMPONENT_CONFIG.directionRtl ? "right" : "left"] = "5px";
-
-            new window.ComponentIcon(
-                `component-qr-code-bottom-icon-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    classList: [ "position-absolute" ] ,
-                    styles: styles,
-
-                    prop_icon : "&#x1F4CB;" ,
-                    prop_iconClass : [] ,
-                    prop_iconStyles : {
-                        "font-size" : "14pt",
-                    } ,
-                }
-            )
-        }
-
-    }
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-    fn_onCLickCopy(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("prop_value")){
-            navigator.clipboard.writeText(data.prop_value).then(() => {
-                alert("copied")
-                console.log('متن کپی شد: ' , data.prop_value);
-            }).catch(err => {
-                console.error('خطا در کپی کردن متن: ', err);
-            });
-        }
-    }
-}
-
-
-/*-------------------------------------
- 21-02) Component Camera Qr Code Reader
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_title
-@prop_labelShow
-@prop_labelTooltipDescription
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_formMinHight
-
-@prop_fps
-@prop_qrbox
-
-@prop_titleErrorExistCamera
-
-@prop_titleErrorPermisionCamera
-@prop_titleBtnRetry
-
-@prop_name
-@prop_showInput
-
-@fn_callback
--------------------------------------*/
-class ComponentCameraQrCodeReaderBase extends ComponentBase{
-
-
-    /* ---------------------------------------------
-       PROPERTYs Pattern
---------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_formMinHight: {
-            prop: "prop_formMinHight",
-            default: "150px"
-        },
-        prop_fps: {
-            prop: "prop_fps",
-            default: 10
-        },
-        prop_qrbox: {
-            prop: "prop_qrbox",
-            default: 250
-        },
-        prop_titleErrorExistCamera: {
-            prop: "prop_titleErrorExistCamera",
-            default: "دوربینی در دستگاه شما یافت نشد"
-        },
-        prop_titleBtnRetry: {
-            prop: "prop_titleBtnRetry",
-            default: "تلاش مجدد"
-        },
-        prop_titleErrorPermisionCamera: {
-            prop: "prop_titleErrorPermisionCamera",
-            default: "مجوز برای درخواست دوربین تایید نشد"
-        },
-        prop_showInput: {
-            prop: "prop_showInput",
-            default: true
-        },
-        prop_name: {
-            prop: "prop_name",
-            default: "camera_qr_code"
-        }
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-        part_label: [],
-        part_form: [
-            this._COMPONENT_PATTERN.prop_formMinHight
-        ],
-        part_element: [
-            this._COMPONENT_PATTERN.prop_fps,
-            this._COMPONENT_PATTERN.prop_qrbox
-        ],
-        part_error_exist_camera: [
-            this._COMPONENT_PATTERN.prop_titleErrorExistCamera,
-            this._COMPONENT_PATTERN.prop_titleBtnRetry
-        ],
-        part_error_permision_camera: [
-            this._COMPONENT_PATTERN.prop_titleErrorPermisionCamera,
-            this._COMPONENT_PATTERN.prop_titleBtnRetry
-        ],
-        part_input: [
-            this._COMPONENT_PATTERN.prop_showInput,
-            this._COMPONENT_PATTERN.prop_name
-        ]
-    };
-
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_label:{} ,
-            part_form:{
-                part_element:{},
-                part_error_exist_camera:{},
-                part_error_permision_camera:{},
-            } ,
-            part_input:{}
-        }
-    }
-
-}
-window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends ComponentCameraQrCodeReaderBase{
-
-    _COMPONENT_CAMERA = null;
-    _COMPONENT_ERROR_EXIST_CAMERA = null;
-    _COMPONENT_ERROR_PERMISION_CAMERA = null;
-    _COMPONENT_INPUT = null;
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentCameraQrCodeReader.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-
-    /* ---------------------------------------------
-      TEMPLATEs
-    --------------------------------------------- */
-    componentFn(){
-        this.templateFn("part_label");
-        this.templateFn("part_element");
-        this.templateFn("part_input");
-    }
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_label":
-                return this.componentFn_render_label(partName);
-            case "part_form":
-                return this.template_render_form(partName);
-            case "part_element":
-                return this.componentFn_render_formElement(partName);
-            case "part_error_exist_camera":
-                return this.componentFn_render_formErrorExistCamera(partName);
-            case "part_error_permision_camera":
-                return this.componentFn_render_formErrorPermisionCamera(partName);
-            case "part_input":
-                return this.componentFn_render_input(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-  
-  <component-label id="component-camera-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
-  
-   ${this.templateFn("part_form") ?? ""}
-  
-  <component-input id="component-camera-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
-
-                `;
-        return this.templateBasic_render_structure(content );
-    }
-
-    template_render_form(partName){
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_formMinHight          = data.hasOwnProperty("prop_formMinHight")                      ? data.prop_formMinHight          : "";
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-camera-qr-code-reader-form-${this._COMPONENT_RANDOM_ID}"
-         class="border rounded my-2 px-2">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-camera-qr-code-reader-form-${this._COMPONENT_RANDOM_ID}{
-             min-height: ${prop_formMinHight};
-         }
-     </style>
-     
-     <component-is-empty id="component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}"></component-is-empty>
-      
-     <component-is-empty id="component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}"></component-is-empty>
-  
-     <section id="component-camera-qr-code-reader-element-${this._COMPONENT_RANDOM_ID}" ></section>
- 
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_label(partName) {
-        this.componentFneBasic_render_structure(
-            `component-camera-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
-        );
-    }
-
-    componentFn_render_formElement(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_fps            = data.hasOwnProperty("prop_fps")                        ? data.prop_fps            : 10;
-            const prop_qrbox          = data.hasOwnProperty("prop_qrbox")                      ? data.prop_qrbox          : 250;
-
-            let  cameraExist = false;
-
-            this._COMPONENT_CAMERA = new Html5Qrcode(
-                `component-camera-qr-code-reader-element-${this._COMPONENT_RANDOM_ID}`
-            );
-            Html5Qrcode.getCameras().then(devices => {
-
-                for (const device of devices) {
-                    if (device.hasOwnProperty("id") && device.id != ""){
-
-                        html5QrCode.start(
-                            cameraId,
-                            {
-                                fps: prop_fps,
-                                qrbox: prop_qrbox,
-                            },
-                            (decodedText, decodedResult) => {
-                                this.fn_onScanSuccess(decodedText, decodedResult);
-                            },
-                            (errorMessage) => {
-                                console.log(errorMessage);
-                            }
-                        ).catch(err => {
-                            console.log(err);
-                        });
-
-                        cameraExist = true;
-                        break;
-                    }
-                }
-
-            }).catch(err => {
-                this.templateFn("part_error_permision_camera");
-                this.fn_hiddenErrorExistCamera();
-                cameraExist = true;
-            });
-
-            if (!cameraExist){
-                this.templateFn("part_error_exist_camera");
-                this.fn_hiddenErrorPermoisionCamera();
-            }
-
-        }
-    }
-
-    componentFn_render_formErrorExistCamera(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_titleErrorExistCamera    = data.hasOwnProperty("prop_titleErrorExistCamera")    ? data.prop_titleErrorExistCamera      : "";
-            const prop_titleBtnRetry            = data.hasOwnProperty("prop_titleBtnRetry")            ? data.prop_titleBtnRetry              : "";
-
-            this._COMPONENT_ERROR_EXIST_CAMERA = new window.ComponentIsEmpty(
-                `component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    classList: "m-2"  ,
-
-                    prop_title:  prop_titleErrorExistCamera ,
-                    prop_btnAddStatus: true,
-                    prop_btnAddTitle:  prop_titleBtnRetry ,
-
-                    fn_callback: () => {
-                        this.templateFn("part_element");
-                    } ,
-                }
-            )
-        }
-    }
-
-    componentFn_render_formErrorPermisionCamera(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_titleErrorPermisionCamera            = data.hasOwnProperty("prop_titleErrorPermisionCamera")                        ? data.prop_titleErrorPermisionCamera            : "";
-            const prop_titleBtnRetry            = data.hasOwnProperty("prop_titleBtnRetry")            ? data.prop_titleBtnRetry              : "";
-
-            this._COMPONENT_ERROR_PERMISION_CAMERA = new window.ComponentIsEmpty(
-                `component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    classList: "m-2"  ,
-
-                    prop_title:  prop_titleErrorPermisionCamera ,
-
-                    prop_btnAddStatus: true,
-                    prop_btnAddTitle:  prop_titleBtnRetry ,
-
-                    fn_callback: () => {
-                        this.templateFn("part_element");
-                    } ,
-                }
-            )
-
-        }
-    }
-
-    componentFn_render_input(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
-            const prop_showInput       = data.hasOwnProperty("prop_showInput")       ? data.prop_showInput         : true;
-
-            this._COMPONENT_INPUT = new window.ComponentInput(
-                `component-camera-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    classList: [prop_showInput ? "" : "d-none"]  ,
-
-                    prop_type:"string" ,
-                    prop_icon:"&#x25A3;" ,
-                    prop_name: prop_name ,
-                    prop_isDisable: true ,
-
-                }
-            )
-
-        }
-    }
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-    fn_onScanSuccess(decodedText, decodedResult) {
-        this._COMPONENT_INPUT.set("prop_value" , decodedText);
-        this.fn_onCallback(decodedText);
-    }
-
-    fn_hiddenErrorExistCamera() {
-        document.querySelector(`#component-camera-qr-code-reader-error-exist-camera-${this._COMPONENT_RANDOM_ID}`).innerHTML=""
-    }
-    fn_hiddenErrorPermoisionCamera() {
-        document.querySelector(`#component-camera-qr-code-reader-error-permision-camera-${this._COMPONENT_RANDOM_ID}`).innerHTML=""
-    }
-
-
-    fn_onCallback(qrCodde){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(qrCodde);
-        }
-    }
-
-
-}
-
-
-/*-------------------------------------
- 21-03) Component Upload Qr Code Reader
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_title
-@prop_labelShow
-@prop_labelTooltipDescription
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_formHight
-
-@prop_name
-@prop_showInput
-
-@fn_callback
--------------------------------------*/
-class ComponentUploadQrCodeReaderBase extends ComponentBase{
-
-    /* ---------------------------------------------
-        PROPERTYs Pattern
-     --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_formHight: {
-            prop: "prop_formHight",
-            default: 150
-        },
-        prop_showInput: {
-            prop: "prop_showInput",
-            default: true
-        },
-        prop_name: {
-            prop: "prop_name",
-            default: "upload_qr_code"
-        }
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-        part_label: [],
-        part_element: [
-            this._COMPONENT_PATTERN.prop_formHight
-        ],
-        part_input: [
-            this._COMPONENT_PATTERN.prop_showInput,
-            this._COMPONENT_PATTERN.prop_name
-        ]
-    };
-
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_label: {},
-            part_element: {},
-            part_input: {}
-        }
-    }
-
-}
-window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends ComponentUploadQrCodeReaderBase {
-
-    _COMPONENT_INPUT_FILE = null;
-    _COMPONENT_ERROR_EXIST_CAMERA = null;
-    _COMPONENT_ERROR_PERMISION_CAMERA = null;
-    _COMPONENT_INPUT = null;
-
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId, config) {
-        super(
-            listComponent[ComponentUploadQrCodeReader.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-    /* ---------------------------------------------
-      TEMPLATEs
-    --------------------------------------------- */
-    componentFn() {
-        this.templateFn("part_label");
-        this.templateFn("part_element");
-        this.templateFn("part_input");
-    }
-
-    templateFn(partName = null) {
-        switch (partName) {
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_label":
-                return this.componentFn_render_label(partName);
-            case "part_element":
-                return this.componentFn_render_formElement(partName);
-            case "part_input":
-                return this.componentFn_render_input(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-  
-  <component-label id="component-upload-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
-  
-  <div id="component-upload-qr-code-reader-input-reader-${this._COMPONENT_RANDOM_ID}" style="display: none"></div>
-  <component-input-file id="component-upload-qr-code-reader-input-file-${this._COMPONENT_RANDOM_ID}"></component-input-file>
-  
-  <component-input id="component-upload-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
-
-                `;
-        return this.templateBasic_render_structure(content);
-    }
-
-
-    componentFn_render_label(partName) {
-        this.componentFneBasic_render_structure(
-            `component-upload-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
-        );
-    }
-
-    componentFn_render_formElement(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_formHight     = data.hasOwnProperty("prop_formHight")                 ? data.prop_formHight     : 150;
-
-            new window.ComponentInputFile(
-                `component-upload-qr-code-reader-input-file-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_labelShow: false ,
-
-                    prop_accept:  "image/*" ,
-                    prop_maxCount: 1 ,
-                    prop_borderHeight: prop_formHight+"px" ,
-                    prop_showListFiles: false ,
-
-                    fn_callback: (event , files) => {
-                        if (files != null && files.length > 0){
-                            this.fn_onScanSuccess(files[0]);
-                        }
-                    } ,
-
-                }
-            )
-
-        }
-    }
-
-    componentFn_render_input(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
-            const prop_showInput       = data.hasOwnProperty("prop_showInput")       ? data.prop_showInput         : true;
-
-            this._COMPONENT_INPUT = new window.ComponentInput(
-                `component-upload-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    classList: [prop_showInput ? "" : "d-none"]  ,
-
-                    prop_type:"string" ,
-                    prop_icon:"&#x25A3;" ,
-                    prop_name: prop_name ,
-                    prop_isDisable: true ,
-
-                }
-            )
-
-        }
-    }
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-    fn_onScanSuccess(file) {
-        const html5Qr = new Html5Qrcode(
-            `component-upload-qr-code-reader-input-reader-${this._COMPONENT_RANDOM_ID}`
-        );
-        html5Qr.scanFile(file, true)
-            .then(decodedText => {
-                this._COMPONENT_INPUT.set("prop_value" , decodedText);
-                this.fn_onCallback(decodedText);
-            })
-            .catch(err => {
-                console.log("خطا در خواندن QR: " + err)
-            });
-    }
-
-
-    fn_onCallback(qrCodde){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(qrCodde);
-        }
-    }
-
-
-}
-
-
-/*-------------------------------------
- 21-04) Component Qr Code Reader
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_title
-@prop_labelShow
-@prop_labelTooltipDescription
-@prop_labelClass
-@prop_labelStyles
-@prop_labelHoverStyles
-
-@prop_placeholder
-
-@prop_formHight
-
-@prop_name
-@prop_value
-@prop_showInput
-
-@fn_callback
--------------------------------------*/
-class ComponentQrCodeReaderBase extends ComponentBase{
-
-    /* ---------------------------------------------
-         PROPERTYs Pattern
-  --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_titleTabCamera: {
-            prop: "prop_titleTabCamera",
-            default: "دوربین"
-        },
-        prop_titleTabFile: {
-            prop: "prop_titleTabFile",
-            default: "فایل"
-        },
-        prop_titleTabInput: {
-            prop: "prop_titleTabInput",
-            default: "ورودی"
-        },
-        prop_name: {
-            prop: "prop_name",
-            default: ""
-        },
-        prop_value: {
-            prop: "prop_value",
-            default: ""
-        },
-        prop_placeholder: {
-            prop: "prop_placeholder",
-            default: ""
-        }
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-        part_label: [],
-        part_tabs: [
-            this._COMPONENT_PATTERN.prop_titleTabCamera,
-            this._COMPONENT_PATTERN.prop_titleTabFile,
-            this._COMPONENT_PATTERN.prop_titleTabInput
-        ],
-        part_qr_code: [],
-        part_qr_code_file: [],
-        part_qr_code_camera: [],
-        part_input: [
-            this._COMPONENT_PATTERN.prop_name,
-            this._COMPONENT_PATTERN.prop_value,
-            this._COMPONENT_PATTERN.prop_placeholder
-        ]
-    };
-
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_label: {},
-            part_tabs: {},
-            part_qr_code: {
-                part_qr_code_file: {} ,
-                part_qr_code_camera: {} ,
-            },
-            part_input: {}
-        }
-    }
-
-}
-window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCodeReaderBase {
-
-    _COMPONENT_LABEL = null;
-    _COMPONENT_TABS = null;
-    _COMPONENT_INPUT = null;
-    _COMPONENT_QR_CODE_CAMERA = null;
-    _COMPONENT_QR_CODE_UPLOAD = null;
-
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId, config) {
-        super(
-            listComponent[ComponentQrCodeReader.name] ,
-            elId
-        );
-        super.renderComponent(config);
-    }
-
-
-    /* ---------------------------------------------
-      TEMPLATEs
-    --------------------------------------------- */
-    componentFn() {
-        this.templateFn("part_label");
-        this.templateFn("part_tabs");
-        this.templateFn("part_tabs");
-        this.templateFn("part_input");
-
-        this.fn_onSelectTab(1);
-    }
-
-    templateFn(partName = null) {
-        switch (partName) {
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_label":
-                return this.componentFn_render_label(partName);
-            case "part_tabs":
-                return this.componentFn_render_tabs(partName);
-            case "part_qr_code":
-                return this.template_render_qrCode(partName);
-            case "part_qr_code_camera":
-                return this.componentFn_render_qrCodeCamera(partName);
-            case "part_qr_code_file":
-                return this.componentFn_render_qrCodeFile(partName);
-            case "part_input":
-                return this.componentFn_render_input(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-
-    template_render_structure(partName) {
-        const content = `
-  
-  <component-label id="component-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}"></component-label>
-
-  <component-tabs id="component-qr-code-reader-tabs-${this._COMPONENT_RANDOM_ID}"></component-tabs>
-  
-   ${this.templateFn("part_qr_code") ?? ""}
-  
-  <component-input id="component-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}"></component-input>
-  
-                `;
-        return this.templateBasic_render_structure(content);
-    }
-
-    template_render_qrCode(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-qr-code-reader-qr-code-${this._COMPONENT_RANDOM_ID}"
-         class="">
-         
-     <style>
-         #${this._COMPONENT_ID} #component-qr-code-reader-qr-code-${this._COMPONENT_RANDOM_ID}{
-        
-         }
-     </style>
-     
-     
-     <component-camera-qr-code-reader  id="component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}"></component-camera-qr-code-reader>
-     
-     <component-upload-qr-code-reader  id="component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}"></component-upload-qr-code-reader>
-      
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_label(partName) {
-        this.componentFneBasic_render_structure(
-            `component-qr-code-reader-label-${this._COMPONENT_RANDOM_ID}` ,
-        );
-    }
-
-    componentFn_render_tabs(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_titleTabCamera        = data.hasOwnProperty("prop_titleTabCamera")          ? data.prop_titleTabCamera                   : "";
-            const prop_titleTabFile          = data.hasOwnProperty("prop_titleTabFile")            ? data.prop_titleTabFile                     : "";
-            const prop_titleTabInput         = data.hasOwnProperty("prop_titleTabInput")           ? data.prop_titleTabInput                    : "";
-
-            this._COMPONENT_TABS = new window.ComponentTabs(
-                `component-qr-code-reader-tabs-${this._COMPONENT_RANDOM_ID}` ,
-                {
-
-                    prop_type: 0 ,
-                    prop_tabSelected: 1 ,
-                    prop_firstCallBack: false ,
-                    prop_tabs: [
-                        {id:1 , title: prop_titleTabCamera } ,
-                        {id:2 , title: prop_titleTabFile   },
-                        {id:3 , title: prop_titleTabInput  }
-                    ] ,
-                    fn_callback: (event , tabIndex) =>{
-                        this.fn_onSelectTab(tabIndex)
-                    }
-                }
-            )
-
-        }
-    }
-
-    componentFn_render_input(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
-            const prop_value           = data.hasOwnProperty("prop_value")           ? data.prop_value             : "";
-            const prop_placeholder     = data.hasOwnProperty("prop_placeholder")     ? data.prop_placeholder       : "";
-
-            this._COMPONENT_INPUT = new window.ComponentInput(
-                `component-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_type:"string" ,
-                    prop_icon:"&#x25A3;" ,
-                    prop_name: prop_name ,
-                    prop_value: prop_value ,
-                    prop_placeholder: prop_placeholder ,
-                    prop_isDisable: true ,
-
-                    fn_onblur: (event , qrCode) => {
-                        this.fn_onScanSuccess(qrCode);
-                    } ,
-
-                }
-            )
-
-        }
-    }
-
-    componentFn_render_qrCodeCamera(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
-
-            this._COMPONENT_QR_CODE_CAMERA = new window.ComponentCameraQrCodeReader(
-                `component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_labelShow: false ,
-                    prop_showInput: false ,
-
-                    fn_callback: (qrCode)=>{
-                        this.fn_onScanSuccess(qrCode);
-                    }
-                }
-            )
-
-        }
-    }
-
-    componentFn_render_qrCodeFile(partName) {
-
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
-
-            this._COMPONENT_QR_CODE_UPLOAD = new window.ComponentUploadQrCodeReader(
-                `component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_labelShow: false ,
-                    prop_showInput: false ,
-
-                    fn_callback: (qrCode)=>{
-                        this.fn_onScanSuccess(qrCode);
-                    }
-                }
-            )
-
-        }
-    }
-
-
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-
-
-    fn_onSelectTab(tabId) {
-        const tabCamera = document.querySelector(`#component-qr-code-reader-qr-code-camera-${this._COMPONENT_RANDOM_ID}`);
-        const tabUpload = document.querySelector(`#component-qr-code-reader-qr-code-upload-${this._COMPONENT_RANDOM_ID}`);
-
-        tabCamera.innerHTML = "";
-        tabUpload.innerHTML = "";
-        this._COMPONENT_INPUT.set("prop_isDisable" , true);
-
-        if (tabId == 1){
-            this.templateFn("part_qr_code_camera");
-        }
-        else if (tabId == 2){
-            this.templateFn("part_qr_code_file");
-        }
-        else if (tabId == 3){
-            this._COMPONENT_INPUT.set("prop_isDisable" , false);
-        }
-    }
-
-    fn_onScanSuccess(decodedText) {
-        this._COMPONENT_INPUT.set("prop_value" , decodedText);
-        this.fn_onCallback(decodedText);
-    }
-
-    fn_onCallback(qrCodde){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(qrCodde);
-        }
-    }
-}
-
-
-
-
-/* ===============================================================================================================
-    [080] elements Pages
-=============================================================================================================== */
 class ComponentChangePageBase extends ComponentBase{
 
     _EFFECT_TOP =       0;
@@ -26935,6 +26528,9 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
 }
 
 
+/*-------------------------------------
+ 080-02) page header
+-------------------------------------*/
 class ComponentPageHeaderBase extends ComponentBase{
 
     /* ---------------------------------------------
@@ -27529,8 +27125,9 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
 }
 
 
-
-
+/*-------------------------------------
+ 080-03) page card info
+-------------------------------------*/
 class ComponentPageCardInfoBase extends ComponentBase{
 
     /* ---------------------------------------------
@@ -27854,11 +27451,13 @@ ${ typeof prop_iconBtn == "function" ? prop_iconBtn(prop_size , prop_colorIconBt
 
 
 
+//===============================================================================================================
+// [80 - 89] views tools -> [081] elements spicals
+//===============================================================================================================
 
-
-/* ===============================================================================================================
-    [081] elements spicals
-=============================================================================================================== */
+/*-------------------------------------
+ 081-01) draggable order
+-------------------------------------*/
 class ComponentDraggableOrdersBase extends ComponentBase{
 
     /* ---------------------------------------------
@@ -28269,6 +27868,9 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
 }
 
 
+/*-------------------------------------
+ 081-01) recycler view
+-------------------------------------*/
 class ComponentRecyclerViewBase extends ComponentBase{
 
 
@@ -28454,19 +28056,12 @@ window.ComponentRecyclerView  = class ComponentRecyclerView extends ComponentRec
 
 
 
-
-/* ===============================================================================================================
- [081] Tools
-=============================================================================================================== */
-
+//===============================================================================================================
+// [80 - 89] views tools -> [082] elements tools
+//===============================================================================================================
 
 /*-------------------------------------
- 081-01) Component tools Table config
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 082-01) Component tools Table config
 -------------------------------------*/
 class ComponentToolsTableConfigBase extends ComponentBase{
 
@@ -29210,12 +28805,7 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
 
 
 /*-------------------------------------
- 081-02) Component tools Table to excel
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 082-02) Component tools Table to excel
 -------------------------------------*/
 class ComponentToolsTableToExcelBase extends ComponentBase{
 
@@ -29535,14 +29125,8 @@ window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends Co
 }
 
 
-
 /*-------------------------------------
- 081-02) Component tools Table to print
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
+ 082-02) Component tools Table to print
 -------------------------------------*/
 class ComponentToolsTableToPrintBase extends ComponentBase{
 
@@ -29874,28 +29458,14 @@ window.ComponentToolsTableToPrint  = class ComponentToolsTableToPrint extends Co
 
 
 
-/* ===============================================================================================================
- [99] OTHERs
-=============================================================================================================== */
+
+
+//===============================================================================================================
+// [99] Others
+//===============================================================================================================
 
 /*-------------------------------------
  99-01) Component Icon
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_title
-
-@prop_icon
-@prop_isItalik
-
-@prop_iconClass
-@prop_iconStyles
-
-@fn_callback
-@fn_onHoverIcon
-@fn_onBlurIcon
 -------------------------------------*/
 class ComponentIconBase extends ComponentBase{
 
@@ -30063,24 +29633,6 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
 
 /*-------------------------------------
  99-02) Component Position Element
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_elementClass
-@prop_elementStyles
-
-@prop_positionType
-@prop_positionTop
-@prop_positionLeft
-@prop_positionBottom
-@prop_positionRight
-
-@prop_width
-@prop_height
-
-@prop_content
 -------------------------------------*/
 class ComponentPositionElementBase extends ComponentBase{
 
@@ -30320,20 +29872,6 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 
 /*-------------------------------------
  99-03) Component border
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_borderClass
-@prop_borderStyles
-@prop_content
-
-@prop_btnMore_icon
-@prop_btnMore_show
-@prop_btnMore_link
-
-@fn_callback
 -------------------------------------*/
 class ComponentBorderBase extends ComponentBase{
 
@@ -30561,18 +30099,6 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
 
 /*-------------------------------------
  99-04) Component image
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_imageSource
-@prop_imageTitle
-@prop_imageAlt
-@prop_imageClass
-@prop_imageStyles
-
-@fn_callback
 -------------------------------------*/
 class ComponentImageBase extends ComponentBase{
 
@@ -30731,17 +30257,8 @@ window.ComponentImage = class ComponentImage extends ComponentImageBase{
 }
 
 
-
 /*-------------------------------------
  99-04) Component image
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_layoutClass
-@prop_layoutStyles
-@prop_layoutContent
 -------------------------------------*/
 class ComponentLayoutBase extends ComponentBase{
 
@@ -30903,30 +30420,6 @@ window.ComponentLayout = class ComponentLayout extends ComponentLayoutBase{
 
 /*-------------------------------------
  99-04) Component Mouse Scroller
--------------------------------------
-@prop_show
-@prop_structureClass
-@prop_structureStyles
-
-@prop_borderClass
-@prop_borderStyles
-
-@prop_backgroundColor_type
-@prop_backgroundColor_dark
-@prop_backgroundColor_light
-@prop_scollerClass
-@prop_scrollerStyles
-@prop_scrollerWidth
-@prop_scrollerHeight
-
-@prop_backgroundColor_tools
-@prop_moreIcons
-@prop_iconRefresh
-@prop_iconZoomIn
-@prop_iconZoomOut
-@prop_iconBgDark
-@prop_iconBgLight
-@prop_layoutContent
 -------------------------------------*/
 class ComponentMouseScrollerBase extends ComponentBase{
 
@@ -31814,10 +31307,15 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
 
 
 
-/*-------------------------------------
- n-01) Component Report
--------------------------------------
 
+
+//===============================================================================================================
+// [---] Porfisinal
+//===============================================================================================================
+
+
+/*-------------------------------------
+ p-01) Component Report
 -------------------------------------*/
 class ComponentReportBase extends ComponentBase{
 

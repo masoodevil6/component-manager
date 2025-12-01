@@ -342,6 +342,12 @@ tools_init = {
                 color_data:                            component_props.secondaryColor1 ,
             },
 
+
+            stepper: {
+                color_selected:                        component_props.successColor1 ,
+                color_unSelected:                      component_props.errorColor1 ,
+            },
+
             cardInfo: {
                 backgroundColor_options:               component_props.secondaryColor3 ,
 
