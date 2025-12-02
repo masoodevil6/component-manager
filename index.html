@@ -1866,7 +1866,6 @@
                     name: "stepB" ,
                     title: "Step Two" ,
                     condition: ()=>{
-                        console.log("sa " , steperFormData);
                         return steperFormData.fieldA > 0;
                     } ,
                     msg: "Please insert Field B" ,
@@ -1894,12 +1893,13 @@
             ] ,
 
             fn_onStepCreated: (stepName) => {
-                //console.log(stepName)
+                console.log("stepName " , stepName , steperFormData)
                 switch (stepName){
-                    /*case "stepA":
+                    case "stepA":
+                        console.log("stepName: " + stepName)
                         steperFormData.fieldA = 1;
                         break;
-                    case "stepB":
+                    /*case "stepB":
                         steperFormData.fieldB = 1;
                         break;
                     case "stepC":

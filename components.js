@@ -22819,10 +22819,7 @@ class ComponentStepperBase extends ComponentBase{
 }
 window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
 
-    _ZOOM_CENTER = true;
-    _OBJECTS = null;
-
-    _COMPONENT_MOUSE_SCROLLER = null;
+    _LIST_STEPS_ACTIVE = {};
 
 
 
@@ -22863,8 +22860,6 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                 `;
         return this.templateBasic_render_structure(content );
     }
-
-
 
     template_render_form(partName) {
         const data = this.getPartProps(partName)
@@ -22951,9 +22946,10 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
              left:             50%;
              top:              5px;
              transform:        translate(-50% , 0);
-             line-height:      ${elHeight}px;
+             line-height:      ${elHeight-10}px;
              text-align:       center;
              color:            white;
+             padding:          5px;
          }
          
          
@@ -23061,6 +23057,8 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                 const error =     itemStep?.error ?? null;
                 stepBreak =       stepBreak ? (itemStep?.condition() ?? false) : stepBreak;
 
+                this._LIST_STEPS_ACTIVE[stepName] = false;
+
                 let lineHtml = "";
                 if (i < prop_steps.length - 1){
                     lineHtml = `
@@ -23102,11 +23100,8 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
 
 </section>
                 `;
-
             }
         }
-
-
 
         return html;
     }
@@ -23139,8 +23134,12 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
     fn_check(){
         const data = this._COMPONENT_CONFIG;
         const prop_steps                    =   data.hasOwnProperty("prop_steps")                            ?  data.prop_steps                       :  [];
+        const prop_size                     =   this._COMPONENT_CONFIG.hasOwnProperty("prop_size")           ? this._COMPONENT_CONFIG.prop_size       : null;
+
+        const elHeight =tools_css.getHeightSize(prop_size);
 
         let stepBreak = false;
+        let isFinishCheck = false;
         if (prop_steps != null && Array.isArray(prop_steps)){
             for (let i = 0; i < prop_steps.length; i++) {
                 const itemStep =  prop_steps[i];
@@ -23180,7 +23179,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                         elLineHorizontal?.classList?.add("step_bgColor_active")
                         elBody?.classList?.remove("d-none");
 
-                        elNumber.innerHTML = tools_icons.icon_is_true(20 , "#fff")
+                        elNumber.innerHTML = tools_icons.icon_is_true(elHeight-10 , "#fff")
 
                         const elError = document.querySelector(stepElements?.error);
                         if (elError != null){
@@ -23197,10 +23196,6 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                             );
                         }
 
-
-                        if (data.hasOwnProperty("fn_onStepCreated") && typeof data.fn_onStepCreated != null){
-                            data.fn_onStepCreated(stepName);
-                        }
                     }
                     else{
                         elLineVertical?.classList?.remove("step_bgColor_active")
@@ -23216,7 +23211,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                             elMsg.innerHtml = "";
                         }
 
-                        if (error != null){
+                        if (!isFinishCheck && error != null){
                             new window.ComponentIsEmpty(
                                 stepElements?.error,
                                 {
@@ -23224,8 +23219,24 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                                 }
                             )
                         }
+
+                        isFinishCheck = true;
                     }
 
+
+                    if (this._LIST_STEPS_ACTIVE != null && this._LIST_STEPS_ACTIVE.hasOwnProperty(stepName)){
+                        let status = this._LIST_STEPS_ACTIVE[stepName];
+
+                        console.log(this._LIST_STEPS_ACTIVE , status , stepName , stepActive)
+
+                        if (status != stepActive && stepActive){
+                            if (data.hasOwnProperty("fn_onStepCreated") && typeof data.fn_onStepCreated != null){
+                                data.fn_onStepCreated(stepName);
+                            }
+                        }
+
+                        this._LIST_STEPS_ACTIVE[stepName] = stepActive;
+                    }
                 }
 
             }
