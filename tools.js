@@ -44,9 +44,11 @@ if (typeof component_props === 'undefined') {
         successColor3: "#64c598",
         successColor4: "#ceefe0",
 
-        shadowColor1: "rgba(98,98,98,0.30)",
-        shadowColor2: "rgba(98,98,98,0.25)",
-        shadowColor3: "rgba(98,98,98,0.15)",
+        shadowColor1: "rgba(98,98,98,0.50)",
+        shadowColor2: "rgba(98,98,98,0.40)",
+        shadowColor3: "rgba(98,98,98,0.30)",
+        shadowColor4: "rgba(98,98,98,0.20)",
+        shadowColor5: "rgba(98,98,98,0.10)",
 
         darkColor1: "rgb(30,30,30)",
         darkColor2: "rgb(157,157,157)",
@@ -123,11 +125,11 @@ tools_init = {
 
             loading: {
                 backgroundColor_loading:               component_props.primaryColor1 ,
-                backgroundColor_shadow:                component_props.shadowColor1
+                backgroundColor_shadow:                component_props.shadowColor2
             },
 
             state404: {
-                backgroundColor_shadow:                component_props.shadowColor1 ,
+                backgroundColor_shadow:                component_props.shadowColor2 ,
             },
 
             form: {
@@ -223,7 +225,7 @@ tools_init = {
                 backgroundColor_itemAcl_unSelected:              component_props.secondaryColor3 ,
                 color_itemAcl_unSelected:                        component_props.darkColor1 ,
                 iconColor_itemAcl_unSelected:                    component_props.darkColor1 ,
-                borderColor_itemAcl_unSelected:                  component_props.shadowColor1 ,
+                borderColor_itemAcl_unSelected:                  component_props.shadowColor2 ,
                 color_itemAcl_unSelected_hover:                  component_props.darkColor1 ,
                 backgroundColor_itemAcl_unSelected_hover:        component_props.secondaryColor2 ,
 
@@ -248,10 +250,10 @@ tools_init = {
             inputCheckBox: {
                 color_icon:                            component_props.darkColor1 ,
                 boderColor :                           component_props.darkColor2 ,
-                backgroundColor_unSelected :           component_props.shadowColor1 ,
+                backgroundColor_unSelected :           component_props.shadowColor2 ,
                 backgroundColor_selected :             component_props.secondaryColor1 ,
                 backgroundColor_disable :              component_props.darkColor2 ,
-                color_unSelected :                     component_props.shadowColor1 ,
+                color_unSelected :                     component_props.shadowColor2 ,
                 color_selected :                       component_props.primaryColor1 ,
                 color_disable :                        component_props.darkColor2 ,
             } ,
@@ -298,7 +300,7 @@ tools_init = {
 
 
             tabs: {
-                backgroundColor_unselected:            component_props.shadowColor1 ,
+                backgroundColor_unselected:            component_props.shadowColor2 ,
                 backgroundColor_itemBefore:            component_props.shadowColor3 ,
                 backgroundColor_itemAfter:             component_props.primaryColor1 ,
                 color_itemAfter:                       component_props.shanColor4 ,
@@ -346,6 +348,13 @@ tools_init = {
             stepper: {
                 color_selected:                        component_props.successColor1 ,
                 color_unSelected:                      component_props.errorColor1 ,
+            },
+
+            progressStepper: {
+                color_init:                            component_props.shadowColor1 ,
+                color_progress:                        component_props.primaryColor1 ,
+                color_faield:                          component_props.errorColor1 ,
+                color_success:                         component_props.successColor1 ,
             },
 
             cardInfo: {
@@ -401,7 +410,7 @@ tools_init = {
             } ,
 
             window: {
-                backgroundColor_blur :                component_props.shadowColor1 ,
+                backgroundColor_blur :                component_props.shadowColor2 ,
                 backgroundColor_window :              component_props.shanColor1 ,
             } ,
 
@@ -424,12 +433,12 @@ tools_init = {
                 color_unactive :                       component_props.darkColor1 ,
                 backgroundColor_active :               component_props.secondaryColor1 ,
                 color_active :                         component_props.shanColor1 ,
-                color_shadow :                         component_props.shadowColor1 ,
+                color_shadow :                         component_props.shadowColor2 ,
             } ,
 
 
             tree: {
-                backgroundColor_unSelected :           component_props.shadowColor1 ,
+                backgroundColor_unSelected :           component_props.shadowColor2 ,
                 backgroundColor_selected :             component_props.secondaryColor1 ,
             } ,
 
@@ -441,7 +450,7 @@ tools_init = {
 
 
             backShadow: {
-                backgroundColor:                       component_props.shadowColor1
+                backgroundColor:                       component_props.shadowColor2
             },
             buttonError: {
                 backgroundColor:                       component_props.errorColor1 ,
@@ -457,7 +466,7 @@ tools_init = {
 
 
             changePage: {
-                backgroundColor_shadow:                component_props.shadowColor1 ,
+                backgroundColor_shadow:                component_props.shadowColor2 ,
                 backgroundColor_page:                  component_props.primaryColor5 ,
             } ,
             pageCardInfo: {

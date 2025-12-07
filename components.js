@@ -33,8 +33,8 @@ if (typeof listComponent === 'undefined') {
         ComponentWidget:                     "component-widget" ,                         //02-04
         ComponentIframe:                     "component-iframe" ,                         //02-05
 
-
-
+        // [03] progress
+        ComponentProgressStepper:            "component-progress-stepper" ,               //03-01
 
 
 
@@ -51,7 +51,7 @@ if (typeof listComponent === 'undefined') {
         ComponentInputFile:                  "component-input-file" ,                     //010-06
         ComponentInputColor:                 "component-input-color" ,                    //010-07
         ComponentInputSize:                  "component-input-size" ,                     //010-08
-        ComponentInputAcl:                  "component-input-acl" ,                       //010-09
+        ComponentInputAcl:                   "component-input-acl" ,                      //010-09
         ComponentDate:                       "component-date" ,                           //010-010
         ComponentOtp:                        "component-otp" ,                            //010-011
         ComponentSelectOption:               "component-select-option" ,                  //010-012
@@ -3575,11 +3575,19 @@ class ComponentLoadingBase extends ComponentBase{
         },
         prop_background_loading: {
             prop: "prop_background_loading",
-            default: null
+            default:    tools_const?.styles?.loading?.backgroundColor_loading ?? ""
         },
         prop_background_shadow: {
             prop: "prop_background_shadow",
-            default: true
+            default:    tools_const?.styles?.loading?.backgroundColor_shadow ?? ""
+        },
+        prop_loadingWidth: {
+            prop: "prop_loadingWidth",
+            default: 80
+        },
+        prop_loadingHeight: {
+            prop: "prop_loadingHeight",
+            default: 80
         },
     };
 
@@ -3594,6 +3602,8 @@ class ComponentLoadingBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_type,
             this._COMPONENT_PATTERN.prop_background_loading,
             this._COMPONENT_PATTERN.prop_background_shadow,
+            this._COMPONENT_PATTERN.prop_loadingWidth,
+            this._COMPONENT_PATTERN.prop_loadingHeight,
         ]
     };
 
@@ -3652,9 +3662,12 @@ window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
 
         if (data != null){
 
-            const prop_type               =   data.hasOwnProperty("prop_type")                                                           ?  data.prop_type                 : "circle";
-            const prop_background_loading =   data.hasOwnProperty("prop_background_loading")   && data.prop_background_loading != null   ? data.prop_background_loading    : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_shadow") ? tools_const.styles.loading.backgroundColor_shadow : "";
-            const prop_background_shadow  =   data.hasOwnProperty("prop_background_shadow")    && data.prop_background_shadow != null    ? data.prop_background_shadow     : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("loading") &&  tools_const.styles.loading.hasOwnProperty("backgroundColor_loading") ? tools_const.styles.loading.backgroundColor_loading : "";
+            const prop_type                    =   data.hasOwnProperty("prop_type")                              ?  data.prop_type                 : "circle";
+            const prop_loadingWidth            =   data.hasOwnProperty("prop_loadingWidth")                      ?  data.prop_loadingWidth         : 80;
+            const prop_loadingHeight           =   data.hasOwnProperty("prop_loadingHeight")                     ?  data.prop_loadingHeight        : 80;
+            const prop_background_loading      =   data.hasOwnProperty("prop_background_loading")                ?  data.prop_background_loading   : "";
+            const prop_background_shadow       =   data.hasOwnProperty("prop_background_shadow")                 ?  data.prop_background_shadow    : "";
+
 
             if (prop_type == "circle"){
                 return `
@@ -3662,63 +3675,63 @@ window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
 
    <style>
       #${this._COMPONENT_ID} .form-loading-${this._COMPONENT_RANDOM_ID}{
-           left: 0;
-           top: 0;
-           z-index: ${ tools_css.getZIndex(tools_css.standardZIndex.popup.name , 5000) };
-           background-color: ${prop_background_loading};
+           left:             0;
+           top:              0;
+           z-index:          ${ tools_css.getZIndex(tools_css.standardZIndex.popup.name , 5000) };
+           background-color: ${prop_background_shadow};
       }
 
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} {
-          z-index: ${ tools_css.getZIndex(tools_css.standardZIndex.blur_popup.name , 10) };
-          color: ${prop_background_shadow};
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%)
+          z-index:           ${ tools_css.getZIndex(tools_css.standardZIndex.blur_popup.name , 10) };
+          color:             ${prop_background_loading};
+          left:              50%;
+          top:               50%;
+          transform:         translate(-50%, -50%)
       }
       
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID},
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div {
-          box-sizing: border-box;
+          box-sizing:        border-box;
       }
       
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} {
-          display: inline-block;
-          position: relative;
-          width: 80px;
-          height: 80px;
+          display:           inline-block;
+          position:          relative;
+          width:             ${prop_loadingWidth}px;
+          height:            ${prop_loadingHeight}px;
       }
 
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div {
-          box-sizing: border-box;
-          display: block;
-          position: absolute;
-          width: 64px;
-          height: 64px;
-          margin: 8px;
-          border: 8px solid currentColor;
-          border-radius: 50%;
-          animation: lds-ring-${this._COMPONENT_RANDOM_ID} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-          border-color: currentColor transparent transparent transparent;
+          box-sizing:        border-box;
+          display:           block;
+          position:          absolute;
+          width:             ${prop_loadingWidth - 16}px;
+          height:            ${prop_loadingHeight - 16}px;
+          margin:            8px;
+          border:            8px solid currentColor;
+          border-radius:     50%;
+          animation:         lds-ring-${this._COMPONENT_RANDOM_ID} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+          border-color:      currentColor transparent transparent transparent;
       }
       
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div:nth-child(1) {
-          animation-delay: -0.45s;
+          animation-delay:  -0.45s;
       }
       
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div:nth-child(2) {
-         animation-delay: -0.3s;
+         animation-delay:   -0.3s;
       }
       
       #${this._COMPONENT_ID} .lds-ring-${this._COMPONENT_RANDOM_ID} div:nth-child(3) {
-         animation-delay: -0.15s;
+         animation-delay:   -0.15s;
       }
       
       @keyframes lds-ring-${this._COMPONENT_RANDOM_ID} {
          0% {
-            transform: rotate(0deg);
+            transform:      rotate(0deg);
          }
          100% {
-            transform: rotate(360deg);
+            transform:      rotate(360deg);
          }
       }
    </style>
@@ -5051,12 +5064,475 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
 
 
 
+
+
 //===============================================================================================================
 // [10 - 19] button / inputs / tools -> [010] Button and Inputs
 //===============================================================================================================
 
 /*-------------------------------------
  010-01) Component Button
+-------------------------------------*/
+class ComponentProgressStepperBase extends ComponentBase{
+
+    _STEP_STATE_INIT =      0 ;
+    _STEP_STATE_PROGRESS =  1 ;
+    _STEP_STATE_FAIELD =    2 ;
+    _STEP_STATE_SUCCESS =   3 ;
+
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+
+
+        prop_steps: {
+            prop: "prop_steps",
+            default: []
+        },
+
+        prop_colorIconDescription: {
+            prop: "prop_colorIconDescription",
+            default:  tools_const.styles?.progressStepper?.color_icon ?? "black" ,
+        },
+        prop_colorStataeInit: {
+            prop: "prop_colorStataeInit",
+            default:  tools_const.styles?.progressStepper?.color_init ?? "black" ,
+        },
+        prop_colorStataeProgress: {
+            prop: "prop_colorStataeProgress",
+            default:  tools_const.styles?.progressStepper?.color_progress ?? "black"
+        },
+        prop_colorStataeFailed: {
+            prop: "prop_colorStataeFailed",
+            default:  tools_const.styles?.progressStepper?.color_faield ?? "red"
+        },
+        prop_colorStataeSuccess: {
+            prop: "prop_colorStataeSuccess",
+            default:  tools_const.styles?.progressStepper?.color_success ?? "green"
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [],
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_steps,
+            this._COMPONENT_PATTERN.prop_colorIconDescription,
+            this._COMPONENT_PATTERN.prop_colorStataeInit,
+            this._COMPONENT_PATTERN.prop_colorStataeProgress,
+            this._COMPONENT_PATTERN.prop_colorStataeFailed,
+            this._COMPONENT_PATTERN.prop_colorStataeSuccess,
+        ],
+
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form: {}
+        }
+    }
+
+}
+window.ComponentProgressStepper = class ComponentProgressStepper extends ComponentProgressStepperBase{
+
+    /* ---------------------------------------------
+        SETUP
+    --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentProgressStepper.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+
+    componentFn(){
+        this.onRegisterFinish().then(el => {
+            this.fn_renderComponents();
+        })
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_form":
+                return this.template_render_form(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+            ${this.templateFn("part_form") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl               =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            const prop_size                  =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : 0;
+            const prop_steps                 =   data.hasOwnProperty("prop_steps")                    ?  data.prop_steps                         : [];
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elFontSize = tools_css.getFontSize(prop_size);
+
+            const stepsHtml = this.fn_readyProgressSteps(prop_steps);
+
+            return `
+<section id="component-progress-steppper-form-${this._COMPONENT_RANDOM_ID}"
+         data-part-name="${partName}">
+
+   <style>
+      #${this._COMPONENT_ID} #component-progress-steppper-form-${this._COMPONENT_RANDOM_ID}{
+          
+     }
+     
+      #${this._COMPONENT_ID} .component-progress-steppper-form-step-${this._COMPONENT_RANDOM_ID}{
+          width:                                                  100%;
+          display:                                                flow-root;
+          margin-bottom:                                          5px;
+     }
+     
+     
+      #${this._COMPONENT_ID} .component-progress-steppper-form-step-state-${this._COMPONENT_RANDOM_ID}{
+          float:                                                 ${directionRtl ? "right" : "left"};
+          width:                                                 ${elHeight+40}px;
+          height:                                                ${elHeight}px;
+       
+     }
+      #${this._COMPONENT_ID} .component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID}{
+             position:                                            absolute;
+             width:                                              ${elHeight}px;
+             height:                                             ${elHeight}px;
+             line-height:                                        ${elHeight}px;
+             ${directionRtl ? "right" : "left"}:                 50%;
+             transform:                                          translate(${directionRtl ? "" : "-"}50% , 0);
+             text-align:                                         center;
+             padding:                                            5px;
+             border-radius:                                      100%;
+             padding:                                            unset;
+     }
+     
+     
+      #${this._COMPONENT_ID} .component-progress-steppper-form-step-title-${this._COMPONENT_RANDOM_ID}{
+          float:                                                 ${directionRtl ? "right" : "left"};
+           height:                                                ${elHeight}px;
+      }
+      #${this._COMPONENT_ID} .component-progress-steppper-form-step-title-${this._COMPONENT_RANDOM_ID} .title{
+          float:                                                 ${directionRtl ? "right" : "left"};
+          height:                                                ${elHeight}px;
+          ${directionRtl ? "margin-right" : "margin-left"} :     10px;  
+          ${directionRtl ? "padding-left" : "padding-right"} :   40px;  
+      }
+      #${this._COMPONENT_ID} .component-progress-steppper-form-step-title-${this._COMPONENT_RANDOM_ID} .description{
+          float:                                                 ${directionRtl ? "right" : "left"};
+          width:                                                 30px;
+
+          height:                                                ${elHeight}px;
+      }
+     
+     
+      #${this._COMPONENT_ID} .component-progress-steppper-form-step-line-${this._COMPONENT_RANDOM_ID}{
+          display:                                               flow-root;
+          height:                                                ${elHeight}px;
+          ${directionRtl ? "margin-left" : "margin-right"} :     30px; 
+     }
+      #${this._COMPONENT_ID} .component-progress-steppper-form-step-line-inside-${this._COMPONENT_RANDOM_ID}{
+          position:                                              absolute;
+          width:                                                 100%;
+          height:                                                1px;
+          left:                                                  0;
+          top:                                                   50%;
+          transform:                                             translate(0 , -50%);
+          opacity:                                               0.5; 
+     }
+     
+     
+   </style>
+
+   ${stepsHtml}
+</section>
+            `
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+
+    fn_setElementStepStatus(itemIndex){
+        return `component-progress-steppper-form-step-state-${this._COMPONENT_RANDOM_ID}-${itemIndex}`
+    }
+    fn_getElementStepStatus(itemIndex){
+        return document.querySelector("#"+this.fn_setElementStepStatus(itemIndex))
+    }
+
+
+    fn_readyProgressSteps(prop_steps){
+        let stepsHtml = "";
+        if (prop_steps != null && Array.isArray(prop_steps)){
+            for (let i = 0; i < prop_steps.length; i++) {
+                const itemStep = prop_steps[i];
+                if (itemStep != null && itemStep.hasOwnProperty("name")){
+                    const stepName =        itemStep.name;
+                    const stepTitle =       itemStep?.title ?? ""
+                    const stepDescription = itemStep?.description ?? ""
+
+                    const stepState =        itemStep?.state ?? 0;
+                    const stepColor = this.fn_getColorStepWithState(stepState);
+
+                    stepsHtml += `
+<section class="component-progress-steppper-form-step-${this._COMPONENT_RANDOM_ID} position-relative p-0" name="${stepName}">
+    <div id="${this.fn_setElementStepStatus(i)}" class="component-progress-steppper-form-step-state-${this._COMPONENT_RANDOM_ID} position-relative">
+       
+    </div>
+    <div class="component-progress-steppper-form-step-title-${this._COMPONENT_RANDOM_ID}">
+        <b class="title" style="color: ${stepColor}">
+           ${stepTitle}
+        </b>
+    </div>
+    <div class="component-progress-steppper-form-step-line-${this._COMPONENT_RANDOM_ID} position-relative ">
+          <div class="component-progress-steppper-form-step-line-inside-${this._COMPONENT_RANDOM_ID} position-relative " style="border-bottom:  1px dashed ${stepColor};"></div>
+    </div>
+    <component-tooltip-description id="component-progress-steppper-form-step-description-${this._COMPONENT_RANDOM_ID}-${i}"></component-tooltip-description>
+</section>
+                    `
+
+                }
+
+            }
+        }
+        return stepsHtml;
+    }
+
+
+    fn_renderComponents(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_steps           =   data.hasOwnProperty("prop_steps")                    ?  data.prop_steps                         : [];
+
+        const directionRtl         =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+        let descriptionStyles = {
+            "position" : "absolute" ,
+            "top" : 0
+        }
+        if (directionRtl){
+            descriptionStyles ["left"] = 0
+        }
+        else{
+            descriptionStyles ["right"] = 0
+        }
+
+
+        if (prop_steps != null && Array.isArray(prop_steps)){
+            for (let i = 0; i < prop_steps.length; i++) {
+                const itemStep = prop_steps[i];
+                if (itemStep != null){
+
+                    const stepState =        itemStep?.state ?? 0;
+                    const stepColor = this.fn_getColorStepWithState(stepState);
+
+                    this.fn_setViewElementStateStep( i , stepState , stepColor);
+
+                    if (itemStep.hasOwnProperty("description")){
+                        new window.ComponentTooltipDescription(
+                            `component-progress-steppper-form-step-description-${this._COMPONENT_RANDOM_ID}-${i}` ,
+                            {
+                                styles: descriptionStyles  ,
+
+                                prop_description: itemStep.description,
+                                prop_iconColor : stepColor
+                            }
+                        )
+                    }
+
+                }
+
+            }
+        }
+    }
+
+
+    fn_setViewElementStateStep(itemIndex , stepState , stepColor){
+        const elStatus = this.fn_getElementStepStatus(itemIndex);
+
+        switch (stepState){
+            case 0:
+                this.fn_setViewElementStateStep_init(elStatus , stepColor , itemIndex)
+                break;
+            case 1:
+                this.fn_setViewElementStateStep_progress(elStatus , stepColor , itemIndex)
+                break;
+            case 2:
+                this.fn_setViewElementStateStep_error(elStatus , stepColor , itemIndex)
+                break;
+            case 3:
+                this.fn_setViewElementStateStep_success(elStatus , stepColor , itemIndex)
+                break;
+        }
+    }
+
+
+    fn_setViewElementStateStep_init(elStatus , stepColor , itemIndex){
+        elStatus.innerHTML = `
+<b class="component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID} text-white" style="background-color: ${stepColor}">
+   ${itemIndex+1}     
+</b>
+        `
+
+
+    }
+
+    fn_setViewElementStateStep_progress(elStatus , stepColor , itemIndex){
+        const data = this._COMPONENT_CONFIG;
+        const prop_size                  =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : 0;
+
+        const elHeight = tools_css.getHeightSize(prop_size);
+
+        elStatus.innerHTML = `
+<div class="component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID} ">
+  <component-loading id="component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID}-${itemIndex}"></component-loading>   
+</div>
+        `
+
+        new window.ComponentLoading(
+            `component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID}-${itemIndex}`  ,
+            {
+                classList:     [ "position-absolute"] ,
+                styles : {
+                    "top" : "50%" ,
+                    "left" : "50%" ,
+                    "transform" : "translate(-50% , -50%)" ,
+                },
+                prop_background_loading : stepColor ,
+                prop_background_shadow : "#fff" ,
+                prop_loadingWidth: elHeight+16 ,
+                prop_loadingHeight: elHeight+16 ,
+            }
+        )
+
+    }
+
+
+    fn_setViewElementStateStep_error(elStatus , stepColor , itemIndex){
+        const data = this._COMPONENT_CONFIG;
+        const prop_size                  =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : 0;
+
+        elStatus.innerHTML = `
+<div class="component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID} position-relative"  style="background-color: ${stepColor}">
+   <component-icon id="component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID}-${itemIndex}"></component-icon>   
+</div>
+        `
+        new window.ComponentIcon(
+            `component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID}-${itemIndex}`  ,
+            {
+                classList:     [ "position-absolute"] ,
+                styles : {
+                    "top" : "50%" ,
+                    "left" : "50%" ,
+                    "transform" : "translate(-50% , -50%)" ,
+                },
+                prop_icon:    tools_icons.icon_is_false(prop_size , "#fff")  ,
+            }
+        )
+
+    }
+
+
+    fn_setViewElementStateStep_success(elStatus , stepColor , itemIndex){
+        const data = this._COMPONENT_CONFIG;
+        const prop_size                  =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : 0;
+
+        elStatus.innerHTML = `
+<div class="component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID} position-relative"  style="background-color: ${stepColor}">
+  <component-icon id="component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID}-${itemIndex}" ></component-icon>    
+</div>
+        `
+        new window.ComponentIcon(
+            `component-progress-steppper-form-step-state-inside-${this._COMPONENT_RANDOM_ID}-${itemIndex}`  ,
+            {
+                classList:     [ "position-absolute"] ,
+                styles : {
+                     "top" : "50%" ,
+                     "left" : "50%" ,
+                     "transform" : "translate(-50% , -50%)" ,
+                },
+                prop_icon:    tools_icons.icon_is_true(prop_size , "#fff")  ,
+            }
+        )
+
+
+    }
+
+
+    fn_getColorStepWithState(stepStatus = 0){
+        const data = this._COMPONENT_CONFIG;
+        const prop_colorStataeInit       =   data.hasOwnProperty("prop_colorStataeInit")          ?  data.prop_colorStataeInit               : false;
+        const prop_colorStataeProgress   =   data.hasOwnProperty("prop_colorStataeProgress")      ?  data.prop_colorStataeProgress           : false;
+        const prop_colorStataeFailed     =   data.hasOwnProperty("prop_colorStataeFailed")        ?  data.prop_colorStataeFailed             : false;
+        const prop_colorStataeSuccess    =   data.hasOwnProperty("prop_colorStataeSuccess")       ?  data.prop_colorStataeSuccess            : false;
+
+        switch (stepStatus){
+            case 0:
+                return prop_colorStataeInit;
+            case 1:
+                return prop_colorStataeProgress;
+            case 2:
+                return prop_colorStataeFailed;
+            case 3:
+                return prop_colorStataeSuccess;
+        }
+
+        return "";
+    }
+
+
+}
+
+
+
+
+
+
+
+
+//===============================================================================================================
+// [10 - 19] button / inputs / tools -> [010] Button and Inputs
+//===============================================================================================================
+
+/*-------------------------------------
+ 03-01) Component Button
 -------------------------------------*/
 class ComponentButtonBase extends ComponentBase{
 
@@ -5184,7 +5660,7 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
 
             const prop_type             =   data.hasOwnProperty("prop_type")                 ?  data.prop_type               :  null;
             const prop_btnType          =   data.hasOwnProperty("prop_btnType")              ?  data.prop_btnType               :  null;
-            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+            const prop_title            =   data.hasOwnProperty("prop_title")                ?  data.prop_title              :  this._COMPONENT_SLOTS?.body?.html ?? "";
 
             const prop_btnClass         =   data.hasOwnProperty("prop_btnClass")             ?  data.prop_btnClass           : "w-100"
             const prop_size             =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               : 0;
@@ -5271,6 +5747,7 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
     }
 
 }
+
 
 
 /*-------------------------------------
@@ -22895,6 +23372,9 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_bgColor_active{
                 background-color: ${prop_selectedBackground} !important;
          }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_borderColor_active{
+                border-bottom: 1px dashed ${prop_selectedBackground}  !important;
+         }
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_color_active{
                 color: ${prop_selectedBackground} !important;
          }
@@ -22904,6 +23384,9 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
          
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_bgColor_diactive{
                 background-color: ${prop_unSelectedBackground};
+         }
+         #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_borderColor_diactive{
+                border-bottom: 1px dashed ${prop_unSelectedBackground};
          }
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_color_diactive{
                 color: ${prop_unSelectedBackground} ;
@@ -22950,6 +23433,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
              text-align:       center;
              color:            white;
              padding:          5px;
+             border-radius:    100%;
          }
          
          
@@ -22966,8 +23450,11 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
          
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-div-title-${this._COMPONENT_RANDOM_ID}{
              float:       ${directionRtl ? 'right' : 'left'};
-             width:       200px;
              height:      ${elHeight + 10}px;
+             background:  white;
+             position:    relative;
+             z-index:     1;
+             ${directionRtl ? "padding-left" : "padding-right"} :  40px;
          }
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-div-title-inside-${this._COMPONENT_RANDOM_ID}{
          
@@ -22981,8 +23468,6 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
          
          
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .component-steps-from-item-step-part-info-div-space-${this._COMPONENT_RANDOM_ID}{
-             float:            ${directionRtl ? 'left' : 'right'};
-             width:            calc(100% - 200px);
              position:         relative;
              height:           ${elHeight + 10}px;
          }
@@ -22993,6 +23478,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
              left:             0;
              top:              50%;
              transform:        translate(0 , -50%);
+             opacity:          0.5;
          }
   
          
@@ -23038,7 +23524,6 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
             lineHorizontal:         ` .component-steps-from-item-step-part-info-div-space-inside-${this._COMPONENT_RANDOM_ID}` ,
             body:                   ` .component-steps-from-item-step-part-body-div-body-inside-${this._COMPONENT_RANDOM_ID}` ,
             msg:                    `component-steps-from-item-step-part-body-div-body-message-${this._COMPONENT_RANDOM_ID}-${index}` ,
-            error:                  `component-steps-from-item-step-part-body-div-body-is-empty-${this._COMPONENT_RANDOM_ID}-${index}` ,
         };
     }
 
@@ -23072,7 +23557,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
 
      <div class="component-steps-from-item-step-section-number-${this._COMPONENT_RANDOM_ID}">
           ${lineHtml}
-          <b class="component-steps-from-item-step-section-number-txt-${this._COMPONENT_RANDOM_ID} rounded step_bgColor_diactive">${i+1}</b>
+          <b class="component-steps-from-item-step-section-number-txt-${this._COMPONENT_RANDOM_ID}  step_bgColor_diactive">${i+1}</b>
      </div>
 
      <div class="component-steps-from-item-step-section-info-${this._COMPONENT_RANDOM_ID}">
@@ -23084,18 +23569,16 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                     </b>
                </div>
                <div class="component-steps-from-item-step-part-info-div-space-${this._COMPONENT_RANDOM_ID}">
-                    <div class="component-steps-from-item-step-part-info-div-space-inside-${this._COMPONENT_RANDOM_ID} step_bgColor_diactive"></div>
+                    <div class="component-steps-from-item-step-part-info-div-space-inside-${this._COMPONENT_RANDOM_ID} step_borderColor_diactive"></div>
                </div>
           </div>
           <div class="component-steps-from-item-step-part-body-${this._COMPONENT_RANDOM_ID} ">
-              <component-messages id="component-steps-from-item-step-part-body-div-body-message-${this._COMPONENT_RANDOM_ID}-${i}"></component-messages>
+              <component-messages id="component-steps-from-item-step-part-body-div-body-message-${this._COMPONENT_RANDOM_ID}-${i}">123</component-messages>
             
               <div class="component-steps-from-item-step-part-body-div-body-inside-${this._COMPONENT_RANDOM_ID} d-none">
                   ${stepBody}
               </div>
-              
-              <component-is-empty id="component-steps-from-item-step-part-body-div-body-is-empty-${this._COMPONENT_RANDOM_ID}-${i}"></component-is-empty>
-          </div>
+           </div>
      </div>
 
 </section>
@@ -23172,19 +23655,21 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                     const elLineHorizontal = elStep?.querySelector(stepElements?.lineHorizontal);
                     const elBody =           elStep?.querySelector(stepElements?.body);
 
+
+                     const elMsg = document.querySelector("#"+stepElements?.msg)
+                     if (elMsg != null){
+                         elMsg.innerHTML = "";
+                     }
+
                     if (stepActive){
                         elLineVertical?.classList?.add("step_bgColor_active")
                         elNumber?.classList?.add("step_bgColor_active")
                         elTitle?.classList?.add("step_color_active")
-                        elLineHorizontal?.classList?.add("step_bgColor_active")
+                        elLineHorizontal?.classList?.add("step_borderColor_active")
                         elBody?.classList?.remove("d-none");
 
                         elNumber.innerHTML = tools_icons.icon_is_true(elHeight-10 , "#fff")
 
-                        const elError = document.querySelector(stepElements?.error);
-                        if (elError != null){
-                            elError.innerHtml = "";
-                        }
 
                         if (msg != null){
                             new window.ComponentMessages(
@@ -23201,23 +23686,19 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                         elLineVertical?.classList?.remove("step_bgColor_active")
                         elNumber?.classList?.remove("step_bgColor_active")
                         elTitle?.classList?.remove("step_color_active")
-                        elLineHorizontal?.classList?.remove("step_bgColor_active")
+                        elLineHorizontal?.classList?.remove("step_borderColor_active")
                         elBody?.classList?.add("d-none")
 
-                        elNumber.innerHTML = i;
-
-                        const elMsg = document.querySelector(stepElements?.msg);
-                        if (elMsg != null){
-                            elMsg.innerHtml = "";
-                        }
+                        elNumber.innerHTML = i+1;
 
                         if (!isFinishCheck && error != null){
-                            new window.ComponentIsEmpty(
-                                stepElements?.error,
+                            new window.ComponentMessages(
+                                stepElements?.msg ,
                                 {
-                                    prop_title: error,
+                                    prop_type: "error" ,
+                                    prop_messages: [ error ]
                                 }
-                            )
+                            );
                         }
 
                         isFinishCheck = true;
@@ -23226,8 +23707,6 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
 
                     if (this._LIST_STEPS_ACTIVE != null && this._LIST_STEPS_ACTIVE.hasOwnProperty(stepName)){
                         let status = this._LIST_STEPS_ACTIVE[stepName];
-
-                        console.log(this._LIST_STEPS_ACTIVE , status , stepName , stepActive)
 
                         if (status != stepActive && stepActive){
                             if (data.hasOwnProperty("fn_onStepCreated") && typeof data.fn_onStepCreated != null){

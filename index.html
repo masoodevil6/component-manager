@@ -98,6 +98,18 @@
         </component-body>
     </component-collapse>
 
+    <component-collapse  id="progress">
+        <component-body>
+
+            <section class="row p-0 m-0">
+
+                <component-progress-stepper    id="progress-stepper"></component-progress-stepper>
+
+            </section>
+
+        </component-body>
+    </component-collapse>
+
     <component-collapse  id="btn-and-input">
         <component-body>
 
@@ -641,6 +653,54 @@
                 }
             }
         );
+
+
+
+
+
+    /*-------------------------------------
+          03-01) Component page header
+       -------------------------------------*/
+    new window.ComponentProgressStepper(
+        "progress-stepper" ,
+        {
+            classList: ""  ,
+
+            prop_stepHasBtn: true ,
+            prop_steps: [
+                {
+                    name: "stepA" ,
+                    title: "Step One" ,
+                    description: "This step is for ... " ,
+                    state: 3 ,
+                } ,
+                {
+                    name: "stepB" ,
+                    title: "Step Two" ,
+                    description: "This step is for ... " ,
+                    state: 1 ,
+                } ,
+                {
+                    name: "stepC" ,
+                    title: "Step Three" ,
+                    description: "This step is for ... " ,
+                    state: 0 ,
+                } ,
+                {
+                    name: "stepD" ,
+                    title: "Step Four" ,
+                    description: "This step is for ... " ,
+                    state: 0 ,
+                }
+            ]
+        }
+    );
+
+
+
+
+
+
 
 
         /*-------------------------------------
@@ -2332,6 +2392,15 @@
 
                 prop_title: " [02] Fetch " ,
                 prop_bodyShow: false
+            }
+        )
+        new window.ComponentCollapse(
+            "progress" ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_title: " [03] Progress " ,
+                prop_bodyShow: true
             }
         )
         new window.ComponentCollapse(
