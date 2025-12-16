@@ -151,13 +151,13 @@ window.NavStepper = class NavStepper  {
     /* ---------------------------------------------
        SETUP
      --------------------------------------------- */
-    constructor(elementId , workflow) {
+    constructor(elementId , workflow , stepActive=null) {
         this._ELEMENT_ID = elementId;
         this._ELEMENT = document.getElementById(elementId);
         if ( this._ELEMENT != null){
             this._WORK_FLOW = workflow;
 
-            this.start()
+            this.start(stepActive)
         }
     }
 
@@ -505,9 +505,9 @@ window.NavStepper = class NavStepper  {
     /* ---------------------------------------------
         run
      --------------------------------------------- */
-    start(){
+    start(stepActive = null){
         this.createMainStepper();
-        this.goToStep();
+        this.goToStep(stepActive);
     }
 
     goToStep(stepActive = null){
