@@ -15479,7 +15479,11 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         this.templateFn("part_body" );
         this.templateFn("part_body_searcher" );
 
-        this.fn_firstCallback();
+
+        this.onRegisterFinish().then(el => {
+            this.fn_firstCallback();
+            this.fn_closeWhenClickOutside();
+        })
     }
     templateFn(partName = null){
 
@@ -16008,6 +16012,15 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         }
     }
 
+    fn_closeWhenClickOutside(){
+        document.addEventListener("click", (event) => {
+            const isInside = event.target.closest(`#${this._COMPONENT_ID}`);
+            if (!isInside) {
+                this.fn_showListOptions(event, false);
+            }
+        });
+    }
+
     fn_clickBtnTools(event){
         event.stopPropagation();
         const data = this._COMPONENT_CONFIG;
@@ -16060,11 +16073,13 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         this.set("var_showFormSelectOption" ,  var_showFormSelectOption);
 
         const body = document.querySelector(`#component-select-option-position-element-${ this._COMPONENT_RANDOM_ID}`);
-        if (var_showFormSelectOption){
-            body.classList.remove("d-none")
-        }
-        else {
-            body.classList.add("d-none")
+        if (body != null){
+            if (var_showFormSelectOption){
+                body.classList.remove("d-none")
+            }
+            else {
+                body.classList.add("d-none")
+            }
         }
     }
 
@@ -27188,16 +27203,26 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
          
      <style>
          #${this._COMPONENT_ID} #ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}{
-         
+            
          }
          #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page{
              transition: left ease ${prop_duration}ms ,  right ease ${prop_duration}ms ,  top ease ${prop_duration}ms ,  bottom ease ${prop_duration}ms;
              width: 100%;
              height: 100%;
+             overflow-y: auto;
+             overflow-x: hidden;
              ${styleStr};
              z-index: ${tools_css.getZIndex(tools_css.standardZIndex.new_page.name , 10)};
              background-color: ${prop_backgroundColorPage};
          }
+         
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.4);
+  border-radius: 20px;
+}
      </style>
      
      ${html}
@@ -29290,7 +29315,6 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
                     prop_size ,
 
                     prop_order : ["id" , "header_name" , "header_title" , "header_background" , "header_color"  , "header_dataType" , "footer_background" , "footer_color" , "footer_action"] ,
-                    prop_headerIconSize: 45 ,
                     prop_header : [
                         {id:"id"                    , content: headerCol_id                                                                   ,  inMobile: true  },
                         {id:"header_name"           , content: headerCol_headerName                                                          ,  inMobile: true  },
@@ -32591,9 +32615,6 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                </component-pages>
                
                ${this.fn_getHtmlPages(prop_pages )}
-               
-            
-            
 
        </component-change-page>
           
