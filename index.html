@@ -23,6 +23,8 @@
 
                 <component-is-empty  id="is_empty"></component-is-empty>
 
+                <component-notify  id="notify"></component-notify>
+
 
                 <component-header  id="header"></component-header>
 
@@ -534,6 +536,19 @@
                 fn_callback: ()=>{
                     alert("aaa")
                 }
+            }
+        )
+
+        /*-------------------------------------
+         01-02) Component Is Empty
+        -------------------------------------*/
+        new window.ComponentNotify(
+            "notify" ,
+            {
+                classList: "col-md-3 col-12 mt-2"  ,
+
+                prop_borderArrowType: 0 ,
+                prop_title: "it is a test" ,
             }
         )
 
@@ -2237,6 +2252,7 @@
             {
                 classList: "col-md-3 col-12 mt-2"  ,
 
+                prop_borderArrowType: 0 ,
                 prop_btnMore_show: true,
                 prop_btnMore_icon: "&#10127;" ,
                 prop_btnMore_link: "/asd" ,
@@ -2396,11 +2412,6 @@
             }
         }
     );
-
-
-
-
-
 
 
 

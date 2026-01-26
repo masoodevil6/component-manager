@@ -38,7 +38,9 @@
     if (el != null && typeof tools_icons != "undefined" && typeof tools_icons == "object"){
 
         Object.keys(tools_icons).forEach(key=>{
-            let iconSvg = tools_icons[key](100)
+            let iconSvg = tools_icons[key]({
+                size : 100
+            })
             el.innerHTML = el.innerHTML + `
             <div class="item-icon-form-method-name item-icon border  float-end" onclick="copyMethodIcon('${key}')">
                <span class="bg-dark text-white d-block text-center">

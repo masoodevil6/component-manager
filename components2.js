@@ -1,7 +1,7 @@
 // Name:      Components
 // Developer: Mehdi Maarefian
 // Version:   0.8
-// Date:      12/1/2025
+// Date:      12/24/2025
 //----------------------------------------------------
 
 
@@ -15,27 +15,26 @@ if (typeof listComponent === 'undefined') {
         // [01 - 10] basic
         //===============================================================================================================
         // [01] text
-        ComponentMessages:                   "component-messages" ,                       //01-01
-        ComponentIsEmpty:                    "component-is-empty" ,                       //01-02
-        ComponentNotify:                     "component-notify" ,                         //01-03
-        ComponentHeader:                     "component-header" ,                         //01-04
-        ComponentLabel:                      "component-label" ,                          //01-05
-        ComponentDescription:                "component-description" ,                    //01-06
-        ComponentLink:                       "component-link" ,                           //01-07
-        ComponentInfo:                       "component-info" ,                           //01-08
-        ComponentCard:                       "component-card" ,                           //01-09
-        ComponentCardInfo:                   "component-card-info" ,                      //01-010
-        ComponentListSelectedScroller:       "component-list-selected-scroller" ,         //01-011
+        ComponentMessages:                   "" ,                       //01-01
+        ComponentIsEmpty:                    "" ,                       //01-02
+        ComponentHeader:                     "" ,                         //01-03
+        ComponentLabel:                      "" ,                          //01-04
+        ComponentDescription:                "" ,                    //01-05
+        ComponentLink:                       "" ,                           //01-06
+        ComponentInfo:                       "" ,                           //01-07
+        ComponentCard:                       "" ,                           //01-08
+        ComponentCardInfo:                   "" ,                      //01-09
+        ComponentListSelectedScroller:       "" ,         //01-010
 
         // [02] Fetch
-        ComponentLoading:                    "component-loading" ,                        //02-01
-        Component404:                        "component-404" ,                            //02-02
-        ComponentForm:                       "component-form" ,                           //02-03
-        ComponentWidget:                     "component-widget" ,                         //02-04
-        ComponentIframe:                     "component-iframe" ,                         //02-05
+        ComponentLoading:                    "" ,                        //02-01
+        Component404:                        "" ,                            //02-02
+        ComponentForm:                       "" ,                           //02-03
+        ComponentWidget:                     "" ,                         //02-04
+        ComponentIframe:                     "" ,                         //02-05
 
         // [03] progress
-        ComponentProgressStepper:            "component-progress-stepper" ,               //03-01
+        ComponentProgressStepper:            "" ,               //03-01
 
 
 
@@ -44,32 +43,32 @@ if (typeof listComponent === 'undefined') {
         //===============================================================================================================
 
         // [010] Button and Inputs
-        ComponentButton:                     "component-button" ,                         //010-01
-        ComponentInput:                      "component-input" ,                          //010-02
-        ComponentInputPrice:                 "component-input-price" ,                    //010-03
-        ComponentInputEmail:                 "component-input-email" ,                    //010-04
-        ComponentInputPassword:              "component-input-password" ,                 //010-05
-        ComponentInputFile:                  "component-input-file" ,                     //010-06
-        ComponentInputColor:                 "component-input-color" ,                    //010-07
-        ComponentInputSize:                  "component-input-size" ,                     //010-08
-        ComponentInputAcl:                   "component-input-acl" ,                      //010-09
-        ComponentDate:                       "component-date" ,                           //010-010
-        ComponentOtp:                        "component-otp" ,                            //010-011
-        ComponentSelectOption:               "component-select-option" ,                  //010-012
-        ComponentSelectIcon:                 "component-select-icon" ,                    //010-013
-        ComponentCheckBox:                   "component-check-box" ,                      //010-014
+        ComponentButton:                     "" ,                         //010-01
+        ComponentInput:                      "" ,                          //010-02
+        ComponentInputPrice:                 "" ,                    //010-03
+        ComponentInputEmail:                 "" ,                    //010-04
+        ComponentInputPassword:              "" ,                 //010-05
+        ComponentInputFile:                  "" ,                     //010-06
+        ComponentInputColor:                 "" ,                    //010-07
+        ComponentInputSize:                  "" ,                     //010-08
+        ComponentInputAcl:                   "" ,                      //010-09
+        ComponentDate:                       "" ,                           //010-010
+        ComponentOtp:                        "" ,                            //010-011
+        ComponentSelectOption:               "" ,                  //010-012
+        ComponentSelectIcon:                 "" ,                    //010-013
+        ComponentCheckBox:                   "" ,                      //010-014
 
         // [011] QR CODE
-        ComponentQrCode:                     "component-qr-code" ,                        //011-01
-        ComponentCameraQrCodeReader:         "component-camera-qr-code-reader" ,          //011-02
-        ComponentUploadQrCodeReader:         "component-upload-qr-code-reader" ,          //011-03
-        ComponentQrCodeReader:               "component-qr-code-reader" ,                 //011-04
+        ComponentQrCode:                     "" ,                        //011-01
+        ComponentCameraQrCodeReader:         "" ,          //011-02
+        ComponentUploadQrCodeReader:         "" ,          //011-03
+        ComponentQrCodeReader:               "" ,                 //011-04
 
         // [012] Inputs Tools
-        ComponentAcceptTerms:                "component-accept-terms" ,                   //012-01
-        ComponentSelectColumns:              "component-select-columns" ,                 //012-02
-        ComponentValidate:                   "component-validate" ,                       //012-03
-        ComponentTooltipDescription:         "component-tooltip-description" ,            //012-04
+        ComponentAcceptTerms:                "" ,                   //012-01
+        ComponentSelectColumns:              "" ,                 //012-02
+        ComponentValidate:                   "" ,                       //012-03
+        ComponentTooltipDescription:         "" ,            //012-04
 
 
 
@@ -79,23 +78,23 @@ if (typeof listComponent === 'undefined') {
         // [20 - 29] tables and tab view
         //===============================================================================================================
         // [020] Tables
-        ComponentTable:                      "component-table" ,                          //020-01
-        ComponentTableResponsible:           "component-table-responsible" ,              //020-02
+        ComponentTable:                      "" ,                          //020-01
+        ComponentTableResponsible:           "" ,              //020-02
 
         // [021] page number
-        ComponentPageNumber:                "component-page-number" ,                     //021-01
-        ComponentPageData:                  "component-page-data" ,                       //021-02
+        ComponentPageNumber:                "" ,                     //021-01
+        ComponentPageData:                  "" ,                       //021-02
 
         // [022] Tabs
-        ComponentTabs:                       "component-tabs" ,                           //022-01
-        ComponentTree:                       "component-tree" ,                           //022-02
+        ComponentTabs:                       "" ,                           //022-01
+        ComponentTree:                       "" ,                           //022-02
 
         // [023] Charts
-        ComponentChart:                      "component-chart" ,                          //023-01
-        ComponentChartTreeY:                 "component-chart-tree-y" ,                   //023-02
+        ComponentChart:                      "" ,                          //023-01
+        ComponentChartTreeY:                 "" ,                   //023-02
 
         // [024] Steppers
-        ComponentStepper:                    "component-stepper" ,                        //024-01
+        ComponentStepper:                    "" ,                        //024-01
 
 
 
@@ -104,18 +103,18 @@ if (typeof listComponent === 'undefined') {
         // [30 - 39] collapse and windows
         //===============================================================================================================
         // [030] Collapse
-        ComponentCollapse:                   "component-collapse" ,                       //030-01
+        ComponentCollapse:                   "" ,                       //030-01
 
         // [031] Window
-        ComponentWindow:                     "component-window" ,                         //031-01
-        ComponentWindowConfirm:              "component-window-confirm" ,                 //031-02
+        ComponentWindow:                     "" ,                         //031-01
+        ComponentWindowConfirm:              "" ,                 //031-02
 
         // [032] Slider Shows
-        ComponentSliderShowOverlapping:      "component-slider-show-overlapping" ,        //032-01
+        ComponentSliderShowOverlapping:      "" ,        //032-01
 
         // [033] Breadcrumb
-        ComponentBreadcrumb :                "component-breadcrumb" ,                     //033-01
-        ComponentBreadcrumbWithArrow :       "component-breadcrumb-with-arrow" ,          //033-02
+        ComponentBreadcrumb :                "" ,                     //033-01
+        ComponentBreadcrumbWithArrow :       "" ,          //033-02
 
 
 
@@ -127,18 +126,18 @@ if (typeof listComponent === 'undefined') {
         // [80 - 89] views tools
         //===============================================================================================================
         // [080] elements page
-        ComponentChangePage:                 "component-change-page" ,                    //080-01
-        ComponentPageHeader:                 "component-page-header" ,                    //080-02
-        ComponentPageCardInfo:               "component-page-card-info" ,                 //080-03
+        ComponentChangePage:                 "" ,                    //080-01
+        ComponentPageHeader:                 "" ,                    //080-02
+        ComponentPageCardInfo:               "" ,                 //080-03
 
         // [081] elements spicals
-        ComponentDraggableOrders:           "component-draggable-orders" ,               //081-01
-        ComponentRecyclerView:              "component-recycler-view" ,                  //081-02
+        ComponentDraggableOrders:           "" ,               //081-01
+        ComponentRecyclerView:              "" ,                  //081-02
 
         // [082] elements tools
-        ComponentToolsTableConfig:          "component-tools-table-config" ,             //082-01
-        ComponentToolsTableToExcel:         "component-tools-table-to-excel" ,           //082-02
-        ComponentToolsTableToPrint:         "component-tools-table-to-print" ,           //082-03
+        ComponentToolsTableConfig:          "" ,             //082-01
+        ComponentToolsTableToExcel:         "" ,           //082-02
+        ComponentToolsTableToPrint:         "" ,           //082-03
 
 
 
@@ -147,12 +146,12 @@ if (typeof listComponent === 'undefined') {
         //===============================================================================================================
         // [99] Others
         //===============================================================================================================
-        ComponentIcon:                       "component-icon" ,                           //99-01
-        ComponentPositionElement:            "component-position-element" ,               //99-02
-        ComponentBorder:                     "component-border" ,                         //99-03
-        ComponentImage:                      "component-image" ,                          //99-04
-        ComponentLayout:                     "component-layout" ,                         //99-05
-        ComponentMouseScroller:              "component-mouse-scroller" ,                 //99-06
+        ComponentIcon:                       "" ,                           //99-01
+        ComponentPositionElement:            "" ,               //99-02
+        ComponentBorder:                     "" ,                         //99-03
+        ComponentImage:                      "" ,                          //99-04
+        ComponentLayout:                     "" ,                         //99-05
+        ComponentMouseScroller:              "" ,                 //99-06
 
 
 
@@ -160,7 +159,7 @@ if (typeof listComponent === 'undefined') {
         //===============================================================================================================
         // [---] Porfisinal
         //===============================================================================================================
-        ComponentReport:                     "component-report" ,                         //p-02
+        ComponentReport:                     "" ,                         //p-02
         ComponentRender:                     "component-render" ,                         //p-01
 
 
@@ -802,7 +801,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentMessages.name] ,
+            "component-messages" ,
             elId
         );
         this.renderComponent(config);
@@ -959,7 +958,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                             classList:     [ "position-absolute"] ,
                             styles :       styles,
 
-                            prop_icon:    tools_icons.icon_close({size : prop_size})  ,
+                            prop_icon:    tools_icons.icon_close(prop_size , prop_colorIcon)  ,
 
                             prop_iconClass : ["mx-2" ] ,
                             prop_iconStyles : {
@@ -1121,7 +1120,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentIsEmpty.name] ,
+            "component-is-empty" ,
             elId
         );
         this.renderComponent(config);
@@ -1222,7 +1221,6 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
                 {
                     prop_btnMore_show: false ,
 
-                    prop_borderColor : null,
                     prop_structureClass: prop_borderClass ,
                     prop_structureStyles: {
                         ...prop_borderStyles ,
@@ -1257,7 +1255,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
                     {
                         prop_iconClass: prop_iconClass ,
                         prop_iconStyles: prop_iconStyles ,
-                        prop_icon: typeof prop_icon == "function" ? prop_icon({size: prop_iconSize /*, colors:{ primary: prop_iconColor}*/}) : prop_icon,
+                        prop_icon: typeof prop_icon == "function" ? prop_icon(prop_iconSize , prop_iconColor ) : prop_icon,
                     }
                 )
         }
@@ -1323,277 +1321,6 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
     }
 
 
-}
-
-
-
-/*-------------------------------------
- 01-03) Component Nofite
--------------------------------------*/
-class ComponentNotifyBase extends ComponentBase{
-
-
-    /* ---------------------------------------------
-       PROPERTYs Pattern
-     --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_size: {
-            prop: "prop_size",
-            default: tools_css.standardSizes.m.name
-        },
-        prop_borderClass : {
-            prop: "prop_borderClass" ,
-            default: [ "rounded" , "shadow-sm"]
-        } ,
-        prop_borderStyles: {
-            prop: "prop_borderStyles" ,
-            default: {}
-        },
-        prop_borderColor: {
-            prop: "prop_borderColor" ,
-            default: tools_const?.styles?.notify?.borderColor_border ?? ""
-        } ,
-        prop_borderBackground: {
-            prop: "prop_borderBackground" ,
-            default: tools_const?.styles?.notify?.background_border ?? ""
-        },
-        prop_borderArrowType: {
-            prop: "prop_borderArrowType" ,
-            default: null
-        },
-        prop_icon: {
-            prop: "prop_icon" ,
-            default: tools_icons.icon_warning
-        } ,
-        prop_iconSize: {
-            prop: "prop_iconSize" ,
-            default: 40
-        } ,
-        prop_iconColor: {
-            prop: "prop_iconColor" ,
-            default: tools_const?.styles?.notify?.color_icon ?? ""
-        } ,
-        prop_iconClass: {
-            prop: "prop_iconClass" ,
-            default: ["font-30pt" , "text-danger"]
-        } ,
-        prop_iconStyles: {
-            prop: "prop_iconStyles" ,
-            default: { "font-size" : "30px" , "display" : "block" ,  "text-align" : "center" , }
-        } ,
-        prop_title: {
-            prop: "prop_title" ,
-            default: null
-        } ,
-        prop_titleColor: {
-            prop: "prop_titleColor" ,
-            default: tools_const?.styles?.notify?.color_title ?? ""
-        } ,
-    }
-
-
-    /* ---------------------------------------------
-      PROPERTYs Props
-      --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [
-
-        ] ,
-        part_border: [
-            this._COMPONENT_PATTERN.prop_borderClass ,
-            this._COMPONENT_PATTERN.prop_borderStyles ,
-            this._COMPONENT_PATTERN.prop_borderColor ,
-            this._COMPONENT_PATTERN.prop_borderBackground ,
-            this._COMPONENT_PATTERN.prop_borderArrowType ,
-        ] ,
-        part_icon: [
-            this._COMPONENT_PATTERN.prop_icon ,
-            this._COMPONENT_PATTERN.prop_iconSize ,
-            this._COMPONENT_PATTERN.prop_iconColor ,
-            this._COMPONENT_PATTERN.prop_iconClass ,
-            this._COMPONENT_PATTERN.prop_iconStyles ,
-        ] ,
-        part_title: [
-            this._COMPONENT_PATTERN.prop_title ,
-            this._COMPONENT_PATTERN.prop_size ,
-            this._COMPONENT_PATTERN.prop_titleColor ,
-        ] ,
-    }
-
-
-    /* ---------------------------------------------
-         PROPERTYs Schema
-     --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_border: {
-                part_icon: {} ,
-                part_title: {} ,
-            }
-        }
-    }
-
-}
-window.ComponentNotify = class ComponentNotify extends ComponentNotifyBase{
-
-    /* ---------------------------------------------
-       SETUP
-   --------------------------------------------- */
-    constructor(elId , config) {
-        super(
-            listComponent[ComponentNotify.name] ,
-            elId
-        );
-        this.renderComponent(config);
-    }
-
-
-
-    /* ---------------------------------------------
-      TEMPLATEs
-     --------------------------------------------- */
-    componentFn(){
-        this.templateFn(  "part_border");
-        this.templateFn(  "part_icon");
-        this.templateFn(  "part_btn_retry");
-    }
-
-    templateFn(partName = null){
-        switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_border":
-                return this.componentFn_render_border(partName);
-            case "part_title":
-                return this.template_render_title(partName);
-            case "part_icon":
-                return this.componentFn_render_icon(partName);
-            default:
-                return this.templateBasic_render();
-        }
-    }
-
-    template_render_structure(partName) {
-        const content = `
-           <component-border id="component-notify-border-${this._COMPONENT_RANDOM_ID}">
-               <component-body>
-                    <section class="row p-0 m-0">
-                           <component-icon id="component-notify-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
-         
-                           ${this.templateFn("part_title") ?? ""}
-                    </section>
-               </component-body>
-          </component-border> 
-                `;
-        return this.templateBasic_render_structure(content);
-    }
-
-    template_render_title(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_title =            data.hasOwnProperty("prop_title")         ?  data.prop_title           : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
-            const prop_size  =            data.hasOwnProperty("prop_size")          ?  data.prop_size            :  null
-            const prop_titleColor  =      data.hasOwnProperty("prop_titleColor")    ?  data.prop_titleColor      :  null
-
-            const elHeight = tools_css.getHeightSize(prop_size);
-            const elFontSize = tools_css.getFontSize(prop_size);
-
-            return `
-<section data-part-name="${partName}" 
-         id="component-notify-title-${this._COMPONENT_RANDOM_ID}" 
-         class="col-md-8 col-12 position-relative">
-    <style>
-        #${this._COMPONENT_ID} #component-notify-title-${this._COMPONENT_RANDOM_ID}{
-             
-       }
-        #${this._COMPONENT_ID} #component-notify-title-${this._COMPONENT_RANDOM_ID}-b{
-             left:          50%;
-             top:           50%;
-             transform:     translate(-50% , -50%);
-             text-align:    center!important;
-             line-height:   ${elHeight}px;
-             font-size:     ${elFontSize}px;
-             color:         ${prop_titleColor};
-       }
-    </style>
-    <b id="component-notify-title-${this._COMPONENT_RANDOM_ID}-b" class="position-absolute">
-         ${prop_title} 
-    </b>
-</section>
-        `;
-        }
-
-        return `
-<section data-part-name="${partName}"></section>
-        `;
-    }
-
-    componentFn_render_border(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-
-            const prop_borderClass =           data.hasOwnProperty("prop_borderClass")          ? data.prop_borderClass         : null;
-            const prop_borderStyles =          data.hasOwnProperty("prop_borderStyles")         ? data.prop_borderStyles        : null;
-            const prop_borderColor =           data.hasOwnProperty("prop_borderColor")          ? data.prop_borderColor         : null;
-            const prop_borderBackground =      data.hasOwnProperty("prop_borderBackground")     ? data.prop_borderBackground    : null;
-            const prop_borderArrowType =       data.hasOwnProperty("prop_borderArrowType")      ? data.prop_borderArrowType     : null;
-
-            new window.ComponentBorder(
-                `component-notify-border-${this._COMPONENT_RANDOM_ID}` ,
-                {
-                    prop_btnMore_show: false ,
-
-                    prop_borderArrowType ,
-                    prop_borderColor ,
-
-                    prop_borderClass: [
-                        ... prop_borderClass ,
-                        "py-2"
-                    ] ,
-                    prop_borderStyles: {
-                        ... prop_borderStyles ,
-                        "background-color" : `${prop_borderBackground}` ,
-                    } ,
-                }
-            )
-        }
-    }
-
-    componentFn_render_icon(partName) {
-        const data = this.getPartProps(partName)
-
-        if (data != null){
-            const prop_icon        =  data.hasOwnProperty("prop_icon")            ?  data.prop_icon         : null;
-            const prop_iconSize    =  data.hasOwnProperty("prop_iconSize")        ?  data.prop_iconSize     : 80;
-            const prop_iconColor   =  data.hasOwnProperty("prop_iconColor")       ?  data.prop_iconColor    : "#000";
-            const prop_iconClass   =  data.hasOwnProperty("prop_iconClass")       ?  data.prop_iconClass    : [  "mx-3"];
-            const prop_iconStyles  =  data.hasOwnProperty("prop_iconStyles")      ?  data.prop_iconStyles   : {
-                "font-size" : "30px" ,
-                "width" : "100%" ,
-                "display" : "block" ,
-                "text-align" : "center" ,
-            };
-
-            this._COMPONENT_PATTERN.prop_iconSize ,
-                this._COMPONENT_PATTERN.prop_iconColor ,
-
-
-
-            new window.ComponentIcon(
-                    `component-notify-icon-${this._COMPONENT_RANDOM_ID}` ,
-                    {
-                        classList: "col-md-4 col-12"  ,
-
-                        prop_iconClass: prop_iconClass ,
-                        prop_iconStyles: prop_iconStyles ,
-                        prop_icon: typeof prop_icon == "function" ? prop_icon({size: prop_iconSize /*, colors:{ primary: prop_iconColor}*/}) : prop_icon,
-                    }
-                )
-        }
-    }
 }
 
 
@@ -1671,7 +1398,7 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentHeader.name] ,
+            "component-header" ,
             elId
         );
         this.renderComponent(config);
@@ -1757,8 +1484,6 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
 
                     prop_structureClass: prop_borderClass ,
                     prop_structureStyles: prop_borderStyles ,
-
-                    prop_borderColor : null,
                 }
             )
         }
@@ -1892,7 +1617,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentLabel.name] ,
+            "component-label" ,
             elId
         );
         this.renderComponent(config);
@@ -2000,7 +1725,6 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
                 {
                     prop_structureClass: prop_labelClass ,
                     prop_structureStyles: prop_labelStyles ,
-                    prop_borderColor : null,
                 }
             )
         }
@@ -2180,7 +1904,7 @@ window.ComponentDescription = class ComponentDescription extends ComponentDescri
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentDescription.name] ,
+            "component-description" ,
             elId
         );
         this.renderComponent(config);
@@ -2560,7 +2284,7 @@ window.ComponentLink = class ComponentLink extends ComponentLinkBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentLink.name] ,
+            "component-link" ,
             elId
         );
         this.renderComponent(config);
@@ -2849,7 +2573,7 @@ window.ComponentInfo = class ComponentInfo extends ComponentInfoBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInfo.name] ,
+            "component-info",
             elId
         );
         super.renderComponent(config);
@@ -3036,7 +2760,7 @@ window.ComponentCard = class ComponentCard extends ComponentCardBase {
     --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentCard.name] ,
+            "component-card" ,
             elId
         );
         super.renderComponent(config);
@@ -3266,7 +2990,7 @@ window.ComponentCardInfo = class ComponentCardInfo extends ComponentCardInfoBase
     --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentCardInfo.name] ,
+            "component-card-info" ,
             elId
         );
         super.renderComponent(config);
@@ -3554,7 +3278,7 @@ window.ComponentListSelectedScroller = class ComponentListSelectedScroller exten
     --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentListSelectedScroller.name] ,
+            "component-list-selected-scroller" ,
             elId
         );
         super.renderComponent(config);
@@ -3752,7 +3476,7 @@ window.ComponentListSelectedScroller = class ComponentListSelectedScroller exten
                     new window.ComponentIcon(
                         `component-list-selected-form-selector-list-item-${this._COMPONENT_RANDOM_ID}-icon-${i}`,
                         {
-                            prop_icon: tools_icons.icon_close({size : prop_size /*, colors: {primary:prop_formSelectorItemColorIcon }*/} ),
+                            prop_icon: tools_icons.icon_close(prop_size , prop_formSelectorItemColorIcon),
 
                             prop_iconClass: ["position-absolute"],
                             prop_iconStyles: styles,
@@ -3900,7 +3624,7 @@ window.ComponentLoading = class ComponentLoading extends ComponentLoadingBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentLoading.name] ,
+            "component-loading" ,
             elId
         );
         super.renderComponent(config);
@@ -4098,7 +3822,7 @@ window.Component404 = class Component404 extends Component404Base{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[Component404.name] ,
+            "component-404" ,
             elId
         );
         super.renderComponent(config);
@@ -4551,7 +4275,7 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentForm.name] ,
+            "component-form" ,
             elId
         );
         super.renderComponent(config);
@@ -4657,14 +4381,12 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
             new window.ComponentBorder(
                 `component-form-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
+                    prop_btnMore_show: false ,
 
-                    prop_borderColor :    null,
-                    prop_btnMore_show:    false ,
-
-                    prop_structureClass:  prop_borderClass ,
+                    prop_structureClass: prop_borderClass ,
                     prop_structureStyles: {} ,
 
-                    prop_borderStyles:    prop_borderStyles
+                    prop_borderStyles: prop_borderStyles
                 }
             )
         }
@@ -4926,7 +4648,7 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentWidget.name] ,
+            "component-widget" ,
             elId
         );
         super.renderComponent(config);
@@ -4999,18 +4721,12 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
             new window.ComponentBorder(
                 `border-widget-component-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_borderColor :    null,
-
-                    prop_structureClass:  prop_widgetClass ,
+                    prop_structureClass: prop_widgetClass ,
                     prop_structureStyles: prop_widgetStyles ,
 
-                    prop_borderStyles: {
-                        "min-height": "100px !important"
-                    } ,
-
-                    prop_btnMore_icon:     prop_btnMore_icon ,
-                    prop_btnMore_show:     prop_btnMore_show ,
-                    prop_btnMore_link:     prop_btnMore_link ,
+                    prop_btnMore_icon: prop_btnMore_icon ,
+                    prop_btnMore_show: prop_btnMore_show ,
+                    prop_btnMore_link: prop_btnMore_link ,
                 }
             )
         }
@@ -5224,7 +4940,7 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentIframe.name] ,
+            "component-iframe" ,
             elId
         );
         super.renderComponent(config);
@@ -5443,7 +5159,7 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentProgressStepper.name] ,
+            "component-progress-stepper" ,
             elId
         );
         super.renderComponent(config);
@@ -6021,7 +5737,7 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
                     "left" : "50%" ,
                     "transform" : "translate(-50% , -50%)" ,
                 },
-                prop_icon:    tools_icons.icon_is_false({size : prop_size , colors: {primary:"#fff" }})  ,
+                prop_icon:    tools_icons.icon_is_false(prop_size , "#fff")  ,
             }
         )
 
@@ -6045,7 +5761,7 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
                     "left" : "50%" ,
                     "transform" : "translate(-50% , -50%)" ,
                 },
-                prop_icon:    tools_icons.icon_is_true({size : prop_size , colors: {primary:"#fff" }})  ,
+                prop_icon:    tools_icons.icon_is_true(prop_size , "#fff")  ,
             }
         )
 
@@ -6196,7 +5912,7 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentButton.name] ,
+            "component-button" ,
             elId
         );
         super.renderComponent(config);
@@ -6469,7 +6185,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInput.name] ,
+            "component-input" ,
             elId
         );
         super.renderComponent(config);
@@ -6711,7 +6427,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
                 new window.ComponentIcon(
                     `component-input-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : tools_icons.icon_clear({size : prop_size }),
+                        prop_icon : tools_icons.icon_clear(prop_size),
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -7070,7 +6786,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInputPrice.name] ,
+            "component-input-price" ,
             elId
         );
         super.renderComponent(config);
@@ -7372,7 +7088,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
                 new window.ComponentIcon(
                     `component-input-price-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : tools_icons.icon_clear({size : prop_size} ),
+                        prop_icon : tools_icons.icon_clear(prop_size),
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -7819,7 +7535,7 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInputEmail.name] ,
+            "component-input-email" ,
             elId
         );
         super.renderComponent(config);
@@ -8076,7 +7792,7 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear({size : prop_size} ) ,
+                        prop_icon : tools_icons.icon_clear(prop_size) ,
 
                         fn_callback: ()=>{
                             this.runFn("fn_onClearInput" , "event")
@@ -8383,7 +8099,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInputPassword.name] ,
+            "component-input-password" ,
             elId
         );
         super.renderComponent(config);
@@ -8646,7 +8362,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear({size : prop_size }) ,
+                        prop_icon : tools_icons.icon_clear(prop_size) ,
 
                         fn_callback: ()=>{
                             this.runFn("fn_onClearInput" , "event")
@@ -8699,7 +8415,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit({size : prop_size /*, colors: {primary:prop_colorIcon}*/}) : tools_icons.icon_un_visit({size : prop_size /*, colors: {primary:prop_colorIcon}*/}),
+                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit(prop_size , prop_colorIcon) : tools_icons.icon_un_visit(prop_size , prop_colorIcon),
 
                         fn_callback: (event)=>{
                             this.fn_onVisitInput(event);
@@ -9000,7 +8716,7 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInputFile.name] ,
+            "component-input-file" ,
             elId
         );
         super.renderComponent(config);
@@ -9863,7 +9579,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInputColor.name] ,
+            "component-input-color" ,
             elId
         );
         super.renderComponent(config);
@@ -10415,7 +10131,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                 new window.ComponentIcon(
                     `component-input-color-icon-clear-${ this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon:          tools_icons.icon_clear_broom({size : prop_size/* , colors: {primary:prop_colorIconClear}*/}  ),
+                        prop_icon:          tools_icons.icon_clear_broom(prop_size , prop_colorIconClear),
 
                         prop_iconClass :    ["position-absolute"] ,
                         prop_iconStyles :   styles ,
@@ -10453,7 +10169,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                 new window.ComponentIcon(
                     `component-input-color-icon-color-empty-${ this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon:          tools_icons.icon_empty({size : prop_size /*, colors: {primary:prop_colorIconEmpty}*/} ),
+                        prop_icon:          tools_icons.icon_empty(prop_size , prop_colorIconEmpty),
 
                         prop_iconClass :    ["position-absolute"] ,
                         prop_iconStyles :   styles
@@ -11000,7 +10716,7 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInputSize.name] ,
+            "component-input-size" ,
             elId
         );
         super.renderComponent(config);
@@ -11258,7 +10974,7 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear({size : prop_size}),
+                        prop_icon : tools_icons.icon_clear(prop_size),
 
                         fn_callback: (event)=>{
                             this.fn_onClearInput(event);
@@ -11873,7 +11589,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentInputAcl.name] ,
+            "component-input-acl" ,
             elId
         );
         super.renderComponent(config);
@@ -12329,7 +12045,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             new window.ComponentIcon(
                 `component-input-acl-icon-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon: tools_icons.icon_input_acl({size : prop_size /*, colors: {primary:prop_colorIcon}*/} )  ,
+                    prop_icon: tools_icons.icon_input_acl(prop_size , prop_colorIcon)  ,
 
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles : styles ,
@@ -12378,7 +12094,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear({size : prop_size /*, colors: {primary:prop_colorIcon}*/}  ),
+                        prop_icon : tools_icons.icon_clear(prop_size , prop_colorIcon),
 
                         fn_callback: (event)=>{
                             this.fn_clearAcl(event)
@@ -12436,7 +12152,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                     {
 
                         prop_show_label: false ,
-                        prop_icon: tools_icons.icon_search({size : prop_size /*, colors: {primary:prop_colorIcon}*/}  ) ,
+                        prop_icon: tools_icons.icon_search(prop_size ,prop_colorIcon ) ,
 
                         fn_oninput: (event , value) => {
                             this._REQUEST_ACL_SEARCH = value;
@@ -12478,7 +12194,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             new window.ComponentButton(
                 `component-input-acl-header-body-form-body-select-all-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_title: directionRtl ? tools_icons.icon_selectAllLeft({size : prop_size /*, colors: {primary:prop_btnColor}*/} ) : tools_icons.icon_selectAllRight({size : prop_size /*, colors: {primary:prop_btnColor}*/})   ,
+                    prop_title: directionRtl ? tools_icons.icon_selectAllLeft(prop_size , prop_btnColor) : tools_icons.icon_selectAllRight(prop_size , prop_btnColor)   ,
 
                     prop_btnClass : ["position-absolute"] ,
                     prop_btnStyles : styles ,
@@ -12512,7 +12228,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             new window.ComponentButton(
                 `component-input-acl-header-body-form-body-clear-all-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_title: tools_icons.icon_clear_broom({size : prop_size /*, colors: {primary:prop_btnColor}*/}  )  ,
+                    prop_title: tools_icons.icon_clear_broom(prop_size , prop_btnColor)  ,
 
                     prop_btnClass : ["position-absolute"] ,
                     prop_btnStyles : styles ,
@@ -12822,7 +12538,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                 <div class="item-selected position-relative" data-item-id="${item.id}"  data-item-name="${item.name}"  onClick="${this.getFn("fn_onClickRemoveAcl" , "event" , item.id)}">
                       ${item.name}
                       <i class="position-absolute">
-                           ${tools_icons.icon_clear({size : prop_size /*, colors: {primary:prop_itemAclIconColorSelected}*/} ) }
+                           ${tools_icons.icon_clear(prop_size , prop_itemAclIconColorSelected) }
                       </i>
                 </div>
             `
@@ -12866,7 +12582,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                 <div class="item-acl position-relative" onClick="${this.getFn("fn_onClickItemAcl" , "event" , item.id)}">
                         ${item.name}
                         <i class="position-absolute">
-                                 ${directionRtl ? tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_itemAclIconColorUnSelected}*/}  ) : tools_icons.icon_arrow_right({size : prop_size/* , colors: {primary:prop_itemAclIconColorUnSelected}*/}  ) }
+                                 ${directionRtl ? tools_icons.icon_arrow_left(prop_size , prop_itemAclIconColorUnSelected) : tools_icons.icon_arrow_right(prop_size , prop_itemAclIconColorUnSelected) }
                         </i>
                 </div>
             `
@@ -13250,7 +12966,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentDate.name] ,
+            "component-date" ,
             elId
         );
         super.renderComponent(config);
@@ -13942,7 +13658,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                 new window.ComponentIcon(
                     `component-input-date-header-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : tools_icons.icon_reload({size : prop_size /*, colors: {primary:"#000"}*/} ),
+                        prop_icon : tools_icons.icon_reload(prop_size , "#000"),
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -13988,7 +13704,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
             new window.ComponentIcon(
                 `component-input-date-header-icon-calender-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon: tools_icons.icon_calendar({size : elIconHeight /*, colors: {primary:prop_colorIcon}*/} ) ,
+                    prop_icon: tools_icons.icon_calendar(elIconHeight , prop_colorIcon) ,
 
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles : styles ,
@@ -14051,7 +13767,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "transform" : "translate(-50% , -50%)"
                     } ,
 
-                    prop_icon : tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_iconArrow}*/} ) ,
+                    prop_icon : tools_icons.icon_arrow_left(prop_size , prop_iconArrow) ,
 
                     fn_callback: (event)=>{
                         this.fn_goToYear(event);
@@ -14131,7 +13847,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "transform" : "translate(-50% , -50%)"
                     } ,
 
-                    prop_icon : tools_icons.icon_arrow_right({size : prop_size /*, colors: {primary:prop_iconArrow}*/} ) ,
+                    prop_icon : tools_icons.icon_arrow_right(prop_size , prop_iconArrow) ,
 
                     fn_callback: (event)=>{
                         this.fn_goToYear(event , true);
@@ -14163,7 +13879,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "transform" : "translate(-50% , -50%)"
                     } ,
 
-                    prop_icon : tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_iconArrow}*/} ) ,
+                    prop_icon : tools_icons.icon_arrow_left(prop_size , prop_iconArrow) ,
 
                     fn_callback: (event)=>{
                         this.fn_goToMonth(event);
@@ -14251,7 +13967,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "transform" : "translate(-50% , -50%)"
                     } ,
 
-                    prop_icon : tools_icons.icon_arrow_right({size : prop_size /*, colors: {primary:prop_iconArrow}*/} ) ,
+                    prop_icon : tools_icons.icon_arrow_right(prop_size , prop_iconArrow) ,
 
                     fn_callback: (event)=>{
                         this.fn_goToMonth(event , true);
@@ -15123,7 +14839,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentOtp.name] ,
+            "component-otp" ,
             elId
         );
         super.renderComponent(config);
@@ -15743,7 +15459,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentSelectOption.name] ,
+            "component-select-option" ,
             elId
         );
         super.renderComponent(config);
@@ -16274,7 +15990,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 `component-select-option-body-searcher-${ this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_show_label: false ,
-                    prop_icon: tools_icons.icon_search({size : prop_size /*, colors: {primary:prop_colorIcon}*/}  ) ,
+                    prop_icon: tools_icons.icon_search(prop_size ,prop_colorIcon ) ,
 
                     fn_oninput: (event , value) => {
                         this.set("var_searcherSelectOption" , value)
@@ -16520,7 +16236,7 @@ window.ComponentSelectIcon = class ComponentSelectIcon extends ComponentSelectIc
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentSelectIcon.name] ,
+            "component-select-icon" ,
             elId
         );
         super.renderComponent(config);
@@ -16818,7 +16534,7 @@ window.ComponentCheckBox = class ComponentCheckBox extends ComponentCheckBoxBase
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentCheckBox.name] ,
+            "component-check-box" ,
             elId
         );
         super.renderComponent(config);
@@ -17196,7 +16912,7 @@ window.ComponentQrCode = class ComponentQrCode extends ComponentQrCodeBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentQrCode.name] ,
+            "component-qr-code" ,
             elId
         );
         super.renderComponent(config);
@@ -17516,7 +17232,7 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentCameraQrCodeReader.name] ,
+            "component-camera-qr-code-reader" ,
             elId
         );
         super.renderComponent(config);
@@ -17729,7 +17445,7 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
                     classList: [prop_showInput ? "" : "d-none"]  ,
 
                     prop_type:"string" ,
-                    prop_icon: tools_icons.icon_crcode({size : prop_size }   ) ,
+                    prop_icon: tools_icons.icon_crcode(prop_size) ,
                     prop_name: prop_name ,
                     prop_isDisable: true ,
 
@@ -17838,7 +17554,7 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
    --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentUploadQrCodeReader.name] ,
+            "component-upload-qr-code-reader" ,
             elId
         );
         super.renderComponent(config);
@@ -17935,7 +17651,7 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
                     classList: [prop_showInput ? "" : "d-none"]  ,
 
                     prop_type:"string" ,
-                    prop_icon: tools_icons.icon_crcode({size : prop_size }  ) ,
+                    prop_icon: tools_icons.icon_crcode(prop_size) ,
                     prop_name: prop_name ,
                     prop_isDisable: true ,
 
@@ -18069,7 +17785,7 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCo
    --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentQrCodeReader.name] ,
+            "component-qr-code-reader" ,
             elId
         );
         super.renderComponent(config);
@@ -18207,7 +17923,7 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCo
                 `component-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_type:"string" ,
-                    prop_icon: tools_icons.icon_crcode({size : prop_size }  ) ,
+                    prop_icon: tools_icons.icon_crcode(prop_size) ,
                     prop_name: prop_name ,
                     prop_value: prop_value ,
                     prop_placeholder: prop_placeholder ,
@@ -18418,7 +18134,7 @@ window.ComponentAcceptTerms = class ComponentAcceptTerms extends ComponentAccept
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentAcceptTerms.name] ,
+            "component-accept-terms" ,
             elId
         );
         super.renderComponent(config);
@@ -18899,7 +18615,7 @@ window.ComponentSelectColumns = class ComponentSelectColumns extends ComponentSe
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentSelectColumns.name] ,
+            "component-select-columns" ,
             elId
         );
         super.renderComponent(config);
@@ -19508,7 +19224,7 @@ window.ComponentValidate = class ComponentValidate extends ComponentValidateBase
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentValidate.name] ,
+            "component-validate" ,
             elId
         );
         super.renderComponent(config);
@@ -19877,7 +19593,7 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
    --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentTooltipDescription.name] ,
+            "component-tooltip-description" ,
             elId
         );
         super.renderComponent(config);
@@ -20248,7 +19964,7 @@ class ComponentTableBase extends ComponentBase{
         },
         prop_colorIconColumnSelector: {
             prop: "prop_colorIconColumnSelector",
-            default: tools_const?.styles?.table?.color_iconColumnSelector ?? ""
+            default: tools_const?.styles?.table?.color_iconColumnSelecto ?? ""
         },
     };
 
@@ -20357,7 +20073,7 @@ window.ComponentTable = class ComponentTable extends ComponentTableBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentTable.name] ,
+            "component-table" ,
             elId
         );
         super.renderComponent(config);
@@ -20986,7 +20702,7 @@ ${itemRowOptions}
                     <div class="component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID} rounded position-absolute py-1 px-2">
                     
                         <div class="component-table-body-item-option-col-arrow-${this._COMPONENT_RANDOM_ID} rounded text-center  mx-1 " >
-                               ${directionRtl ? tools_icons.icon_arrow_right({size : prop_size /*, colors: {primary:prop_rowOptionsItemColor}*/} ) : tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_rowOptionsItemColor}*/} )}
+                               ${directionRtl ? tools_icons.icon_arrow_right(prop_size , prop_rowOptionsItemColor) : tools_icons.icon_arrow_left(prop_size , prop_rowOptionsItemColor)}
                         </div>
                         
                         <div class="component-table-body-item-option-col-icons-${this._COMPONENT_RANDOM_ID}" style="width: ${prop_rowOptions.length * 50}px" >
@@ -21236,7 +20952,7 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentTableResponsible.name] ,
+            "component-table-responsible" ,
             elId
         );
         super.renderComponent(config);
@@ -21355,11 +21071,11 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
             const prop_backgroundcolorBodyHover      =   data.hasOwnProperty("prop_backgroundcolorBodyHover")           ?  data.prop_backgroundcolorBodyHover           : "";
             const prop_colorBodyHover                =   data.hasOwnProperty("prop_colorBodyHover")                     ?  data.prop_colorBodyHover                     : "";
 
-            const prop_options                                  =   data.hasOwnProperty("prop_options")                                ?  data.prop_options                                      : [];
-            const prop_colorIconColumnSelector                  =   data.hasOwnProperty("prop_colorIconColumnSelector")                ?  data.prop_colorIconColumnSelector                   : "";
-            const prop_backgroundColorIconColumnSelector        =   data.hasOwnProperty("prop_backgroundColorIconColumnSelector")      ?  data.prop_backgroundColorIconColumnSelector            : "";
+            const prop_options                              =   data.hasOwnProperty("prop_options")                                ?  data.prop_options                                      : [];
+            const prop_backgroundColorIconColumnSelector    =   data.hasOwnProperty("ckgroundColorIconColumnSelector")             ?  data.ckgroundColorIconColumnSelector                   : "";
+            const prop_colorIconColumnSelector              =   data.hasOwnProperty("prop_backgroundColorIconColumnSelector")      ?  data.prop_backgroundColorIconColumnSelector            : "";
 
-            const prop_headerIconSize                           =   data.hasOwnProperty("prop_headerIconSize")                         ?  data.prop_headerIconSize            : 20;
+            const prop_headerIconSize                       =   data.hasOwnProperty("prop_headerIconSize")                         ?  data.prop_headerIconSize            : 20;
 
             formEl.innerHTML = `<component-table id="component-table-responsible-${ this._COMPONENT_RANDOM_ID}-table"></component-table>`
 
@@ -21766,7 +21482,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentPageNumber.name] ,
+            "component-page-number" ,
             elId
         );
         super.renderComponent(config);
@@ -22015,7 +21731,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
                 new window.ComponentIcon(
                     `component-page-number-form-btn-prevous-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: directionRtl ?  tools_icons.icon_arrow_right({size : prop_size /*, colors: {primary:prop_colorIcon}*/})  :  tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_colorIcon}*/})  ,
+                        prop_icon: directionRtl ?  tools_icons.icon_arrow_right(prop_size , prop_colorIcon)  :  tools_icons.icon_arrow_left(prop_size , prop_colorIcon)  ,
 
                         classList : [  , "d-block"  ] ,
                         styles: {
@@ -22063,7 +21779,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
                 new window.ComponentIcon(
                     `component-page-number-form-btn-next-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon:  directionRtl ? tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_colorIcon}*/} )  :  tools_icons.icon_arrow_right({size : prop_size/* , colors: {primary:prop_colorIcon}*/} )  ,
+                        prop_icon:  directionRtl ? tools_icons.icon_arrow_left(prop_size , prop_colorIcon)  :  tools_icons.icon_arrow_right(prop_size , prop_colorIcon)  ,
 
                         classList : [ "position-relative" , "d-block"  ] ,
                         styles: {
@@ -22252,7 +21968,7 @@ window.ComponentPageData = class ComponentPageData extends ComponentPageDataBase
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentPageData.name] ,
+            "component-page-data" ,
             elId
         );
         super.renderComponent(config);
@@ -22511,7 +22227,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentTabs.name] ,
+            "component-tabs" ,
             elId
         );
         super.renderComponent(config);
@@ -22660,7 +22376,7 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
          
          
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types{
-               /*height:            ${elHeight*1.25}px;*/
+               height:            ${elHeight*1.25}px;
                line-height:       ${elHeight*(prop_type == 0 ? 1.25 : 1)}px;
                font-size:         ${elFontSize}px;
                padding:           5px 10px;
@@ -22792,7 +22508,7 @@ window.ComponentTree = class ComponentTree extends ComponentTreeBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentTree.name] ,
+            "component-tree" ,
             elId
         );
         super.renderComponent(config);
@@ -23111,7 +22827,7 @@ window.ComponentChart = class ComponentChart extends ComponentChartBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentChart.name] ,
+            "component-chart" ,
             elId
         );
         super.renderComponent(config);
@@ -23389,7 +23105,7 @@ window.ComponentChartTreeY = class ComponentChartTreeY extends ComponentChartTre
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentChartTreeY.name] ,
+            "component-chart-tree-y" ,
             elId
         );
         super.renderComponent(config);
@@ -23921,7 +23637,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentStepper.name] ,
+            "component-stepper" ,
             elId
         );
         super.renderComponent(config);
@@ -24283,10 +23999,10 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                     const elBody =           elStep?.querySelector(stepElements?.body);
 
 
-                    const elMsg = document.querySelector("#"+stepElements?.msg)
-                    if (elMsg != null){
-                        elMsg.innerHTML = "";
-                    }
+                     const elMsg = document.querySelector("#"+stepElements?.msg)
+                     if (elMsg != null){
+                         elMsg.innerHTML = "";
+                     }
 
                     if (stepActive){
                         elLineVertical?.classList?.add("step_bgColor_active")
@@ -24295,7 +24011,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                         elLineHorizontal?.classList?.add("step_borderColor_active")
                         elBody?.classList?.remove("d-none");
 
-                        elNumber.innerHTML = tools_icons.icon_is_true({size : elHeight-10 , colors: {primary: "#fff"}} )
+                        elNumber.innerHTML = tools_icons.icon_is_true(elHeight-10 , "#fff")
 
 
                         if (msg != null){
@@ -24471,7 +24187,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentCollapse.name] ,
+            "component-collapse" ,
             elId
         );
         super.renderComponent(config);
@@ -24646,7 +24362,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
                 new window.ComponentIcon(
                     `component-collapse-header-label-icon-${ this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : typeof prop_icon == "function" ? prop_icon({size: prop_size , colors:{primary: prop_iconColor}}) : prop_icon ,
+                        prop_icon : typeof prop_icon == "function" ? prop_icon(prop_size , prop_iconColor) : prop_icon ,
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles :styles,
                     }
@@ -24681,7 +24397,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
             new window.ComponentIcon(
                 `component-collapse-header-label-icon-arrow-${ this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon : this._BODY_SHOW  ? tools_icons.icon_arrow_down({size : prop_size , colors: {primary: prop_iconColor}}) : tools_icons.icon_arrow_up({size : prop_size , colors: {primary: prop_iconColor}} ),
+                    prop_icon : this._BODY_SHOW  ? tools_icons.icon_arrow_down(prop_size , prop_iconColor) : tools_icons.icon_arrow_up(prop_size ,  prop_iconColor),
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles :styles,
                 }
@@ -24846,7 +24562,7 @@ window.ComponentWindow = class ComponentWindow extends ComponentWindowBase {
    --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentWindow.name] ,
+            "component-window" ,
             elId
         );
         super.renderComponent(config);
@@ -25492,7 +25208,7 @@ window.ComponentWindowConfirm = class ComponentWindowConfirm extends ComponentWi
    --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentWindowConfirm.name] ,
+            "component-window-confirm" ,
             elId
         );
         super.renderComponent(config);
@@ -25844,7 +25560,7 @@ window.ComponentSliderShowOverlapping = class ComponentSliderShowOverlapping ext
    --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentSliderShowOverlapping.name] ,
+            "component-slider-show-overlapping" ,
             elId
         );
         super.renderComponent(config);
@@ -26295,7 +26011,7 @@ window.ComponentBreadcrumb = class ComponentBreadcrumb extends ComponentBreadcru
    --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentBreadcrumb.name] ,
+            "component-breadcrumb" ,
             elId
         );
         super.renderComponent(config);
@@ -26713,7 +26429,7 @@ window.ComponentBreadcrumbWithArrow = class ComponentBreadcrumbWithArrow extends
    --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentBreadcrumbWithArrow.name] ,
+            "component-breadcrumb-with-arrow" ,
             elId
         );
         super.renderComponent(config);
@@ -27331,7 +27047,7 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentChangePage.name] ,
+            "component-change-page" ,
             elId
         );
         super.renderComponent(config);
@@ -27681,13 +27397,9 @@ class ComponentPageHeaderBase extends ComponentBase{
             default: {}
         },
 
-        prop_colorIcon_primary: {
-            prop: "prop_colorIcon_primary",
-            default: tools_const?.styles?.pageHeader?.colorPrimary_icon ?? ""
-        },
-        prop_colorIcon_secondary: {
-            prop: "prop_colorIcon_secondary",
-            default: tools_const?.styles?.pageHeader?.colorSecondary_icon ?? ""
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: tools_const?.styles?.pageHeader?.color_icon ?? ""
         },
         prop_hasIconBack: {
             prop: "prop_hasIconBack",
@@ -27740,8 +27452,7 @@ class ComponentPageHeaderBase extends ComponentBase{
 
         part_form_back_icon: [
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_colorIcon_primary,
-            this._COMPONENT_PATTERN.prop_colorIcon_secondary,
+            this._COMPONENT_PATTERN.prop_colorIcon,
             this._COMPONENT_PATTERN.prop_hasIconBack,
         ],
 
@@ -27769,8 +27480,7 @@ class ComponentPageHeaderBase extends ComponentBase{
 
         part_form_options_render: [
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_colorIcon_primary,
-            this._COMPONENT_PATTERN.prop_colorIcon_secondary,
+            this._COMPONENT_PATTERN.prop_colorIcon,
             this._COMPONENT_PATTERN.prop_optionsList,
         ]
 
@@ -27804,7 +27514,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
     --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentPageHeader.name] ,
+            "component-page-header" ,
             elId
         );
         super.renderComponent(config);
@@ -28139,11 +27849,10 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
 
         if (data != null) {
 
-            const prop_size                       = data.hasOwnProperty("prop_size")                           ? data.prop_size                           : null;
-            const prop_colorIcon_primary          = data.hasOwnProperty("prop_colorIcon_primary")              ? data.prop_colorIcon_primary              : "";
-            const prop_colorIcon_secondary        = data.hasOwnProperty("prop_colorIcon_secondary")            ? data.prop_colorIcon_secondary            : "";
-            const prop_hasIconBack                = data.hasOwnProperty("prop_hasIconBack")                    ? data.prop_hasIconBack                    : true;
-            const directionRtl                    =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")     ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                 : null;
+            const prop_colorIcon        = data.hasOwnProperty("prop_colorIcon")                  ? data.prop_colorIcon            : "";
+            const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                ? data.prop_hasIconBack          : true;
+            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
 
             if (prop_hasIconBack){
 
@@ -28157,7 +27866,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
                 new window.ComponentIcon(
                     `component-header-page-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : directionRtl ? tools_icons.icon_back_right({size : prop_size ,  colors: {primary: prop_colorIcon_primary , secondary: prop_colorIcon_secondary }}) : tools_icons.icon_back_left({size : prop_size ,  colors: {primary: prop_colorIcon_primary , secondary: prop_colorIcon_secondary }} )  ,
+                        prop_icon : directionRtl ? tools_icons.icon_back_right(prop_size , prop_colorIcon) : tools_icons.icon_back_left(prop_size , prop_colorIcon)  ,
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -28176,10 +27885,9 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
 
         if (data != null) {
 
-            const prop_size                       = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
-            const prop_colorIcon_primary          = data.hasOwnProperty("prop_colorIcon_primary")          ? data.prop_colorIcon_primary              : "";
-            const prop_colorIcon_secondary        = data.hasOwnProperty("prop_colorIcon_secondary")        ? data.prop_colorIcon_secondary            : "";
-            const prop_optionsList                = data.hasOwnProperty("prop_optionsList")                ? data.prop_optionsList                    : [];
+            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
+            const prop_colorIcon        = data.hasOwnProperty("prop_colorIcon")                  ? data.prop_colorIcon                      : "";
+            const prop_optionsList      = data.hasOwnProperty("prop_optionsList")                ? data.prop_optionsList                    : [];
 
             if (prop_optionsList != null && Array.isArray(prop_optionsList)){
                 const el = this.fn_getElFormOptions();
@@ -28206,7 +27914,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
                         new window.ComponentIcon(
                             `component-header-page-form-option-icon-${this._COMPONENT_RANDOM_ID}-${i}` ,
                             {
-                                prop_icon : typeof icon == "function" ? icon({size: prop_size , colors: {primary: prop_colorIcon_primary , secondary: prop_colorIcon_secondary }}) : icon ,
+                                prop_icon : typeof icon == "function" ? icon(prop_size , prop_colorIcon) : icon ,
                                 prop_title: itemOptions?.attrs?.title ?? "" ,
 
                                 prop_iconClass : ["position-absolute"] ,
@@ -28375,7 +28083,7 @@ window.ComponentPageCardInfo = class ComponentPageCardInfo extends ComponentPage
     --------------------------------------------- */
     constructor(elId, config) {
         super(
-            listComponent[ComponentPageCardInfo.name] ,
+            "component-page-card-info" ,
             elId
         );
         super.renderComponent(config);
@@ -28482,8 +28190,6 @@ window.ComponentPageCardInfo = class ComponentPageCardInfo extends ComponentPage
             new window.ComponentBorder(
                 `component-page-card-info-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
-
-                    prop_borderColor :    null,
                     prop_structureClass:  prop_formClass ,
                     prop_structureStyles: prop_formStyles ,
                 }
@@ -28507,7 +28213,7 @@ window.ComponentPageCardInfo = class ComponentPageCardInfo extends ComponentPage
                     `component-page-card-info-border-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
                         classList: [ ] ,
-                        prop_icon: typeof  prop_icon == "function" ? prop_icon({size: prop_iconSize , colors: {primary: prop_iconColor}} ) : prop_icon ,
+                        prop_icon: typeof  prop_icon == "function" ? prop_icon(prop_iconSize , prop_iconColor) : prop_icon ,
 
                         prop_iconClass : [  ] ,
                         prop_iconStyles : {
@@ -28554,7 +28260,7 @@ window.ComponentPageCardInfo = class ComponentPageCardInfo extends ComponentPage
                         } ,
                         prop_title: `
 <b>${prop_titleBtn}</b>
-${ typeof prop_iconBtn == "function" ? prop_iconBtn({size: prop_size , colors: {primary: prop_colorIconBtn }} ) : prop_iconBtn}
+${ typeof prop_iconBtn == "function" ? prop_iconBtn(prop_size , prop_colorIconBtn) : prop_iconBtn}
                     ` ,
 
                         fn_callback: (event)=>{
@@ -28686,7 +28392,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentDraggableOrders.name] ,
+            "component-draggable-orders" ,
             elId
         );
         super.renderComponent(config);
@@ -28845,7 +28551,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
 
                         const icon = document.createElement('span');
                         icon.setAttribute("class" , `item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}`);
-                        icon.innerHTML = tools_icons.icon_pin_open({size : prop_size /*, colors: {primary: prop_colorIcon}*/} );
+                        icon.innerHTML = tools_icons.icon_pin_open(prop_size , prop_colorIcon);
                         icon.addEventListener('click', this.fn_onClickPinDraggable.bind(this , icon));
                         section.appendChild(icon);
                     }
@@ -28985,7 +28691,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
             const isPin = item.hasOwnProperty("isPin") ? !item.isPin : true;
             this._ITEM_ORDERS[ref].isPin = isPin;
 
-            element.innerHTML = isPin ? tools_icons.icon_pin_close({size : prop_size /*, colors: {primary: prop_colorIcon}*/} ) : tools_icons.icon_pin_open({size : prop_size /*, colors: {primary: prop_colorIcon}*/} ) ;
+            element.innerHTML = isPin ? tools_icons.icon_pin_close(prop_size , prop_colorIcon) : tools_icons.icon_pin_open(prop_size , prop_colorIcon) ;
 
             if (!isPin){
                 element.classList.remove(`item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}-active`)
@@ -29070,7 +28776,7 @@ window.ComponentRecyclerView  = class ComponentRecyclerView extends ComponentRec
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentRecyclerView.name] ,
+            "component-recycler-view" ,
             elId
         );
         super.renderComponent(config);
@@ -29395,7 +29101,7 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentToolsTableConfig.name] ,
+            "component-tools-table-config" ,
             elId
         );
         super.renderComponent(config);
@@ -30059,7 +29765,7 @@ window.ComponentToolsTableToExcel  = class ComponentToolsTableToExcel extends Co
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentToolsTableToExcel.name] ,
+            "component-tools-table-to-excel" ,
             elId
         );
         super.renderComponent(config);
@@ -30382,7 +30088,7 @@ window.ComponentToolsTableToPrint  = class ComponentToolsTableToPrint extends Co
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentToolsTableToPrint.name] ,
+            "component-tools-table-to-print" ,
             elId
         );
         super.renderComponent(config);
@@ -30669,7 +30375,7 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
    --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentIcon.name] ,
+            "component-icon" ,
             elId
         );
         super.renderComponent(config);
@@ -30865,7 +30571,7 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentPositionElement.name] ,
+            "component-position-element" ,
             elId
         );
         super.renderComponent(config);
@@ -30968,9 +30674,6 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 
                     prop_structureClass:  prop_elementClass ,
                     //prop_borderStyles: prop_elementStyles ,
-
-
-                    prop_borderColor : null,
                 }
             )
         }
@@ -31014,18 +30717,13 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 -------------------------------------*/
 class ComponentBorderBase extends ComponentBase{
 
-    _BORDER_ARROW_TOP =    0
-    _BORDER_ARROW_RIGHT =  1
-    _BORDER_ARROW_BOTTOM = 2
-    _BORDER_ARROW_LEFT =   3
-
     /* ---------------------------------------------
          PROPERTYs Pattern
-    --------------------------------------------- */
+  --------------------------------------------- */
     _COMPONENT_PATTERN = {
         prop_structureClass: {
             prop: "prop_structureClass",
-            default: [ /*"py-1", "px-2",*/ ]
+            default: ["border", "shadow-sm", "rounded", "py-1", "px-2", "position-relative"]
         },
         prop_structureStyles: {
             prop: "prop_structureStyles",
@@ -31033,25 +30731,13 @@ class ComponentBorderBase extends ComponentBase{
         },
         prop_borderClass: {
             prop: "prop_borderClass",
-            default: [ "shadow-sm", "rounded" , "position-relative" , "position-relative"]
+            default: [ "rounded"]
         },
         prop_borderStyles: {
             prop: "prop_borderStyles",
             default: {
                 "display" : "flow-root"
             }
-        },
-        prop_borderArrowType: {
-            prop: "prop_borderArrowType",
-            default: null
-        },
-        prop_borderColor: {
-            prop: "prop_borderColor",
-            default: tools_const?.styles?.border?.color_border ?? ""
-        },
-        prop_borderArrowWidth: {
-            prop: "prop_borderArrowWidth",
-            default: 15
         },
         prop_content: {
             prop: "prop_content",
@@ -31084,9 +30770,6 @@ class ComponentBorderBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_structureStyles
         ],
         part_border: [
-            this._COMPONENT_PATTERN.prop_borderArrowType ,
-            this._COMPONENT_PATTERN.prop_borderArrowWidth ,
-            this._COMPONENT_PATTERN.prop_borderColor,
             this._COMPONENT_PATTERN.prop_borderClass,
             this._COMPONENT_PATTERN.prop_borderStyles,
             this._COMPONENT_PATTERN.prop_content ,
@@ -31119,7 +30802,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentBorder.name] ,
+            "component-border" ,
             elId
         );
         super.renderComponent(config);
@@ -31148,7 +30831,19 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
 
     template_render_structure(partName) {
         const content = `
+     <style>
+         #${this._COMPONENT_ID} #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
+             opacity: 0.25;
+         }
+         #${this._COMPONENT_ID}:hover #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
+             transition: opacity 200ms ease;
+             opacity: 0.75;
+         }
+     </style>
+     
      ${this.templateFn("part_border") ?? ""}
+     
+     <component-icon id="component-border-icon-more-${this._COMPONENT_RANDOM_ID}"></component-icon>
                 `;
         return this.templateBasic_render_structure(content );
     }
@@ -31157,41 +30852,11 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const directionRtl             =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                 ? this._COMPONENT_CONFIG.directionRtl          : false;
 
-            const prop_borderArrowType     =  data.hasOwnProperty("prop_borderArrowType")                           ?  data.prop_borderArrowType                   : null;
-            const prop_borderArrowWidth    =  data.hasOwnProperty("prop_borderArrowWidth")                          ?  data.prop_borderArrowWidth                  : null;
-            const prop_borderColor         =  data.hasOwnProperty("prop_borderColor")                               ?  data.prop_borderColor                       : null;
-            const prop_borderClass         =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass                       : [];
-            const prop_borderStyles        =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles                      : {};
-            const prop_minWidth            =  data.hasOwnProperty("prop_minWidth")                                  ?  data.prop_minWidth                          : null;
-            const prop_content             =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content                           : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
-
-            let borderArrow = "";
-            switch (prop_borderArrowType){
-                case this._BORDER_ARROW_TOP:
-                    borderArrow = `
-#${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}:after{
-   content:                                    "";
-   position:                                   absolute;
-   top:                                        -${prop_borderArrowWidth}px;
-   ${directionRtl? "right" : "left"}:          10px;
-   width:                                      0px;
-   height:                                     0px;
-   border-style:                               solid;
-   border-width:                               0 ${(2/3)*prop_borderArrowWidth}px ${prop_borderArrowWidth}px ${(2/3)*prop_borderArrowWidth}px;
-   border-color:                               transparent transparent ${prop_borderColor} transparent;
-   transform:                                  rotate(0deg);
-}
-                    `
-                    break;
-                case this._BORDER_ARROW_RIGHT:
-                    break;
-                case this._BORDER_ARROW_BOTTOM:
-                    break;
-                case this._BORDER_ARROW_LEFT:
-                    break;
-            }
+            const prop_borderClass      =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass   : [];
+            const prop_borderStyles     =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles  : {};
+            const prop_minWidth         =  data.hasOwnProperty("prop_minWidth")                                  ?  data.prop_minWidth      : null;
+            const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content       : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
 
             prop_content
             return `
@@ -31201,27 +30866,14 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
          onclick="${this.getFn("fn_callback" , "event")}">
          
      <style>
-         #${this._COMPONENT_ID} #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
-             opacity: 0.25;
-         }
-         #${this._COMPONENT_ID}:hover #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
-             transition: opacity 200ms ease;
-             opacity: 0.75;
-         }
-     
          #${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_borderStyles)}
              ${prop_minWidth ? `min-width: ${prop_minWidth}`: ""};
-             border: solid 2px ${prop_borderColor}  !important;
-             position: relative;
          }
-         
-         ${borderArrow}
      </style>
      
      ${prop_content}
      
-      <component-icon id="component-border-icon-more-${this._COMPONENT_RANDOM_ID}"></component-icon>
 </section>
         `;
         }
@@ -31363,7 +31015,7 @@ window.ComponentImage = class ComponentImage extends ComponentImageBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentImage.name] ,
+            "component-image" ,
             elId
         );
         super.renderComponent(config);
@@ -31512,7 +31164,7 @@ window.ComponentLayout = class ComponentLayout extends ComponentLayoutBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentLayout.name] ,
+            "component-layout" ,
             elId
         );
         super.renderComponent(config);
@@ -31804,7 +31456,7 @@ window.ComponentMouseScroller = class ComponentMouseScroller extends ComponentMo
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentMouseScroller.name] ,
+            "component-mouse-scroller" ,
             elId
         );
         super.renderComponent(config);
@@ -32852,7 +32504,7 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
     --------------------------------------------- */
     constructor(elId , config) {
         super(
-            listComponent[ComponentReport.name] ,
+            "component-report" ,
             elId
         );
         super.renderComponent(config);
