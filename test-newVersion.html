@@ -1,0 +1,1312 @@
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+
+<section id="template-main" class=" mx-2 my-2 row">
+
+    <component-messages  id="message-success">
+    </component-messages>
+
+    <component-icon  id="c-icon">
+        <!--<template>
+            <component-body name="a">
+                123
+            </component-body>
+        </template>-->
+    </component-icon>
+
+
+</section>
+
+<script src="./html5-qrcode.min.js"></script>
+<script src="./qrcode.js"></script>
+<script src="./jalali.js"></script>
+<script src="./highcharts.js"></script>
+<script src="./components-newVersion.js"></script>
+<script src="./tools.js"></script>
+
+
+<script>
+
+    tools_init.renderToolsConst()
+
+
+    /*-------------------------------------
+   01-01) Component Messages
+   -------------------------------------*/
+    new window.ComponentMessages(
+        "message-success" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_type: "success" ,
+            prop_messages: ["asd" , "asd2" , "asd3"]
+        }
+    );
+
+
+    const icon = new window.ComponentIcon(
+        "c-icon" ,
+        {
+            classList: ["col-md-3", "col-12" ,"mt-2"]  ,
+            styles: {
+                color: "red"
+            }  ,
+            prop_show : true ,
+            prop_icon: tools_icons.icon_application({size: 30 , colors : {primary: "#bb1414"}}) ,
+
+            fn_callback: function (event , args)  {
+                this.set("prop_icon" ,  tools_icons.icon_crcode({size: 30 , colors : {primary: "#bb1414"}}) )
+                console.log(event , args)
+            } ,
+        }
+    )
+  //  icon.set("directionRtl" , false )
+
+
+
+
+    /*const icon = new window.ComponentIcon(
+        {
+            classList: ["col-md-3", "col-12" ,"mt-2"]  ,
+            styles: {
+                color: "red"
+            }  ,
+
+            prop_icon: tools_icons.icon_application({size: 30 , colors : {primary: "#bb1414"}}) ,
+
+            fn_callback: function(event , args) {
+                this.set("prop_icon" ,  tools_icons.icon_crcode({size: 30 , colors : {primary: "#bb1414"}}) )
+                console.log(event , args)
+            } ,
+        }
+    )
+
+    const el = document.getElementById("template-main")
+    el.appendChild(icon.getSchema())
+
+    icon.set("classList" , ["a"] )
+    icon.set("styles" , {
+        color: "blue"
+    } )*/
+
+
+
+
+
+
+</script>
+
+
+
+
+
+<!--
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+
+<body></body>
+
+<script>
+
+
+    class ReactiveElement {
+        constructor(tagName, options = {}) {
+            this.tagName = tagName;
+            this._options = options;
+            this.element = document.createElement(tagName);
+            this._eventListeners = [];
+            this._states = new Set();
+            this._children = []; // برای track کردن children
+            this._hoverHandlers = {};
+
+            this._bindings = [];
+            this._applyOptions();
+
+            this._setupHover();
+        }
+
+
+
+
+
+
+        _setupBindings(bindings) {
+            for (const [type, config] of Object.entries(bindings)) {
+                switch (type) {
+                    case "text":
+                        this._bindText(config);
+                        break;
+
+                    case "className":
+                        this._bindClassNames(config);
+                        break;
+
+                    case "styles":
+                        this._bindStyles(config);
+                        break;
+
+                    case "attr":
+                        this._bindAttrs(config);
+                        break;
+                }
+            }
+        }
+
+        _bindText(observable) {
+            const apply = value => {
+                this.element.textContent = value ?? "";
+            };
+
+            apply(observable.get());
+            observable.subscribe(apply);
+        }
+
+        _bindClassNames(classObservable) {
+            if (!(classObservable instanceof Observable)) return;
+
+            let appliedClasses = new Set();
+
+            const apply = classList => {
+                // پاک کردن کلاس‌های قبلی مربوط به این binding
+                appliedClasses.forEach(cls => {
+                    this.element.classList.remove(cls);
+                });
+                appliedClasses.clear();
+
+                if (!Array.isArray(classList)) return;
+
+                classList.forEach(cls => {
+                    if (typeof cls === "string" && cls.trim()) {
+                        this.element.classList.add(cls);
+                        appliedClasses.add(cls);
+                    }
+                });
+            };
+
+            apply(classObservable.get());
+            classObservable.subscribe(apply);
+        }
+
+
+        _bindStyles(styles) {
+            if (!styles || typeof styles !== "object") return;
+
+            Object.entries(styles).forEach(([cssProp, observable]) => {
+                if (!(observable instanceof Observable)) return;
+
+                const apply = value => {
+                    this.element.style[cssProp] = value ?? "";
+                };
+
+                apply(observable.get());
+                observable.subscribe(apply);
+            });
+        }
+
+        _bindAttrs(attrs) {
+            Object.entries(attrs).forEach(([attrName, observable]) => {
+                if (!(observable instanceof Observable)) return;
+
+                const apply = value => {
+                    if (value === false || value == null) {
+                        this.element.removeAttribute(attrName);
+                    } else {
+                        this.element.setAttribute(
+                            attrName,
+                            value === true ? "" : value
+                        );
+                    }
+                };
+
+                apply(observable.get());
+                observable.subscribe(apply);
+            });
+        }
+
+
+        _applyOptions() {
+            const opts = this._options;
+
+
+
+            // کلاس
+            if (opts.className) {
+                this.element.className = opts.className;
+            }
+
+            // ID
+            if (opts.id) {
+                this.element.id = opts.id;
+            }
+
+            // متن
+            if (opts.text !== undefined) {
+                this.element.textContent = opts.text;
+            }
+
+            // HTML
+            if (opts.html !== undefined) {
+                this.element.innerHTML = opts.html;
+            }
+
+            // استایل اصلی
+            if (opts.style) {
+                Object.assign(this.element.style, opts.style);
+            }
+
+            // استایل hover
+            if (opts.styleHover) {
+                this._options.styleHover = opts.styleHover;
+            }
+
+            // استایل active
+            if (opts.styleActive) {
+                this._options.styleActive = opts.styleActive;
+            }
+
+            // استایل disabled
+            if (opts.styleDisabled) {
+                this._options.styleDisabled = opts.styleDisabled;
+            }
+
+            // استایل focus
+            if (opts.styleFocus) {
+                this._options.styleFocus = opts.styleFocus;
+            }
+
+            // attributes
+            if (opts.attrs) {
+                Object.entries(opts.attrs).forEach(([key, value]) => {
+                    this.element.setAttribute(key, value);
+                });
+            }
+
+            // children - مهم!
+            if (opts.children) {
+                this._setChildren(opts.children);
+            }
+
+            // events
+            if (opts.on) {
+                this._setEvents(opts.on);
+            }
+
+            // state اولیه
+            if (opts.disabled) {
+                this.disable();
+            }
+
+            if (opts.active) {
+                this.activate();
+            }
+
+
+            if (opts.bind) {
+                this._setupBindings(opts.bind);
+            }
+        }
+
+        _setChildren(children) {
+            // پاک کردن children قبلی
+            while (this.element.firstChild) {
+                this.element.removeChild(this.element.firstChild);
+            }
+
+            this._children = [];
+
+            // اضافه کردن children جدید
+            children.forEach((child, index) => {
+                if (child instanceof ReactiveElement) {
+                    this._children[index] = child;
+                    this.element.appendChild(child.element);
+                } else if (child instanceof HTMLElement) {
+                    this.element.appendChild(child);
+                    this._children[index] = child;
+                } else if (typeof child === 'string') {
+                    const textNode = document.createTextNode(child);
+                    this.element.appendChild(textNode);
+                    this._children[index] = textNode;
+                } else if (child === null || child === undefined) {
+                    // ignore
+                } else {
+                    // سعی کن به string تبدیل کنی
+                    const textNode = document.createTextNode(String(child));
+                    this.element.appendChild(textNode);
+                    this._children[index] = textNode;
+                }
+            });
+        }
+
+        _setupHover() {
+            if (this._options.styleHover) {
+                const originalStyle = { ...this.element.style };
+
+                this.element.addEventListener('mouseenter', () => {
+                    if (!this._states.has('disabled') && !this._states.has('active')) {
+                        Object.assign(this.element.style, this._options.styleHover);
+                    }
+                });
+
+                this.element.addEventListener('mouseleave', () => {
+                    if (!this._states.has('disabled') && !this._states.has('active')) {
+                        Object.assign(this.element.style, originalStyle);
+
+                        if (this._states.has('active') && this._options.styleActive) {
+                            Object.assign(this.element.style, this._options.styleActive);
+                        }
+                    }
+                });
+            }
+        }
+
+        _setEvents(events) {
+            this._eventListeners.forEach(({ event, handler }) => {
+                this.element.removeEventListener(event, handler);
+            });
+
+            this._eventListeners = [];
+
+            Object.entries(events).forEach(([event, handler]) => {
+                const wrappedHandler = (e) => {
+                    if (this._states.has('disabled') && event !== 'mouseenter' && event !== 'mouseleave') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+                    handler(e);
+                };
+                this.element.addEventListener(event, wrappedHandler);
+                this._eventListeners.push({ event, handler: wrappedHandler });
+            });
+        }
+
+        // ========== Children Management ==========
+
+        appendChild(child) {
+            if (child instanceof ReactiveElement) {
+                this._children.push(child);
+                this.element.appendChild(child.element);
+            } else if (child instanceof HTMLElement) {
+                this._children.push(child);
+                this.element.appendChild(child);
+            } else if (typeof child === 'string') {
+                const textNode = document.createTextNode(child);
+                this._children.push(textNode);
+                this.element.appendChild(textNode);
+            }
+            return this;
+        }
+
+        prependChild(child) {
+            if (child instanceof ReactiveElement) {
+                this._children.unshift(child);
+                this.element.prepend(child.element);
+            } else if (child instanceof HTMLElement) {
+                this._children.unshift(child);
+                this.element.prepend(child);
+            } else if (typeof child === 'string') {
+                const textNode = document.createTextNode(child);
+                this._children.unshift(textNode);
+                this.element.prepend(textNode);
+            }
+            return this;
+        }
+
+        removeChild(child) {
+            const index = this._children.indexOf(child);
+            if (index > -1) {
+                this._children.splice(index, 1);
+
+                if (child instanceof ReactiveElement) {
+                    this.element.removeChild(child.element);
+                } else if (child instanceof HTMLElement || child.nodeType === 3) {
+                    this.element.removeChild(child);
+                }
+            }
+            return this;
+        }
+
+        clearChildren() {
+            while (this.element.firstChild) {
+                this.element.removeChild(this.element.firstChild);
+            }
+            this._children = [];
+            return this;
+        }
+
+        getChildren() {
+            return [...this._children];
+        }
+
+        // ========== State Management ==========
+
+        enableHover() {
+            this._states.delete('no-hover');
+            return this;
+        }
+
+        disableHover() {
+            this._states.add('no-hover');
+            return this;
+        }
+
+        activate() {
+            this._states.add('active');
+            if (this._options.styleActive) {
+                Object.assign(this.element.style, this._options.styleActive);
+            }
+            return this;
+        }
+
+        deactivate() {
+            this._states.delete('active');
+            const opts = this._options;
+            if (opts.style) {
+                Object.assign(this.element.style, opts.style);
+            }
+            return this;
+        }
+
+        disable() {
+            this._states.add('disabled');
+            if (this._options.styleDisabled) {
+                Object.assign(this.element.style, this._options.styleDisabled);
+            }
+            this.element.style.cursor = 'not-allowed';
+            return this;
+        }
+
+        enable() {
+            this._states.delete('disabled');
+            const opts = this._options;
+            if (opts.style) {
+                Object.assign(this.element.style, opts.style);
+            }
+            this.element.style.cursor = '';
+            return this;
+        }
+
+        focus() {
+            this.element.focus();
+            if (this._options.styleFocus) {
+                Object.assign(this.element.style, this._options.styleFocus);
+            }
+            return this;
+        }
+
+        blur() {
+            this.element.blur();
+            const opts = this._options;
+            if (opts.style) {
+                Object.assign(this.element.style, opts.style);
+            }
+            return this;
+        }
+
+        toggleActive() {
+            if (this._states.has('active')) {
+                this.deactivate();
+            } else {
+                this.activate();
+            }
+            return this;
+        }
+
+        toggleDisabled() {
+            if (this._states.has('disabled')) {
+                this.enable();
+            } else {
+                this.disable();
+            }
+            return this;
+        }
+
+        isActive() {
+            return this._states.has('active');
+        }
+
+        isDisabled() {
+            return this._states.has('disabled');
+        }
+
+        isHoverEnabled() {
+            return !this._states.has('no-hover');
+        }
+
+        // ========== Public API ==========
+
+        setText(text) {
+            this.element.textContent = text;
+            return this;
+        }
+
+        setHtml(html) {
+            this.element.innerHTML = html;
+            return this;
+        }
+
+        setStyle(styleObj) {
+            Object.assign(this.element.style, styleObj);
+            this._options.style = { ...this._options.style, ...styleObj };
+            return this;
+        }
+
+        setStyleHover(styleObj) {
+            this._options.styleHover = styleObj;
+            this._setupHover();
+            return this;
+        }
+
+        setStyleActive(styleObj) {
+            this._options.styleActive = styleObj;
+            return this;
+        }
+
+        setStyleDisabled(styleObj) {
+            this._options.styleDisabled = styleObj;
+            return this;
+        }
+
+        setStyleFocus(styleObj) {
+            this._options.styleFocus = styleObj;
+            return this;
+        }
+
+        setChildren(children) {
+            this._setChildren(children);
+            this._options.children = children;
+            return this;
+        }
+
+        addClass(className) {
+            this.element.classList.add(className);
+            return this;
+        }
+
+        removeClass(className) {
+            this.element.classList.remove(className);
+            return this;
+        }
+
+        toggleClass(className) {
+            this.element.classList.toggle(className);
+            return this;
+        }
+
+        getElement() {
+            return this.element;
+        }
+
+        // متدهای استاتیک
+        static create(tagName, options) {
+            return new ReactiveElement(tagName, options);
+        }
+
+        static div(options)     { return new ReactiveElement('div',      options); }
+        static button(options)  { return new ReactiveElement('button',   options); }
+        static section(options) { return new ReactiveElement('section',  options); }
+        static span(options)    { return new ReactiveElement('span',     options); }
+        static a(options)       { return new ReactiveElement('a',        options); }
+        static input(options)   { return new ReactiveElement('input',    options); }
+        static h1(options)      { return new ReactiveElement('h1',       options); }
+        static h2(options)      { return new ReactiveElement('h2',       options); }
+        static h3(options)      { return new ReactiveElement('h3',       options); }
+        static p(options)       { return new ReactiveElement('p',        options); }
+        static ul(options)      { return new ReactiveElement('ul',       options); }
+        static li(options)      { return new ReactiveElement('li',       options); }
+        static img(options)     { return new ReactiveElement('img',      options); }
+        static i(options)       { return new ReactiveElement('i',        options); }
+    }
+
+
+
+    class Observable {
+        constructor(value) {
+            this._value = value;
+            this._subscribers = new Set();
+        }
+
+        get() {
+            return this._value;
+        }
+
+        set(value) {
+            if (this._value === value) return;
+            this._value = value;
+            this._notify();
+        }
+
+        subscribe(fn) {
+            this._subscribers.add(fn);
+            return () => this._subscribers.delete(fn);
+        }
+
+        _notify() {
+            this._subscribers.forEach(fn => fn(this._value));
+        }
+    }
+
+
+
+    const prop_title = new Observable("Hello World");
+    const prop_bg = new Observable("red");
+    const prop_class = new Observable(["bg-red" , "text-dark"]);
+    const prop_textColor = new Observable("");
+    const prop_id = new Observable("a1");
+
+    const el = ReactiveElement.section({
+        bind: {
+            //text: { key: prop_title, default: "hello world" },
+            styles: {
+                backgroundColor: prop_bg
+            },
+            className: prop_class,
+            attr: {
+                id: prop_id
+            }
+        },
+        on: {
+            click: (e) => {
+                prop_title.set("clicked ...");
+            }
+        } ,
+        children:[
+            ReactiveElement.div({
+                bind: {
+                    text: prop_title,
+                },
+                children:[
+
+                ]
+            })
+        ]
+    });
+    document.body.appendChild(el.getElement());
+
+    setTimeout(() => {
+        prop_title.set("Changed 😈");
+        prop_textColor.set("text-white");
+    }, 2000)
+
+    /*const prop_title = new Observable("Hello World");
+
+    const el = ReactiveElement.section({
+        className: "position-relative",
+        attrs: {
+            "data-part-name": "partName",
+            id: `component-collapse-header-1234`,
+        },
+        bind: {
+            text: {
+                key: "prop_title",
+                default: "Hello World"
+            },
+            /!*text: {
+                source: prop_title,
+                default: "Hello World"
+            }*!/
+        }
+    });
+
+    document.body.appendChild(el.getElement());
+
+    setTimeout(() => {
+        prop_title.set("Changed 😈");
+    }, 2000);*/
+
+</script>
+
+-->
+
+
+
+<!--<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+
+<body></body>
+
+<script>
+
+
+    class ReactiveElement {
+        constructor(tagName, options = {}) {
+            this.tagName = tagName;
+            this._options = options;
+            this._eventListeners = [];
+            this._states = new Set();
+            this._children = [];
+            this._hoverHandlers = {};
+
+            this._bindings = [];
+
+            this.element = document.createElement(tagName);
+            this._applyOptions();
+            this._setupHover();
+        }
+
+
+        _isObservable(value) {
+            return value instanceof Observable;
+        }
+
+        _applyText(value) {
+            if (this._isObservable(value)) {
+                const apply = v => this.element.textContent = v ?? "";
+                apply(value.get());
+                value.subscribe(apply);
+            } else if (value !== undefined) {
+                this.element.textContent = value;
+            }
+        }
+
+        _applyClassName(input) {
+            const staticClasses = new Set();
+            const reactiveBindings = new Map(); // observable -> Set(classes)
+
+            const applyStatic = cls => {
+                if (typeof cls === "string" && cls.trim()) {
+                    this.element.classList.add(cls);
+                    staticClasses.add(cls);
+                }
+            };
+
+            const bindObservable = observable => {
+                let applied = new Set();
+
+                const apply = list => {
+                    applied.forEach(c => this.element.classList.remove(c));
+                    applied.clear();
+
+                    if (!Array.isArray(list)) return;
+
+                    list.forEach(c => {
+                        if (typeof c === "string" && c.trim()) {
+                            this.element.classList.add(c);
+                            applied.add(c);
+                        }
+                    });
+                };
+
+                apply(observable.get());
+                observable.subscribe(apply);
+                reactiveBindings.set(observable, applied);
+            };
+
+            // normalize
+            const items = Array.isArray(input) ? input : [input];
+
+            items.forEach(item => {
+                if (item instanceof Observable) {
+                    bindObservable(item);
+                } else if (Array.isArray(item)) {
+                    item.forEach(applyStatic);
+                } else {
+                    applyStatic(item);
+                }
+            });
+        }
+
+
+
+        _applyStyles(styles = {}) {
+            Object.entries(styles).forEach(([key, value]) => {
+
+                // Observable
+                if (value instanceof Observable) {
+                    const current = value.get();
+
+                    // اگر خروجی آبجکت است → چند style
+                    if (current && typeof current === "object" && !Array.isArray(current)) {
+                        this._bindStyleObject(value);
+                    }
+                    // اگر primitive است → key یک style است
+                    else {
+                        this._bindStyle(key, value);
+                    }
+                    return;
+                }
+
+                // مقدار ثابت
+                this._bindStyle(key, value);
+            });
+        }
+        _bindStyle(key, value) {
+            if (value instanceof Observable) {
+                this.element.style[key] = value.get();
+                value.subscribe(v => {
+                    this.element.style[key] = v ?? "";
+                });
+            } else {
+                this.element.style[key] = value;
+            }
+        }
+
+        _bindStyleObject(obs) {
+
+            const apply = (obj = {}) => {
+                Object.entries(obj).forEach(([k, v]) => {
+
+                    this.element.style[k] = v ?? "";
+                });
+            };
+
+            apply(obs.get());
+            obs.subscribe(apply);
+        }
+
+
+        _applyAttrs(attrs) {
+            if (!attrs || typeof attrs !== "object") return;
+
+            Object.entries(attrs).forEach(([attr, val]) => {
+                const apply = v => {
+                    if (v === false || v == null) {
+                        this.element.removeAttribute(attr);
+                    } else {
+                        this.element.setAttribute(attr, v === true ? "" : v);
+                    }
+                };
+
+                if (this._isObservable(val)) {
+                    apply(val.get());
+                    val.subscribe(apply);
+                } else {
+                    apply(val);
+                }
+            });
+        }
+
+
+        _applyOptions() {
+            const o = this._options;
+
+            if (o.children) this._setChildren(o.children);
+            if (o.on) this._setEvents(o.on);
+
+            this._applyText(o.text);
+            this._applyClassName(o.className);
+            this._applyStyles(o.styles);
+            this._applyAttrs(o.attrs);
+        }
+
+        _setChildren(children) {
+            // پاک کردن children قبلی
+            while (this.element.firstChild) {
+                this.element.removeChild(this.element.firstChild);
+            }
+
+            this._children = [];
+
+            // اضافه کردن children جدید
+            children.forEach((child, index) => {
+                if (child instanceof ReactiveElement) {
+                    this._children[index] = child;
+                    this.element.appendChild(child.element);
+                } else if (child instanceof HTMLElement) {
+                    this.element.appendChild(child);
+                    this._children[index] = child;
+                } else if (typeof child === 'string') {
+                    const textNode = document.createTextNode(child);
+                    this.element.appendChild(textNode);
+                    this._children[index] = textNode;
+                } else if (child === null || child === undefined) {
+                    // ignore
+                } else {
+                    // سعی کن به string تبدیل کنی
+                    const textNode = document.createTextNode(String(child));
+                    this.element.appendChild(textNode);
+                    this._children[index] = textNode;
+                }
+            });
+        }
+
+        _setupHover() {
+            if (this._options.styleHover) {
+                const originalStyle = { ...this.element.style };
+
+                this.element.addEventListener('mouseenter', () => {
+                    if (!this._states.has('disabled') && !this._states.has('active')) {
+                        Object.assign(this.element.style, this._options.styleHover);
+                    }
+                });
+
+                this.element.addEventListener('mouseleave', () => {
+                    if (!this._states.has('disabled') && !this._states.has('active')) {
+                        Object.assign(this.element.style, originalStyle);
+
+                        if (this._states.has('active') && this._options.styleActive) {
+                            Object.assign(this.element.style, this._options.styleActive);
+                        }
+                    }
+                });
+            }
+        }
+
+        _setEvents(events) {
+            this._eventListeners.forEach(({ event, handler }) => {
+                this.element.removeEventListener(event, handler);
+            });
+
+            this._eventListeners = [];
+
+            Object.entries(events).forEach(([event, handler]) => {
+                const wrappedHandler = (e) => {
+                    if (this._states.has('disabled') && event !== 'mouseenter' && event !== 'mouseleave') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+                    handler(e);
+                };
+                this.element.addEventListener(event, wrappedHandler);
+                this._eventListeners.push({ event, handler: wrappedHandler });
+            });
+        }
+
+        // ========== Children Management ==========
+
+        appendChild(child) {
+            if (child instanceof ReactiveElement) {
+                this._children.push(child);
+                this.element.appendChild(child.element);
+            } else if (child instanceof HTMLElement) {
+                this._children.push(child);
+                this.element.appendChild(child);
+            } else if (typeof child === 'string') {
+                const textNode = document.createTextNode(child);
+                this._children.push(textNode);
+                this.element.appendChild(textNode);
+            }
+            return this;
+        }
+
+        prependChild(child) {
+            if (child instanceof ReactiveElement) {
+                this._children.unshift(child);
+                this.element.prepend(child.element);
+            } else if (child instanceof HTMLElement) {
+                this._children.unshift(child);
+                this.element.prepend(child);
+            } else if (typeof child === 'string') {
+                const textNode = document.createTextNode(child);
+                this._children.unshift(textNode);
+                this.element.prepend(textNode);
+            }
+            return this;
+        }
+
+        removeChild(child) {
+            const index = this._children.indexOf(child);
+            if (index > -1) {
+                this._children.splice(index, 1);
+
+                if (child instanceof ReactiveElement) {
+                    this.element.removeChild(child.element);
+                } else if (child instanceof HTMLElement || child.nodeType === 3) {
+                    this.element.removeChild(child);
+                }
+            }
+            return this;
+        }
+
+        clearChildren() {
+            while (this.element.firstChild) {
+                this.element.removeChild(this.element.firstChild);
+            }
+            this._children = [];
+            return this;
+        }
+
+        getChildren() {
+            return [...this._children];
+        }
+
+        // ========== State Management ==========
+
+        enableHover() {
+            this._states.delete('no-hover');
+            return this;
+        }
+
+        disableHover() {
+            this._states.add('no-hover');
+            return this;
+        }
+
+        activate() {
+            this._states.add('active');
+            if (this._options.styleActive) {
+                Object.assign(this.element.style, this._options.styleActive);
+            }
+            return this;
+        }
+
+        deactivate() {
+            this._states.delete('active');
+            const opts = this._options;
+            if (opts.style) {
+                Object.assign(this.element.style, opts.style);
+            }
+            return this;
+        }
+
+        disable() {
+            this._states.add('disabled');
+            if (this._options.styleDisabled) {
+                Object.assign(this.element.style, this._options.styleDisabled);
+            }
+            this.element.style.cursor = 'not-allowed';
+            return this;
+        }
+
+        enable() {
+            this._states.delete('disabled');
+            const opts = this._options;
+            if (opts.style) {
+                Object.assign(this.element.style, opts.style);
+            }
+            this.element.style.cursor = '';
+            return this;
+        }
+
+        focus() {
+            this.element.focus();
+            if (this._options.styleFocus) {
+                Object.assign(this.element.style, this._options.styleFocus);
+            }
+            return this;
+        }
+
+        blur() {
+            this.element.blur();
+            const opts = this._options;
+            if (opts.style) {
+                Object.assign(this.element.style, opts.style);
+            }
+            return this;
+        }
+
+        toggleActive() {
+            if (this._states.has('active')) {
+                this.deactivate();
+            } else {
+                this.activate();
+            }
+            return this;
+        }
+
+        toggleDisabled() {
+            if (this._states.has('disabled')) {
+                this.enable();
+            } else {
+                this.disable();
+            }
+            return this;
+        }
+
+        isActive() {
+            return this._states.has('active');
+        }
+
+        isDisabled() {
+            return this._states.has('disabled');
+        }
+
+        isHoverEnabled() {
+            return !this._states.has('no-hover');
+        }
+
+        // ========== Public API ==========
+
+        setText(text) {
+            this.element.textContent = text;
+            return this;
+        }
+
+        setHtml(html) {
+            this.element.innerHTML = html;
+            return this;
+        }
+
+        setStyle(styleObj) {
+            Object.assign(this.element.style, styleObj);
+            this._options.style = { ...this._options.style, ...styleObj };
+            return this;
+        }
+
+        setStyleHover(styleObj) {
+            this._options.styleHover = styleObj;
+            this._setupHover();
+            return this;
+        }
+
+        setStyleActive(styleObj) {
+            this._options.styleActive = styleObj;
+            return this;
+        }
+
+        setStyleDisabled(styleObj) {
+            this._options.styleDisabled = styleObj;
+            return this;
+        }
+
+        setStyleFocus(styleObj) {
+            this._options.styleFocus = styleObj;
+            return this;
+        }
+
+        setChildren(children) {
+            this._setChildren(children);
+            this._options.children = children;
+            return this;
+        }
+
+        addClass(className) {
+            this.element.classList.add(className);
+            return this;
+        }
+
+        removeClass(className) {
+            this.element.classList.remove(className);
+            return this;
+        }
+
+        toggleClass(className) {
+            this.element.classList.toggle(className);
+            return this;
+        }
+
+        getElement() {
+            return this.element;
+        }
+
+        // متدهای استاتیک
+        static create(tagName, options) {
+            return new ReactiveElement(tagName, options);
+        }
+
+        static div(options)     { return new ReactiveElement('div',      options); }
+        static button(options)  { return new ReactiveElement('button',   options); }
+        static section(options) { return new ReactiveElement('section',  options); }
+        static span(options)    { return new ReactiveElement('span',     options); }
+        static a(options)       { return new ReactiveElement('a',        options); }
+        static input(options)   { return new ReactiveElement('input',    options); }
+        static h1(options)      { return new ReactiveElement('h1',       options); }
+        static h2(options)      { return new ReactiveElement('h2',       options); }
+        static h3(options)      { return new ReactiveElement('h3',       options); }
+        static p(options)       { return new ReactiveElement('p',        options); }
+        static ul(options)      { return new ReactiveElement('ul',       options); }
+        static li(options)      { return new ReactiveElement('li',       options); }
+        static img(options)     { return new ReactiveElement('img',      options); }
+        static i(options)       { return new ReactiveElement('i',        options); }
+    }
+
+
+
+    class Observable {
+        constructor(value) {
+            this._value = value;
+            this._subscribers = new Set();
+        }
+
+        get() {
+            return this._value;
+        }
+
+        set(value) {
+            if (this._value === value) return;
+            this._value = value;
+            this._notify();
+        }
+
+        subscribe(fn) {
+            this._subscribers.add(fn);
+            return () => this._subscribers.delete(fn);
+        }
+
+        _notify() {
+            this._subscribers.forEach(fn => fn(this._value));
+        }
+    }
+
+
+
+    const prop_title = new Observable("Hello World");
+    const prop_bg = new Observable("red");
+    const prop_class = new Observable(["bg-red" ]);
+    const prop_style = new Observable({
+        "color" : "white"
+    });
+    const prop_id = new Observable("a1");
+
+    const el = ReactiveElement.section({
+        styles: {
+            backgroundColor: prop_bg ,
+            prop_style
+        },
+        className: [
+            "border" ,
+            prop_class
+        ],
+        attr: {
+            id: prop_id
+        },
+        on: {
+            click: (e) => {
+                prop_title.set("clicked ...");
+            }
+        } ,
+        children:[
+            ReactiveElement.div({
+                text: prop_title,
+                children:[
+
+                ]
+            })
+        ]
+    });
+    document.body.appendChild(el.getElement());
+
+    setTimeout(() => {
+        prop_title.set("Changed 😈");
+        prop_style.set(
+            {
+                "color" : "blue"
+            }
+        );
+        prop_class.set(["test"]);
+    }, 2000)
+
+    /*const prop_title = new Observable("Hello World");
+
+    const el = ReactiveElement.section({
+        className: "position-relative",
+        attrs: {
+            "data-part-name": "partName",
+            id: `component-collapse-header-1234`,
+        },
+        bind: {
+            text: {
+                key: "prop_title",
+                default: "Hello World"
+            },
+            /!*text: {
+                source: prop_title,
+                default: "Hello World"
+            }*!/
+        }
+    });
+
+    document.body.appendChild(el.getElement());
+
+    setTimeout(() => {
+        prop_title.set("Changed 😈");
+    }, 2000);*/
+
+</script>-->
