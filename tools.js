@@ -4780,8 +4780,8 @@ tools_icons = {
         options = {
             size : component_props.elementSizes ,
             colors : {
-                primary :   component_props?.primaryColor1 ?? "#00AEEF" ,
-                secondary : component_props?.secondaryColor1 ?? "#fff"
+                "primary" :   component_props?.primaryColor1 ?? "#00AEEF" ,
+                "secondary" : component_props?.secondaryColor1 ?? "#fff"
             } ,
             strokeWidth: 5 ,
             variant : "default"

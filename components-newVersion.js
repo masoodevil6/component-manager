@@ -703,7 +703,7 @@ class Observable {
     }
 
 
-    map(trueValue, falseValue) {
+    mapBoolean(trueValue, falseValue) {
         const derived = new Observable(
             this.get() ? trueValue : falseValue
         );
@@ -713,6 +713,43 @@ class Observable {
         });
 
         return derived;
+    }
+
+    mapList(mapping) {
+        const currentValue = this.get();
+        const initialMappedValue = this._mapValue(currentValue, mapping);
+        const derived = new Observable(initialMappedValue);
+
+        this.subscribe(v => {
+            const mappedValue = this._mapValue(v, mapping);
+            derived.set(mappedValue);
+        });
+
+
+
+        return derived;
+    }
+
+    _mapValue(value, mapping) {
+        if (typeof mapping === 'function') {
+            // اگر mapping یک تابع است
+            return mapping(value);
+        } else if (typeof mapping === 'object' && mapping !== null) {
+            // اگر mapping یک object است
+            if (value in mapping) {
+                return mapping[value];
+            } else if ('default' in mapping) {
+                const value = mapping.default;
+                if (value != null && value instanceof Observable) {
+                    return value.get();
+                }
+                else {
+                    return value;
+                }
+            }
+            return value;
+        }
+        return value;
     }
 
     set(value) {
@@ -1173,7 +1210,7 @@ class ComponentBase{
                 ] ,
                 styles :{
                   //  direction: AppConfig.get("direction") ,
-                    direction:  directionRtl.map( "rtl" , "ltr"),
+                    direction:  directionRtl.mapBoolean( "rtl" , "ltr"),
                     ...styles
                 },
                 children: [
@@ -1373,6 +1410,10 @@ class ComponentBase{
 -------------------------------------*/
 class ComponentMessagesBase extends ComponentBase{
 
+    _MESSAGE_TYPE_SUCCESS = "success";
+    _MESSAGE_TYPE_WARNING = "warning";
+    _MESSAGE_TYPE_ERROR =   "error";
+
     /* ---------------------------------------------
       PROPERTYs Pattern
       --------------------------------------------- */
@@ -1527,35 +1568,27 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
             const prop_type       =   data?.prop_type      ??  null;
             const prop_size       =   data?.prop_size      ??  null;
 
-
-            let msgBackgroundColor =  null;
-            let msgColor =            null;
-            let msgBorderColor =      null;
-
             const elfontSize = tools_css.getFontSize(this.get("prop_size"));
 
-            switch (this.get("prop_type")){
-                case "success" :
-                    msgBackgroundColor       =  tools_const?.styles?.message?.success?.backgroundColor ?? "" ;
-                    msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("success") &&  tools_const.styles.message.success.hasOwnProperty("color")           ? tools_const.styles.message.success.color : "" ;
-                    msgBorderColor           =  tools_const?.styles?.message?.success?.border ??  "" ;
-                    break;
-                case "error" :
-                    msgBackgroundColor       =  tools_const?.styles?.message?.error?.backgroundColor ?? "" ;
-                    msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("error") &&  tools_const.styles.message.error.hasOwnProperty("color")               ? tools_const.styles.message.error.color : "" ;
-                    msgBorderColor           =  tools_const?.styles?.message?.error?.border ??  "" ;
-                    break;
-                case "warning" :
-                    msgBackgroundColor       =  tools_const?.styles?.message?.warning?.backgroundColor ?? "" ;
-                    msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("warning") &&  tools_const.styles.message.warning.hasOwnProperty("color")           ? tools_const.styles.message.warning.color : "" ;
-                    msgBorderColor           =  tools_const?.styles?.message?.warning?.border ??  "" ;
-                    break;
-                default:
-                    msgBackgroundColor       =  data?.prop_msgBackgroundColor ?? "" ;
-                    msgColor                 =  data?.prop_msgColor           ?? "" ;
-                    msgBorderColor           =  data?.prop_colorBorder        ?? "" ;
-                    break;
-            }
+            let msgBackgroundColor = {};
+            msgBackgroundColor[this._MESSAGE_TYPE_SUCCESS] = tools_const?.styles?.message?.success?.backgroundColor ?? "";
+            msgBackgroundColor[this._MESSAGE_TYPE_ERROR] = tools_const?.styles?.message?.error?.backgroundColor ?? "";
+            msgBackgroundColor[this._MESSAGE_TYPE_WARNING] = tools_const?.styles?.message?.warning?.backgroundColor ?? "";
+            msgBackgroundColor["default"] = data?.prop_msgBackgroundColor ?? "";
+
+            let msgColor = {};
+            msgColor[this._MESSAGE_TYPE_SUCCESS] = tools_const?.styles?.message?.success?.color ?? "";
+            msgColor[this._MESSAGE_TYPE_ERROR] = tools_const?.styles?.message?.error?.color ?? "";
+            msgColor[this._MESSAGE_TYPE_WARNING] = tools_const?.styles?.message?.warning?.color ?? "";
+            msgColor["default"] = data?.prop_msgColor ?? "";
+
+            let msgBorderColor = {};
+            msgBorderColor[this._MESSAGE_TYPE_SUCCESS] = tools_const?.styles?.message?.success?.border ?? "";
+            msgBorderColor[this._MESSAGE_TYPE_ERROR] = tools_const?.styles?.message?.error?.border ?? "";
+            msgBorderColor[this._MESSAGE_TYPE_WARNING] = tools_const?.styles?.message?.warning?.border ?? "";
+            msgBorderColor["default"] = data?.prop_colorBorder ?? "";
+
+
 
             return ReactiveElement.section(
                 {
@@ -1578,9 +1611,9 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                                                 "id":  `component-messages-item-${this._COMPONENT_RANDOM_ID}-body`,
                                             },
                                             styles: {
-                                                backgroundColor:  msgBackgroundColor ,
-                                                borderColor:      msgBorderColor ,
-                                                color:            msgColor ,
+                                                backgroundColor:  prop_type.mapList(msgBackgroundColor) ,
+                                                borderColor:      prop_type.mapList(msgBorderColor) ,
+                                                color:            prop_type.mapList(msgColor) ,
                                                 fontSize :        elfontSize ,
                                                 borderWidth:      "2px" ,
                                                 borderStyle:      "solid"
@@ -1635,27 +1668,17 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
             const directionRtl =   data?.directionRtl  ??  null;
             const prop_size    =   data?.prop_size     ??  null;
 
-            let prop_colorIcon = "";
-            switch (this.get("prop_type")){
-                case "success" :
-                    prop_colorIcon       =  tools_const?.styles?.message?.success?.icon ??  "" ;
-                    break;
-                case "error" :
-                    prop_colorIcon       =  tools_const?.styles?.message?.error?.icon ??  "" ;
-                    break;
-                case "warning" :
-                    prop_colorIcon       =  tools_const?.styles?.message?.warning?.icon ??  "" ;
-                    break;
-                default:
-                    prop_colorIcon       =  data?.prop_msgColor ?? "" ;
-                    break;
-            }
+            let prop_colorIcon = {};
+            prop_colorIcon[this._MESSAGE_TYPE_SUCCESS] = tools_const?.styles?.message?.success?.icon ?? "";
+            prop_colorIcon[this._MESSAGE_TYPE_ERROR] = tools_const?.styles?.message?.error?.icon ?? "";
+            prop_colorIcon[this._MESSAGE_TYPE_WARNING] = tools_const?.styles?.message?.warning?.icon ?? "";
+            prop_colorIcon["default"] = data?.prop_msgColor ?? "";
 
             const elheight = tools_css.getHeightSize(prop_size);
 
             let styles = {
                 "top" :  `${elheight/2}px` ,
-                "inset-inline-end" :  directionRtl.map( "20px" , ""),
+                "inset-inline-end" :  directionRtl.mapBoolean( "20px" , ""),
             }
 
             return new ComponentIcon(
@@ -1667,7 +1690,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                     prop_iconStyles : {
                         "cursor" : "pointer"
                     } ,
-                    prop_icon: tools_icons.icon_close({size: this.get("prop_size") }) ,
+                    prop_icon: tools_icons.icon_close({size: this.get("prop_size") , colors:{primary: prop_type.mapList(prop_colorIcon)?.get?.()} }) ,
 
                     fn_callback: function (event , args)  {
                         this._COMPONENT_CONTENT.remove()
