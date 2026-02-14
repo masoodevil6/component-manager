@@ -267,6 +267,8 @@ class ReactiveElement {
 
 
 
+
+
     _applyStyles(styles = {}) {
         Object.entries(styles).forEach(([key, value]) => {
 
@@ -291,12 +293,26 @@ class ReactiveElement {
     }
     _bindStyle(key, value) {
         if (value instanceof Observable) {
+
             this.element.style[key] = value.get();
             value.subscribe(v => {
                 this.element.style[key] = v ?? "";
             });
         } else {
-            this.element.style[key] = value;
+            if (value && typeof value === "object" && !Array.isArray(value)) {
+                Object.entries(value).forEach(([k, v]) => {
+
+                    if (v instanceof Observable) {
+                        this.element.style[k] = v?.get?.() ?? "";
+                    }
+                    else{
+                        this.element.style[k] = v ?? "";
+                    }
+                });
+            }
+            else{
+                this.element.style[key] = value ?? "";
+            }
         }
     }
 
@@ -304,7 +320,6 @@ class ReactiveElement {
 
         const apply = (obj = {}) => {
             Object.entries(obj).forEach(([k, v]) => {
-
                 this.element.style[k] = v ?? "";
             });
         };
@@ -312,6 +327,10 @@ class ReactiveElement {
         apply(obs.get());
         obs.subscribe(apply);
     }
+
+
+
+
 
 
     _applyAttrs(attrs) {
@@ -348,6 +367,8 @@ class ReactiveElement {
         this._applyClassName(o.className);
         this._applyStyles(o.styles);
         this._applyAttrs(o.attrs);
+
+
     }
 
     _setChildren(children) {
@@ -637,17 +658,26 @@ class ReactiveElement {
         return this;
     }
 
+
+
+    ///----------------------------------------------------
     getElement() {
         return this.element;
     }
 
-    // متدهای استاتیک
+    remove(){
+        this.element?.remove?.();
+    }
+
+
+    ///----------------------------------------------------
     static create(tagName, options) {
         return new ReactiveElement(tagName, options);
     }
 
     static div(options)     { return new ReactiveElement('div',      options); }
     static button(options)  { return new ReactiveElement('button',   options); }
+    static b(options)       { return new ReactiveElement('b',        options); }
     static section(options) { return new ReactiveElement('section',  options); }
     static span(options)    { return new ReactiveElement('span',     options); }
     static a(options)       { return new ReactiveElement('a',        options); }
@@ -703,6 +733,56 @@ class Observable {
 
 
 
+
+
+
+/* ----------------------------------------------------
+   Component config:
+------------------------------------- */
+class AppConfig {
+    static _state = {
+        directionRtl: true,
+        //language: "fa",
+        //font: "IRANSans"
+    };
+
+    static _subscribers = new Map();
+
+    static get(key) {
+        return this._state[key];
+    }
+
+    static set(key, value) {
+        if (this._state[key] === value) return;
+
+        this._state[key] = value;
+        this._notify(key, value);
+    }
+
+    static subscribe(key, callback) {
+        if (!this._subscribers.has(key)) {
+            this._subscribers.set(key, new Set());
+        }
+
+        this._subscribers.get(key).add(callback);
+
+        return () => {
+            this._subscribers.get(key).delete(callback);
+        };
+    }
+
+    static _notify(key, value) {
+        if (!this._subscribers.has(key)) return;
+
+        this._subscribers
+            .get(key)
+            .forEach(fn => fn(value));
+    }
+}
+
+
+
+
 /* ----------------------------------------------------
    Component Base:
 ------------------------------------- */
@@ -740,6 +820,8 @@ class ComponentBase{
 
     renderComponent(config){
 
+        this.connectedCallback();
+
         // GET Ready ==> _COMPONENT_TEMPLATES
         this.#getReadyTemplates()
 
@@ -758,9 +840,20 @@ class ComponentBase{
 
         // GET Ready ==> _COMPONENT_ELEMENT
         return this.#getReadyTemplateSchma();
+
     }
 
 
+
+
+
+    connectedCallback() {
+        this.set("directionRtl" , AppConfig.get("directionRtl"))
+        this._unsubscribeDirection =
+            AppConfig.subscribe("directionRtl", (value) => {
+                this.set("directionRtl" , value)
+            });
+    }
 
 
     //--------------------------------------------------
@@ -937,10 +1030,10 @@ class ComponentBase{
     }
 
     #getReadyParamsBasic(config) {
-        this._COMPONENT_PATTERN["directionRtl"] = {prop: "directionRtl", default: config.hasOwnProperty("directionRtl") ? config.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)}  ;
-        this._COMPONENT_PATTERN["prop_show"] = {prop: "prop_show"   , default: config.hasOwnProperty("prop_show")    ? config.prop_show    : true};
-        this._COMPONENT_PATTERN["classList"] = {prop: "classList"   , default: config.hasOwnProperty("classList")    ? config.classList    : []};
-        this._COMPONENT_PATTERN["styles"] = {prop: "styles"      , default: config.hasOwnProperty("styles")       ? config.styles       : {}};
+        this._COMPONENT_PATTERN["directionRtl"] = this.getProp_directionRtl(config) ;
+        this._COMPONENT_PATTERN["prop_show"] =    this.getProp_show(config) ;
+        this._COMPONENT_PATTERN["classList"] =    this.getProp_classList(config) ;
+        this._COMPONENT_PATTERN["styles"] =       this.getProp_classList(config) ;
     }
 
     #getReadyRealProps() {
@@ -1031,16 +1124,14 @@ class ComponentBase{
     // GET Ready ==> _COMPONENT_ELEMENT
     //--------------------------------------------------
     #getReadyTemplateSchma(){
-        if (typeof this.templateFn !== "undefined"){
-            this._COMPONENT_CONTENT = this.templateFn();
+        this._COMPONENT_CONTENT = this.templateBasic_render();
 
-            if (this._COMPONENT_ELEMENT != null){
-                const classList = this.get("classList")
-                const styles = this.get("styles")
-                this._COMPONENT_ELEMENT.className =  tools_public.renderListClass(classList)
-                this._COMPONENT_ELEMENT.style =  tools_public.renderListStyle(styles)
-                this._COMPONENT_ELEMENT.appendChild(this.getSchema());
-            }
+        if (this._COMPONENT_ELEMENT != null){
+            const classList = this.get("classList")
+            const styles = this.get("styles")
+            this._COMPONENT_ELEMENT.className =  tools_public.renderListClass(classList)
+            this._COMPONENT_ELEMENT.style =  tools_public.renderListStyle(styles)
+            this._COMPONENT_ELEMENT.appendChild(this.getSchema());
         }
     }
 
@@ -1066,12 +1157,12 @@ class ComponentBase{
 
         if (data != null){
 
-            const directionRtl    =   data.hasOwnProperty("directionRtl")   ?  data.directionRtl   : true;
+            const directionRtl  =  data?.directionRtl ?? null;
             let classList = [];
             let styles = {};
             if (this._COMPONENT_ELEMENT == null){
-                classList       =   data.hasOwnProperty("classList")      ? data.classList       : [];
-                styles          =   data.hasOwnProperty("styles")         ? data.styles          : {};
+                classList       =   data?.classList   ?? null;
+                styles          =   data?.styles      ?? null;
             }
 
            return  ReactiveElement.section({
@@ -1081,8 +1172,9 @@ class ComponentBase{
                     classList
                 ] ,
                 styles :{
+                  //  direction: AppConfig.get("direction") ,
                     direction:  directionRtl.map( "rtl" , "ltr"),
-                    styles
+                    ...styles
                 },
                 children: [
                     this.template_render_structure()
@@ -1108,13 +1200,10 @@ class ComponentBase{
             const prop_structureStyles       =   data.hasOwnProperty("prop_structureStyles")          ? data.prop_structureStyles          : {};
             const prop_structureHoverStyles  =   data.hasOwnProperty("prop_structureHoverStyles")     ? data.prop_structureHoverStyles     : {};
 
-            console.log(data)
-
-
             return ReactiveElement.section({
                 className: [
                     "position-relative" ,
-                    { hidden: prop_show }
+                    { "d-none": !prop_show }
                 ],
                 attrs: {
                     "data-part-name": partName,
@@ -1147,8 +1236,36 @@ class ComponentBase{
 
 
 
+    //--------------------------------------------------
+    // fix Props
+    //--------------------------------------------------
 
+    getProp_directionRtl(config = null){
+        return  {
+            prop:     "directionRtl",
+            default:  config?.directionRtl ?? (component_props?.directionRtl ?? false)
+        }
+    }
+    getProp_show(config = null){
+        return  {
+            prop:     "prop_show",
+            default:   config?.prop_show ?? true
+        }
+    }
 
+    getProp_classList(config = null){
+        return  {
+            prop:     "classList",
+            default:  config?.classList ?? []
+        }
+    }
+
+    getProp_styles(config = null){
+        return  {
+            prop:     "styles",
+            default:  config?.styles ?? {}
+        }
+    }
 
 
     //--------------------------------------------------
@@ -1284,10 +1401,10 @@ class ComponentMessagesBase extends ComponentBase{
             prop: "prop_msgColor" ,
             default: null
         } ,
-        prop_messages: {
-            prop: "prop_messages" ,
+        prop_message: {
+            prop: "prop_message" ,
             default: null ,
-            hasMultiTemplate: true
+            hasMultiTemplate: false
         } ,
     }
 
@@ -1303,15 +1420,19 @@ class ComponentMessagesBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_type ,
             this._COMPONENT_PATTERN.prop_msgBackgroundColor ,
             this._COMPONENT_PATTERN.prop_msgColor ,
-            this._COMPONENT_PATTERN.prop_messages ,
+            this._COMPONENT_PATTERN.prop_message ,
             this._COMPONENT_PATTERN.prop_size ,
             this._COMPONENT_PATTERN.prop_colorBorder ,
+
+            super.getProp_directionRtl() ,
         ] ,
         part_icon: [
-            this._COMPONENT_PATTERN.prop_messages ,
+            this._COMPONENT_PATTERN.prop_message ,
             this._COMPONENT_PATTERN.prop_size ,
             this._COMPONENT_PATTERN.prop_colorIcon ,
             this._COMPONENT_PATTERN.prop_type ,
+
+            super.getProp_directionRtl() ,
         ]
     }
 
@@ -1319,11 +1440,9 @@ class ComponentMessagesBase extends ComponentBase{
     PROPERTYs Pattern
  --------------------------------------------- */
     _COMPONENT_METHODS= {
-        fn_callback: {
-            description: "on click icon" ,
-            args: {
-                icon: this._COMPONENT_PATTERN.prop_icon
-            }
+        fn_onCloseMessage: {
+            description: "on close message selected" ,
+            args: {}
         },
     };
 
@@ -1333,7 +1452,7 @@ class ComponentMessagesBase extends ComponentBase{
     _COMPONENT_TEMPLATES= {
         body: {
             description: "for list messages" ,
-            refrence: this._COMPONENT_PATTERN.prop_messages
+            refrence: this._COMPONENT_PATTERN.prop_message
         },
     };
 
@@ -1353,6 +1472,8 @@ class ComponentMessagesBase extends ComponentBase{
 
 }
 window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase{
+
+    _ELEMENT_MESSGEE = false;
 
     /* ---------------------------------------------
        SETUP
@@ -1380,24 +1501,8 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn(){
-        this.templateFn(  "part_icon" );
-    }
-
-    templateFn(partName = null){
+    templateFn(){
         return this.templateBasic_render();
-
-
-        /*switch (partName){
-            case "part_structure":
-                return this.template_render_structure(partName);
-            case "part_message":
-                return this.template_render_message(partName);
-            case "part_icon":
-                return this.componentFn_render_icon(partName);
-            default:
-                return this.templateBasic_render();
-        }*/
     }
 
     template_render_structure() {
@@ -1406,63 +1511,62 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
         return this.templateBasic_render_structure(
             ReactiveElement.section({
                 children: [
-                    this.template_render_messages() ,
+                    this.#template_render_messages() ,
                 ]
             })
         );
     }
 
-    template_render_messages() {
+    #template_render_messages() {
         const partName = "part_message";
         const data = this.getPartProps(partName)
 
         if (data != null){
 
-            let html = "";
-            if (data.hasOwnProperty("prop_messages")  ){
-                const prop_messages  =   data.prop_messages;
-
-                const prop_type                =   data.hasOwnProperty("prop_type")                 ?  data.prop_type               :  null;
-                const prop_size                =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               :  null;
-                let msgBackgroundColor =  null;
-                let msgColor =            null;
-                let msgBorderColor =      null;
-
-                const elfontSize = tools_css.getFontSize(prop_size);
-
-                switch (prop_type){
-                    case "success" :
-                        msgBackgroundColor       =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("success") &&  tools_const.styles.message.success.hasOwnProperty("backgroundColor") ? tools_const.styles.message.success.backgroundColor : "" ;
-                        msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("success") &&  tools_const.styles.message.success.hasOwnProperty("color")           ? tools_const.styles.message.success.color : "" ;
-                        msgBorderColor           =  tools_const?.styles?.message?.success?.border ??  "" ;
-                        break;
-                    case "error" :
-                        msgBackgroundColor       =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("error") &&  tools_const.styles.message.error.hasOwnProperty("backgroundColor")     ? tools_const.styles.message.error.backgroundColor : "" ;
-                        msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("error") &&  tools_const.styles.message.error.hasOwnProperty("color")               ? tools_const.styles.message.error.color : "" ;
-                        msgBorderColor           =  tools_const?.styles?.message?.error?.border ??  "" ;
-                        break;
-                    case "warning" :
-                        msgBackgroundColor       =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("warning") &&  tools_const.styles.message.warning.hasOwnProperty("backgroundColor") ? tools_const.styles.message.warning.backgroundColor : "" ;
-                        msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("warning") &&  tools_const.styles.message.warning.hasOwnProperty("color")           ? tools_const.styles.message.warning.color : "" ;
-                        msgBorderColor           =  tools_const?.styles?.message?.warning?.border ??  "" ;
-                        break;
-                    default:
-                        msgBackgroundColor       =  data.hasOwnProperty("prop_msgBackgroundColor") ?  data.prop_msgBackgroundColor  : "";
-                        msgColor                 =  data.hasOwnProperty("prop_msgColor")           ?  data.prop_msgColor            : "" ;
-                        msgBorderColor           =  data.hasOwnProperty("prop_colorBorder")        ?  data.prop_colorBorder         : "" ;
-                        break;
-                }
+            const prop_message    =   data?.prop_message   ??  null;
+            const prop_type       =   data?.prop_type      ??  null;
+            const prop_size       =   data?.prop_size      ??  null;
 
 
-                let massagesEl = [];
-                for (const indexMessage in prop_messages) {
-                    const itemMessage = prop_messages[indexMessage];
+            let msgBackgroundColor =  null;
+            let msgColor =            null;
+            let msgBorderColor =      null;
 
-                    massagesEl.push(
+            const elfontSize = tools_css.getFontSize(this.get("prop_size"));
+
+            switch (this.get("prop_type")){
+                case "success" :
+                    msgBackgroundColor       =  tools_const?.styles?.message?.success?.backgroundColor ?? "" ;
+                    msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("success") &&  tools_const.styles.message.success.hasOwnProperty("color")           ? tools_const.styles.message.success.color : "" ;
+                    msgBorderColor           =  tools_const?.styles?.message?.success?.border ??  "" ;
+                    break;
+                case "error" :
+                    msgBackgroundColor       =  tools_const?.styles?.message?.error?.backgroundColor ?? "" ;
+                    msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("error") &&  tools_const.styles.message.error.hasOwnProperty("color")               ? tools_const.styles.message.error.color : "" ;
+                    msgBorderColor           =  tools_const?.styles?.message?.error?.border ??  "" ;
+                    break;
+                case "warning" :
+                    msgBackgroundColor       =  tools_const?.styles?.message?.warning?.backgroundColor ?? "" ;
+                    msgColor                 =  tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("message") &&  tools_const.styles.message.hasOwnProperty("warning") &&  tools_const.styles.message.warning.hasOwnProperty("color")           ? tools_const.styles.message.warning.color : "" ;
+                    msgBorderColor           =  tools_const?.styles?.message?.warning?.border ??  "" ;
+                    break;
+                default:
+                    msgBackgroundColor       =  data?.prop_msgBackgroundColor ?? "" ;
+                    msgColor                 =  data?.prop_msgColor           ?? "" ;
+                    msgBorderColor           =  data?.prop_colorBorder        ?? "" ;
+                    break;
+            }
+
+            return ReactiveElement.section(
+                {
+                    attrs: {
+                        "id":  `component-messages-${this._COMPONENT_RANDOM_ID}`,
+                    },
+                    children: [
                         ReactiveElement.section(
                             {
                                 attrs: {
-                                    "id":     `component-messages-item-${this._COMPONENT_RANDOM_ID}-${indexMessage}`,
+                                    "id":     `component-messages-item-${this._COMPONENT_RANDOM_ID}`,
                                     "role" :  "alert"
                                 },
                                 styles: {} ,
@@ -1471,14 +1575,14 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                                     ReactiveElement.div(
                                         {
                                             attrs: {
-                                                "id":  `component-messages-item-${this._COMPONENT_RANDOM_ID}-${indexMessage}-body`,
+                                                "id":  `component-messages-item-${this._COMPONENT_RANDOM_ID}-body`,
                                             },
                                             styles: {
                                                 backgroundColor:  msgBackgroundColor ,
                                                 borderColor:      msgBorderColor ,
                                                 color:            msgColor ,
                                                 fontSize :        elfontSize ,
-                                                borderWidth:      "1px" ,
+                                                borderWidth:      "2px" ,
                                                 borderStyle:      "solid"
                                             } ,
                                             className: [
@@ -1488,9 +1592,9 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                                                 ReactiveElement.div(
                                                     {
                                                         attrs: {
-                                                            "id":  `component-messages-item-${this._COMPONENT_RANDOM_ID}-${indexMessage}-body-message`,
+                                                            "id":  `component-messages-item-${this._COMPONENT_RANDOM_ID}-body-message`,
                                                         },
-                                                        text: itemMessage,
+                                                        //
                                                         styles: {
 
                                                         } ,
@@ -1498,25 +1602,20 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                                                             "alert" ,
                                                         ] ,
                                                         children: [
-
+                                                            ReactiveElement.b(
+                                                                {
+                                                                    text: prop_message,
+                                                                }
+                                                            ),
+                                                            this.#componentFn_render_icon()
                                                         ]
                                                     })
                                             ]
                                         })
                                 ]
                             })
-                    )
-
-                }
-
-                return ReactiveElement.section(
-                    {
-                        attrs: {
-                            "id":  `component-messages-${this._COMPONENT_RANDOM_ID}`,
-                        },
-                        children: massagesEl
-                    });
-            }
+                    ]
+                });
         }
 
 
@@ -1527,13 +1626,17 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
         });
     }
 
-    componentFn_render_icon (partName) {
+    #componentFn_render_icon () {
+        const partName = "part_icon";
         const data = this.getPartProps(partName)
+
         if (data != null){
-            const prop_type                =   data.hasOwnProperty("prop_type")                 ?  data.prop_type               :  null;
+            const prop_type    =   data?.prop_type     ??  null;
+            const directionRtl =   data?.directionRtl  ??  null;
+            const prop_size    =   data?.prop_size     ??  null;
 
             let prop_colorIcon = "";
-            switch (prop_type){
+            switch (this.get("prop_type")){
                 case "success" :
                     prop_colorIcon       =  tools_const?.styles?.message?.success?.icon ??  "" ;
                     break;
@@ -1544,61 +1647,44 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                     prop_colorIcon       =  tools_const?.styles?.message?.warning?.icon ??  "" ;
                     break;
                 default:
-                    prop_colorIcon       =  data.hasOwnProperty("prop_msgColor")           ?  data.prop_msgColor            : "" ;
+                    prop_colorIcon       =  data?.prop_msgColor ?? "" ;
                     break;
             }
 
-            const directionRtl             =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl : false
-            const prop_size                =   data.hasOwnProperty("prop_size")                      ?  data.prop_size                     :  null;
-
             const elheight = tools_css.getHeightSize(prop_size);
 
-            if (data.hasOwnProperty("prop_messages")  ) {
-
-                let styles = {
-                    "top" : `${elheight/2}px`
-                }
-                if (directionRtl){
-                    styles["left"] = "20px"
-                }
-                else{
-                    styles["right"] = "20px"
-                }
-
-                for (const indexMessage in data.prop_messages) {
-                    new window.ComponentIcon(
-                        `component-messages-icon-close-${this._COMPONENT_RANDOM_ID}-${indexMessage}`  ,
-                        {
-                            classList:     [ "position-absolute"] ,
-                            styles :       styles,
-
-                            prop_icon:    tools_icons.icon_close({size : prop_size})  ,
-
-                            prop_iconClass : ["mx-2" ] ,
-                            prop_iconStyles : {
-                                "cursor" : "pointer"
-                            } ,
-
-                            fn_callback: () =>{
-                                this.runFn('fn_onCLickIconClose' , "event" , indexMessage);
-                            }
-                        }
-                    )
-                }
-
-
+            let styles = {
+                "top" :  `${elheight/2}px` ,
+                "inset-inline-end" :  directionRtl.map( "20px" , ""),
             }
 
+            return new ComponentIcon(
+                {
+                    classList: "position-absolute"  ,
+                    styles: styles ,
+
+                    prop_iconClass : ["mx-2" ] ,
+                    prop_iconStyles : {
+                        "cursor" : "pointer"
+                    } ,
+                    prop_icon: tools_icons.icon_close({size: this.get("prop_size") }) ,
+
+                    fn_callback: function (event , args)  {
+                        this._COMPONENT_CONTENT.remove()
+                        this.executMethod("fn_onCloseMessage" , event , [])
+                    }.bind(this) ,
+                }
+            ).getSchema();
+
         }
+
+        return ReactiveElement.section({
+            attr: {
+                "data-part-name":  partName
+            }
+        });
     }
 
-
-    /* ---------------------------------------------
-       FUNCTIONs
-    --------------------------------------------- */
-    fn_onCLickIconClose(event  , indexMessage){
-        this.getComponentElement().querySelector(`#component-messages-item-${this._COMPONENT_RANDOM_ID}-${indexMessage}`).remove()
-    }
 }
 
 
@@ -1730,11 +1816,7 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn(){
-
-    }
-
-    templateFn(partName = null){
+    templateFn(){
         return this.templateBasic_render();
     }
 
@@ -1743,13 +1825,13 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
         return this.templateBasic_render_structure(
             ReactiveElement.section({
                 children: [
-                    this.templateFn_render_icon() ,
+                    this.#templateFn_render_icon() ,
                 ]
             })
         );
     }
 
-    templateFn_render_icon(){
+    #templateFn_render_icon(){
         const partName="part_icon";
         const data = this.getPartProps(partName);
 
@@ -1788,9 +1870,7 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
                         },
                     },
             });
-
         }
-
 
         return ReactiveElement.section({
             attr: {
@@ -1798,8 +1878,6 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
             }
         });
     }
-
-
 
 
 

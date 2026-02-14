@@ -573,6 +573,7 @@ tools_css = {
 
     getFontSize(sizeName){
         let val = 10;
+
         Object.keys(tools_css.standardSizes).forEach(key=>{
             itemFont = tools_css.standardSizes[key];
             if(itemFont.name == sizeName){
@@ -580,7 +581,7 @@ tools_css = {
                 return;
             }
         });
-        return val;
+        return val+"px";
     },
 
 
