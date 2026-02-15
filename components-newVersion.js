@@ -242,6 +242,12 @@ class ReactiveElement {
                         this.element.classList.add(v);
                         prev = v;
                     }
+                    if (Array.isArray(v)) {
+                        for (let j = 0; j < v.length; j++) {
+                            const itemClass =v[j];
+                            this.element.classList.add(itemClass);
+                        }
+                    }
                 };
 
                 apply(item.get());
@@ -291,6 +297,7 @@ class ReactiveElement {
             this._bindStyle(key, value);
         });
     }
+
     _bindStyle(key, value) {
         if (value instanceof Observable) {
 
@@ -330,6 +337,60 @@ class ReactiveElement {
 
 
 
+    _setupHover(stylesHover = null) {
+        const hover = stylesHover || this._options.stylesHover;
+        if (!hover) return;
+
+        const applyStyles = (obj = {}) => {
+            Object.entries(obj).forEach(([k, v]) => {
+                this.element.style[k] = v ?? "";
+            });
+        };
+
+        const applySingle = (key, value) => {
+            if (value instanceof Observable) {
+                this.element.style[key] = value.get() ?? "";
+                value.subscribe(v => {
+                    if (!this._states.has('disabled') && !this._states.has('active')) {
+                        this.element.style[key] = v ?? "";
+                    }
+                });
+            } else {
+                this.element.style[key] = value ?? "";
+            }
+        };
+
+        this.element.addEventListener('mouseenter', () => {
+            if (this._states.has('disabled') || this._states.has('active')) return;
+
+            if (hover instanceof Observable) {
+                const val = hover.get();
+                if (typeof val === "object") applyStyles(val);
+            } else {
+                Object.entries(hover).forEach(([k, v]) => {
+                    applySingle(k, v);
+                });
+            }
+        });
+
+        this.element.addEventListener('mouseleave', () => {
+            if (this._states.has('disabled')) return;
+
+            // ری‌اپلای styles اصلی
+            if (this._options.styles) {
+                this._applyStyles(this._options.styles);
+            }
+
+            if (this._states.has('active') && this._options.styleActive) {
+                Object.assign(this.element.style, this._options.styleActive);
+            }
+        });
+    }
+
+
+
+
+
 
 
 
@@ -366,8 +427,11 @@ class ReactiveElement {
         this._applyText(o.text);
         this._applyClassName(o.className);
         this._applyStyles(o.styles);
+
+
         this._applyAttrs(o.attrs);
 
+        this._setupHover(o.stylesHover);
 
     }
 
@@ -402,27 +466,7 @@ class ReactiveElement {
         });
     }
 
-    _setupHover() {
-        if (this._options.styleHover) {
-            const originalStyle = { ...this.element.style };
 
-            this.element.addEventListener('mouseenter', () => {
-                if (!this._states.has('disabled') && !this._states.has('active')) {
-                    Object.assign(this.element.style, this._options.styleHover);
-                }
-            });
-
-            this.element.addEventListener('mouseleave', () => {
-                if (!this._states.has('disabled') && !this._states.has('active')) {
-                    Object.assign(this.element.style, originalStyle);
-
-                    if (this._states.has('active') && this._options.styleActive) {
-                        Object.assign(this.element.style, this._options.styleActive);
-                    }
-                }
-            });
-        }
-    }
 
     _setEvents(events) {
         this._eventListeners.forEach(({ event, handler }) => {
@@ -616,8 +660,8 @@ class ReactiveElement {
         return this;
     }
 
-    setStyleHover(styleObj) {
-        this._options.styleHover = styleObj;
+    setStylesHover(styleObj) {
+        this._options.stylesHover = styleObj;
         this._setupHover();
         return this;
     }
@@ -1249,7 +1293,7 @@ class ComponentBase{
                 style: {
                     prop_structureStyles
                 },
-                /*styleHover: {
+                /*stylesHover: {
                     prop_structureHoverStyles
                 },*/
                 children: [
@@ -1479,7 +1523,7 @@ class ComponentMessagesBase extends ComponentBase{
 
     /* ---------------------------------------------
     PROPERTYs Pattern
- --------------------------------------------- */
+     --------------------------------------------- */
     _COMPONENT_METHODS= {
         fn_onCloseMessage: {
             description: "on close message selected" ,
@@ -1530,13 +1574,11 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
         }
 
         super(
-            listComponent[ComponentMessages.name] ,
+            "component-message" ,
             elId
         );
-        this.renderComponent(config);
+        super.renderComponent(config);
     }
-
-
 
 
     /* ---------------------------------------------
@@ -1677,14 +1719,14 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
             const elheight = tools_css.getHeightSize(prop_size);
 
             let styles = {
-                "top" :  `${elheight/2}px` ,
+                "top" :               elheight ,
                 "inset-inline-end" :  directionRtl.mapBoolean( "20px" , ""),
             }
 
             return new ComponentIcon(
                 {
                     classList: "position-absolute"  ,
-                    styles: styles ,
+                    styles: styles,
 
                     prop_iconClass : ["mx-2" ] ,
                     prop_iconStyles : {
@@ -1714,6 +1756,293 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
 
 
 
+
+//===============================================================================================================
+// [10 - 19] button / inputs / tools -> [010] Button and Inputs
+//===============================================================================================================
+
+/*-------------------------------------
+ 03-01) Component Button
+-------------------------------------*/
+class ComponentButtonBase extends ComponentBase{
+
+    _BUTTON_TYPE_SUBMIT = "submit";
+    _BUTTON_TYPE_CANCEL = "cancel";
+    _BUTTON_TYPE_BACK = "back";
+
+    /* ---------------------------------------------
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type: {
+            prop: "prop_type",
+            default: this._BUTTON_TYPE_SUBMIT
+        },
+        prop_btnType: {
+            prop: "prop_btnType",
+            default: null
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "BTN"
+        },
+        prop_btnClass: {
+            prop: "prop_btnClass",
+            default: ["w-100"]
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_btnStyles: {
+            prop: "prop_btnStyles",
+            default: {}
+        },
+        prop_btnHoverStyles: {
+            prop: "prop_btnHoverStyles",
+            default: {}
+        },
+        prop_btnBackgroundColor: {
+            prop: "prop_btnBackgroundColor",
+            default: null
+        },
+        prop_btnBackgroundColor_hover: {
+            prop: "prop_btnBackgroundColor_hover",
+            default: null
+        },
+        prop_btnColor: {
+            prop: "prop_btnColor",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_component: [],
+
+        part_structure: [],
+
+        part_button: [
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_btnType,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_btnClass,
+            this._COMPONENT_PATTERN.prop_btnStyles,
+            this._COMPONENT_PATTERN.prop_btnHoverStyles,
+            this._COMPONENT_PATTERN.prop_btnBackgroundColor,
+            this._COMPONENT_PATTERN.prop_btnBackgroundColor_hover,
+            this._COMPONENT_PATTERN.prop_btnColor,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.fn_callback
+        ]
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs methods
+    --------------------------------------------- */
+    _COMPONENT_METHODS= {
+        fn_callback: {
+            description: "on click btn" ,
+            args: {}
+        },
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs templates
+     --------------------------------------------- */
+    _COMPONENT_TEMPLATES= {
+        body: {
+            description: "for content button" ,
+            refrence: this._COMPONENT_PATTERN.prop_title
+        },
+    };
+
+    /* ---------------------------------------------
+       PROPERTYs Schema
+     --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_component: {
+            part_structure: {
+                part_button: {} ,
+            }
+        },
+    }
+
+}
+window.ComponentButton = class ComponentButton extends ComponentButtonBase{
+
+    /* ---------------------------------------------
+        SETUP
+    --------------------------------------------- */
+    constructor() {
+        let elId = null;
+        let config = null;
+        if (arguments.length === 1) {
+            config = arguments[0];
+        } else if (arguments.length === 2) {
+            elId = arguments[0];
+            config = arguments[1];
+        }
+
+        super(
+            "component-button" ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    templateFn(){
+        return this.templateBasic_render();
+    }
+
+    template_render_structure() {
+        const partName = "part_structure";
+        return this.templateBasic_render_structure(
+            ReactiveElement.section({
+                children: [
+                    this.#template_render_button() ,
+                ]
+            })
+        );
+    }
+
+    #template_render_button() {
+        const partName = "part_button";
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_type             =   data?.prop_type           ?? null;
+            const prop_btnType          =   data?.prop_btnType        ?? null;
+            const prop_title            =   data?.prop_title          ?? null;
+
+            const prop_btnClass         =   data?.prop_btnClass       ?? null;
+            const prop_size             =   data?.prop_size           ?? null;
+            const prop_btnStyles        =   data?.prop_btnStyles      ?? null;
+            const prop_btnHoverStyles   =   data?.prop_btnHoverStyles ?? null;
+
+            let btnBackgroundColor = {};
+            btnBackgroundColor[this._BUTTON_TYPE_SUBMIT] = tools_const?.styles?.button?.submit?.backgroundColor ?? "";
+            btnBackgroundColor[this._BUTTON_TYPE_CANCEL] = tools_const?.styles?.button?.cancel?.backgroundColor ?? "";
+            btnBackgroundColor[this._BUTTON_TYPE_BACK] =   tools_const?.styles?.button?.back?.backgroundColor ?? "";
+            btnBackgroundColor["default"] = data?.prop_btnBackgroundColor ?? "";
+
+            let btnBackgroundColor_hover = {};
+            btnBackgroundColor_hover[this._BUTTON_TYPE_SUBMIT] = tools_const?.styles?.button?.submit?.backgroundColorHover ?? "";
+            btnBackgroundColor_hover[this._BUTTON_TYPE_CANCEL] = tools_const?.styles?.button?.cancel?.backgroundColorHover ?? "";
+            btnBackgroundColor_hover[this._BUTTON_TYPE_BACK] =   tools_const?.styles?.button?.back?.backgroundColorHover ?? "";
+            btnBackgroundColor_hover["default"] = data?.prop_btnBackgroundColor_hover ?? "";
+
+            let btnColor = {};
+            btnColor[this._BUTTON_TYPE_SUBMIT] = tools_const?.styles?.button?.submit?.color ?? "";
+            btnColor[this._BUTTON_TYPE_CANCEL] = tools_const?.styles?.button?.cancel?.color ?? "";
+            btnColor[this._BUTTON_TYPE_BACK] =   tools_const?.styles?.button?.back?.color ?? "";
+            btnColor["default"] = data?.prop_btnColor ?? "";
+
+            const btnHeight = tools_css.getHeightSize(prop_size);
+            const btnfontSize = tools_css.getFontSize(prop_size);
+
+
+            return ReactiveElement.section(
+                {
+                    attrs: {
+                        "data-part-name":     partName,
+                        "id":                `component-buttn-form-${this._COMPONENT_RANDOM_ID}`,
+                        "type":               prop_btnType
+                    },
+                    styles: {} ,
+                    className: [] ,
+                    children: [
+                        ReactiveElement.button(
+                            {
+                                attrs: {
+                                    "id":     `component-button-${this._COMPONENT_RANDOM_ID}`,
+                                },
+                                className: [
+                                    "shadow-sm" , "border-0" , "rounded",
+                                    prop_btnClass
+                                ] ,
+                                text: prop_title,
+                                styles: {
+                                    backgroundColor:    prop_type.mapList(btnBackgroundColor) ,
+                                    color:              prop_type.mapList(btnColor) ,
+                                    height :            btnHeight ,
+                                    lineHeight :        btnHeight ,
+                                    fontSize :          btnfontSize ,
+                                    prop_btnStyles
+                                } ,
+                                stylesHover: {
+                                    transition:         "background-color 200ms ease" ,
+                                    backgroundColor:    prop_type.mapList(btnBackgroundColor_hover) ,
+                                    prop_btnHoverStyles
+                                } ,
+                                on: {
+                                    click: (event) => {
+                                        this.executMethod("fn_callback" , event )
+                                    },
+                                },
+                            }
+                        )
+                    ]
+                });
+
+        /*    return `
+<section data-part-name="${partName}">
+
+   <style>
+      #${this._COMPONENT_ID} #component-button-${this._COMPONENT_RANDOM_ID}{
+          background-color: ${btnBackgroundColor};
+          color:            ${btnColor};
+          height:           ${btnHeight}px;
+          line-height:      ${btnHeight}px;
+          font-size:        ${btnfontSize}px;
+          ${tools_public.renderListStyle(prop_btnStyles)}
+     }
+      #${this._COMPONENT_ID} #component-button-${this._COMPONENT_RANDOM_ID}:hover{
+          transition: background-color 200ms ease;
+          background-color: ${btnBackgroundColor_hover};
+          ${tools_public.renderListStyle(prop_btnHoverStyles)}
+     }
+   </style>
+
+   <button id="component-button-${this._COMPONENT_RANDOM_ID}"  
+           ${prop_btnType !=null ? `type=${prop_btnType}` : ""}
+           class="shadow-sm border-0 rounded ${tools_public.renderListClass(prop_btnClass)}  "
+            onclick="${this.getFn('fn_onCLickBtn' , "event")}">
+      ${prop_title}
+   </button>
+
+</section>
+            `*/
+        }
+
+        return ReactiveElement.section({
+            attr: {
+                "data-part-name":  partName
+            }
+        });
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickBtn(event){
+        event.stopPropagation()
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+}
 
 
 
@@ -1829,7 +2158,7 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
         }
 
         super(
-            listComponent[ComponentIcon.name] ,
+            "component-icon" ,
             elId
         );
         super.renderComponent(config);
