@@ -1,4 +1,4 @@
-<!--<meta charset="UTF-8">
+<meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -7,11 +7,22 @@
 <link href="./bootstrap.css" rel="stylesheet" type="text/css">
 
 
-<section id="template-main" class=" mx-2 my-2">
+<section id="template-main" class=" mx-2 my-2 row">
 
-    <component-test  id="c-test"></component-test>
+    <component-message  id="message-success">
+    </component-message>
 
-    <component-icon  id="c-icon"></component-icon>
+
+    <component-button  id="button"></component-button>
+
+
+    <component-icon  id="c-icon">
+        <!--<template>
+            <component-body name="a">
+                123
+            </component-body>
+        </template>-->
+    </component-icon>
 
 
 </section>
@@ -20,7 +31,7 @@
 <script src="./qrcode.js"></script>
 <script src="./jalali.js"></script>
 <script src="./highcharts.js"></script>
-<script src="./components.js"></script>
+<script src="./components-newVersion.js"></script>
 <script src="./tools.js"></script>
 
 
@@ -28,28 +39,94 @@
 
     tools_init.renderToolsConst()
 
-    //// Collapses Categories
-    new window.ComponentTest(
-        "c-test" ,
-        {
 
-        }
-    )
-
-    new window.ComponentIcon(
-        "c-icon" ,
+    /*-------------------------------------
+     Component Messages
+ -------------------------------------*/
+    messagee =new  window.ComponentMessages(
+        "message-success" ,
         {
             classList: "col-md-3 col-12 mt-2"  ,
 
-            prop_icon: " &#x2315; " ,
+            prop_type:  "warning" , // "aa" ,
+            //prop_msgBackgroundColor: "#000" ,
+            prop_message: "asd3"
+        }
+    );
 
-            fn_callback: (event) => {
-                console.log(event)
+
+    /*-------------------------------------
+       Component Button
+    -------------------------------------*/
+    new window.ComponentButton(
+        "button" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_size: "m" ,
+            prop_title: "asd" ,
+            fn_callback: ()=>{
+                alert("asd");
+            }
+        }
+    )
+
+
+
+    /*-------------------------------------
+       Component Icon
+    -------------------------------------*/
+     icon = new window.ComponentIcon(
+        "c-icon" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+            /*styles: {
+                color: "red"
+            }  ,*/
+            prop_show : true ,
+            prop_icon: tools_icons.icon_application({size: 30 , colors : {primary: "#bb1414"}}) ,
+
+            fn_callback: function (event , args)  {
+                this.set("prop_icon" ,  tools_icons.icon_crcode({size: 30 , colors : {primary: "#bb1414"}}) )
+                console.log(event , args)
+            } ,
+        }
+    )
+  //  icon.set("directionRtl" , false )
+
+
+
+
+    /*const icon = new window.ComponentIcon(
+        {
+            classList: ["col-md-3", "col-12" ,"mt-2"]  ,
+            styles: {
+                color: "red"
+            }  ,
+
+            prop_icon: tools_icons.icon_application({size: 30 , colors : {primary: "#bb1414"}}) ,
+
+            fn_callback: function(event , args) {
+                this.set("prop_icon" ,  tools_icons.icon_crcode({size: 30 , colors : {primary: "#bb1414"}}) )
+                console.log(event , args)
             } ,
         }
     )
 
-</script>-->
+    const el = document.getElementById("template-main")
+    el.appendChild(icon.getSchema())
+
+    icon.set("classList" , ["a"] )
+    icon.set("styles" , {
+        color: "blue"
+    } )*/
+
+
+
+
+
+
+</script>
 
 
 
@@ -675,7 +752,7 @@
 
 
 
-<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+<!--<link href="./bootstrap.css" rel="stylesheet" type="text/css">
 
 
 <body></body>
@@ -687,15 +764,15 @@
         constructor(tagName, options = {}) {
             this.tagName = tagName;
             this._options = options;
-            this.element = document.createElement(tagName);
             this._eventListeners = [];
             this._states = new Set();
-            this._children = []; // برای track کردن children
+            this._children = [];
             this._hoverHandlers = {};
 
             this._bindings = [];
-            this._applyOptions();
 
+            this.element = document.createElement(tagName);
+            this._applyOptions();
             this._setupHover();
         }
 
@@ -714,45 +791,101 @@
             }
         }
 
-        _applyClassName(value) {
-            let applied = new Set();
+        _applyClassName(input) {
+            const staticClasses = new Set();
+            const reactiveBindings = new Map(); // observable -> Set(classes)
 
-            const apply = list => {
-                applied.forEach(c => this.element.classList.remove(c));
-                applied.clear();
-
-                if (!Array.isArray(list)) return;
-
-                list.forEach(c => {
-                    if (typeof c === "string" && c.trim()) {
-                        this.element.classList.add(c);
-                        applied.add(c);
-                    }
-                });
+            const applyStatic = cls => {
+                if (typeof cls === "string" && cls.trim()) {
+                    this.element.classList.add(cls);
+                    staticClasses.add(cls);
+                }
             };
 
-            if (this._isObservable(value)) {
-                apply(value.get());
-                value.subscribe(apply);
-            } else if (Array.isArray(value)) {
-                value.forEach(c => this.element.classList.add(c));
-            }
-        }
+            const bindObservable = observable => {
+                let applied = new Set();
 
+                const apply = list => {
+                    applied.forEach(c => this.element.classList.remove(c));
+                    applied.clear();
 
-        _applyStyles(styles) {
-            if (!styles || typeof styles !== "object") return;
+                    if (!Array.isArray(list)) return;
 
-            Object.entries(styles).forEach(([prop, val]) => {
-                if (this._isObservable(val)) {
-                    const apply = v => this.element.style[prop] = v ?? "";
-                    apply(val.get());
-                    val.subscribe(apply);
+                    list.forEach(c => {
+                        if (typeof c === "string" && c.trim()) {
+                            this.element.classList.add(c);
+                            applied.add(c);
+                        }
+                    });
+                };
+
+                apply(observable.get());
+                observable.subscribe(apply);
+                reactiveBindings.set(observable, applied);
+            };
+
+            // normalize
+            const items = Array.isArray(input) ? input : [input];
+
+            items.forEach(item => {
+                if (item instanceof Observable) {
+                    bindObservable(item);
+                } else if (Array.isArray(item)) {
+                    item.forEach(applyStatic);
                 } else {
-                    this.element.style[prop] = val;
+                    applyStatic(item);
                 }
             });
         }
+
+
+
+        _applyStyles(styles = {}) {
+            Object.entries(styles).forEach(([key, value]) => {
+
+                // Observable
+                if (value instanceof Observable) {
+                    const current = value.get();
+
+                    // اگر خروجی آبجکت است → چند style
+                    if (current && typeof current === "object" && !Array.isArray(current)) {
+                        this._bindStyleObject(value);
+                    }
+                    // اگر primitive است → key یک style است
+                    else {
+                        this._bindStyle(key, value);
+                    }
+                    return;
+                }
+
+                // مقدار ثابت
+                this._bindStyle(key, value);
+            });
+        }
+        _bindStyle(key, value) {
+            if (value instanceof Observable) {
+                this.element.style[key] = value.get();
+                value.subscribe(v => {
+                    this.element.style[key] = v ?? "";
+                });
+            } else {
+                this.element.style[key] = value;
+            }
+        }
+
+        _bindStyleObject(obs) {
+
+            const apply = (obj = {}) => {
+                Object.entries(obj).forEach(([k, v]) => {
+
+                    this.element.style[k] = v ?? "";
+                });
+            };
+
+            apply(obs.get());
+            obs.subscribe(apply);
+        }
+
 
         _applyAttrs(attrs) {
             if (!attrs || typeof attrs !== "object") return;
@@ -776,20 +909,17 @@
         }
 
 
-
         _applyOptions() {
             const o = this._options;
+
+            if (o.children) this._setChildren(o.children);
+            if (o.on) this._setEvents(o.on);
 
             this._applyText(o.text);
             this._applyClassName(o.className);
             this._applyStyles(o.styles);
             this._applyAttrs(o.attrs);
-
-            if (o.children) this._setChildren(o.children);
-            if (o.on) this._setEvents(o.on);
         }
-
-
 
         _setChildren(children) {
             // پاک کردن children قبلی
@@ -1135,15 +1265,21 @@
 
     const prop_title = new Observable("Hello World");
     const prop_bg = new Observable("red");
-    const prop_class = new Observable(["bg-red" , "text-dark"]);
-    const prop_textColor = new Observable("");
+    const prop_class = new Observable(["bg-red" ]);
+    const prop_style = new Observable({
+        "color" : "white"
+    });
     const prop_id = new Observable("a1");
 
     const el = ReactiveElement.section({
         styles: {
-            backgroundColor: prop_bg
+            backgroundColor: prop_bg ,
+            prop_style
         },
-        className: prop_class,
+        className: [
+            "border" ,
+            prop_class
+        ],
         attr: {
             id: prop_id
         },
@@ -1165,7 +1301,12 @@
 
     setTimeout(() => {
         prop_title.set("Changed 😈");
-        prop_textColor.set("text-white");
+        prop_style.set(
+            {
+                "color" : "blue"
+            }
+        );
+        prop_class.set(["test"]);
     }, 2000)
 
     /*const prop_title = new Observable("Hello World");
@@ -1194,4 +1335,4 @@
         prop_title.set("Changed 😈");
     }, 2000);*/
 
-</script>
+</script>-->

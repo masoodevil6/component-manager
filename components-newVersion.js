@@ -176,234 +176,263 @@ class ReactiveElement {
     constructor(tagName, options = {}) {
         this.tagName = tagName;
         this._options = options;
-        this.element = document.createElement(tagName);
         this._eventListeners = [];
         this._states = new Set();
-        this._children = []; // برای track کردن children
+        this._children = [];
         this._hoverHandlers = {};
 
         this._bindings = [];
-        this._applyOptions();
 
+        this.element = document.createElement(tagName);
+        this._applyOptions();
         this._setupHover();
     }
 
 
+    _isObservable(value) {
+        return value instanceof Observable;
+    }
 
+    _applyText(value) {
+        const apply = v => {
+            if (v == null) return;
 
-
-
-    _setupBindings(bindings) {
-        for (const [type, config] of Object.entries(bindings)) {
-            switch (type) {
-                case "text":
-                    this._bindText(config);
-                    break;
-
-                case "className":
-                    this._setupClassName(config);
-                    break;
-
-                case "styles":
-                    this._setupStyle(config);
-                    break;
-
-                case "attr":
-                    this._bindAttr(config);
-                    break;
+            // Node واقعی
+            if (v instanceof Node) {
+                this.element.innerHTML = "";
+                this.element.appendChild(v);
+                return;
             }
+
+            // HTML string
+            if (typeof v === "string" && v.trim().startsWith("<")) {
+                this.element.innerHTML = v;
+                return;
+            }
+
+            // متن معمولی
+            this.element.textContent = v;
+        };
+
+        if (this._isObservable(value)) {
+            apply(value.get());
+            value.subscribe(apply);
+        } else if (value !== undefined) {
+            apply(value);
         }
     }
 
-    _bindText({ key, default: def }) {
-        const observable = key;
 
-        const value = observable.get();
-        this.element.textContent =
-            value !== undefined && value !== null ? value : def;
+    _applyClassName(list = []) {
+        list.forEach(item => {
 
-        observable.subscribe(newValue => {
-            this.element.textContent =
-                newValue !== undefined && newValue !== null ? newValue : "";
-        });
-    }
-
-    _setupClassName(classNameArr) {
-        if (!Array.isArray(classNameArr)) return;
-
-        classNameArr.forEach(item => {
-            // کلاس ثابت
+            // 1. string
             if (typeof item === "string") {
                 this.element.classList.add(item);
                 return;
             }
 
-            // کلاس reactive با key و default
-            if (typeof item === "object" && item.key instanceof Observable) {
-                const observable = item.key;
-                const defaultValue = !!item.default;
+            // 2. Observable<string>
+            if (item instanceof Observable) {
+                let prev;
 
-                // مقدار اولیه: اگر Observable رشته است، اسم کلاس همون رشته است
-                let initialClass = observable.get() ?? defaultValue;
-                if (initialClass) this.element.classList.add(initialClass);
-
-                // subscribe برای تغییرات بعدی
-                observable.subscribe(value => {
-                    // ابتدا همه کلاس‌های قبلی مرتبط با این Observable رو حذف کن
-                    if (typeof value === "string") {
-                        // remove old class
-                        const currentClasses = this.element.className.split(" ");
-                        currentClasses.forEach(c => {
-                            if (c === initialClass) this.element.classList.remove(c);
-                        });
-                        initialClass = value;
-                        this.element.classList.add(value);
-                    } else if (value) {
-                        this.element.classList.add(defaultValue);
-                    } else {
-                        this.element.classList.remove(defaultValue);
+                const apply = v => {
+                    if (prev) this.element.classList.remove(prev);
+                    if (typeof v === "string" && v) {
+                        this.element.classList.add(v);
+                        prev = v;
                     }
+                    if (Array.isArray(v)) {
+                        for (let j = 0; j < v.length; j++) {
+                            const itemClass =v[j];
+                            this.element.classList.add(itemClass);
+                        }
+                    }
+                };
+
+                apply(item.get());
+                item.subscribe(apply);
+                return;
+            }
+
+            // 3. { className: Observable<boolean> }
+            if (typeof item === "object") {
+                Object.entries(item).forEach(([cls, obs]) => {
+                    if (!(obs instanceof Observable)) return;
+
+                    const apply = v =>
+                        this.element.classList.toggle(cls, !!v);
+
+                    apply(obs.get());
+                    obs.subscribe(apply);
                 });
             }
         });
     }
 
 
-    _setupStyle(style) {
-        if (!style || typeof style !== "object") return;
 
-        Object.entries(style).forEach(([prop, value]) => {
-            // استایل ثابت
-            if (
-                typeof value !== "object" ||
-                value === null ||
-                !value.key
-            ) {
-                this.element.style[prop] = value;
+
+
+
+    _applyStyles(styles = {}) {
+        Object.entries(styles).forEach(([key, value]) => {
+
+            // Observable
+            if (value instanceof Observable) {
+                const current = value.get();
+
+                // اگر خروجی آبجکت است → چند style
+                if (current && typeof current === "object" && !Array.isArray(current)) {
+                    this._bindStyleObject(value);
+                }
+                // اگر primitive است → key یک style است
+                else {
+                    this._bindStyle(key, value);
+                }
                 return;
             }
 
-            // استایل reactive
-            const { key, default: def } = value;
-            const observable = key;
-
-            const apply = v => {
-                const finalValue =
-                    v !== undefined && v !== null ? v : def;
-
-                this.element.style[prop] = finalValue ?? "";
-            };
-
-            apply(observable.get());
-            observable.subscribe(apply);
+            // مقدار ثابت
+            this._bindStyle(key, value);
         });
     }
 
-    _bindAttr(attrs) {
-        Object.entries(attrs).forEach(([attrName, config]) => {
-            const { key, default: def } = config;
-            const observable = key;
+    _bindStyle(key, value) {
+        if (value instanceof Observable) {
 
-            const apply = value => {
-                const v = value !== undefined ? value : def;
+            this.element.style[key] = value.get();
+            value.subscribe(v => {
+                this.element.style[key] = v ?? "";
+            });
+        } else {
+            if (value && typeof value === "object" && !Array.isArray(value)) {
+                Object.entries(value).forEach(([k, v]) => {
 
+                    if (v instanceof Observable) {
+                        this.element.style[k] = v?.get?.() ?? "";
+                    }
+                    else{
+                        this.element.style[k] = v ?? "";
+                    }
+                });
+            }
+            else{
+                this.element.style[key] = value ?? "";
+            }
+        }
+    }
+
+    _bindStyleObject(obs) {
+
+        const apply = (obj = {}) => {
+            Object.entries(obj).forEach(([k, v]) => {
+                this.element.style[k] = v ?? "";
+            });
+        };
+
+        apply(obs.get());
+        obs.subscribe(apply);
+    }
+
+
+
+    _setupHover(stylesHover = null) {
+        const hover = stylesHover || this._options.stylesHover;
+        if (!hover) return;
+
+        const applyStyles = (obj = {}) => {
+            Object.entries(obj).forEach(([k, v]) => {
+                this.element.style[k] = v ?? "";
+            });
+        };
+
+        const applySingle = (key, value) => {
+            if (value instanceof Observable) {
+                this.element.style[key] = value.get() ?? "";
+                value.subscribe(v => {
+                    if (!this._states.has('disabled') && !this._states.has('active')) {
+                        this.element.style[key] = v ?? "";
+                    }
+                });
+            } else {
+                this.element.style[key] = value ?? "";
+            }
+        };
+
+        this.element.addEventListener('mouseenter', () => {
+            if (this._states.has('disabled') || this._states.has('active')) return;
+
+            if (hover instanceof Observable) {
+                const val = hover.get();
+                if (typeof val === "object") applyStyles(val);
+            } else {
+                Object.entries(hover).forEach(([k, v]) => {
+                    applySingle(k, v);
+                });
+            }
+        });
+
+        this.element.addEventListener('mouseleave', () => {
+            if (this._states.has('disabled')) return;
+
+            // ری‌اپلای styles اصلی
+            if (this._options.styles) {
+                this._applyStyles(this._options.styles);
+            }
+
+            if (this._states.has('active') && this._options.styleActive) {
+                Object.assign(this.element.style, this._options.styleActive);
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+    _applyAttrs(attrs) {
+        if (!attrs || typeof attrs !== "object") return;
+
+        Object.entries(attrs).forEach(([attr, val]) => {
+            const apply = v => {
                 if (v === false || v == null) {
-                    this.element.removeAttribute(attrName);
+                    this.element.removeAttribute(attr);
                 } else {
-                    this.element.setAttribute(
-                        attrName,
-                        v === true ? "" : v
-                    );
+                    this.element.setAttribute(attr, v === true ? "" : v);
                 }
             };
 
-            apply(observable.get());
-            observable.subscribe(apply);
+            if (this._isObservable(val)) {
+                apply(val.get());
+                val.subscribe(apply);
+            } else {
+                apply(val);
+            }
         });
     }
+
 
 
 
     _applyOptions() {
-        const opts = this._options;
+        const o = this._options;
+
+        if (o.children) this._setChildren(o.children);
+        if (o.on) this._setEvents(o.on);
+
+        this._applyText(o.text);
+        this._applyClassName(o.className);
+        this._applyStyles(o.styles);
 
 
+        this._applyAttrs(o.attrs);
 
-        // کلاس
-        if (opts.className) {
-            this.element.className = opts.className;
-        }
+        this._setupHover(o.stylesHover);
 
-        // ID
-        if (opts.id) {
-            this.element.id = opts.id;
-        }
-
-        // متن
-        if (opts.text !== undefined) {
-            this.element.textContent = opts.text;
-        }
-
-        // HTML
-        if (opts.html !== undefined) {
-            this.element.innerHTML = opts.html;
-        }
-
-        // استایل اصلی
-        if (opts.style) {
-            Object.assign(this.element.style, opts.style);
-        }
-
-        // استایل hover
-        if (opts.styleHover) {
-            this._options.styleHover = opts.styleHover;
-        }
-
-        // استایل active
-        if (opts.styleActive) {
-            this._options.styleActive = opts.styleActive;
-        }
-
-        // استایل disabled
-        if (opts.styleDisabled) {
-            this._options.styleDisabled = opts.styleDisabled;
-        }
-
-        // استایل focus
-        if (opts.styleFocus) {
-            this._options.styleFocus = opts.styleFocus;
-        }
-
-        // attributes
-        if (opts.attrs) {
-            Object.entries(opts.attrs).forEach(([key, value]) => {
-                this.element.setAttribute(key, value);
-            });
-        }
-
-        // children - مهم!
-        if (opts.children) {
-            this._setChildren(opts.children);
-        }
-
-        // events
-        if (opts.on) {
-            this._setEvents(opts.on);
-        }
-
-        // state اولیه
-        if (opts.disabled) {
-            this.disable();
-        }
-
-        if (opts.active) {
-            this.activate();
-        }
-
-
-        if (opts.bind) {
-            this._setupBindings(opts.bind);
-        }
     }
 
     _setChildren(children) {
@@ -437,27 +466,7 @@ class ReactiveElement {
         });
     }
 
-    _setupHover() {
-        if (this._options.styleHover) {
-            const originalStyle = { ...this.element.style };
 
-            this.element.addEventListener('mouseenter', () => {
-                if (!this._states.has('disabled') && !this._states.has('active')) {
-                    Object.assign(this.element.style, this._options.styleHover);
-                }
-            });
-
-            this.element.addEventListener('mouseleave', () => {
-                if (!this._states.has('disabled') && !this._states.has('active')) {
-                    Object.assign(this.element.style, originalStyle);
-
-                    if (this._states.has('active') && this._options.styleActive) {
-                        Object.assign(this.element.style, this._options.styleActive);
-                    }
-                }
-            });
-        }
-    }
 
     _setEvents(events) {
         this._eventListeners.forEach(({ event, handler }) => {
@@ -651,8 +660,8 @@ class ReactiveElement {
         return this;
     }
 
-    setStyleHover(styleObj) {
-        this._options.styleHover = styleObj;
+    setStylesHover(styleObj) {
+        this._options.stylesHover = styleObj;
         this._setupHover();
         return this;
     }
@@ -693,17 +702,26 @@ class ReactiveElement {
         return this;
     }
 
+
+
+    ///----------------------------------------------------
     getElement() {
         return this.element;
     }
 
-    // متدهای استاتیک
+    remove(){
+        this.element?.remove?.();
+    }
+
+
+    ///----------------------------------------------------
     static create(tagName, options) {
         return new ReactiveElement(tagName, options);
     }
 
     static div(options)     { return new ReactiveElement('div',      options); }
     static button(options)  { return new ReactiveElement('button',   options); }
+    static b(options)       { return new ReactiveElement('b',        options); }
     static section(options) { return new ReactiveElement('section',  options); }
     static span(options)    { return new ReactiveElement('span',     options); }
     static a(options)       { return new ReactiveElement('a',        options); }
@@ -728,6 +746,56 @@ class Observable {
         return this._value;
     }
 
+
+    mapBoolean(trueValue, falseValue) {
+        const derived = new Observable(
+            this.get() ? trueValue : falseValue
+        );
+
+        this.subscribe(v => {
+            derived.set(v ? trueValue : falseValue);
+        });
+
+        return derived;
+    }
+
+    mapList(mapping) {
+        const currentValue = this.get();
+        const initialMappedValue = this._mapValue(currentValue, mapping);
+        const derived = new Observable(initialMappedValue);
+
+        this.subscribe(v => {
+            const mappedValue = this._mapValue(v, mapping);
+            derived.set(mappedValue);
+        });
+
+
+
+        return derived;
+    }
+
+    _mapValue(value, mapping) {
+        if (typeof mapping === 'function') {
+            // اگر mapping یک تابع است
+            return mapping(value);
+        } else if (typeof mapping === 'object' && mapping !== null) {
+            // اگر mapping یک object است
+            if (value in mapping) {
+                return mapping[value];
+            } else if ('default' in mapping) {
+                const value = mapping.default;
+                if (value != null && value instanceof Observable) {
+                    return value.get();
+                }
+                else {
+                    return value;
+                }
+            }
+            return value;
+        }
+        return value;
+    }
+
     set(value) {
         if (this._value === value) return;
         this._value = value;
@@ -746,12 +814,64 @@ class Observable {
 
 
 
+
+
+
+/* ----------------------------------------------------
+   Component config:
+------------------------------------- */
+class AppConfig {
+    static _state = {
+        directionRtl: true,
+        //language: "fa",
+        //font: "IRANSans"
+    };
+
+    static _subscribers = new Map();
+
+    static get(key) {
+        return this._state[key];
+    }
+
+    static set(key, value) {
+        if (this._state[key] === value) return;
+
+        this._state[key] = value;
+        this._notify(key, value);
+    }
+
+    static subscribe(key, callback) {
+        if (!this._subscribers.has(key)) {
+            this._subscribers.set(key, new Set());
+        }
+
+        this._subscribers.get(key).add(callback);
+
+        return () => {
+            this._subscribers.get(key).delete(callback);
+        };
+    }
+
+    static _notify(key, value) {
+        if (!this._subscribers.has(key)) return;
+
+        this._subscribers
+            .get(key)
+            .forEach(fn => fn(value));
+    }
+}
+
+
+
+
 /* ----------------------------------------------------
    Component Base:
 ------------------------------------- */
 class ComponentBase{
 
     _COMPONENT_PATTERN = {};
+    _COMPONENT_METHODS = {};
+    _COMPONENT_TEMPLATES = {};
     _COMPONENT_PROPS = null;
     _COMPONENT_SCHEMA = null;
 
@@ -767,9 +887,6 @@ class ComponentBase{
 
 
 
-
-
-
     //--------------------------------------------------
     // cunstruct
     //--------------------------------------------------
@@ -779,18 +896,159 @@ class ComponentBase{
 
         this._COMPONENT_RANDOM_ID =       Math.floor(Math.random() * 10000);
         this._COMPONENT_SELECTOR =        this._COMPONENT_NAME+"#"+this._COMPONENT_ID;
-        this._COMPONENT_ELEMENT =         this.getComponentElement();
+        this._COMPONENT_ELEMENT =         this.#getComponentElement();
     }
 
     renderComponent(config){
 
-        this.getReadyComponentParamsWithDefault();
+        this.connectedCallback();
 
-        let realConfig = this.getReadyRealProps();
-        realConfig = this.getReadyParamsBasic(config , realConfig);
-        this.getReadyParamsBinding(realConfig);
+        // GET Ready ==> _COMPONENT_TEMPLATES
+        this.#getReadyTemplates()
 
-        this.getReadyTemplateSchma();
+        // GET Ready ==> _COMPONENT_PROPS_BIND
+        this.#getReadyComponentParamsWithDefault();
+
+        this.#getReadyParamsBasic(config);
+
+        let realConfig = this.#getReadyRealProps();
+        realConfig = this.#getReadyUserConfigAndDefaultConfig(config , realConfig)
+        this.#getReadyParamsBinding(realConfig);
+
+
+        // GET Ready ==> _COMPONENT_METHODS
+        this.#getReadyComponentMethods(config)
+
+        // GET Ready ==> _COMPONENT_ELEMENT
+        return this.#getReadyTemplateSchma();
+
+    }
+
+
+
+
+
+    connectedCallback() {
+        this.set("directionRtl" , AppConfig.get("directionRtl"))
+        this._unsubscribeDirection =
+            AppConfig.subscribe("directionRtl", (value) => {
+                this.set("directionRtl" , value)
+            });
+    }
+
+
+    //--------------------------------------------------
+    // GET Ready ==> _COMPONENT_TEMPLATES
+    //--------------------------------------------------
+    #getReadyTemplates(){
+        const listTemplates = this.#getListTemplates();
+        if (this._COMPONENT_TEMPLATES != null){
+            Object.keys(this._COMPONENT_TEMPLATES).forEach(templateName => {
+                const value = this.#getReadyTemplateValueSelected(listTemplates , templateName , this._COMPONENT_TEMPLATES[templateName])
+                if (value != null){
+                    this._COMPONENT_TEMPLATES[templateName].value = value;
+                }
+            })
+        }
+    }
+
+    #getListTemplates(){
+        let resultExp = {};
+
+        const component = this.#getComponentElement();
+
+        let hasTemplate = false;
+        if (component != null){
+            const children = component.children
+            let childReal = children;
+            if (children.length > 0){
+                hasTemplate = children[0] && children[0].tagName === "TEMPLATE"
+                if (hasTemplate){
+                    childReal = children[0]?.content?.children ?? [];
+                }
+            }
+
+            const componentSlotNames= Object.values(
+                [...childReal]
+                    .filter(el => el.tagName.toLowerCase().startsWith('component-'))
+                    .reduce((acc, el) => {
+                        const tag = el.tagName.toLowerCase();
+                        if (!acc[tag]) acc[tag] = { el, list: [] };
+                        acc[tag].list.push(el);
+                        console.log(el)
+                        return acc;
+                    }, {})
+            );
+
+            if (hasTemplate){
+                children[0].remove()
+            }
+
+            if (Array.isArray(componentSlotNames)) {
+                for (const componentTag of componentSlotNames) {
+
+                    if(componentTag.hasOwnProperty("list") && componentTag.hasOwnProperty("el")){
+                        const list = componentTag.list;
+
+                        if(list != null && Array.isArray(list)){
+                            const listExp = [];
+                            for (const itemComponent of list) {
+                                const name = itemComponent.getAttribute("name")
+                                listExp.push( this.#getListTemplates_templateData(itemComponent))
+                            }
+                            resultExp[componentTag.el.tagName.toLowerCase().replace(/^component-/, '')] = listExp
+                        }
+                    }
+                }
+            }
+        }
+
+        return resultExp;
+    }
+
+    #getListTemplates_templateData(el){
+        return {
+            html:  el.innerHTML ,
+            attrs: Object.fromEntries([...el.attributes].map(a => [a.name, a.value]))
+        }
+    }
+
+    #getReadyTemplateValueSelected(listTemplates , templateName , templateData){
+        let resultExp = null;
+        if (listTemplates != null){
+            Object.keys(listTemplates).forEach(temp => {
+                if (temp == templateName){
+                    const itemTemplate = listTemplates[templateName];
+                    const refrence = templateData.refrence;
+                    const isMulti = this.#getReadyTemplateValueSelected_hasMultiTemplate(refrence)
+
+                    if (isMulti){
+                        resultExp = itemTemplate;
+                    }
+                    else{
+                        if (itemTemplate.length > 0 && itemTemplate[0] != null && itemTemplate[0].hasOwnProperty("html")){
+                            resultExp = itemTemplate[0].html;
+                        }
+                    }
+                    return;
+                }
+            })
+        }
+        return resultExp;
+    }
+
+    #getReadyTemplateValueSelected_hasMultiTemplate(refrence){
+        let resultExp = false;
+        if (this._COMPONENT_PATTERN != null){
+            Object.keys(this._COMPONENT_PATTERN).forEach(key => {
+                if (key == refrence){
+                    const refData = this._COMPONENT_PATTERN[key]
+                    resultExp = refData.hasOwnProperty("hasMultiTemplate") ? refData.hasMultiTemplate : false;
+                    return;
+                }
+            })
+        }
+        return resultExp;
     }
 
 
@@ -798,13 +1056,21 @@ class ComponentBase{
 
 
 
-
-
-
     //--------------------------------------------------
-    // GET Ready
+    // GET Ready ==> _COMPONENT_PROPS_BIND
     //--------------------------------------------------
-    getReadyComponentParamsWithDefault(){
+    #getReadyComponentParamsWithDefault(){
+        if (this._COMPONENT_PROPS.hasOwnProperty("part_component")){
+            if (!this._COMPONENT_PROPS.part_structure.hasOwnProperty("directionRtl")){
+                this._COMPONENT_PROPS["part_component"].push( {prop: "directionRtl"           , default: component_props.directionRtl} );
+            }
+            if (!this._COMPONENT_PROPS.part_structure.hasOwnProperty("classList")){
+                this._COMPONENT_PROPS["part_component"].push( {prop: "classList"           , default: true});
+            }
+            if (!this._COMPONENT_PROPS.part_structure.hasOwnProperty("styles")){
+                this._COMPONENT_PROPS["part_component"].push( {prop: "styles"           , default: true});
+            }
+        }
         if (this._COMPONENT_PROPS.hasOwnProperty("part_structure")){
             if (!this._COMPONENT_PROPS.part_structure.hasOwnProperty("prop_show")){
                 this._COMPONENT_PROPS["part_structure"].push( {prop: "prop_show"           , default: true});
@@ -844,7 +1110,14 @@ class ComponentBase{
         }
     }
 
-    getReadyRealProps() {
+    #getReadyParamsBasic(config) {
+        this._COMPONENT_PATTERN["directionRtl"] = this.getProp_directionRtl(config) ;
+        this._COMPONENT_PATTERN["prop_show"] =    this.getProp_show(config) ;
+        this._COMPONENT_PATTERN["classList"] =    this.getProp_classList(config) ;
+        this._COMPONENT_PATTERN["styles"] =       this.getProp_classList(config) ;
+    }
+
+    #getReadyRealProps() {
         const props = [];
         Object.entries(this._COMPONENT_PROPS).forEach(([partName, partParams]) => {
             for (const param of partParams) {
@@ -857,16 +1130,36 @@ class ComponentBase{
         return props;
     }
 
-    getReadyParamsBasic(config , props) {
-        props.push({prop: "directionRtl", default: config.hasOwnProperty("directionRtl") ? config.directionRtl : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)})   ;
-        props.push({prop: "prop_show"   , default: config.hasOwnProperty("prop_show")    ? config.prop_show    : true});
-        props.push({prop: "classList"   , default: config.hasOwnProperty("classList")    ? config.classList    : []});
-        props.push({prop: "styles"      , default: config.hasOwnProperty("styles")       ? config.styles       : {}});
+    #getReadyUserConfigAndDefaultConfig(config , props){
+        if (props != null && config != null){
+
+            for (let i = 0; i < props.length; i++) {
+                const itemProp = props[i];
+                if (itemProp.hasOwnProperty("prop") ){
+                    const propName = itemProp.prop;
+                    if (config.hasOwnProperty(propName)){
+                        props[i].default = config[itemProp.prop]
+                    }
+                    else{
+                        if (this._COMPONENT_TEMPLATES != null){
+                            Object.keys(this._COMPONENT_TEMPLATES).forEach(templateName => {
+                                const data =this._COMPONENT_TEMPLATES[templateName];
+                                const refrence = data.refrence;
+                                if (refrence.prop == propName && data.hasOwnProperty("value")){
+                                    props[i].default = data.value
+
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+        }
 
         return props;
     }
 
-    getReadyParamsBinding(props){
+    #getReadyParamsBinding(props){
         for (const param of props) {
             if (param != null && param.hasOwnProperty("prop")){
                 const defaultValue = param?.default ?? null;
@@ -875,10 +1168,51 @@ class ComponentBase{
         }
     }
 
-    getReadyTemplateSchma(){
-        if (typeof this.templateFn !== "undefined"){
-            this._COMPONENT_CONTENT = this.templateFn();
-            this._COMPONENT_ELEMENT.appendChild(this._COMPONENT_CONTENT.getElement());
+
+    //--------------------------------------------------
+    // GET Ready ==> _COMPONENT_METHODS
+    //--------------------------------------------------
+    #getReadyComponentMethods(config){
+        if (this._COMPONENT_METHODS != null){
+            Object.keys(this._COMPONENT_METHODS).forEach(keyMethodConfig => {
+                const method = this.#getMethodDestinationConfig(config , keyMethodConfig);
+                if (method != null){
+                    this._COMPONENT_METHODS[keyMethodConfig]["destination"] = method;
+                }
+            })
+        }
+    }
+
+    #getMethodDestinationConfig(config , methodName){
+        let method = null
+        if (config != null){
+            Object.keys(config).forEach(keyMethod => {
+                if (keyMethod == methodName){
+                    const fn = config[keyMethod];
+                    if (fn != null && typeof fn == "function"){
+                        method = fn;
+                        return
+                    }
+                }
+            })
+        }
+        return method;
+    }
+
+
+
+    //--------------------------------------------------
+    // GET Ready ==> _COMPONENT_ELEMENT
+    //--------------------------------------------------
+    #getReadyTemplateSchma(){
+        this._COMPONENT_CONTENT = this.templateBasic_render();
+
+        if (this._COMPONENT_ELEMENT != null){
+            const classList = this.get("classList")
+            const styles = this.get("styles")
+            this._COMPONENT_ELEMENT.className =  tools_public.renderListClass(classList)
+            this._COMPONENT_ELEMENT.style =  tools_public.renderListStyle(styles)
+            this._COMPONENT_ELEMENT.appendChild(this.getSchema());
         }
     }
 
@@ -886,17 +1220,138 @@ class ComponentBase{
 
 
 
-
-
-
-
     //--------------------------------------------------
-    // Getter
+    // GET Ready ==> _COMPONENT_SELECTOR
     //--------------------------------------------------
-    getComponentElement(){
+    #getComponentElement(){
         return document.querySelector(this._COMPONENT_SELECTOR);
     }
 
+
+
+    //--------------------------------------------------
+    // Template Reader
+    //--------------------------------------------------
+    templateBasic_render(moreClass=["mb-1"]) {
+        const partName = "part_component";
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+
+            const directionRtl  =  data?.directionRtl ?? null;
+            let classList = [];
+            let styles = {};
+            if (this._COMPONENT_ELEMENT == null){
+                classList       =   data?.classList   ?? null;
+                styles          =   data?.styles      ?? null;
+            }
+
+           return  ReactiveElement.section({
+                className:[
+                    "component-element-structure" ,
+                    moreClass ,
+                    classList
+                ] ,
+                styles :{
+                  //  direction: AppConfig.get("direction") ,
+                    direction:  directionRtl.mapBoolean( "rtl" , "ltr"),
+                    ...styles
+                },
+                children: [
+                    this.template_render_structure()
+                ]
+            });
+        }
+
+
+        return ReactiveElement.section({
+            className: [
+                "component-element-structure"
+            ]
+        });
+    }
+
+    templateBasic_render_structure(content , moreClass="") {
+        const partName = "part_structure";
+        const data = this.getPartProps(partName);
+
+        if (data != null){
+            const prop_show                  =   data.hasOwnProperty("prop_show")                     ?  data.prop_show                    : true;
+            const prop_structureClass        =   data.hasOwnProperty("prop_structureClass")           ?  data.prop_structureClass          : [];
+            const prop_structureStyles       =   data.hasOwnProperty("prop_structureStyles")          ? data.prop_structureStyles          : {};
+            const prop_structureHoverStyles  =   data.hasOwnProperty("prop_structureHoverStyles")     ? data.prop_structureHoverStyles     : {};
+
+            return ReactiveElement.section({
+                className: [
+                    "position-relative" ,
+                    { "d-none": !prop_show }
+                ],
+                attrs: {
+                    "data-part-name": partName,
+                    "id": `component-${this._COMPONENT_NAME}-structure-${this._COMPONENT_RANDOM_ID}`,
+                },
+                style: {
+                    prop_structureStyles
+                },
+                /*stylesHover: {
+                    prop_structureHoverStyles
+                },*/
+                children: [
+                    content
+                ]
+            });
+
+            if (prop_show){
+
+
+
+            }
+        }
+
+        return ReactiveElement.section({
+            attrs: {
+                "data-part-name": partName,
+            },
+        });
+    }
+
+
+
+    //--------------------------------------------------
+    // fix Props
+    //--------------------------------------------------
+
+    getProp_directionRtl(config = null){
+        return  {
+            prop:     "directionRtl",
+            default:  config?.directionRtl ?? (component_props?.directionRtl ?? false)
+        }
+    }
+    getProp_show(config = null){
+        return  {
+            prop:     "prop_show",
+            default:   config?.prop_show ?? true
+        }
+    }
+
+    getProp_classList(config = null){
+        return  {
+            prop:     "classList",
+            default:  config?.classList ?? []
+        }
+    }
+
+    getProp_styles(config = null){
+        return  {
+            prop:     "styles",
+            default:  config?.styles ?? {}
+        }
+    }
+
+
+    //--------------------------------------------------
+    // part Props
+    //--------------------------------------------------
     getPartProps(partName){
         let resultExp = null
         if (this._COMPONENT_PROPS != null){
@@ -918,6 +1373,20 @@ class ComponentBase{
         return resultExp;
     }
 
+    getSchema(){
+        return this._COMPONENT_CONTENT.getElement()
+    }
+
+
+    //--------------------------------------------------
+    // Prop
+    //--------------------------------------------------
+    set(propName , propValue){
+        if ( this._COMPONENT_PROPS_BIND != null && this._COMPONENT_PROPS_BIND.hasOwnProperty(propName) ){
+            this._COMPONENT_PROPS_BIND[propName].set(propValue);
+        }
+    }
+
     get(propName){
         if ( this._COMPONENT_PROPS_BIND != null && this._COMPONENT_PROPS_BIND.hasOwnProperty(propName) ){
             return this._COMPONENT_PROPS_BIND[propName].get();
@@ -928,131 +1397,185 @@ class ComponentBase{
 
 
 
-
-
-
-    //--------------------------------------------------
-    // Setter
-    //--------------------------------------------------
-    set(propName , propValue){
-        if ( this._COMPONENT_PROPS_BIND != null && this._COMPONENT_PROPS_BIND.hasOwnProperty(propName) ){
-            console.log(propValue , this._COMPONENT_PROPS_BIND[propName])
-            this._COMPONENT_PROPS_BIND[propName].set(propValue);
-        }
-    }
-
-
-
-
-
-
-
     //--------------------------------------------------
     // Template Reader
     //--------------------------------------------------
-    templateBasic_render(moreClass="mb-1") {
-        return ReactiveElement.section({
-            className: `component-element-structure  ${tools_public.renderListClass(moreClass)}`,
-            children: [
-                this.template_render_structure()
-            ]
-        });
+    executMethod(methodName, event) {
+        const [fn, argsObject] = this.#executMethod_getMethodData(methodName);
+        if (typeof fn === "function") {
+            fn.call(this, event, argsObject);
+        }
     }
 
-    templateBasic_render_structure(content , moreClass="") {
-        const partName = "part_structure";
-        const data = this.getPartProps(partName);
+    #executMethod_getMethodData(methodName){
+        let fn = null;
+        let argsObject = {};
+        if (this._COMPONENT_METHODS != null){
+            Object.keys(this._COMPONENT_METHODS).forEach(key => {
+                const methodData = this._COMPONENT_METHODS[key];
+                if (
+                    key === methodName &&
+                    typeof methodData.destination === "function"
+                ){
+                    fn = methodData.destination;
+                    argsObject = this.#executMethod_getMethodData_getArgs(
+                        methodData.args || {}
+                    );
+                }
+            });
+        }
+        return [fn, argsObject];
+    }
 
-        if (data != null){
-            const prop_show                  =   data.hasOwnProperty("prop_show")                     ?  data.prop_show                    : true;
-            const prop_structureClass        =   data.hasOwnProperty("prop_structureClass")           ?  data.prop_structureClass          : [];
-            const prop_structureStyles       =   data.hasOwnProperty("prop_structureStyles")          ? data.prop_structureStyles          : {};
-            const prop_structureHoverStyles  =   data.hasOwnProperty("prop_structureHoverStyles")     ? data.prop_structureHoverStyles     : {};
+    #executMethod_getMethodData_getArgs(args){
+        let argsExp = {};
+        if (args != null){
+            Object.keys(args).forEach(keyArg => {
+                const argProp = args[keyArg]
+                if (argProp != null && argProp.hasOwnProperty("prop") && this._COMPONENT_PROPS_BIND.hasOwnProperty(argProp.prop)){
+                    argsExp[keyArg] = this._COMPONENT_PROPS_BIND[argProp.prop].get();
+                }
+            })
+        }
+        return argsExp;
+    }
 
-            if (prop_show){
+}
 
-                return ReactiveElement.section({
-                    className: "position-relative",
-                    attrs: {
-                        "data-part-name": partName,
-                        "id": `component-${this._COMPONENT_NAME}-structure-${this._COMPONENT_RANDOM_ID}`,
-                    },
-                    style: {
-                        ...prop_structureStyles
-                    },
-                    styleHover: {
-                        ...prop_structureHoverStyles
-                    },
-                    children: [
-                        content
-                    ]
-                });
 
+
+
+//===============================================================================================================
+// [01 - 10] basic ->  [01] text
+//===============================================================================================================
+
+/*-------------------------------------
+ 01-01) Component Messages
+-------------------------------------*/
+class ComponentMessagesBase extends ComponentBase{
+
+    _MESSAGE_TYPE_SUCCESS = "success";
+    _MESSAGE_TYPE_WARNING = "warning";
+    _MESSAGE_TYPE_ERROR =   "error";
+
+    /* ---------------------------------------------
+      PROPERTYs Pattern
+      --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_type : {
+            prop: "prop_type" ,
+            default: "success"
+        } ,
+        prop_colorIcon: {
+            prop: "prop_colorIcon",
+            default: null
+        },
+        prop_colorBorder: {
+            prop: "prop_colorBorder",
+            default: null
+        },
+        prop_msgBackgroundColor: {
+            prop: "prop_msgBackgroundColor" ,
+            default: null
+        },
+        prop_msgColor: {
+            prop: "prop_msgColor" ,
+            default: null
+        } ,
+        prop_message: {
+            prop: "prop_message" ,
+            default: null ,
+            hasMultiTemplate: false
+        } ,
+    }
+
+
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+      --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_component: [],
+        part_structure: [],
+        part_message: [
+            this._COMPONENT_PATTERN.prop_type ,
+            this._COMPONENT_PATTERN.prop_msgBackgroundColor ,
+            this._COMPONENT_PATTERN.prop_msgColor ,
+            this._COMPONENT_PATTERN.prop_message ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_colorBorder ,
+
+            super.getProp_directionRtl() ,
+        ] ,
+        part_icon: [
+            this._COMPONENT_PATTERN.prop_message ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_colorIcon ,
+            this._COMPONENT_PATTERN.prop_type ,
+
+            super.getProp_directionRtl() ,
+        ]
+    }
+
+    /* ---------------------------------------------
+    PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_METHODS= {
+        fn_onCloseMessage: {
+            description: "on close message selected" ,
+            args: {}
+        },
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_TEMPLATES= {
+        body: {
+            description: "for list messages" ,
+            refrence: this._COMPONENT_PATTERN.prop_message
+        },
+    };
+
+
+
+    /* ---------------------------------------------
+         PROPERTYs Schema
+     --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_component: {
+            part_structure: {
+                part_message: {} ,
+                part_icon: {}
             }
         }
-
-        return ReactiveElement.section({
-            attrs: {
-                "data-part-name": partName,
-            },
-        });
     }
 
 }
+window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase{
 
-
-
-
-
-/*----------------------------------------------------
- 030-01) Component Collapse
--------------------------------------*/
-class ComponentTestBase extends ComponentBase{
-
-
-    /* ---------------------------------------------
-           PROPERTYs Pattern
-    --------------------------------------------- */
-    _COMPONENT_PATTERN = {
-        prop_title : {
-            prop: "prop_title" ,
-            default: "Hello World" ,
-        } ,
-    };
-
-    /* ---------------------------------------------
-           PROPERTYs Props
-    --------------------------------------------- */
-    _COMPONENT_PROPS = {
-        part_structure: [],
-
-        part_one: [
-            this._COMPONENT_PATTERN.prop_title ,
-        ],
-    };
-
-
-    /* ---------------------------------------------
-   PROPERTYs Schema
-   --------------------------------------------- */
-    _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_one: {
-
-            } ,
-        }
-    }
-
-}
-window.ComponentTest = class ComponentTest extends ComponentTestBase{
+    _ELEMENT_MESSGEE = false;
 
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
-    constructor(elId , config) {
+    constructor() {
+        let elId = null;
+        let config = null;
+        if (arguments.length === 1) {
+            config = arguments[0];
+        } else if (arguments.length === 2) {
+            elId = arguments[0];
+            config = arguments[1];
+        }
+
         super(
-            "component-test" ,
-            elId ,
+            "component-message" ,
+            elId
         );
         super.renderComponent(config);
     }
@@ -1061,49 +1584,113 @@ window.ComponentTest = class ComponentTest extends ComponentTestBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn(){
-
-    }
-
-    templateFn(partName = null){
+    templateFn(){
         return this.templateBasic_render();
     }
 
     template_render_structure() {
         const partName = "part_structure";
+
         return this.templateBasic_render_structure(
             ReactiveElement.section({
                 children: [
-                    this.template_render_one() ,
+                    this.#template_render_messages() ,
                 ]
             })
         );
     }
 
-    template_render_one() {
-        const partName = "part_one";
+    #template_render_messages() {
+        const partName = "part_message";
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const prop_title                =   data.hasOwnProperty("prop_title")                 ?  data.prop_title               :  null;
 
-            return ReactiveElement.section({
-                className: "position-relative",
-                attrs: {
-                    "data-part-name": partName,
-                    "id": `component-collapse-header-${this._COMPONENT_RANDOM_ID}`,
-                },
-                bind:{
-                    text: { key: prop_title, default: "1" },
-                } ,
-                on: {
-                    click: (e) => {
-                        this.set("prop_title" , "clicked")
-                        //e.target.set("")
-                        alert("کلیک شد!");
+            const prop_message    =   data?.prop_message   ??  null;
+            const prop_type       =   data?.prop_type      ??  null;
+            const prop_size       =   data?.prop_size      ??  null;
+
+            const elfontSize = tools_css.getFontSize(this.get("prop_size"));
+
+            let msgBackgroundColor = {};
+            msgBackgroundColor[this._MESSAGE_TYPE_SUCCESS] = tools_const?.styles?.message?.success?.backgroundColor ?? "";
+            msgBackgroundColor[this._MESSAGE_TYPE_ERROR] = tools_const?.styles?.message?.error?.backgroundColor ?? "";
+            msgBackgroundColor[this._MESSAGE_TYPE_WARNING] = tools_const?.styles?.message?.warning?.backgroundColor ?? "";
+            msgBackgroundColor["default"] = data?.prop_msgBackgroundColor ?? "";
+
+            let msgColor = {};
+            msgColor[this._MESSAGE_TYPE_SUCCESS] = tools_const?.styles?.message?.success?.color ?? "";
+            msgColor[this._MESSAGE_TYPE_ERROR] = tools_const?.styles?.message?.error?.color ?? "";
+            msgColor[this._MESSAGE_TYPE_WARNING] = tools_const?.styles?.message?.warning?.color ?? "";
+            msgColor["default"] = data?.prop_msgColor ?? "";
+
+            let msgBorderColor = {};
+            msgBorderColor[this._MESSAGE_TYPE_SUCCESS] = tools_const?.styles?.message?.success?.border ?? "";
+            msgBorderColor[this._MESSAGE_TYPE_ERROR] = tools_const?.styles?.message?.error?.border ?? "";
+            msgBorderColor[this._MESSAGE_TYPE_WARNING] = tools_const?.styles?.message?.warning?.border ?? "";
+            msgBorderColor["default"] = data?.prop_colorBorder ?? "";
+
+
+
+            return ReactiveElement.section(
+                {
+                    attrs: {
+                        "id":  `component-messages-${this._COMPONENT_RANDOM_ID}`,
                     },
-                },
-            });
+                    children: [
+                        ReactiveElement.section(
+                            {
+                                attrs: {
+                                    "id":     `component-messages-item-${this._COMPONENT_RANDOM_ID}`,
+                                    "role" :  "alert"
+                                },
+                                styles: {} ,
+                                className: [] ,
+                                children: [
+                                    ReactiveElement.div(
+                                        {
+                                            attrs: {
+                                                "id":  `component-messages-item-${this._COMPONENT_RANDOM_ID}-body`,
+                                            },
+                                            styles: {
+                                                backgroundColor:  prop_type.mapList(msgBackgroundColor) ,
+                                                borderColor:      prop_type.mapList(msgBorderColor) ,
+                                                color:            prop_type.mapList(msgColor) ,
+                                                fontSize :        elfontSize ,
+                                                borderWidth:      "2px" ,
+                                                borderStyle:      "solid"
+                                            } ,
+                                            className: [
+                                                "mb-2" , "mt-2" , "rounded" , "shadow-sm"
+                                            ] ,
+                                            children: [
+                                                ReactiveElement.div(
+                                                    {
+                                                        attrs: {
+                                                            "id":  `component-messages-item-${this._COMPONENT_RANDOM_ID}-body-message`,
+                                                        },
+                                                        //
+                                                        styles: {
+
+                                                        } ,
+                                                        className: [
+                                                            "alert" ,
+                                                        ] ,
+                                                        children: [
+                                                            ReactiveElement.b(
+                                                                {
+                                                                    text: prop_message,
+                                                                }
+                                                            ),
+                                                            this.#componentFn_render_icon()
+                                                        ]
+                                                    })
+                                            ]
+                                        })
+                                ]
+                            })
+                    ]
+                });
         }
 
 
@@ -1114,7 +1701,350 @@ window.ComponentTest = class ComponentTest extends ComponentTestBase{
         });
     }
 
+    #componentFn_render_icon () {
+        const partName = "part_icon";
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_type    =   data?.prop_type     ??  null;
+            const directionRtl =   data?.directionRtl  ??  null;
+            const prop_size    =   data?.prop_size     ??  null;
+
+            let prop_colorIcon = {};
+            prop_colorIcon[this._MESSAGE_TYPE_SUCCESS] = tools_const?.styles?.message?.success?.icon ?? "";
+            prop_colorIcon[this._MESSAGE_TYPE_ERROR] = tools_const?.styles?.message?.error?.icon ?? "";
+            prop_colorIcon[this._MESSAGE_TYPE_WARNING] = tools_const?.styles?.message?.warning?.icon ?? "";
+            prop_colorIcon["default"] = data?.prop_msgColor ?? "";
+
+            const elheight = tools_css.getHeightSize(prop_size);
+
+            let styles = {
+                "top" :               elheight ,
+                "inset-inline-end" :  directionRtl.mapBoolean( "20px" , ""),
+            }
+
+            return new ComponentIcon(
+                {
+                    classList: "position-absolute"  ,
+                    styles: styles,
+
+                    prop_iconClass : ["mx-2" ] ,
+                    prop_iconStyles : {
+                        "cursor" : "pointer"
+                    } ,
+                    prop_icon: tools_icons.icon_close({size: this.get("prop_size") , colors:{primary: prop_type.mapList(prop_colorIcon)?.get?.()} }) ,
+
+                    fn_callback: function (event , args)  {
+                        this._COMPONENT_CONTENT.remove()
+                        this.executMethod("fn_onCloseMessage" , event , [])
+                    }.bind(this) ,
+                }
+            ).getSchema();
+
+        }
+
+        return ReactiveElement.section({
+            attr: {
+                "data-part-name":  partName
+            }
+        });
+    }
+
 }
+
+
+
+
+
+
+//===============================================================================================================
+// [10 - 19] button / inputs / tools -> [010] Button and Inputs
+//===============================================================================================================
+
+/*-------------------------------------
+ 03-01) Component Button
+-------------------------------------*/
+class ComponentButtonBase extends ComponentBase{
+
+    _BUTTON_TYPE_SUBMIT = "submit";
+    _BUTTON_TYPE_CANCEL = "cancel";
+    _BUTTON_TYPE_BACK = "back";
+
+    /* ---------------------------------------------
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_type: {
+            prop: "prop_type",
+            default: this._BUTTON_TYPE_SUBMIT
+        },
+        prop_btnType: {
+            prop: "prop_btnType",
+            default: null
+        },
+        prop_title: {
+            prop: "prop_title",
+            default: "BTN"
+        },
+        prop_btnClass: {
+            prop: "prop_btnClass",
+            default: ["w-100"]
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_btnStyles: {
+            prop: "prop_btnStyles",
+            default: {}
+        },
+        prop_btnHoverStyles: {
+            prop: "prop_btnHoverStyles",
+            default: {}
+        },
+        prop_btnBackgroundColor: {
+            prop: "prop_btnBackgroundColor",
+            default: null
+        },
+        prop_btnBackgroundColor_hover: {
+            prop: "prop_btnBackgroundColor_hover",
+            default: null
+        },
+        prop_btnColor: {
+            prop: "prop_btnColor",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_component: [],
+
+        part_structure: [],
+
+        part_button: [
+            this._COMPONENT_PATTERN.prop_type,
+            this._COMPONENT_PATTERN.prop_btnType,
+            this._COMPONENT_PATTERN.prop_title,
+            this._COMPONENT_PATTERN.prop_btnClass,
+            this._COMPONENT_PATTERN.prop_btnStyles,
+            this._COMPONENT_PATTERN.prop_btnHoverStyles,
+            this._COMPONENT_PATTERN.prop_btnBackgroundColor,
+            this._COMPONENT_PATTERN.prop_btnBackgroundColor_hover,
+            this._COMPONENT_PATTERN.prop_btnColor,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.fn_callback
+        ]
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs methods
+    --------------------------------------------- */
+    _COMPONENT_METHODS= {
+        fn_callback: {
+            description: "on click btn" ,
+            args: {}
+        },
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs templates
+     --------------------------------------------- */
+    _COMPONENT_TEMPLATES= {
+        body: {
+            description: "for content button" ,
+            refrence: this._COMPONENT_PATTERN.prop_title
+        },
+    };
+
+    /* ---------------------------------------------
+       PROPERTYs Schema
+     --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_component: {
+            part_structure: {
+                part_button: {} ,
+            }
+        },
+    }
+
+}
+window.ComponentButton = class ComponentButton extends ComponentButtonBase{
+
+    /* ---------------------------------------------
+        SETUP
+    --------------------------------------------- */
+    constructor() {
+        let elId = null;
+        let config = null;
+        if (arguments.length === 1) {
+            config = arguments[0];
+        } else if (arguments.length === 2) {
+            elId = arguments[0];
+            config = arguments[1];
+        }
+
+        super(
+            "component-button" ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    templateFn(){
+        return this.templateBasic_render();
+    }
+
+    template_render_structure() {
+        const partName = "part_structure";
+        return this.templateBasic_render_structure(
+            ReactiveElement.section({
+                children: [
+                    this.#template_render_button() ,
+                ]
+            })
+        );
+    }
+
+    #template_render_button() {
+        const partName = "part_button";
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_type             =   data?.prop_type           ?? null;
+            const prop_btnType          =   data?.prop_btnType        ?? null;
+            const prop_title            =   data?.prop_title          ?? null;
+
+            const prop_btnClass         =   data?.prop_btnClass       ?? null;
+            const prop_size             =   data?.prop_size           ?? null;
+            const prop_btnStyles        =   data?.prop_btnStyles      ?? null;
+            const prop_btnHoverStyles   =   data?.prop_btnHoverStyles ?? null;
+
+            let btnBackgroundColor = {};
+            btnBackgroundColor[this._BUTTON_TYPE_SUBMIT] = tools_const?.styles?.button?.submit?.backgroundColor ?? "";
+            btnBackgroundColor[this._BUTTON_TYPE_CANCEL] = tools_const?.styles?.button?.cancel?.backgroundColor ?? "";
+            btnBackgroundColor[this._BUTTON_TYPE_BACK] =   tools_const?.styles?.button?.back?.backgroundColor ?? "";
+            btnBackgroundColor["default"] = data?.prop_btnBackgroundColor ?? "";
+
+            let btnBackgroundColor_hover = {};
+            btnBackgroundColor_hover[this._BUTTON_TYPE_SUBMIT] = tools_const?.styles?.button?.submit?.backgroundColorHover ?? "";
+            btnBackgroundColor_hover[this._BUTTON_TYPE_CANCEL] = tools_const?.styles?.button?.cancel?.backgroundColorHover ?? "";
+            btnBackgroundColor_hover[this._BUTTON_TYPE_BACK] =   tools_const?.styles?.button?.back?.backgroundColorHover ?? "";
+            btnBackgroundColor_hover["default"] = data?.prop_btnBackgroundColor_hover ?? "";
+
+            let btnColor = {};
+            btnColor[this._BUTTON_TYPE_SUBMIT] = tools_const?.styles?.button?.submit?.color ?? "";
+            btnColor[this._BUTTON_TYPE_CANCEL] = tools_const?.styles?.button?.cancel?.color ?? "";
+            btnColor[this._BUTTON_TYPE_BACK] =   tools_const?.styles?.button?.back?.color ?? "";
+            btnColor["default"] = data?.prop_btnColor ?? "";
+
+            const btnHeight = tools_css.getHeightSize(prop_size);
+            const btnfontSize = tools_css.getFontSize(prop_size);
+
+
+            return ReactiveElement.section(
+                {
+                    attrs: {
+                        "data-part-name":     partName,
+                        "id":                `component-buttn-form-${this._COMPONENT_RANDOM_ID}`,
+                        "type":               prop_btnType
+                    },
+                    styles: {} ,
+                    className: [] ,
+                    children: [
+                        ReactiveElement.button(
+                            {
+                                attrs: {
+                                    "id":     `component-button-${this._COMPONENT_RANDOM_ID}`,
+                                },
+                                className: [
+                                    "shadow-sm" , "border-0" , "rounded",
+                                    prop_btnClass
+                                ] ,
+                                text: prop_title,
+                                styles: {
+                                    backgroundColor:    prop_type.mapList(btnBackgroundColor) ,
+                                    color:              prop_type.mapList(btnColor) ,
+                                    height :            btnHeight ,
+                                    lineHeight :        btnHeight ,
+                                    fontSize :          btnfontSize ,
+                                    prop_btnStyles
+                                } ,
+                                stylesHover: {
+                                    transition:         "background-color 200ms ease" ,
+                                    backgroundColor:    prop_type.mapList(btnBackgroundColor_hover) ,
+                                    prop_btnHoverStyles
+                                } ,
+                                on: {
+                                    click: (event) => {
+                                        this.executMethod("fn_callback" , event )
+                                    },
+                                },
+                            }
+                        )
+                    ]
+                });
+
+        /*    return `
+<section data-part-name="${partName}">
+
+   <style>
+      #${this._COMPONENT_ID} #component-button-${this._COMPONENT_RANDOM_ID}{
+          background-color: ${btnBackgroundColor};
+          color:            ${btnColor};
+          height:           ${btnHeight}px;
+          line-height:      ${btnHeight}px;
+          font-size:        ${btnfontSize}px;
+          ${tools_public.renderListStyle(prop_btnStyles)}
+     }
+      #${this._COMPONENT_ID} #component-button-${this._COMPONENT_RANDOM_ID}:hover{
+          transition: background-color 200ms ease;
+          background-color: ${btnBackgroundColor_hover};
+          ${tools_public.renderListStyle(prop_btnHoverStyles)}
+     }
+   </style>
+
+   <button id="component-button-${this._COMPONENT_RANDOM_ID}"  
+           ${prop_btnType !=null ? `type=${prop_btnType}` : ""}
+           class="shadow-sm border-0 rounded ${tools_public.renderListClass(prop_btnClass)}  "
+            onclick="${this.getFn('fn_onCLickBtn' , "event")}">
+      ${prop_title}
+   </button>
+
+</section>
+            `*/
+        }
+
+        return ReactiveElement.section({
+            attr: {
+                "data-part-name":  partName
+            }
+        });
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickBtn(event){
+        event.stopPropagation()
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+}
+
+
 
 
 
@@ -1131,7 +2061,8 @@ class ComponentIconBase extends ComponentBase{
     _COMPONENT_PATTERN = {
         prop_icon: {
             prop: "prop_icon",
-            default: ""
+            default: "" ,
+            hasMultiTemplate: false ,
         },
         prop_title: {
             prop: "prop_title",
@@ -1148,17 +2079,44 @@ class ComponentIconBase extends ComponentBase{
         prop_iconStyles: {
             prop: "prop_iconStyles",
             default: {}
-        },
-        fn_callback: {
-            prop: "fn_callback",
-            default: null
         }
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_METHODS= {
+        fn_callback: {
+            description: "on click icon" ,
+            args: {
+                icon: this._COMPONENT_PATTERN.prop_icon
+            }
+        },
+        fn_onHoverIcon: {
+            description: "on hover icon" ,
+            args: {}
+        },
+        fn_onBlurIcon: {
+            description: "on blur icon" ,
+            args: {}
+        },
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_TEMPLATES= {
+        body: {
+            description: "for show icon" ,
+            refrence: this._COMPONENT_PATTERN.prop_icon
+        },
     };
 
     /* ---------------------------------------------
            PROPERTYs Props
     --------------------------------------------- */
     _COMPONENT_PROPS = {
+        part_component: [],
         part_structure: [],
         part_icon: [
             this._COMPONENT_PATTERN.prop_icon,
@@ -1176,8 +2134,10 @@ class ComponentIconBase extends ComponentBase{
    PROPERTYs Schema
    --------------------------------------------- */
     _COMPONENT_SCHEMA = {
-        part_structure: {
-            part_icon: {} ,
+        part_component: {
+            part_structure: {
+                part_icon: {} ,
+            }
         }
     }
 
@@ -1187,9 +2147,18 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
     /* ---------------------------------------------
        SETUP
    --------------------------------------------- */
-    constructor(elId , config) {
+    constructor() {
+        let elId = null;
+        let config = null;
+        if (arguments.length === 1) {
+            config = arguments[0];
+        } else if (arguments.length === 2) {
+            elId = arguments[0];
+            config = arguments[1];
+        }
+
         super(
-            listComponent[ComponentIcon.name] ,
+            "component-icon" ,
             elId
         );
         super.renderComponent(config);
@@ -1199,11 +2168,7 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
     /* ---------------------------------------------
        TEMPLATEs
     --------------------------------------------- */
-    componentFn(){
-
-    }
-
-    templateFn(partName = null){
+    templateFn(){
         return this.templateBasic_render();
     }
 
@@ -1212,13 +2177,13 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
         return this.templateBasic_render_structure(
             ReactiveElement.section({
                 children: [
-                    this.templateFn_render_icon() ,
+                    this.#templateFn_render_icon() ,
                 ]
             })
         );
     }
 
-    templateFn_render_icon(){
+    #templateFn_render_icon(){
         const partName="part_icon";
         const data = this.getPartProps(partName);
 
@@ -1231,40 +2196,33 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
             const prop_iconClass    =   data.hasOwnProperty("prop_iconClass")     ?  data.prop_iconClass    :  [];
             const prop_iconStyles   =   data.hasOwnProperty("prop_iconStyles")    ?  data.prop_iconStyles   :  {};
 
-            console.log(prop_icon);
-
             return ReactiveElement.i(
                 {
-                    className: "",
                     attrs: {
                         "data-part-name":     partName,
                         "title":              prop_title,
                         "id":                `component-icon-icon-${this._COMPONENT_RANDOM_ID}`,
                    },
-                   bind:{
-                       text: { key: prop_icon, default: "" },
-                       styles: {
-                           ... prop_iconStyles
-                       }
-                       /*className: [
-                           { key: prop_iconClass, default: "" }
-                       ]*/
-                   } ,
-                   on: {
-                       click: (event) => {
-                           this.fn_onCLickIcon(event)
-                       },
-                       mouseenter: (event) => {
-                           this.fn_onHoverIcon(event)
-                       },
-                       mouseleave: (event) => {
-                           this.fn_onBlurIcon(event)
-                       },
-                   },
+                    text: prop_icon,
+                    styles: {
+                        prop_iconStyles
+                    } ,
+                    className: [
+                        prop_iconClass
+                    ] ,
+                    on: {
+                        click: (event) => {
+                            this.executMethod("fn_callback" , event )
+                        },
+                        mouseenter: (event) => {
+                            this.executMethod("fn_onHoverIcon" , event , [])
+                        },
+                        mouseleave: (event) => {
+                            this.executMethod("fn_onBlurIcon" , event , [])
+                        },
+                    },
             });
-
         }
-
 
         return ReactiveElement.section({
             attr: {
@@ -1274,27 +2232,11 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
     }
 
 
+
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
-    fn_onCLickIcon(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
-            data.fn_callback(event);
-        }
-    }
-    fn_onHoverIcon(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onHoverIcon") && typeof data.fn_onHoverIcon != null){
-            data.fn_onHoverIcon(event);
-        }
-    }
-    fn_onBlurIcon(event){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onBlurIcon") && typeof data.fn_onBlurIcon != null){
-            data.fn_onBlurIcon(event);
-        }
-    }
+
 
 }
 

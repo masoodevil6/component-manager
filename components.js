@@ -17,14 +17,15 @@ if (typeof listComponent === 'undefined') {
         // [01] text
         ComponentMessages:                   "component-messages" ,                       //01-01
         ComponentIsEmpty:                    "component-is-empty" ,                       //01-02
-        ComponentHeader:                     "component-header" ,                         //01-03
-        ComponentLabel:                      "component-label" ,                          //01-04
-        ComponentDescription:                "component-description" ,                    //01-05
-        ComponentLink:                       "component-link" ,                           //01-06
-        ComponentInfo:                       "component-info" ,                           //01-07
-        ComponentCard:                       "component-card" ,                           //01-08
-        ComponentCardInfo:                   "component-card-info" ,                      //01-09
-        ComponentListSelectedScroller:       "component-list-selected-scroller" ,         //01-010
+        ComponentNotify:                     "component-notify" ,                         //01-03
+        ComponentHeader:                     "component-header" ,                         //01-04
+        ComponentLabel:                      "component-label" ,                          //01-05
+        ComponentDescription:                "component-description" ,                    //01-06
+        ComponentLink:                       "component-link" ,                           //01-07
+        ComponentInfo:                       "component-info" ,                           //01-08
+        ComponentCard:                       "component-card" ,                           //01-09
+        ComponentCardInfo:                   "component-card-info" ,                      //01-010
+        ComponentListSelectedScroller:       "component-list-selected-scroller" ,         //01-011
 
         // [02] Fetch
         ComponentLoading:                    "component-loading" ,                        //02-01
@@ -70,8 +71,8 @@ if (typeof listComponent === 'undefined') {
         ComponentValidate:                   "component-validate" ,                       //012-03
         ComponentTooltipDescription:         "component-tooltip-description" ,            //012-04
 
-
-
+        // [013] Inputs timer
+        ComponentTimerDown:                  "component-timer-down" ,                     //013-04
 
 
         //===============================================================================================================
@@ -958,7 +959,7 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                             classList:     [ "position-absolute"] ,
                             styles :       styles,
 
-                            prop_icon:    tools_icons.icon_close(prop_size , prop_colorIcon)  ,
+                            prop_icon:    tools_icons.icon_close({size : prop_size})  ,
 
                             prop_iconClass : ["mx-2" ] ,
                             prop_iconStyles : {
@@ -1221,6 +1222,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
                 {
                     prop_btnMore_show: false ,
 
+                    prop_borderColor : null,
                     prop_structureClass: prop_borderClass ,
                     prop_structureStyles: {
                         ...prop_borderStyles ,
@@ -1255,7 +1257,7 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
                     {
                         prop_iconClass: prop_iconClass ,
                         prop_iconStyles: prop_iconStyles ,
-                        prop_icon: typeof prop_icon == "function" ? prop_icon(prop_iconSize , prop_iconColor ) : prop_icon,
+                        prop_icon: typeof prop_icon == "function" ? prop_icon({size: prop_iconSize /*, colors:{ primary: prop_iconColor}*/}) : prop_icon,
                     }
                 )
         }
@@ -1321,6 +1323,282 @@ window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
     }
 
 
+}
+
+
+
+/*-------------------------------------
+ 01-03) Component Nofite
+-------------------------------------*/
+class ComponentNotifyBase extends ComponentBase{
+
+
+    /* ---------------------------------------------
+       PROPERTYs Pattern
+     --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_borderClass : {
+            prop: "prop_borderClass" ,
+            default: [ "rounded" , "shadow-sm"]
+        } ,
+        prop_borderStyles: {
+            prop: "prop_borderStyles" ,
+            default: {}
+        },
+        prop_borderColor: {
+            prop: "prop_borderColor" ,
+            default: tools_const?.styles?.notify?.borderColor_border ?? ""
+        } ,
+        prop_borderBackground: {
+            prop: "prop_borderBackground" ,
+            default: tools_const?.styles?.notify?.background_border ?? ""
+        },
+        prop_borderArrowType: {
+            prop: "prop_borderArrowType" ,
+            default: null
+        },
+
+        prop_icon: {
+            prop: "prop_icon" ,
+            default: tools_icons.icon_warning
+        } ,
+        prop_iconSize: {
+            prop: "prop_iconSize" ,
+            default: 40
+        } ,
+        prop_iconColor: {
+            prop: "prop_iconColor" ,
+            default: tools_const?.styles?.notify?.color_icon ?? ""
+        } ,
+        prop_iconClass: {
+            prop: "prop_iconClass" ,
+            default: ["font-30pt" , "text-danger"]
+        } ,
+        prop_iconStyles: {
+            prop: "prop_iconStyles" ,
+            default: { "font-size" : "30px" , "display" : "block" ,  "text-align" : "center" , }
+        } ,
+
+        prop_title: {
+            prop: "prop_title" ,
+            default: null
+        } ,
+        prop_titleColor: {
+            prop: "prop_titleColor" ,
+            default: tools_const?.styles?.notify?.color_title ?? ""
+        } ,
+    }
+
+
+    /* ---------------------------------------------
+      PROPERTYs Props
+      --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+
+        ] ,
+        part_border: [
+            this._COMPONENT_PATTERN.prop_borderClass ,
+            this._COMPONENT_PATTERN.prop_borderStyles ,
+            this._COMPONENT_PATTERN.prop_borderColor ,
+            this._COMPONENT_PATTERN.prop_borderBackground ,
+            this._COMPONENT_PATTERN.prop_borderArrowType ,
+        ] ,
+        part_icon: [
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_iconSize ,
+            this._COMPONENT_PATTERN.prop_iconColor ,
+            this._COMPONENT_PATTERN.prop_iconClass ,
+            this._COMPONENT_PATTERN.prop_iconStyles ,
+        ] ,
+        part_title: [
+            this._COMPONENT_PATTERN.prop_title ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_titleColor ,
+        ] ,
+
+    }
+
+
+    /* ---------------------------------------------
+         PROPERTYs Schema
+     --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_border: {
+                part_icon: {} ,
+                part_title: {}
+            }
+        }
+    }
+
+}
+window.ComponentNotify = class ComponentNotify extends ComponentNotifyBase{
+
+    /* ---------------------------------------------
+       SETUP
+   --------------------------------------------- */
+    constructor(elId , config) {
+        super(
+            listComponent[ComponentNotify.name] ,
+            elId
+        );
+        this.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+     --------------------------------------------- */
+    componentFn(){
+        this.templateFn(  "part_border");
+        this.templateFn(  "part_icon");
+        this.templateFn(  "part_btn_retry");
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
+            case "part_title":
+                return this.template_render_title(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+           <component-border id="component-notify-border-${this._COMPONENT_RANDOM_ID}">
+               <component-body>
+                    <section class="row p-0 m-0">
+                           <component-icon id="component-notify-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+         
+                           ${this.templateFn("part_title") ?? ""}
+                           
+                    </section>
+               </component-body>
+          </component-border> 
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_title(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title =            data.hasOwnProperty("prop_title")         ?  data.prop_title           : (componentSlots != null && componentSlots.hasOwnProperty("title") ? componentSlots.title : '');
+            const prop_size  =            data.hasOwnProperty("prop_size")          ?  data.prop_size            :  null
+            const prop_titleColor  =      data.hasOwnProperty("prop_titleColor")    ?  data.prop_titleColor      :  null
+
+            const elHeight = tools_css.getHeightSize(prop_size);
+            const elFontSize = tools_css.getFontSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-notify-title-${this._COMPONENT_RANDOM_ID}" 
+         class="col-md-8 col-12 position-relative">
+    <style>
+        #${this._COMPONENT_ID} #component-notify-title-${this._COMPONENT_RANDOM_ID}{
+             
+       }
+        #${this._COMPONENT_ID} #component-notify-title-${this._COMPONENT_RANDOM_ID}-b{
+             left:          50%;
+             top:           50%;
+             transform:     translate(-50% , -50%);
+             text-align:    center!important;
+             line-height:   ${elHeight}px;
+             font-size:     ${elFontSize}px;
+             color:         ${prop_titleColor};
+       }
+    </style>
+    <b id="component-notify-title-${this._COMPONENT_RANDOM_ID}-b" class="position-absolute">
+         ${prop_title} 
+    </b>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+
+    componentFn_render_border(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_borderClass =           data.hasOwnProperty("prop_borderClass")          ? data.prop_borderClass         : null;
+            const prop_borderStyles =          data.hasOwnProperty("prop_borderStyles")         ? data.prop_borderStyles        : null;
+            const prop_borderColor =           data.hasOwnProperty("prop_borderColor")          ? data.prop_borderColor         : null;
+            const prop_borderBackground =      data.hasOwnProperty("prop_borderBackground")     ? data.prop_borderBackground    : null;
+            const prop_borderArrowType =       data.hasOwnProperty("prop_borderArrowType")      ? data.prop_borderArrowType     : null;
+
+            new window.ComponentBorder(
+                `component-notify-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_btnMore_show: false ,
+
+                    prop_borderArrowType ,
+                    prop_borderColor ,
+
+                    prop_borderClass: [
+                        ... prop_borderClass ,
+                        "py-2"
+                    ] ,
+                    prop_borderStyles: {
+                        ... prop_borderStyles ,
+                        "background-color" : `${prop_borderBackground}` ,
+                    } ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_icon(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_icon        =  data.hasOwnProperty("prop_icon")            ?  data.prop_icon         : null;
+            const prop_iconSize    =  data.hasOwnProperty("prop_iconSize")        ?  data.prop_iconSize     : 80;
+            const prop_iconColor   =  data.hasOwnProperty("prop_iconColor")       ?  data.prop_iconColor    : "#000";
+            const prop_iconClass   =  data.hasOwnProperty("prop_iconClass")       ?  data.prop_iconClass    : [  "mx-3"];
+            const prop_iconStyles  =  data.hasOwnProperty("prop_iconStyles")      ?  data.prop_iconStyles   : {
+                "font-size" : "30px" ,
+                "width" : "100%" ,
+                "display" : "block" ,
+                "text-align" : "center" ,
+            };
+
+            this._COMPONENT_PATTERN.prop_iconSize ,
+                this._COMPONENT_PATTERN.prop_iconColor ,
+
+
+
+            new window.ComponentIcon(
+                    `component-notify-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList: "col-md-4 col-12"  ,
+
+                        prop_iconClass: prop_iconClass ,
+                        prop_iconStyles: prop_iconStyles ,
+                        prop_icon: typeof prop_icon == "function" ? prop_icon({size: prop_iconSize /*, colors:{ primary: prop_iconColor}*/}) : prop_icon,
+                    }
+                )
+        }
+    }
 }
 
 
@@ -1484,6 +1762,8 @@ window.ComponentHeader = class ComponentHeader extends ComponentHeaderBase{
 
                     prop_structureClass: prop_borderClass ,
                     prop_structureStyles: prop_borderStyles ,
+
+                    prop_borderColor : null,
                 }
             )
         }
@@ -1725,6 +2005,7 @@ window.ComponentLabel  = class ComponentLabel extends ComponentLabelBase{
                 {
                     prop_structureClass: prop_labelClass ,
                     prop_structureStyles: prop_labelStyles ,
+                    prop_borderColor : null,
                 }
             )
         }
@@ -1822,7 +2103,7 @@ class ComponentDescriptionBase extends ComponentBase{
         },
         prop_description: {
             prop: "prop_description",
-            default: ""
+            default: null
         },
         prop_descriptionClass: {
             prop: "prop_descriptionClass",
@@ -2010,10 +2291,9 @@ window.ComponentDescription = class ComponentDescription extends ComponentDescri
         const data = this.getPartProps(partName)
 
         if (data != null){
-
-            const prop_description         =  data.hasOwnProperty("prop_description")                     ?  data.prop_description             : "";
-            const prop_descriptionClass    =  data.hasOwnProperty("prop_descriptionClass")                ?  data.prop_descriptionClass        : [];
-            const prop_descriptionStyles   =  data.hasOwnProperty("prop_descriptionStyles")               ?  data.prop_descriptionStyles       : {};
+            const prop_description         =   data.hasOwnProperty("prop_description") && data.prop_description !=null       ?  data.prop_description             : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+            const prop_descriptionClass    =  data.hasOwnProperty("prop_descriptionClass")                                   ?  data.prop_descriptionClass        : [];
+            const prop_descriptionStyles   =  data.hasOwnProperty("prop_descriptionStyles")                                  ?  data.prop_descriptionStyles       : {};
 
             prop_descriptionStyles["text-align"] = "justify";
             prop_descriptionStyles["display"] = "-webkit-box";
@@ -3477,7 +3757,7 @@ window.ComponentListSelectedScroller = class ComponentListSelectedScroller exten
                     new window.ComponentIcon(
                         `component-list-selected-form-selector-list-item-${this._COMPONENT_RANDOM_ID}-icon-${i}`,
                         {
-                            prop_icon: tools_icons.icon_close(prop_size , prop_formSelectorItemColorIcon),
+                            prop_icon: tools_icons.icon_close({size : prop_size /*, colors: {primary:prop_formSelectorItemColorIcon }*/} ),
 
                             prop_iconClass: ["position-absolute"],
                             prop_iconStyles: styles,
@@ -4382,12 +4662,14 @@ window.ComponentForm = class ComponentForm extends ComponentFormBase{
             new window.ComponentBorder(
                 `component-form-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_btnMore_show: false ,
 
-                    prop_structureClass: prop_borderClass ,
+                    prop_borderColor :    null,
+                    prop_btnMore_show:    false ,
+
+                    prop_structureClass:  prop_borderClass ,
                     prop_structureStyles: {} ,
 
-                    prop_borderStyles: prop_borderStyles
+                    prop_borderStyles:    prop_borderStyles
                 }
             )
         }
@@ -4722,12 +5004,18 @@ window.ComponentWidget = class ComponentWidget extends ComponentWidgetBase{
             new window.ComponentBorder(
                 `border-widget-component-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_structureClass: prop_widgetClass ,
+                    prop_borderColor :    null,
+
+                    prop_structureClass:  prop_widgetClass ,
                     prop_structureStyles: prop_widgetStyles ,
 
-                    prop_btnMore_icon: prop_btnMore_icon ,
-                    prop_btnMore_show: prop_btnMore_show ,
-                    prop_btnMore_link: prop_btnMore_link ,
+                    prop_borderStyles: {
+                        "min-height": "100px !important"
+                    } ,
+
+                    prop_btnMore_icon:     prop_btnMore_icon ,
+                    prop_btnMore_show:     prop_btnMore_show ,
+                    prop_btnMore_link:     prop_btnMore_link ,
                 }
             )
         }
@@ -5075,10 +5363,12 @@ window.ComponentIframe = class ComponentIframe extends ComponentIframeBase{
 -------------------------------------*/
 class ComponentProgressStepperBase extends ComponentBase{
 
+
     _STEP_STATE_INIT =      0 ;
     _STEP_STATE_PROGRESS =  1 ;
     _STEP_STATE_FAIELD =    2 ;
-    _STEP_STATE_SUCCESS =   3 ;
+    _STEP_STATE_SUCCESS =   3;
+
 
     /* ---------------------------------------------
          PROPERTYs Pattern
@@ -5094,11 +5384,11 @@ class ComponentProgressStepperBase extends ComponentBase{
             prop: "prop_steps",
             default: []
         },
-
-        prop_colorIconDescription: {
-            prop: "prop_colorIconDescription",
-            default:  tools_const.styles?.progressStepper?.color_icon ?? "black" ,
+        prop_params: {
+            prop: "prop_params",
+            default: []
         },
+
         prop_colorStataeInit: {
             prop: "prop_colorStataeInit",
             default:  tools_const.styles?.progressStepper?.color_init ?? "black" ,
@@ -5126,7 +5416,9 @@ class ComponentProgressStepperBase extends ComponentBase{
         part_form: [
             this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_steps,
-            this._COMPONENT_PATTERN.prop_colorIconDescription,
+
+            this._COMPONENT_PATTERN.prop_params,
+
             this._COMPONENT_PATTERN.prop_colorStataeInit,
             this._COMPONENT_PATTERN.prop_colorStataeProgress,
             this._COMPONENT_PATTERN.prop_colorStataeFailed,
@@ -5134,7 +5426,6 @@ class ComponentProgressStepperBase extends ComponentBase{
         ],
 
     };
-
 
     /* ---------------------------------------------
    PROPERTYs Schema
@@ -5147,6 +5438,10 @@ class ComponentProgressStepperBase extends ComponentBase{
 
 }
 window.ComponentProgressStepper = class ComponentProgressStepper extends ComponentProgressStepperBase{
+
+    _STEPS = [];
+    _STEP_PARAMS = {};
+
 
     /* ---------------------------------------------
         SETUP
@@ -5168,6 +5463,7 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
     componentFn(){
         this.onRegisterFinish().then(el => {
             this.fn_renderComponents();
+            this.fn_startFetchs();
         })
     }
 
@@ -5193,19 +5489,25 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
         const data = this.getPartProps(partName)
 
         if (data != null){
-            const directionRtl               =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const directionRtl         =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            this._STEP_PARAMS          =   data.hasOwnProperty("prop_params")                   ?  data.prop_params                        : [];
+            const prop_size            =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : 0;
+            this._STEPS                =   data.hasOwnProperty("prop_steps")                    ?  data.prop_steps                         : [];
 
-            const prop_size                  =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : 0;
-            const prop_steps                 =   data.hasOwnProperty("prop_steps")                    ?  data.prop_steps                         : [];
+            if(this._STEPS != null && Array.isArray(this._STEPS )){
+                for (let i = 0; i < this._STEPS.length; i++) {
+                    this._STEPS[i].started = true;
+                }
+            }
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elFontSize = tools_css.getFontSize(prop_size);
 
-            const stepsHtml = this.fn_readyProgressSteps(prop_steps);
+            const stepsHtml = this.fn_readyProgressSteps();
 
             return `
 <section id="component-progress-steppper-form-${this._COMPONENT_RANDOM_ID}"
-         data-part-name="${partName}">
+         data-part-name="${partName}" class="position-relative">
 
    <style>
       #${this._COMPONENT_ID} #component-progress-steppper-form-${this._COMPONENT_RANDOM_ID}{
@@ -5221,7 +5523,7 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
      
       #${this._COMPONENT_ID} .component-progress-steppper-form-step-state-${this._COMPONENT_RANDOM_ID}{
           float:                                                 ${directionRtl ? "right" : "left"};
-          width:                                                 ${elHeight+40}px;
+          width:                                                 ${elHeight+30}px;
           height:                                                ${elHeight}px;
        
      }
@@ -5273,7 +5575,26 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
      }
      
      
+     
+      #${this._COMPONENT_ID}:hover #component-progress-steppper-form-line-horizontal-${this._COMPONENT_RANDOM_ID}{
+          opacity:                                               1; 
+     }
+     
+      #${this._COMPONENT_ID} #component-progress-steppper-form-line-horizontal-${this._COMPONENT_RANDOM_ID}{
+          position:                                              absolute;
+          width:                                                 5px;
+          height:                                                100%;
+          ${directionRtl ? "right" : "left"}:                    5px;
+          top:                                                   0;
+          transform:                                             translate(0 , 0);
+          opacity:                                               0.5; 
+          background-color:                                      red;
+     }
+     
+     
    </style>
+
+   <div id="component-progress-steppper-form-line-horizontal-${this._COMPONENT_RANDOM_ID}" class="rounded shadow-sm"></div>
 
    ${stepsHtml}
 </section>
@@ -5287,9 +5608,130 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
 
 
 
+
+
+
+    /* ---------------------------------------------
+       private FUNCTIONs
+    --------------------------------------------- */
+    #fn_getStateId(itemStep){
+
+        const repeat =        itemStep?.repeat ?? 1;
+        const fetched =       itemStep?.fetched ?? false;
+        const comnpleted =    itemStep?.comnpleted ?? false;
+        const condition =     itemStep?.condition(this._STEP_PARAMS) ?? false;
+
+
+        if (fetched ){
+            if (comnpleted){
+                if (condition){
+                    return this._STEP_STATE_SUCCESS;
+                }
+                else if(repeat == 0){
+                    return this._STEP_STATE_FAIELD;
+                }
+            }
+            else {
+                return this._STEP_STATE_PROGRESS;
+            }
+        }
+        else {
+            return this._STEP_STATE_INIT;
+        }
+        return null;
+    }
+
+    #fn_isFetchBreak(itemStep){
+        const stepState = this.#fn_getStateId(itemStep);
+        const repeat =   itemStep?.repeat ?? 0;
+        const fetched =      itemStep?.fetched ?? false;
+        if (stepState == this._STEP_STATE_FAIELD && (repeat==0 && fetched)){
+            return true;
+        }
+        return false;
+    }
+
+    #fn_setStepParam(stepName , paramName , paramValue){
+        for (let i = 0; i < this._STEPS.length; i++) {
+            const itemStep = this._STEPS[i];
+            if (itemStep != null && itemStep.hasOwnProperty("name") && stepName == itemStep.name) {
+                this._STEPS[i][paramName] = paramValue;
+                break;
+            }
+        }
+    }
+    #fn_decreaseFromRepeat(stepName){
+        let repeat = 0;
+        for (let i = 0; i < this._STEPS.length; i++) {
+            const itemStep = this._STEPS[i];
+            if (itemStep != null && itemStep.hasOwnProperty("name") && itemStep.hasOwnProperty("repeat") && stepName == itemStep.name) {
+                repeat = itemStep.repeat-1;
+                this.#fn_setStepParam(stepName , "repeat" , repeat);
+                break;
+            }
+        }
+        return repeat;
+    }
+    #fn_startStepNotFirst(stepName){
+        this.#fn_setStepParam(stepName , "started" , false);
+    }
+
+    #fn_setFectchParams(response){
+        if (this._STEP_PARAMS != null && response != null){
+            Object.keys(this._STEP_PARAMS).forEach(paramKeyReference=> {
+
+                Object.keys(response).forEach(responseKey=> {
+                    const responseValue = response[responseKey];
+                    if (responseValue != null && paramKeyReference == responseKey){
+                        this._STEP_PARAMS[paramKeyReference] = responseValue;
+                    }
+                })
+
+            })
+        }
+    }
+
+    #fn_getFectchParams(){
+        let fetchParams = [];
+        if (this._STEP_PARAMS != null){
+            Object.keys(this._STEP_PARAMS).forEach(paramKey=> {
+                const paramValue = this._STEP_PARAMS[paramKey];
+                if (paramValue != null){
+                    fetchParams.push({
+                        name : paramKey ,
+                        value : paramValue ,
+                    })
+                }
+            })
+        }
+        return fetchParams;
+    }
+
+    #fn_getResultFinish(){
+        let status = true;
+        let stepsUnCompleted = [];
+        for (let i = 0; i < this._STEPS.length; i++) {
+            const itemStep = this._STEPS[i];
+            if (itemStep != null && itemStep.hasOwnProperty("name")) {
+                const stepState = this.#fn_getStateId(itemStep);
+                if (stepState == this._STEP_STATE_FAIELD){
+                    status = false;
+                    stepsUnCompleted.push(itemStep.name)
+                }
+            }
+        }
+        return [status , stepsUnCompleted]
+    }
+
+
     /* ---------------------------------------------
        FUNCTIONs
     --------------------------------------------- */
+
+    fn_getElLineProgress(){
+        return document.querySelector(`#${this._COMPONENT_ID} #component-progress-steppper-form-line-horizontal-${this._COMPONENT_RANDOM_ID}`)
+    }
+
 
     fn_setElementStepStatus(itemIndex){
         return `component-progress-steppper-form-step-state-${this._COMPONENT_RANDOM_ID}-${itemIndex}`
@@ -5299,11 +5741,27 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
     }
 
 
-    fn_readyProgressSteps(prop_steps){
+    fn_setElementStepTitle(itemIndex){
+        return `component-progress-steppper-form-step-title-inside-${this._COMPONENT_RANDOM_ID}-${itemIndex}`
+    }
+    fn_getElementStepTitle(itemIndex){
+        return document.querySelector("#"+this.fn_setElementStepTitle(itemIndex))
+    }
+
+
+    fn_setElementStepLine(itemIndex){
+        return `component-progress-steppper-form-step-line-inside-${this._COMPONENT_RANDOM_ID}-${itemIndex}`
+    }
+    fn_getElementStepLine(itemIndex){
+        return document.querySelector("#"+this.fn_setElementStepLine(itemIndex))
+    }
+
+
+    fn_readyProgressSteps(){
         let stepsHtml = "";
-        if (prop_steps != null && Array.isArray(prop_steps)){
-            for (let i = 0; i < prop_steps.length; i++) {
-                const itemStep = prop_steps[i];
+        if (this._STEPS  != null && Array.isArray(this._STEPS )){
+            for (let i = 0; i < this._STEPS .length; i++) {
+                const itemStep = this._STEPS [i];
                 if (itemStep != null && itemStep.hasOwnProperty("name")){
                     const stepName =        itemStep.name;
                     const stepTitle =       itemStep?.title ?? ""
@@ -5315,15 +5773,14 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
                     stepsHtml += `
 <section class="component-progress-steppper-form-step-${this._COMPONENT_RANDOM_ID} position-relative p-0" name="${stepName}">
     <div id="${this.fn_setElementStepStatus(i)}" class="component-progress-steppper-form-step-state-${this._COMPONENT_RANDOM_ID} position-relative">
-       
     </div>
-    <div class="component-progress-steppper-form-step-title-${this._COMPONENT_RANDOM_ID}">
-        <b class="title" style="color: ${stepColor}">
+    <div  class="component-progress-steppper-form-step-title-${this._COMPONENT_RANDOM_ID}">
+        <b id="${this.fn_setElementStepTitle(i)}" class="title" style="color: ${stepColor}">
            ${stepTitle}
         </b>
     </div>
-    <div class="component-progress-steppper-form-step-line-${this._COMPONENT_RANDOM_ID} position-relative ">
-          <div class="component-progress-steppper-form-step-line-inside-${this._COMPONENT_RANDOM_ID} position-relative " style="border-bottom:  1px dashed ${stepColor};"></div>
+    <div  class="component-progress-steppper-form-step-line-${this._COMPONENT_RANDOM_ID} position-relative ">
+          <div id="${this.fn_setElementStepLine(i)}" class="component-progress-steppper-form-step-line-inside-${this._COMPONENT_RANDOM_ID} position-relative " style="border-bottom:  1px dashed ${stepColor};"></div>
     </div>
     <component-tooltip-description id="component-progress-steppper-form-step-description-${this._COMPONENT_RANDOM_ID}-${i}"></component-tooltip-description>
 </section>
@@ -5336,12 +5793,9 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
         return stepsHtml;
     }
 
-
-    fn_renderComponents(){
+    fn_renderComponents(stepNameSelected){
         const data = this._COMPONENT_CONFIG;
-        const prop_steps           =   data.hasOwnProperty("prop_steps")                    ?  data.prop_steps                         : [];
-
-        const directionRtl         =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+        const directionRtl    =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl   : false;
 
         let descriptionStyles = {
             "position" : "absolute" ,
@@ -5355,15 +5809,25 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
         }
 
 
-        if (prop_steps != null && Array.isArray(prop_steps)){
-            for (let i = 0; i < prop_steps.length; i++) {
-                const itemStep = prop_steps[i];
+        if (this._STEPS  != null && Array.isArray(this._STEPS )){
+            for (let i = 0; i < this._STEPS.length; i++) {
+                const itemStep = this._STEPS[i];
                 if (itemStep != null){
 
-                    const stepState =        itemStep?.state ?? 0;
+                    const stepState = this.#fn_getStateId(itemStep);
                     const stepColor = this.fn_getColorStepWithState(stepState);
-
                     this.fn_setViewElementStateStep( i , stepState , stepColor);
+
+                    const elTitle = this.fn_getElementStepTitle(i);
+                    elTitle.style.color = stepColor;
+
+                    const elLine = this.fn_getElementStepLine(i);
+                    elLine.style.borderBottom = `1px dashed ${stepColor}`;
+
+                    if (stepNameSelected != null && stepNameSelected == itemStep?.name){
+                        const elLineProgress = this.fn_getElLineProgress();
+                        elLineProgress.style.backgroundColor = stepColor;
+                    }
 
                     if (itemStep.hasOwnProperty("description")){
                         new window.ComponentTooltipDescription(
@@ -5384,25 +5848,127 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
     }
 
 
+    fn_startFetchs(){
+        const data = this._COMPONENT_CONFIG;
+
+        const stateContinue = this.fn_checkForFetch();
+
+        if (stateContinue){
+
+            const stepData = this.fn_getFirstStepInit()
+            if (stepData != null) {
+                const name =       stepData?.name ?? null;
+                const url =        stepData?.url ?? "";
+                const delay =      stepData?.delay  ?? 1000;
+                const started =    stepData?.started ?? false;
+
+                if (name != null){
+                    setTimeout(event => {
+                        this.#fn_setStepParam(name , "fetched" , true);
+                        const fetchParams = this.#fn_getFectchParams();
+                        this.fn_renderComponents(name);
+
+                        tools_submit.fetcth(
+                            url,
+                            {
+                                data: {
+                                    contentType: tools_const.contentTypes.json ,
+                                    data: fetchParams
+                                },
+                                callback:(response , request)=>{
+                                    this.#fn_startStepNotFirst(name);
+                                    const conditionResponse =     stepData?.condition(response) ?? false;
+                                    if (conditionResponse){
+                                        this.#fn_setFectchParams(response);
+                                        this.#fn_setStepParam(name , "comnpleted" , true);
+                                        this.fn_renderComponents(name);
+                                        this.fn_startFetchs();
+                                    }
+                                    else{
+                                        const repeat = this.#fn_decreaseFromRepeat(name);
+                                        if (repeat == 0){
+                                            this.#fn_setStepParam(name , "comnpleted" , true);
+                                        }
+                                        this.fn_renderComponents(name);
+                                        this.fn_startFetchs();
+                                    }
+                                },
+                                errorBack:(error)=>{
+                                    const repeat = this.#fn_decreaseFromRepeat(name);
+                                    this.#fn_startStepNotFirst(name);
+                                    if (repeat == 0){
+                                        this.#fn_setStepParam(name , "comnpleted" , true);
+                                    }
+                                    this.fn_renderComponents(name);
+                                    this.fn_startFetchs();
+                                }
+                            });
+
+                    } , started ? 0 : delay)
+                }
+            }
+            else{
+                this.fn_onComplete();
+            }
+
+        }
+        else{
+            this.fn_onComplete();
+        }
+
+    }
+
+    fn_checkForFetch(){
+        const data = this._COMPONENT_CONFIG;
+
+        for (let i = 0; i < this._STEPS.length; i++) {
+            const itemStep = this._STEPS[i];
+            if (itemStep != null) {
+                const stepIsBreak = this.#fn_isFetchBreak(itemStep)
+                if (stepIsBreak){
+                    return false
+                }
+            }
+        }
+
+        return true;
+    }
+
+    fn_getFirstStepInit(){
+        const data = this._COMPONENT_CONFIG;
+
+        for (let i = 0; i < this._STEPS.length; i++) {
+            const itemStep = this._STEPS[i];
+            if (itemStep != null && itemStep.hasOwnProperty("name")) {
+                const stepState = this.#fn_getStateId(itemStep);
+                if (stepState == this._STEP_STATE_INIT || stepState == this._STEP_STATE_PROGRESS){
+                    return itemStep;
+                }
+            }
+        }
+
+        return null;
+    }
+
+
     fn_setViewElementStateStep(itemIndex , stepState , stepColor){
         const elStatus = this.fn_getElementStepStatus(itemIndex);
 
         switch (stepState){
-            case 0:
+            case this._STEP_STATE_INIT:
                 this.fn_setViewElementStateStep_init(elStatus , stepColor , itemIndex)
                 break;
-            case 1:
+            case this._STEP_STATE_PROGRESS:
                 this.fn_setViewElementStateStep_progress(elStatus , stepColor , itemIndex)
                 break;
-            case 2:
+            case this._STEP_STATE_FAIELD:
                 this.fn_setViewElementStateStep_error(elStatus , stepColor , itemIndex)
                 break;
-            case 3:
+            case this._STEP_STATE_SUCCESS:
                 this.fn_setViewElementStateStep_success(elStatus , stepColor , itemIndex)
                 break;
         }
     }
-
 
     fn_setViewElementStateStep_init(elStatus , stepColor , itemIndex){
         elStatus.innerHTML = `
@@ -5410,8 +5976,6 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
    ${itemIndex+1}     
 </b>
         `
-
-
     }
 
     fn_setViewElementStateStep_progress(elStatus , stepColor , itemIndex){
@@ -5444,7 +6008,6 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
 
     }
 
-
     fn_setViewElementStateStep_error(elStatus , stepColor , itemIndex){
         const data = this._COMPONENT_CONFIG;
         const prop_size                  =   data.hasOwnProperty("prop_size")                     ?  data.prop_size                          : 0;
@@ -5463,12 +6026,11 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
                     "left" : "50%" ,
                     "transform" : "translate(-50% , -50%)" ,
                 },
-                prop_icon:    tools_icons.icon_is_false(prop_size , "#fff")  ,
+                prop_icon:    tools_icons.icon_is_false({size : prop_size , colors: {primary:"#fff" }})  ,
             }
         )
 
     }
-
 
     fn_setViewElementStateStep_success(elStatus , stepColor , itemIndex){
         const data = this._COMPONENT_CONFIG;
@@ -5484,11 +6046,11 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
             {
                 classList:     [ "position-absolute"] ,
                 styles : {
-                     "top" : "50%" ,
-                     "left" : "50%" ,
-                     "transform" : "translate(-50% , -50%)" ,
+                    "top" : "50%" ,
+                    "left" : "50%" ,
+                    "transform" : "translate(-50% , -50%)" ,
                 },
-                prop_icon:    tools_icons.icon_is_true(prop_size , "#fff")  ,
+                prop_icon:    tools_icons.icon_is_true({size : prop_size , colors: {primary:"#fff" }})  ,
             }
         )
 
@@ -5496,26 +6058,40 @@ window.ComponentProgressStepper = class ComponentProgressStepper extends Compone
     }
 
 
-    fn_getColorStepWithState(stepStatus = 0){
+    fn_getColorStepWithState(stepState = 0){
         const data = this._COMPONENT_CONFIG;
         const prop_colorStataeInit       =   data.hasOwnProperty("prop_colorStataeInit")          ?  data.prop_colorStataeInit               : false;
         const prop_colorStataeProgress   =   data.hasOwnProperty("prop_colorStataeProgress")      ?  data.prop_colorStataeProgress           : false;
         const prop_colorStataeFailed     =   data.hasOwnProperty("prop_colorStataeFailed")        ?  data.prop_colorStataeFailed             : false;
         const prop_colorStataeSuccess    =   data.hasOwnProperty("prop_colorStataeSuccess")       ?  data.prop_colorStataeSuccess            : false;
 
-        switch (stepStatus){
-            case 0:
+        switch (stepState){
+            case this._STEP_STATE_INIT:
                 return prop_colorStataeInit;
-            case 1:
+            case this._STEP_STATE_PROGRESS:
                 return prop_colorStataeProgress;
-            case 2:
+            case this._STEP_STATE_FAIELD:
                 return prop_colorStataeFailed;
-            case 3:
+            case this._STEP_STATE_SUCCESS:
                 return prop_colorStataeSuccess;
         }
 
         return "";
     }
+
+
+
+
+
+    fn_onComplete(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onComplete") && typeof data.fn_onComplete != null){
+            const [status , stepUnCompleted] = this.#fn_getResultFinish();
+            data.fn_onComplete(status , stepUnCompleted , this._STEP_PARAMS);
+        }
+    }
+
+
 
 
 }
@@ -6027,7 +6603,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
             const elHeight = tools_css.getHeightSize(prop_size);
 
             let padding = "180px"
-            if (screanWidthType == "xs"){
+            if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                 padding = "35px";
             }
 
@@ -6044,7 +6620,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
             ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
             ${directionRtl ? "padding-left" : "padding-right"} : 25px ;
             ${directionRtl ? `right : 0` :`left : 0` };
-            width: calc(100% - ${prop_btnAddStatus ? (screanWidthType == "xs" ? "30px" : "160px") : "0px"} - ${prop_icon != null ? "30px" : "0px"});
+            width: calc(100% - ${prop_btnAddStatus ? (screanWidthType == tools_css?.standardScreanWidth?.xs?.name ? "30px" : "160px") : "0px"} - ${prop_icon != null ? "30px" : "0px"});
             
             ${prop_icon != null ? (directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important") : ""};
             ${prop_icon != null ? (directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important") : ""};
@@ -6116,7 +6692,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
                     "top" : "50%",
                 }
                 if (directionRtl){
-                    if (screanWidthType == "xs"){
+                    if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                         styles["left"]= "0px";
                         styles["transform"]= prop_btnAddStatus ? "translate(30px , -50%)" : "translate(0 , -50%)";
                     }
@@ -6126,7 +6702,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
                     }
                 }
                 else {
-                    if (screanWidthType == "xs"){
+                    if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                         styles["right"]=  "0px";
                         styles["transform"]= prop_btnAddStatus ? "translate(-30px , -50%)" : "translate(0 , -50%)";
                     }
@@ -6140,7 +6716,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
                 new window.ComponentIcon(
                     `component-input-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : tools_icons.icon_clear(prop_size),
+                        prop_icon : tools_icons.icon_clear({size : prop_size }),
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -6239,7 +6815,7 @@ window.ComponentInput = class ComponentInput extends ComponentInputBase{
                     styles["border-top-left-radius"] = "0 !important";
                 }
 
-                if (screanWidthType == "xs"){
+                if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                     styles["width"] = "30px";
                 }
                 else{
@@ -6640,7 +7216,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
             const elfontSize = tools_css.getFontSize(prop_size);
 
             let padding = "180px"
-            if (screanWidthType == "xs"){
+            if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                 padding = "35px";
             }
 
@@ -6657,7 +7233,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
             ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
             ${directionRtl ? "padding-left" : "padding-right"} : 25px ;
             ${directionRtl ? `right : 0` :`left : 0` };
-            width: calc(100% - ${prop_btnAddStatus ? (screanWidthType == "xs" ? "30px" : "160px") : "0px"} - ${prop_icon != null ? "30px" : "0px"});
+            width: calc(100% - ${prop_btnAddStatus ? (screanWidthType == tools_css?.standardScreanWidth?.xs?.name ? "30px" : "160px") : "0px"} - ${prop_icon != null ? "30px" : "0px"});
             ${directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important" } ;
             ${directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important" } ;
             height: ${elHeight}px;
@@ -6778,7 +7354,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
                     "top" : "50%",
                 }
                 if (directionRtl){
-                    if (screanWidthType == "xs"){
+                    if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                         styles["left"]=  "0px";
                         styles["transform"]= prop_btnAddStatus ? "translate(30px , -50%)" : "translate(0 , -50%)";
                     }
@@ -6788,7 +7364,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
                     }
                 }
                 else {
-                    if (screanWidthType == "xs"){
+                    if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                         styles["right"]=  "0px";
                         styles["transform"]= prop_btnAddStatus ? "translate(-30px , -50%)" :  "translate(0 , -50%)";
                     }
@@ -6801,7 +7377,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
                 new window.ComponentIcon(
                     `component-input-price-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : tools_icons.icon_clear(prop_size),
+                        prop_icon : tools_icons.icon_clear({size : prop_size} ),
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -6898,7 +7474,7 @@ window.ComponentInputPrice = class ComponentInputPrice extends ComponentInputPri
                     styles["right"] = "0";
                 }
 
-                if (screanWidthType == "xs"){
+                if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                     styles["width"] = "30px";
                 }
                 else{
@@ -7369,7 +7945,7 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
             let elfontSize = tools_css.getFontSize(prop_size);
 
             let padding = "180px"
-            if (screanWidthType == "xs"){
+            if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                 padding = "35px";
             }
 
@@ -7505,7 +8081,7 @@ window.ComponentInputEmail = class ComponentInputEmail extends ComponentInputEma
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear(prop_size) ,
+                        prop_icon : tools_icons.icon_clear({size : prop_size} ) ,
 
                         fn_callback: ()=>{
                             this.runFn("fn_onClearInput" , "event")
@@ -7935,7 +8511,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
             let elfontSize = tools_css.getFontSize(prop_size);
 
             let padding = "180px"
-            if (screanWidthType == "xs"){
+            if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                 padding = "35px";
             }
 
@@ -8075,7 +8651,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear(prop_size) ,
+                        prop_icon : tools_icons.icon_clear({size : prop_size }) ,
 
                         fn_callback: ()=>{
                             this.runFn("fn_onClearInput" , "event")
@@ -8128,7 +8704,7 @@ window.ComponentInputPassword = class ComponentInputPassword extends ComponentIn
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit(prop_size , prop_colorIcon) : tools_icons.icon_un_visit(prop_size , prop_colorIcon),
+                        prop_icon : this._STATUS_IS_SHOW ? tools_icons.icon_visit({size : prop_size /*, colors: {primary:prop_colorIcon}*/}) : tools_icons.icon_un_visit({size : prop_size /*, colors: {primary:prop_colorIcon}*/}),
 
                         fn_callback: (event)=>{
                             this.fn_onVisitInput(event);
@@ -8344,7 +8920,24 @@ class ComponentInputFileBase extends ComponentBase{
         prop_deleteBtnAccept: {
             prop: "prop_deleteBtnAccept",
             default: "تایید"
-        }
+        } ,
+
+        prop_backgroundColor_itemFile_invalid: {
+            prop: "prop_backgroundColor_itemFile_invalid",
+            default: tools_const?.styles?.inputFile?.backgroundColor_itemFile_invalid ?? null
+        },
+        prop_backgroundColor_itemFile: {
+            prop: "prop_backgroundColor_itemFile",
+            default: tools_const?.styles?.inputFile?.backgroundColor_itemFile ?? null
+        },
+        prop_color_itemFile: {
+            prop: "prop_color_itemFile",
+            default: tools_const?.styles?.inputFile?.color_itemFile ?? null
+        },
+        prop_color_itemFile_icons: {
+            prop: "prop_color_itemFile_icons",
+            default: tools_const?.styles?.inputFile?.color_itemFile_icons ?? null
+        },
     };
 
     /* ---------------------------------------------
@@ -8384,6 +8977,10 @@ class ComponentInputFileBase extends ComponentBase{
         part_footer: [],
 
         part_footer_files: [
+            this._COMPONENT_PATTERN.prop_backgroundColor_itemFile,
+            this._COMPONENT_PATTERN.prop_backgroundColor_itemFile_invalid,
+            this._COMPONENT_PATTERN.prop_color_itemFile,
+            this._COMPONENT_PATTERN.prop_color_itemFile_icons,
             this._COMPONENT_PATTERN.prop_showListFiles,
             this._COMPONENT_PATTERN.var_fileIsValid,
             this._COMPONENT_PATTERN.var_fileIsNotValid
@@ -8654,9 +9251,13 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
 
         if (data != null){
 
-            const prop_showListFiles     =   data.hasOwnProperty("prop_showListFiles")      ?  data.prop_showListFiles          :  true;
-            const var_fileIsValid        =   data.hasOwnProperty("var_fileIsValid")         ?  data.var_fileIsValid             :  null;
-            const var_fileIsNotValid     =   data.hasOwnProperty("var_fileIsNotValid")      ?  data.var_fileIsNotValid          :  null;
+            const prop_backgroundColor_itemFile             =   data.hasOwnProperty("prop_backgroundColor_itemFile")              ?  data.prop_backgroundColor_itemFile                  :  null;
+            const prop_backgroundColor_itemFile_invalid     =   data.hasOwnProperty("prop_backgroundColor_itemFile_invalid")      ?  data.prop_backgroundColor_itemFile_invalid          :  null;
+            const prop_color_itemFile                       =   data.hasOwnProperty("prop_color_itemFile")                        ?  data.prop_color_itemFile                            :  null;
+            const prop_color_itemFile_icons                 =   data.hasOwnProperty("prop_color_itemFile_icons")                  ?  data.prop_color_itemFile_icons                      :  null;
+            const prop_showListFiles                        =   data.hasOwnProperty("prop_showListFiles")                         ?  data.prop_showListFiles                             :  true;
+            const var_fileIsValid                           =   data.hasOwnProperty("var_fileIsValid")                            ?  data.var_fileIsValid                                :  null;
+            const var_fileIsNotValid                        =   data.hasOwnProperty("var_fileIsNotValid")                         ?  data.var_fileIsNotValid                             :  null;
 
             if (prop_showListFiles){
 
@@ -8670,22 +9271,24 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
                         const formatted = (itemFile.size / 10000).toFixed(3);
 
                         htmlAcceptFiles += `
-<div class="  shadow-sm bg-info rounded row px-1 py-1 mx-0 my-1">
+<div class="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items  shadow-sm rounded row px-1 py-1 mx-0 my-1 border border-2">
 
-   <span class="counter col-1 bg-white rounded ">${counter}</span>
+   <span class="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-counter bg-white rounded ">${counter}</span>
    
-   <span class="fileName col-7 text-start ">  ${itemFile.name}</span>
+   <b class="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-fileName ">  ${itemFile.name}</b>
    
-   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
-      <span class="col-8">
+   <span class="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
+      <span class="col-7">
          ${formatted}
       </span>
-      <span class="col-4">
+      <span class="col-5">
           KB
       </span>
    </span>
    
-   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("fn_showWindowDelete" , "event" , `'${itemFile.name}'`)}"> &#x1F5D1; </span>
+   <span class="fileDelete col-1  text-danger" title="delete" onclick="${this.getFn("fn_showWindowDelete" , "event" , `'${itemFile.name}'`)}">
+${tools_icons.icon_delete({size: 25 , colors:{primary:prop_color_itemFile_icons }})}
+   </span>
   
 </div>
                     `;
@@ -8703,13 +9306,13 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
                         const formatted = (itemFile.size / 10000).toFixed(3);
 
                         htmlUnAcceptFiles += `
-<div class="  shadow-sm bg-danger rounded row px-1 py-1 mx-0 my-1">
+<div class=" component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-invalid  shadow-sm bg-danger rounded row px-1 py-1 mx-0 my-1">
 
-   <span class="counter col-1 bg-white rounded ">${counter}</span>
+   <span class="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-counter  bg-white rounded ">${counter}</span>
    
-   <span class="fileName col-7 text-start text-white  ">  ${itemFile.name}</span>
+   <span class="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-fileName  text-white  ">  ${itemFile.name}</span>
    
-   <span class="fileSize col-3 bg-success rounded text-white border border-white row p-0 m-0">  
+   <span class="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-fileSize  bg-success rounded text-white border border-white row p-0 m-0">  
       <span class="col-8">
          ${formatted}
       </span>
@@ -8728,29 +9331,43 @@ window.ComponentInputFile = class ComponentInputFile extends ComponentInputFileB
                     }
                 }
 
-                return                                       `
+                return `
 <section  data-part-name="${partName}"
           id="component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}"  
           class=" " >
           
      <style>
          #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}{
-        
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .counter{
-         
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileName{
-              font-size: 10pt;
-              white-space: nowrap;        /* فقط یک خط */
-              overflow: hidden;           /* جلوگیری از overflow */
-              text-overflow: ellipsis;    /* نمایش سه نقطه ... */
-         }
-         #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileSize{
-              font-size: 10pt;
+             max-width:           450px
          }
          #${this._COMPONENT_ID} #component-input-file-footer-files-${this._COMPONENT_RANDOM_ID} .fileDelete{
-              cursor: pointer;
+              cursor:             pointer;
+         }
+         
+         
+         #${this._COMPONENT_ID} .component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-invalid{
+              background-color:   ${prop_backgroundColor_itemFile_invalid}
+         }
+         #${this._COMPONENT_ID} .component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items{
+              background-color:   ${prop_backgroundColor_itemFile}
+         }
+         #${this._COMPONENT_ID} .component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-counter{
+              width:              40px;
+         }
+         #${this._COMPONENT_ID} .component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-fileName{
+              width:              60%;
+              color:              ${prop_color_itemFile};
+              font-size:          10pt;
+              white-space:        nowrap; 
+              overflow:           hidden;          
+              text-overflow:      ellipsis;    
+              direction:          ltr !important;
+              text-align:         left;    
+         }
+         #${this._COMPONENT_ID} .component-input-file-footer-files-${this._COMPONENT_RANDOM_ID}-items-fileSize{
+              width:              20%;
+              font-size:          10pt;
+              direction:          ltr !important;
          }
      </style>
 
@@ -9844,7 +10461,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                 new window.ComponentIcon(
                     `component-input-color-icon-clear-${ this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon:          tools_icons.icon_clear_broom(prop_size , prop_colorIconClear),
+                        prop_icon:          tools_icons.icon_clear_broom({size : prop_size/* , colors: {primary:prop_colorIconClear}*/}  ),
 
                         prop_iconClass :    ["position-absolute"] ,
                         prop_iconStyles :   styles ,
@@ -9882,7 +10499,7 @@ window.ComponentInputColor = class ComponentInputColor extends ComponentInputCol
                 new window.ComponentIcon(
                     `component-input-color-icon-color-empty-${ this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon:          tools_icons.icon_empty(prop_size , prop_colorIconEmpty),
+                        prop_icon:          tools_icons.icon_empty({size : prop_size /*, colors: {primary:prop_colorIconEmpty}*/} ),
 
                         prop_iconClass :    ["position-absolute"] ,
                         prop_iconStyles :   styles
@@ -10551,7 +11168,7 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
             let elFontSize = tools_css.getFontSize(prop_size);
 
             let padding = "180px"
-            if (screanWidthType == "xs"){
+            if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                 padding = "35px";
             }
 
@@ -10687,7 +11304,7 @@ window.ComponentInputSize = class ComponentInputSize extends ComponentInputSizeB
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear(prop_size),
+                        prop_icon : tools_icons.icon_clear({size : prop_size}),
 
                         fn_callback: (event)=>{
                             this.fn_onClearInput(event);
@@ -11758,7 +12375,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             new window.ComponentIcon(
                 `component-input-acl-icon-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon: tools_icons.icon_input_acl(prop_size , prop_colorIcon)  ,
+                    prop_icon: tools_icons.icon_input_acl({size : prop_size /*, colors: {primary:prop_colorIcon}*/} )  ,
 
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles : styles ,
@@ -11807,7 +12424,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
-                        prop_icon : tools_icons.icon_clear(prop_size , prop_colorIcon),
+                        prop_icon : tools_icons.icon_clear({size : prop_size /*, colors: {primary:prop_colorIcon}*/}  ),
 
                         fn_callback: (event)=>{
                             this.fn_clearAcl(event)
@@ -11865,7 +12482,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                     {
 
                         prop_show_label: false ,
-                        prop_icon: tools_icons.icon_search(prop_size ,prop_colorIcon ) ,
+                        prop_icon: tools_icons.icon_search({size : prop_size /*, colors: {primary:prop_colorIcon}*/}  ) ,
 
                         fn_oninput: (event , value) => {
                             this._REQUEST_ACL_SEARCH = value;
@@ -11907,7 +12524,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             new window.ComponentButton(
                 `component-input-acl-header-body-form-body-select-all-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_title: directionRtl ? tools_icons.icon_selectAllLeft(prop_size , prop_btnColor) : tools_icons.icon_selectAllRight(prop_size , prop_btnColor)   ,
+                    prop_title: directionRtl ? tools_icons.icon_selectAllLeft({size : prop_size /*, colors: {primary:prop_btnColor}*/} ) : tools_icons.icon_selectAllRight({size : prop_size /*, colors: {primary:prop_btnColor}*/})   ,
 
                     prop_btnClass : ["position-absolute"] ,
                     prop_btnStyles : styles ,
@@ -11941,7 +12558,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
             new window.ComponentButton(
                 `component-input-acl-header-body-form-body-clear-all-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_title: tools_icons.icon_clear_broom(prop_size , prop_btnColor)  ,
+                    prop_title: tools_icons.icon_clear_broom({size : prop_size /*, colors: {primary:prop_btnColor}*/}  )  ,
 
                     prop_btnClass : ["position-absolute"] ,
                     prop_btnStyles : styles ,
@@ -12251,7 +12868,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                 <div class="item-selected position-relative" data-item-id="${item.id}"  data-item-name="${item.name}"  onClick="${this.getFn("fn_onClickRemoveAcl" , "event" , item.id)}">
                       ${item.name}
                       <i class="position-absolute">
-                           ${tools_icons.icon_clear(prop_size , prop_itemAclIconColorSelected) }
+                           ${tools_icons.icon_clear({size : prop_size /*, colors: {primary:prop_itemAclIconColorSelected}*/} ) }
                       </i>
                 </div>
             `
@@ -12295,7 +12912,7 @@ window.ComponentInputAcl = class ComponentInputAcl extends ComponentInputAclBase
                 <div class="item-acl position-relative" onClick="${this.getFn("fn_onClickItemAcl" , "event" , item.id)}">
                         ${item.name}
                         <i class="position-absolute">
-                                 ${directionRtl ? tools_icons.icon_arrow_left(prop_size , prop_itemAclIconColorUnSelected) : tools_icons.icon_arrow_right(prop_size , prop_itemAclIconColorUnSelected) }
+                                 ${directionRtl ? tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_itemAclIconColorUnSelected}*/}  ) : tools_icons.icon_arrow_right({size : prop_size/* , colors: {primary:prop_itemAclIconColorUnSelected}*/}  ) }
                         </i>
                 </div>
             `
@@ -13371,7 +13988,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                 new window.ComponentIcon(
                     `component-input-date-header-icon-clear-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : tools_icons.icon_reload(prop_size , "#000"),
+                        prop_icon : tools_icons.icon_reload({size : prop_size /*, colors: {primary:"#000"}*/} ),
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -13417,7 +14034,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
             new window.ComponentIcon(
                 `component-input-date-header-icon-calender-${this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon: tools_icons.icon_calendar(elIconHeight , prop_colorIcon) ,
+                    prop_icon: tools_icons.icon_calendar({size : elIconHeight /*, colors: {primary:prop_colorIcon}*/} ) ,
 
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles : styles ,
@@ -13480,7 +14097,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "transform" : "translate(-50% , -50%)"
                     } ,
 
-                    prop_icon : tools_icons.icon_arrow_left(prop_size , prop_iconArrow) ,
+                    prop_icon : tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_iconArrow}*/} ) ,
 
                     fn_callback: (event)=>{
                         this.fn_goToYear(event);
@@ -13560,7 +14177,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "transform" : "translate(-50% , -50%)"
                     } ,
 
-                    prop_icon : tools_icons.icon_arrow_right(prop_size , prop_iconArrow) ,
+                    prop_icon : tools_icons.icon_arrow_right({size : prop_size /*, colors: {primary:prop_iconArrow}*/} ) ,
 
                     fn_callback: (event)=>{
                         this.fn_goToYear(event , true);
@@ -13592,7 +14209,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "transform" : "translate(-50% , -50%)"
                     } ,
 
-                    prop_icon : tools_icons.icon_arrow_left(prop_size , prop_iconArrow) ,
+                    prop_icon : tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_iconArrow}*/} ) ,
 
                     fn_callback: (event)=>{
                         this.fn_goToMonth(event);
@@ -13680,7 +14297,7 @@ window.ComponentDate = class ComponentDate extends ComponentDateBase{
                         "transform" : "translate(-50% , -50%)"
                     } ,
 
-                    prop_icon : tools_icons.icon_arrow_right(prop_size , prop_iconArrow) ,
+                    prop_icon : tools_icons.icon_arrow_right({size : prop_size /*, colors: {primary:prop_iconArrow}*/} ) ,
 
                     fn_callback: (event)=>{
                         this.fn_goToMonth(event , true);
@@ -14468,27 +15085,13 @@ class ComponentOtpBase extends ComponentBase{
             prop: "prop_langs",
             default: {
                 _title_otp_description: "کد برای شماره/ایمیل زیر ارسال شد",
-                _text_timer_after_active_otp: "تا ارسال مجدد کد",
-                _text_timer_after_di_active_otp: "کد منقضی شده است",
-                _text_get_new_otp: "کد جدید"
+                _tooltip_otp_description: null,
             }
         },
         prop_length: {
             prop: "prop_length",
             default: 6
         },
-        var_countdown_text: {
-            prop: "var_countdown_text",
-            default: "00:00"
-        },
-        var_activeForm_class: {
-            prop: "var_activeForm_class",
-            default: ""
-        },
-        var_diActiveForm_class: {
-            prop: "var_diActiveForm_class",
-            default: "d-none"
-        }
     };
 
     /* ---------------------------------------------
@@ -14516,12 +15119,9 @@ class ComponentOtpBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_size
         ],
 
-        part_description: [
-            this._COMPONENT_PATTERN.prop_langs,
-            this._COMPONENT_PATTERN.var_countdown_text,
-            this._COMPONENT_PATTERN.var_activeForm_class,
-            this._COMPONENT_PATTERN.var_diActiveForm_class,
-            this._COMPONENT_PATTERN.prop_size
+        part_timerDown: [
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_langs ,
         ]
     };
 
@@ -14536,7 +15136,7 @@ class ComponentOtpBase extends ComponentBase{
             part_elements: {
                 part_label: {} ,
                 part_inputs: {} ,
-                part_description: {} ,
+                part_timerDown: {} ,
             } ,
         } ,
     }
@@ -14544,8 +15144,7 @@ class ComponentOtpBase extends ComponentBase{
 }
 window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
 
-    _TIME_CURRENT = null;
-    _TIME_INTRVAl = null;
+    _OTP_TIMER = null;
 
     /* ---------------------------------------------
        SETUP
@@ -14565,6 +15164,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
     --------------------------------------------- */
     componentFn(){
         this.templateFn("part_label");
+        this.templateFn("part_timerDown");
     }
     templateFn(partName = null){
         switch (partName){
@@ -14578,8 +15178,8 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
                 return this.template_render_inputs(partName);
             case "part_label":
                 return this.componentFn_render_label(partName);
-            case "part_description":
-                return this.template_render_description(partName);
+            case "part_timerDown":
+                return this.componentFn_render_timerDown(partName);
             default:
                 return this.templateBasic_render();
         }
@@ -14593,7 +15193,6 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
                 `;
         return this.templateBasic_render_structure(content);
     }
-
 
     template_render_value(partName) {
 
@@ -14646,7 +15245,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
 
           ${this.templateFn("part_inputs") ?? ""}
           
-          ${this.templateFn("part_description") ?? ""}
+          <component-timer-down id="component-otp-timer-down-${ this._COMPONENT_RANDOM_ID}"></component-timer-down>
           
      </section>
 </section>
@@ -14666,14 +15265,10 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
 
             const prop_name             =   data.hasOwnProperty("prop_name")             ?  data.prop_name             :  "otp";
             const prop_length           =   data.hasOwnProperty("prop_length")           ?  data.prop_length           :  6;
-            const prop_langs            =   data.hasOwnProperty("prop_langs")            ?  data.prop_langs            : {};
             const prop_size             =   data.hasOwnProperty("prop_size")             ?  data.prop_size             : null;
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elfontSize = tools_css.getFontSize(prop_size);
-
-
-
 
             let inputHtmls = "";
             for (let num=0; num<prop_length; num++){
@@ -14716,70 +15311,32 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
         `;
     }
 
-    template_render_description(partName){
+    componentFn_render_timerDown(partName){
 
         const data = this.getPartProps(partName)
         if (data != null){
 
-            const prop_langs                 =   data.hasOwnProperty("prop_langs")                ?  data.prop_langs               : {};
-            const var_countdown_text         =   data.hasOwnProperty("var_countdown_text")        ?  data.var_countdown_text       : "00:00";
-            const var_activeForm_class       =   data.hasOwnProperty("var_activeForm_class")      ?  data.var_activeForm_class     : "";
-            const var_diActiveForm_class     =   data.hasOwnProperty("var_diActiveForm_class")    ?  data.var_diActiveForm_class   : "d-none";
-            const prop_size             =   data.hasOwnProperty("prop_size")                 ?  data.prop_size               : 0;
+            const prop_size             =   data.hasOwnProperty("prop_size")             ?  data.prop_size             : 0;
+            const prop_langs            =   data.hasOwnProperty("prop_langs")            ?  data.prop_langs            : {};
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elfontSize = tools_css.getFontSize(prop_size);
 
+            this._OTP_TIMER = new window.ComponentTimerDown(
+                `component-otp-timer-down-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_description: prop_langs.hasOwnProperty("_tooltip_otp_description") ? prop_langs._tooltip_otp_description : null ,
 
-            return `
-<section data-part-name="${partName}" 
-         id="component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID}" 
-         class="" >
-         
-     <style>
-         #${this._COMPONENT_ID} #component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID}{
-             line-height: ${elHeight}px;
-         }
-         #${this._COMPONENT_ID} #component-otp-inputs-description-${ this._COMPONENT_RANDOM_ID} .btn-get-new-token{
-             cursor: pointer;
-             height: ${elHeight}px;
-             line-height: ${elHeight}px;
-         }
-     </style>
-     
-     <div class="mt-1  text-center">
-         <p  id="form-timer-otp"  class="d-inline-block">
-                 <span  class="countdown bg-secondary rounded-0 text-white px-2 mx-2">
-                     ${var_countdown_text}
-                 </span>
-
-                 <div class="pass_active_code_otp d-inline-block ${var_activeForm_class}">
-                     <span>
-                         ${prop_langs.hasOwnProperty("_text_timer_after_active_otp") ? prop_langs._text_timer_after_active_otp : ""}
-                     </span>
-                 </div>
-
-                 <div class="pass_di_active_code_otp d-inline-block ${var_diActiveForm_class}">
-                     <span class="">
-                         ${prop_langs.hasOwnProperty("_text_timer_after_di_active_otp") ? prop_langs._text_timer_after_di_active_otp : ""}
-                     </span>
-                     <span class="mx-1">
-                         |
-                     </span>
-                     <span class="btn-get-new-token mx-1 text-info cursor-pointer" onclick="${this.getFn("fn_onGetNewToken")}">
-                         ${prop_langs.hasOwnProperty("_text_get_new_otp") ? prop_langs._text_get_new_otp : ""}
-                     </span>
-                 </div>
-          </p>
-     </div>
-     
-</section>
-        `;
+                    fn_onBackClick: (event)=>{
+                        this.fn_onGetNewToken();
+                    } ,
+                    fn_onFinishTimer: (event)=>{
+                        this.fn_onFinishToken();
+                    } ,
+                }
+            );
         }
 
-        return `
-<section data-part-name="${partName}"></section>
-        `;
 
     }
 
@@ -14843,12 +15400,7 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
         return resultExp;
     }
 
-    fn_onGetNewToken(){
-        const data = this._COMPONENT_CONFIG;
-        if (data.hasOwnProperty("fn_onGetNewToken") && typeof data.fn_onGetNewToken != null){
-            data.fn_onGetNewToken();
-        }
-    }
+
 
     fn_onMoveToNext(event , nextFieldID){
         if (event.key !== 'Backspace' && event.target.value !== '') {
@@ -14882,45 +15434,35 @@ window.ComponentOtp = class ComponentOtp extends ComponentOtpBase{
         this.fn_onGetValue();
     }
 
-    fn_setTimeCurrent(){
-        this._TIME_CURRENT = new Date().getTime() ;
-    }
-
-    fn_calculateTimer(durationForEnd){
-        const timeCurrent =   this._TIME_CURRENT != null   ?    this._TIME_CURRENT  :  0;
-
-        const now = new Date().getTime();
-        return (timeCurrent + durationForEnd*60*1000) - now;
-    }
-
     call_startCountdown(durationForEnd){
-        this.fn_setTimeCurrent();
+        const now = new Date().getTime();
 
-        this.set("var_activeForm_class" , "");
-        this.set("var_diActiveForm_class" , "d-none");
-
-        this._TIME_INTRVAl = setInterval(() => {
-            const distance = this.fn_calculateTimer(durationForEnd);
-
-            if (distance < 0) {
-                clearInterval(this._TIME_INTRVAl);
-                this.set("var_countdown_text" , "00:00");
-                this.set("var_activeForm_class" , "d-none");
-                this.set("var_diActiveForm_class" , "");
-                return;
-            }
-
-            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            minutes = minutes < 10 ? "0"+minutes : minutes;
-            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            seconds = seconds < 10 ? "0"+seconds : seconds;
-            this.set("var_countdown_text" , `${minutes}:${seconds}`);
-        }, 1000);
+        this._OTP_TIMER.call_startCountdown(
+            now + durationForEnd*60*1000
+        );
     }
 
     call_getValue(){
         const elValue = this.fn_getElValue();
         return elValue.value
+    }
+
+
+    fn_onGetNewToken(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onGetNewToken") && typeof data.fn_onGetNewToken != null){
+            if (this._TIME_INTRVAl != null){
+                clearInterval(this._TIME_INTRVAl);
+            }
+            data.fn_onGetNewToken();
+        }
+    }
+
+    fn_onFinishToken(){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onFinishToken") && typeof data.fn_onFinishToken != null){
+            data.fn_onFinishToken();
+        }
     }
 }
 
@@ -15179,8 +15721,6 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
     }
 
 
-
-
     /* ---------------------------------------------
       TEMPLATEs
     --------------------------------------------- */
@@ -15192,7 +15732,11 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         this.templateFn("part_body" );
         this.templateFn("part_body_searcher" );
 
-        this.fn_firstCallback();
+
+        this.onRegisterFinish().then(el => {
+            this.fn_firstCallback();
+            this.fn_closeWhenClickOutside();
+        })
     }
     templateFn(partName = null){
 
@@ -15360,7 +15904,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             const var_itemSelectedTitle =this.fn_getItemSelectedTitle(prop_options , prop_itemSelected , prop_placeholder)
 
             let padding = "180px"
-            if (screanWidthType == "xs"){
+            if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                 padding = "35px";
             }
 
@@ -15373,7 +15917,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             ${directionRtl ? "margin-right" : "margin-left"} : ${prop_icon != null ? "30px" : "0"} ;
             ${directionRtl ? "padding-left" : "padding-right"} : 25px ;
             ${directionRtl ? `right : 0` :`left : 0` };
-            width: calc(100% - ${prop_btnAddStatus ? (screanWidthType == "xs" ? "30px" : "160px") : "0px"} - ${prop_icon != null ? "30px" : "0px"});
+            width: calc(100% - ${prop_btnAddStatus ? (screanWidthType == tools_css?.standardScreanWidth?.xs?.name ? "30px" : "160px") : "0px"} - ${prop_icon != null ? "30px" : "0px"});
             ${directionRtl ? "border-top-right-radius: 0 !important" : "border-top-left-radius: 0 !important" } ;
             ${directionRtl ? "border-bottom-right-radius: 0 !important" : "border-bottom-left-radius: 0 !important" } ;
             height: ${elHeight}px;
@@ -15420,7 +15964,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
             const prop_size                              =  data.hasOwnProperty("prop_size")                                 ?  data.prop_size                                 :  null;
             const var_searcherSelectOption               =  data.hasOwnProperty("var_searcherSelectOption")                  ?  data.var_searcherSelectOption                  :  "";
 
-            const optionHtml = this.fn_onGetBodyOptions(prop_options , prop_itemSelected , var_searcherSelectOption , prop_listIcons);
+            const optionHtml = this.fn_onGetBodyOptions(prop_options , prop_itemSelected , var_searcherSelectOption , prop_listIcons , directionRtl);
 
             const elHeight = tools_css.getHeightSize(prop_size);
             const elfontSize = tools_css.getFontSize(prop_size);
@@ -15437,10 +15981,14 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
               height: calc(100% - 45px);
          }
          #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}{
-             background-color: ${prop_optionItemNotSelectedBackground};
-             height: ${elHeight}px;
-             font-size: ${elfontSize}px;
-             padding: 3px 10px !important;
+             background-color:    ${prop_optionItemNotSelectedBackground};
+             width:               calc(100% - 20px);
+             height:              ${elHeight}px;
+             font-size:           ${elfontSize}px;
+             padding:             3px ${25 * (prop_listIcons!= null && prop_listIcons.length > 0 ? prop_listIcons.length : 1)}px 3px 10px!important;
+             white-space:         nowrap;
+             overflow:            hidden;
+             text-overflow:       ellipsis;
          }
          #${this._COMPONENT_ID} .component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID}:hover{
              background-color: ${prop_optionItemHoverBackground};
@@ -15453,11 +16001,13 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
          }
          
          #${this._COMPONENT_ID} .component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID}{
-             cursor: pointer;
-             margin: 0 5px;
-             font-size: 18pt;
-             line-height: 15pt;
-             float:  ${directionRtl? 'left' : 'right'};
+             cursor:               pointer;
+             margin:               0 2.5px;
+             font-size:            18pt;
+             line-height:          15pt;
+             top:                  50%;
+             position:             absolute;
+             transform:            translate(0 , -50%);
          }
      </style>
        
@@ -15547,7 +16097,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 "top" : "50%",
             }
             if (directionRtl){
-                if (screanWidthType == "xs"){
+                if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                     styles["left"]=  "0px";
                     styles["transform"]= prop_btnAddStatus ? "translate(30px , -50%)" : "translate(0 , -50%)";
                 }
@@ -15557,7 +16107,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 }
             }
             else {
-                if (screanWidthType == "xs"){
+                if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                     styles["right"]=  "0px";
                     styles["transform"]= prop_btnAddStatus ? "translate(-30px , -50%)" :  "translate(0 , -50%)";
                 }
@@ -15613,7 +16163,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                     styles["right"] = "0";
                 }
 
-                if (screanWidthType == "xs"){
+                if (screanWidthType == tools_css?.standardScreanWidth?.xs?.name){
                     styles["width"] = "30px";
                 }
                 else{
@@ -15693,7 +16243,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                 `component-select-option-body-searcher-${ this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_show_label: false ,
-                    prop_icon: tools_icons.icon_search(prop_size ,prop_colorIcon ) ,
+                    prop_icon: tools_icons.icon_search({size : prop_size /*, colors: {primary:prop_colorIcon}*/}  ) ,
 
                     fn_oninput: (event , value) => {
                         this.set("var_searcherSelectOption" , value)
@@ -15713,6 +16263,15 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         if (data.hasOwnProperty("prop_firstCallback") && data.prop_firstCallback){
             this.fn_onSelectItemSelectOption(null ,  data.hasOwnProperty("prop_itemSelected") ? data.prop_itemSelected : null );
         }
+    }
+
+    fn_closeWhenClickOutside(){
+        document.addEventListener("click", (event) => {
+            const isInside = event.target.closest(`#${this._COMPONENT_ID}`);
+            if (!isInside) {
+                this.fn_showListOptions(event, false);
+            }
+        });
     }
 
     fn_clickBtnTools(event){
@@ -15767,15 +16326,17 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
         this.set("var_showFormSelectOption" ,  var_showFormSelectOption);
 
         const body = document.querySelector(`#component-select-option-position-element-${ this._COMPONENT_RANDOM_ID}`);
-        if (var_showFormSelectOption){
-            body.classList.remove("d-none")
-        }
-        else {
-            body.classList.add("d-none")
+        if (body != null){
+            if (var_showFormSelectOption){
+                body.classList.remove("d-none")
+            }
+            else {
+                body.classList.add("d-none")
+            }
         }
     }
 
-    fn_onGetBodyOptions(prop_options  , prop_itemSelected , var_searcherSelectOption , prop_listIcons=null){
+    fn_onGetBodyOptions(prop_options  , prop_itemSelected , var_searcherSelectOption , prop_listIcons=null , directionRtl){
 
         let optionsStr = "";
 
@@ -15796,7 +16357,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                                 const itemIconName = itemIcon.name;
 
                                 iconsHtml += `
-                                <i class="component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID} "
+                                <i class="component-select-option-body-options-item-icon-${this._COMPONENT_RANDOM_ID} " style=" ${directionRtl? 'left' : 'right'}: ${(j)*25}px"
                                     onclick="${this.getFn("fn_onClickIconOption" , "event" , `'${itemIconName}'` , value)}">
                                       ${itemIconHtml} 
                                 </i>
@@ -15809,7 +16370,7 @@ window.ComponentSelectOption = class ComponentSelectOption extends ComponentSele
                     if (typeof item.name.includes == "undefined" || item.name.includes(var_searcherSelectOption)){
 
                         optionsStr += `
-<div class="component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID} rounded my-1 ${prop_itemSelected != null && value == prop_itemSelected ? `component-select-option-body-options-item-selected-${this._COMPONENT_RANDOM_ID}` : ''}"
+<div class="component-select-option-body-options-item-${this._COMPONENT_RANDOM_ID} position-relative rounded my-1 ${prop_itemSelected != null && value == prop_itemSelected ? `component-select-option-body-options-item-selected-${this._COMPONENT_RANDOM_ID}` : ''}"
    onclick="${this.getFn("fn_onSelectItemSelectOption" , "event" , item.id)}"> 
    ${item.name} 
    
@@ -16828,6 +17389,10 @@ class ComponentCameraQrCodeReaderBase extends ComponentBase{
        PROPERTYs Pattern
 --------------------------------------------- */
     _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name,
+        },
         prop_formMinHight: {
             prop: "prop_formMinHight",
             default: "150px"
@@ -16884,6 +17449,7 @@ class ComponentCameraQrCodeReaderBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_titleBtnRetry
         ],
         part_input: [
+            this._COMPONENT_PATTERN.prop_size,
             this._COMPONENT_PATTERN.prop_showInput,
             this._COMPONENT_PATTERN.prop_name
         ]
@@ -17122,6 +17688,7 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
 
         if (data != null){
 
+            const prop_size            = data.hasOwnProperty("prop_size")            ? data.prop_size              : null;
             const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
             const prop_showInput       = data.hasOwnProperty("prop_showInput")       ? data.prop_showInput         : true;
 
@@ -17131,7 +17698,7 @@ window.ComponentCameraQrCodeReader = class ComponentCameraQrCodeReader extends C
                     classList: [prop_showInput ? "" : "d-none"]  ,
 
                     prop_type:"string" ,
-                    prop_icon:"&#x25A3;" ,
+                    prop_icon: tools_icons.icon_crcode({size : prop_size }   ) ,
                     prop_name: prop_name ,
                     prop_isDisable: true ,
 
@@ -17179,6 +17746,10 @@ class ComponentUploadQrCodeReaderBase extends ComponentBase{
         PROPERTYs Pattern
      --------------------------------------------- */
     _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name,
+        },
         prop_formHight: {
             prop: "prop_formHight",
             default: 150
@@ -17204,7 +17775,8 @@ class ComponentUploadQrCodeReaderBase extends ComponentBase{
         ],
         part_input: [
             this._COMPONENT_PATTERN.prop_showInput,
-            this._COMPONENT_PATTERN.prop_name
+            this._COMPONENT_PATTERN.prop_name,
+            this._COMPONENT_PATTERN.prop_size,
         ]
     };
 
@@ -17322,7 +17894,7 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
         const data = this.getPartProps(partName)
 
         if (data != null){
-
+            const prop_size            = data.hasOwnProperty("prop_size")            ? data.prop_size              : null;
             const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
             const prop_showInput       = data.hasOwnProperty("prop_showInput")       ? data.prop_showInput         : true;
 
@@ -17332,7 +17904,7 @@ window.ComponentUploadQrCodeReader = class ComponentUploadQrCodeReader extends C
                     classList: [prop_showInput ? "" : "d-none"]  ,
 
                     prop_type:"string" ,
-                    prop_icon:"&#x25A3;" ,
+                    prop_icon: tools_icons.icon_crcode({size : prop_size }  ) ,
                     prop_name: prop_name ,
                     prop_isDisable: true ,
 
@@ -17382,6 +17954,10 @@ class ComponentQrCodeReaderBase extends ComponentBase{
          PROPERTYs Pattern
   --------------------------------------------- */
     _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name,
+        },
         prop_titleTabCamera: {
             prop: "prop_titleTabCamera",
             default: "دوربین"
@@ -17425,7 +18001,8 @@ class ComponentQrCodeReaderBase extends ComponentBase{
         part_input: [
             this._COMPONENT_PATTERN.prop_name,
             this._COMPONENT_PATTERN.prop_value,
-            this._COMPONENT_PATTERN.prop_placeholder
+            this._COMPONENT_PATTERN.prop_placeholder,
+            this._COMPONENT_PATTERN.prop_size,
         ]
     };
 
@@ -17590,6 +18167,7 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCo
 
         if (data != null){
 
+            const prop_size            = data.hasOwnProperty("prop_size")            ? data.prop_size              : null;
             const prop_name            = data.hasOwnProperty("prop_name")            ? data.prop_name              : "";
             const prop_value           = data.hasOwnProperty("prop_value")           ? data.prop_value             : "";
             const prop_placeholder     = data.hasOwnProperty("prop_placeholder")     ? data.prop_placeholder       : "";
@@ -17598,7 +18176,7 @@ window.ComponentQrCodeReader = class ComponentQrCodeReader extends ComponentQrCo
                 `component-qr-code-reader-input-${this._COMPONENT_RANDOM_ID}` ,
                 {
                     prop_type:"string" ,
-                    prop_icon:"&#x25A3;" ,
+                    prop_icon: tools_icons.icon_crcode({size : prop_size }  ) ,
                     prop_name: prop_name ,
                     prop_value: prop_value ,
                     prop_placeholder: prop_placeholder ,
@@ -19454,6 +20032,666 @@ window.ComponentTooltipDescription = class ComponentTooltipDescription extends C
 
 
 
+/*-------------------------------------
+ 013-01)   // [01] timer dwon
+-------------------------------------*/
+class ComponentComponentTimerDownBase extends ComponentBase{
+
+
+    /* ---------------------------------------------
+       PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_structureStyles: {
+            prop: "prop_structureStyles",
+            default: {
+                "max-width" : "450px",
+                "margin" : "auto",
+                "display": "block"
+            }
+        },
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+
+        prop_backgroundColor_body: {
+            prop: "prop_backgroundColor_body",
+            default:  tools_const?.styles?.timerDown?.backgroundColor_body ?? ""
+        },
+        prop_backgroundColor_timer: {
+            prop: "prop_backgroundColor_timer",
+            default:  tools_const?.styles?.timerDown?.backgroundColor_timer ?? ""
+        },
+        prop_backgroundColor_timerEffect: {
+            prop: "prop_backgroundColor_timerEffect",
+            default:  tools_const?.styles?.timerDown?.backgroundColor_timerEffect ?? ""
+        },
+        prop_color_timer: {
+            prop: "prop_color_timer",
+            default:  tools_const?.styles?.timerDown?.color_timer ?? ""
+        },
+        prop_color_description: {
+            prop: "prop_color_description",
+            default:  tools_const?.styles?.timerDown?.color_description ?? ""
+        },
+
+        prop_description: {
+            prop: "prop_description",
+            default:  null
+        },
+
+        prop_show_options: {
+            prop: "prop_show_options",
+            default:  true
+        },
+
+        prop_tooltipIcon : {
+            prop: "prop_tooltipIcon" ,
+            default: tools_icons.icon_exclamation_square
+        } ,
+
+        prop_langSelected: {
+            prop: "prop_langSelected",
+            default: component_props.directionRtl ? "fa" : "en"
+        } ,
+        prop_langs: {
+            prop: "prop_langs",
+            default: {
+                fa: {
+                    on_progress_duration:  "تا ارسال مجدد کد" ,
+                    on_end_duration:       "کد منقی شده است" ,
+                    btn_resend:            "ارسال مجدد" ,
+                } ,
+                en: {
+                    on_progress_duration:  "Until resend code" ,
+                    on_end_duration:       "The code has been deprecated" ,
+                    btn_resend:            "Retry" ,
+                }
+            }
+        },
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_structure: [
+            this._COMPONENT_PATTERN.prop_structureStyles,
+        ],
+
+        part_form: [
+            this._COMPONENT_PATTERN.prop_backgroundColor_body,
+            this._COMPONENT_PATTERN.prop_size,
+        ],
+
+        part_tooltip: [
+            this._COMPONENT_PATTERN.prop_backgroundColor_body,
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_tooltipIcon,
+            this._COMPONENT_PATTERN.prop_description,
+        ],
+
+        part_timer: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_backgroundColor_timer,
+            this._COMPONENT_PATTERN.prop_backgroundColor_timerEffect,
+            this._COMPONENT_PATTERN.prop_color_timer,
+            this._COMPONENT_PATTERN.prop_show_options,
+        ],
+
+        part_text: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_color_description,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+            this._COMPONENT_PATTERN.prop_show_options,
+        ],
+
+        part_text_button: [
+            this._COMPONENT_PATTERN.prop_size,
+            this._COMPONENT_PATTERN.prop_langSelected,
+            this._COMPONENT_PATTERN.prop_langs,
+        ],
+
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_structure: {
+            part_form: {
+                part_tooltip:{},
+                part_timer:{},
+                part_text:{
+                    part_text_button: {}
+                },
+            }
+        },
+    }
+
+}
+window.ComponentTimerDown = class ComponentTimerDown extends ComponentComponentTimerDownBase {
+
+    _COUNTER_TIMER_DOWN = null;
+
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor(elId, config) {
+        super(
+            listComponent[ComponentTimerDown.name] ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+    /* ---------------------------------------------
+       TEMPLATEs
+    --------------------------------------------- */
+    componentFn(){
+        this.templateFn("part_tooltip")
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_form":
+                return this.template_render_form(partName);
+            case "part_timer":
+                return this.template_render_form_timer(partName);
+            case "part_text":
+                return this.template_render_form_text(partName);
+            case "part_text_button":
+                return this.componentFn_render_form_text_button(partName);
+            case "part_tooltip":
+                return this.componentFn_render_form_tooltip(partName);
+
+            default:
+                return this.templateBasic_render([]);
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+            ${this.templateFn("part_form") ?? ""}
+                `;
+        return this.templateBasic_render_structure(content , []);
+    }
+
+    template_render_form(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+            const prop_backgroundColor_body=         data.hasOwnProperty("prop_backgroundColor_body")            ?  data.prop_backgroundColor_body          : null;
+
+            const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            return `
+<section id="component-timer-down-form-${ this._COMPONENT_RANDOM_ID}" 
+         data-part-name="${partName}"
+         class="row p-0 m-0 rounded shadow-sm py-2 position-relative">
+    <style>
+       #${this._COMPONENT_ID} #component-timer-down-form-${ this._COMPONENT_RANDOM_ID}{
+             background-color:    ${prop_backgroundColor_body};
+             direction:           ${directionRtl ? "ltr" : "rtl"}
+       }
+    </style>
+    
+     <component-tooltip-description id="component-timer-down-form-tooltip-${this._COMPONENT_RANDOM_ID}"></component-tooltip-description>
+    
+    ${this.templateFn("part_timer") ?? ""}
+    
+    ${this.templateFn("part_text") ?? ""}
+    
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form_timer(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+
+            const prop_backgroundColor_timer=         data.hasOwnProperty("prop_backgroundColor_timer")            ?  data.prop_backgroundColor_timer          : null;
+            const prop_backgroundColor_timerEffect=   data.hasOwnProperty("prop_backgroundColor_timerEffect")      ?  data.prop_backgroundColor_timerEffect    : null;
+            const prop_color_timer=                   data.hasOwnProperty("prop_color_timer")                      ?  data.prop_color_timer                    : null;
+            const prop_size  =                        data.hasOwnProperty("prop_size")                             ?  data.prop_size                           : null;
+            const prop_show_options  =                data.hasOwnProperty("prop_show_options")                     ?  data.prop_show_options                   : false;
+
+
+            const elFontSize = tools_css.getFontSize(prop_size);
+            const elHeight = tools_css.getHeightSize(prop_size);
+
+            return `
+<section id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}" 
+         data-part-name="${partName}"
+         class="${prop_show_options ? 'col-md-5' : ''} col-12 ">
+    <style>
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}{
+
+       }
+       
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-parts{
+           direction:         ltr !important;
+           width:             100px;
+           margin:            0 auto !important;
+       }
+       
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute{
+         
+       }
+       
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute-one{
+           background-color:  ${prop_backgroundColor_timer};
+           color:             ${prop_color_timer};
+           font-size:         ${elFontSize}px;
+           line-height:       ${elHeight}px;
+           position:          relative;
+       }
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute-one:after{
+           content:           "" ;
+           position:          absolute;
+           left:              50%;
+           top:               50%;
+           transform:         translate(-50% , -50%);
+           width:             75%;
+           height:            0%;
+           background-color:  ${prop_backgroundColor_timerEffect};
+           border-radius:     5px;
+           animation:         myTimerDownAnimation-${ this._COMPONENT_RANDOM_ID} 1000ms infinite;
+       }
+       
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute-two{
+           background-color:  ${prop_backgroundColor_timer};
+           color:             ${prop_color_timer};
+           font-size:         ${elFontSize}px;
+           line-height:       ${elHeight}px;
+           position:          relative;
+       }
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute-two:after{
+           content:           "" ;
+           position:          absolute;
+           left:              50%;
+           top:               50%;
+           transform:         translate(-50% , -50%);
+           width:             75%;
+           height:            0%;
+           background-color:  ${prop_backgroundColor_timerEffect};
+           border-radius:     5px;
+           animation:         myTimerDownAnimation-${ this._COMPONENT_RANDOM_ID} 1000ms infinite;
+       }
+       
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-dot{
+           color:             ${prop_color_timer};       
+           font-size:         ${elFontSize}px;
+           line-height:       ${elHeight}px;
+       }
+      
+       
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second{
+
+       }
+       
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second-one{
+           background-color:  ${prop_backgroundColor_timer};
+           color:             ${prop_color_timer};
+           font-size:         ${elFontSize}px;
+           line-height:       ${elHeight}px;
+           position:          relative;
+       }
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second-one:after{
+           content:           "" ;
+           position:          absolute;
+           left:              50%;
+           top:               50%;
+           transform:         translate(-50% , -50%);
+           width:             75%;
+           height:            0%;
+           background-color:  ${prop_backgroundColor_timerEffect};
+           border-radius:     5px;
+           animation:         myTimerDownAnimation-${ this._COMPONENT_RANDOM_ID} 1000ms infinite;
+       }
+       
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second-two{
+           background-color:  ${prop_backgroundColor_timer};
+           color:             ${prop_color_timer};
+           font-size:         ${elFontSize}px;
+           line-height:       ${elHeight}px;
+           position:          relative;
+       }
+       #${this._COMPONENT_ID} #component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second-two:after{
+           content:           "" ;
+           position:          absolute;
+           left:              50%;
+           top:               50%;
+           transform:         translate(-50% , -50%);
+           width:             75%;
+           height:            0%;
+           background-color:  ${prop_backgroundColor_timerEffect};
+           border-radius:     5px;
+           animation:         myTimerDownAnimation-${ this._COMPONENT_RANDOM_ID} 1000ms infinite;
+       }
+       
+       @keyframes myTimerDownAnimation-${ this._COMPONENT_RANDOM_ID} {
+         0% {
+           opacity: 0;
+           height:   0;
+         }
+         50% {
+           opacity: 1;
+           height:   80%;
+         }
+         100% {
+           opacity: 0;
+           height:   0;
+         }
+       }
+       
+    </style>
+    
+    <div id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-parts" class="row  p-0">
+            
+         <div id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute" class="col-5 m-0 p-0 row">
+            <b id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute-one" class="col-6 border rounded px-1 text-center border-white border-2"> -</b>
+            <b id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute-two" class="col-6 border rounded px-1 text-center border-white border-2"> -</b>
+         </div>
+         
+         <b id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-dot" class="col-2 m-0 p-0 text-center">
+            :
+         </b>
+         
+         <div id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second" class="col-5 m-0 p-0 row">
+            <b id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second-one" class="col-6 border rounded px-1 text-center border-white border-2"> -</b>
+            <b id="component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second-two" class="col-6 border rounded px-1 text-center border-white border-2"> -</b>
+         </div>
+         
+    </div>
+
+</section>
+            `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    template_render_form_text(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+           const prop_size  =                   data.hasOwnProperty("prop_size")                   ?  data.prop_size                  : null;
+            const prop_color_description  =     data.hasOwnProperty("prop_color_description")      ?  data.prop_color_description     : null;
+            const prop_show_options  =          data.hasOwnProperty("prop_show_options")           ?  data.prop_show_options          : false;
+            const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+
+            if (prop_show_options){
+                const elFontSize = tools_css.getFontSize(prop_size);
+                const elHeight = tools_css.getHeightSize(prop_size);
+
+                return `
+<section id="component-timer-down-form-text-${ this._COMPONENT_RANDOM_ID}" 
+         data-part-name="${partName}"
+        class="col-md-7 col-12 py-1">
+    <style>
+       #${this._COMPONENT_ID} #component-timer-down-form-text-${ this._COMPONENT_RANDOM_ID}{
+           color:             ${prop_color_description};
+           direction:         ${directionRtl ? "ltr" : "rtl"};
+       }
+       #${this._COMPONENT_ID} #component-timer-down-form-text-${ this._COMPONENT_RANDOM_ID}-content{
+           float:         ${directionRtl ? "left" : "right"};
+       }
+       #${this._COMPONENT_ID} #component-timer-down-form-text-${ this._COMPONENT_RANDOM_ID}-sp{
+           float:         ${directionRtl ? "left" : "right"};
+       }
+    </style>
+    
+    <b id="component-timer-down-form-text-${ this._COMPONENT_RANDOM_ID}-content" class=""></b>
+    
+    <span id="component-timer-down-form-text-${ this._COMPONENT_RANDOM_ID}-sp"  class=" px-2">
+       |
+    </span>
+    
+    <component-button id="component-timer-down-form-text-button-${ this._COMPONENT_RANDOM_ID}"></component-button>
+    
+</section>
+            `;
+            }
+
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_form_text_button(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+            const prop_langSelected  =        data.hasOwnProperty("prop_langSelected")               ?  data.prop_langSelected                 : null;
+            const prop_langs  =               data.hasOwnProperty("prop_langs")                      ?  data.prop_langs                        : null;
+            const directionRtl  =             data.hasOwnProperty("directionRtl")                    ? data.directionRtl                       : (component_props != null && component_props.hasOwnProperty("directionRtl") ? component_props.directionRtl : false)
+
+            let btn_resend = "";
+            if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+                const langs = prop_langs[prop_langSelected];
+                btn_resend = langs?.btn_resend ?? "";
+            }
+
+            new window.ComponentButton(
+                `component-timer-down-form-text-button-${ this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList:  [] ,
+                    styles: {
+                        float:    directionRtl ? "left" : "right" ,
+                    } ,
+
+                    prop_btnClass: ["px-2"],
+                    prop_btnStyles: {},
+
+                    prop_title: btn_resend ,
+
+                    fn_callback: (event) => {
+                        this.#fn_onClickRetry(event);
+                    }
+                }
+            )
+
+        }
+    }
+
+    componentFn_render_form_tooltip(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null) {
+            const prop_description          =    data.hasOwnProperty("prop_description")                ?  data.prop_description                 : null;
+            const prop_tooltipIcon          =    data.hasOwnProperty("prop_tooltipIcon")                ?  data.prop_tooltipIcon                 : null;
+            const prop_backgroundColor_body =    data.hasOwnProperty("prop_backgroundColor_body")       ?  data.prop_backgroundColor_body        : null;
+            const prop_size  =                   data.hasOwnProperty("prop_size")                       ?  data.prop_size                        : null;
+
+
+            const directionRtl              =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")  ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_btnAddStatus         =  data.hasOwnProperty("prop_btnAddStatus")               ?  data.prop_btnAddStatus                  : false;
+            const var_showFormSelectOption  =  data.hasOwnProperty("var_showFormSelectOption")        ?  data.var_showFormSelectOption           : false;
+
+            let styles = {
+                top:       "50%" ,
+                transform: "translate(0px , -50%)"
+            }
+            if (directionRtl){
+                styles["left"]=  "0px";
+            }
+            else {
+                styles["right"]= "0px";
+            }
+
+            if (prop_description != null){
+                new window.ComponentTooltipDescription(
+                    `component-timer-down-form-tooltip-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        classList:         "position-absolute"  ,
+                        styles:            styles ,
+
+                        prop_icon:         prop_tooltipIcon != null ? (typeof prop_tooltipIcon == "function" ? prop_tooltipIcon({size: prop_size , color:{primary: prop_backgroundColor_body}} ) : prop_tooltipIcon) : ""  ,
+                        prop_description:  prop_description,
+                    }
+                )
+            }
+
+        }
+    }
+
+
+    /* ---------------------------------------------
+      FUNCTIONs
+    --------------------------------------------- */
+
+    #fn_getElementButton(){
+        return document.getElementById(`component-timer-down-form-text-button-${ this._COMPONENT_RANDOM_ID}`);
+    }
+    #fn_getElementText(){
+        return document.getElementById(`component-timer-down-form-text-${ this._COMPONENT_RANDOM_ID}-content`);
+    }
+
+    #fn_getElementTextTimeDuration_minuteOne(){
+        return document.getElementById(`component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute-one`);
+    }
+    #fn_getElementTextTimeDuration_minuteTwo(){
+        return document.getElementById(`component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-minute-two`);
+    }
+
+    #fn_getElementTextTimeDuration_secondOne(){
+        return document.getElementById(`component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second-one`);
+    }
+    #fn_getElementTextTimeDuration_secondTwo(){
+        return document.getElementById(`component-timer-down-form-timer-${ this._COMPONENT_RANDOM_ID}-part-second-two`);
+    }
+
+
+
+    #fn_progressTimerProgress(timer){
+        const data = this._COMPONENT_CONFIG;
+        const prop_langSelected  =        data.hasOwnProperty("prop_langSelected")               ?  data.prop_langSelected                 : null;
+        const prop_langs  =               data.hasOwnProperty("prop_langs")                      ?  data.prop_langs                        : null;
+
+        let on_progress_duration = "";
+        if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+            const langs = prop_langs[prop_langSelected];
+            on_progress_duration = langs?.on_progress_duration ?? "";
+        }
+
+        const elText = this.#fn_getElementText();
+        if(elText != null) elText.innerText = on_progress_duration;
+
+
+
+        const elButtn = this.#fn_getElementButton();
+        if(elButtn != null)  elButtn.innerHtml = "";
+
+
+        const elMinuteOne = this.#fn_getElementTextTimeDuration_minuteOne();
+        const elMinuteTwo = this.#fn_getElementTextTimeDuration_minuteTwo();
+
+        let minutes = Math.floor((timer % (1000 * 60 * 60)) / (1000 * 60));
+        const minutes_digitOne = Math.floor(minutes/10);
+        const minutes_digitTwo = minutes - (minutes_digitOne*10);
+
+        if(elMinuteOne != null) elMinuteOne.innerText= minutes_digitOne ;
+        if(elMinuteTwo != null) elMinuteTwo.innerText= minutes_digitTwo;
+
+
+
+        const elSecondOne = this.#fn_getElementTextTimeDuration_secondOne();
+        const elSecondTwo = this.#fn_getElementTextTimeDuration_secondTwo();
+
+        let seconds = Math.floor((timer % (1000 * 60)) / 1000);
+        const seconds_digitOne = Math.floor(seconds/10);
+        const seconds_digitTwo = seconds - (seconds_digitOne*10);
+
+        if(elSecondOne != null) elSecondOne.innerText= seconds_digitOne ;
+        if(elSecondTwo != null) elSecondTwo.innerText= seconds_digitTwo;
+
+    }
+    #fn_endTimerProgress(){
+        const data = this._COMPONENT_CONFIG;
+        const prop_langSelected  =   data.hasOwnProperty("prop_langSelected")      ?  data.prop_langSelected    : null;
+        const prop_langs  =          data.hasOwnProperty("prop_langs")             ?  data.prop_langs           : null;
+
+        let on_end_duration = "";
+        if (prop_langs != null && prop_langSelected != null && prop_langs.hasOwnProperty(prop_langSelected)){
+            const langs = prop_langs[prop_langSelected];
+            on_end_duration = langs?.on_end_duration ?? "";
+        }
+
+        const elText = this.#fn_getElementText();
+        if(elText != null) elText.innerText=on_end_duration;
+
+        this.templateFn("part_text_button")
+
+        const elMinuteOne = this.#fn_getElementTextTimeDuration_minuteOne();
+        const elMinuteTwo = this.#fn_getElementTextTimeDuration_minuteTwo();
+        if(elMinuteOne != null) elMinuteOne.innerText="-" ;
+        if(elMinuteTwo != null) elMinuteTwo.innerText="-" ;
+
+        const elSecondOne = this.#fn_getElementTextTimeDuration_secondOne();
+        const elSecondTwo = this.#fn_getElementTextTimeDuration_secondTwo();
+        if(elSecondOne != null) elSecondOne.innerText="-" ;
+        if(elSecondTwo != null) elSecondTwo.innerText="-" ;
+    }
+
+
+
+    #fn_calculateTimer(timeUnixEnd){
+        return timeUnixEnd - new Date().getTime();
+    }
+    call_startCountdown(timeUnixEnd){
+
+        this._COUNTER_TIMER_DOWN = setInterval(() => {
+            const distance = this.#fn_calculateTimer(timeUnixEnd);
+
+            if (distance < 0) {
+                clearInterval(this._COUNTER_TIMER_DOWN);
+                this.#fn_endTimerProgress();
+                this.#fn_onFinishTimer();
+                return;
+            }
+
+            this.#fn_progressTimerProgress(distance);
+        }, 1000);
+    }
+
+
+
+    #fn_onClickRetry(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onBackClick") && typeof data.fn_onClickRetry != null){
+            data.fn_onBackClick(event);
+        }
+    }
+
+    #fn_onFinishTimer(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_onFinishTimer") && typeof data.fn_onFinishTimer != null){
+            data.fn_onFinishTimer();
+        }
+    }
+
+
+}
+
+
+
 
 
 
@@ -19639,7 +20877,7 @@ class ComponentTableBase extends ComponentBase{
         },
         prop_colorIconColumnSelector: {
             prop: "prop_colorIconColumnSelector",
-            default: tools_const?.styles?.table?.color_iconColumnSelecto ?? ""
+            default: tools_const?.styles?.table?.color_iconColumnSelector ?? ""
         },
     };
 
@@ -20377,7 +21615,7 @@ ${itemRowOptions}
                     <div class="component-table-body-item-option-col-${this._COMPONENT_RANDOM_ID} rounded position-absolute py-1 px-2">
                     
                         <div class="component-table-body-item-option-col-arrow-${this._COMPONENT_RANDOM_ID} rounded text-center  mx-1 " >
-                               ${directionRtl ? tools_icons.icon_arrow_right(prop_size , prop_rowOptionsItemColor) : tools_icons.icon_arrow_left(prop_size , prop_rowOptionsItemColor)}
+                               ${directionRtl ? tools_icons.icon_arrow_right({size : prop_size /*, colors: {primary:prop_rowOptionsItemColor}*/} ) : tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_rowOptionsItemColor}*/} )}
                         </div>
                         
                         <div class="component-table-body-item-option-col-icons-${this._COMPONENT_RANDOM_ID}" style="width: ${prop_rowOptions.length * 50}px" >
@@ -20746,11 +21984,11 @@ window.ComponentTableResponsible = class ComponentTableResponsible extends Compo
             const prop_backgroundcolorBodyHover      =   data.hasOwnProperty("prop_backgroundcolorBodyHover")           ?  data.prop_backgroundcolorBodyHover           : "";
             const prop_colorBodyHover                =   data.hasOwnProperty("prop_colorBodyHover")                     ?  data.prop_colorBodyHover                     : "";
 
-            const prop_options                              =   data.hasOwnProperty("prop_options")                                ?  data.prop_options                                      : [];
-            const prop_backgroundColorIconColumnSelector    =   data.hasOwnProperty("ckgroundColorIconColumnSelector")             ?  data.ckgroundColorIconColumnSelector                   : "";
-            const prop_colorIconColumnSelector              =   data.hasOwnProperty("prop_backgroundColorIconColumnSelector")      ?  data.prop_backgroundColorIconColumnSelector            : "";
+            const prop_options                                  =   data.hasOwnProperty("prop_options")                                ?  data.prop_options                                      : [];
+            const prop_colorIconColumnSelector                  =   data.hasOwnProperty("prop_colorIconColumnSelector")                ?  data.prop_colorIconColumnSelector                   : "";
+            const prop_backgroundColorIconColumnSelector        =   data.hasOwnProperty("prop_backgroundColorIconColumnSelector")      ?  data.prop_backgroundColorIconColumnSelector            : "";
 
-            const prop_headerIconSize                       =   data.hasOwnProperty("prop_headerIconSize")                         ?  data.prop_headerIconSize            : 20;
+            const prop_headerIconSize                           =   data.hasOwnProperty("prop_headerIconSize")                         ?  data.prop_headerIconSize            : 20;
 
             formEl.innerHTML = `<component-table id="component-table-responsible-${ this._COMPONENT_RANDOM_ID}-table"></component-table>`
 
@@ -21406,7 +22644,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
                 new window.ComponentIcon(
                     `component-page-number-form-btn-prevous-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon: directionRtl ?  tools_icons.icon_arrow_right(prop_size , prop_colorIcon)  :  tools_icons.icon_arrow_left(prop_size , prop_colorIcon)  ,
+                        prop_icon: directionRtl ?  tools_icons.icon_arrow_right({size : prop_size /*, colors: {primary:prop_colorIcon}*/})  :  tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_colorIcon}*/})  ,
 
                         classList : [  , "d-block"  ] ,
                         styles: {
@@ -21454,7 +22692,7 @@ window.ComponentPageNumber = class ComponentPageNumber extends ComponentPageNumb
                 new window.ComponentIcon(
                     `component-page-number-form-btn-next-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon:  directionRtl ? tools_icons.icon_arrow_left(prop_size , prop_colorIcon)  :  tools_icons.icon_arrow_right(prop_size , prop_colorIcon)  ,
+                        prop_icon:  directionRtl ? tools_icons.icon_arrow_left({size : prop_size /*, colors: {primary:prop_colorIcon}*/} )  :  tools_icons.icon_arrow_right({size : prop_size/* , colors: {primary:prop_colorIcon}*/} )  ,
 
                         classList : [ "position-relative" , "d-block"  ] ,
                         styles: {
@@ -22051,7 +23289,8 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
          
          
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types{
-               line-height:       ${elHeight}px;
+               /*height:            ${elHeight*1.25}px;*/
+               line-height:       ${elHeight*(prop_type == 0 ? 1.25 : 1)}px;
                font-size:         ${elFontSize}px;
                padding:           5px 10px;
                background-color:  ${prop_backgroundUnselected} ;
@@ -22059,12 +23298,12 @@ window.ComponentTabs = class ComponentTabs extends ComponentTabsBase{
          }
          #${this._COMPONENT_ID} #component-tabs-tabs-${ this._COMPONENT_RANDOM_ID} .btn-tab-types:before{
                content: "";
-               width: 100%;
+               width: calc(100% - 10px);
                height: 115%;
                display: block;
                position: absolute;
                top: 0;
-               left: 0;
+               left: 5px;
                background-color:  ${prop_backgroundIterBefore};
                clip-path: ellipse(75% 50% at 50% 0);
          }
@@ -23252,6 +24491,10 @@ class ComponentStepperBase extends ComponentBase{
             prop: "prop_steps",
             default: []
         },
+        prop_params: {
+            prop: "prop_params",
+            default: []
+        },
         prop_body: {
             prop: "prop_body",
             default: null
@@ -23275,6 +24518,7 @@ class ComponentStepperBase extends ComponentBase{
         part_form: [
             this._COMPONENT_PATTERN.prop_size ,
             this._COMPONENT_PATTERN.prop_steps ,
+            this._COMPONENT_PATTERN.prop_params ,
             this._COMPONENT_PATTERN.prop_unSelectedBackground ,
             this._COMPONENT_PATTERN.prop_selectedBackground ,
         ] ,
@@ -23297,6 +24541,7 @@ class ComponentStepperBase extends ComponentBase{
 window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
 
     _LIST_STEPS_ACTIVE = {};
+    _PARAMS = {};
 
 
 
@@ -23346,10 +24591,11 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
             const directionRtl                  =   this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")        ? this._COMPONENT_CONFIG.directionRtl    : false;
             const prop_body                     =   data.hasOwnProperty("prop_body")  && data.prop_body != null  ?  data.prop_body                        : this._COMPONENT_SLOTS?.body ?? [];
             const prop_steps                    =   data.hasOwnProperty("prop_steps")                            ?  data.prop_steps                       :  []
+            this._PARAMS                        =   data.hasOwnProperty("prop_params")                           ?  data.prop_params                      : {}
             const prop_unSelectedBackground     =   data.hasOwnProperty("prop_unSelectedBackground")             ?  data.prop_unSelectedBackground        :  ""
             const prop_selectedBackground       =   data.hasOwnProperty("prop_selectedBackground")               ?  data.prop_selectedBackground          :  ""
 
-            const stepsHtml = this.fn_renderSteps(prop_steps , prop_body );
+            const stepsHtml = this.#fn_renderSteps(prop_steps , prop_body );
 
 
             const elHeight =tools_css.getHeightSize(prop_size);
@@ -23373,7 +24619,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                 background-color: ${prop_selectedBackground} !important;
          }
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_borderColor_active{
-                border-bottom: 1px dashed ${prop_selectedBackground}  !important;
+                border-bottom: 2px dotted ${prop_selectedBackground}  !important;
          }
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_color_active{
                 color: ${prop_selectedBackground} !important;
@@ -23386,7 +24632,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                 background-color: ${prop_unSelectedBackground};
          }
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_borderColor_diactive{
-                border-bottom: 1px dashed ${prop_unSelectedBackground};
+                border-bottom: 2px dotted ${prop_unSelectedBackground};
          }
          #${this._COMPONENT_ID} #component-steps-from-${this._COMPONENT_RANDOM_ID} .step_color_diactive{
                 color: ${prop_unSelectedBackground} ;
@@ -23512,10 +24758,10 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
 
 
     /* ---------------------------------------------
-        FUNCTIONs
+        FUNCTIONs #PRIVATE
     --------------------------------------------- */
 
-    fn_getElStepSelected(stepName , index){
+    #fn_getElStepSelected(stepName , index){
         return {
             step:                  `#${this._COMPONENT_ID} .component-steps-from-item-step-${this._COMPONENT_RANDOM_ID}[name=${stepName}]` ,
             lineVertical:           ` .component-steps-from-item-step-section-number-line-${this._COMPONENT_RANDOM_ID}` ,
@@ -23527,20 +24773,18 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
         };
     }
 
-    fn_renderSteps(prop_steps , prop_body ){
+    #fn_renderSteps(prop_steps , prop_body ){
         let html = "";
 
-        let stepBreak = true;
         if (prop_steps != null && Array.isArray(prop_steps)){
             for (let i = 0; i < prop_steps.length; i++) {
                 const itemStep =  prop_steps[i];
 
-                const stepBody =  this.fn_getStepBody(itemStep , prop_body)  ;
+                const stepBody =  this.#fn_getStepBody(itemStep , prop_body)  ;
                 const stepName =  itemStep?.name ?? "";
                 const stepTitle = itemStep?.title ?? "";
                 const msg =       itemStep?.msg ?? null;
                 const error =     itemStep?.error ?? null;
-                stepBreak =       stepBreak ? (itemStep?.condition() ?? false) : stepBreak;
 
                 this._LIST_STEPS_ACTIVE[stepName] = false;
 
@@ -23550,7 +24794,6 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                         <div class="component-steps-from-item-step-section-number-line-${this._COMPONENT_RANDOM_ID} step_bgColor_diactive"></div>
                     `;
                 }
-
 
                 html += `
 <section class="component-steps-from-item-step-${this._COMPONENT_RANDOM_ID}" name="${stepName}">
@@ -23589,7 +24832,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
         return html;
     }
 
-    fn_getStepBody(itemStep , prop_body){
+    #fn_getStepBody(itemStep , prop_body){
         let body = null;
         if (itemStep != null){
             if (itemStep.hasOwnProperty("body")){
@@ -23612,7 +24855,31 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
     }
 
 
+    /* ---------------------------------------------
+        FUNCTIONs
+    --------------------------------------------- */
 
+    fn_setParamValue(paramName , paramValue){
+        if (this._PARAMS != null){
+            Object.keys(this._PARAMS).forEach(key => {
+                if (key == paramName){
+                    this._PARAMS[paramName] = paramValue;
+                    return
+                }
+            })
+        }
+    }
+
+    fn_deleteStepHistory(stepName){
+        if (this._LIST_STEPS_ACTIVE != null){
+            Object.keys(this._LIST_STEPS_ACTIVE).forEach(key => {
+                if (key == stepName){
+                    this._LIST_STEPS_ACTIVE[stepName] = false;
+                    return
+                }
+            })
+        }
+    }
 
     fn_check(){
         const data = this._COMPONENT_CONFIG;
@@ -23621,7 +24888,6 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
 
         const elHeight =tools_css.getHeightSize(prop_size);
 
-        let stepBreak = false;
         let isFinishCheck = false;
         if (prop_steps != null && Array.isArray(prop_steps)){
             for (let i = 0; i < prop_steps.length; i++) {
@@ -23631,22 +24897,12 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                 const error =           itemStep?.error ?? null;
 
                 const stepName =        itemStep?.name ?? "";
-                const stepElements =    this.fn_getElStepSelected(stepName , i);
+                const stepElements =    this.#fn_getElStepSelected(stepName , i);
 
                 if (stepElements.hasOwnProperty("step")){
                     const stepQuery = stepElements.step;
+                    let stepActive =       (itemStep?.condition(this._PARAMS) ?? false);
 
-                    let stepActive = false;
-                    if (!stepBreak){
-                        let condition =       (itemStep?.condition() ?? false);
-
-                        if (condition){
-                            stepActive = true;
-                        }
-                        else{
-                            stepBreak = true;
-                        }
-                    }
 
                     const elStep =           document.querySelector(stepQuery);
                     const elLineVertical =   elStep?.querySelector(stepElements?.lineVertical);
@@ -23656,10 +24912,10 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                     const elBody =           elStep?.querySelector(stepElements?.body);
 
 
-                     const elMsg = document.querySelector("#"+stepElements?.msg)
-                     if (elMsg != null){
-                         elMsg.innerHTML = "";
-                     }
+                    const elMsg = document.querySelector("#"+stepElements?.msg)
+                    if (elMsg != null){
+                        elMsg.innerHTML = "";
+                    }
 
                     if (stepActive){
                         elLineVertical?.classList?.add("step_bgColor_active")
@@ -23668,7 +24924,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
                         elLineHorizontal?.classList?.add("step_borderColor_active")
                         elBody?.classList?.remove("d-none");
 
-                        elNumber.innerHTML = tools_icons.icon_is_true(elHeight-10 , "#fff")
+                        elNumber.innerHTML = tools_icons.icon_is_true({size : elHeight-10 , colors: {primary: "#fff"}} )
 
 
                         if (msg != null){
@@ -23710,7 +24966,7 @@ window.ComponentStepper = class ComponentStepper extends ComponentStepperBase{
 
                         if (status != stepActive && stepActive){
                             if (data.hasOwnProperty("fn_onStepCreated") && typeof data.fn_onStepCreated != null){
-                                data.fn_onStepCreated(stepName);
+                                data.fn_onStepCreated(stepName , this._PARAMS);
                             }
                         }
 
@@ -24019,7 +25275,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
                 new window.ComponentIcon(
                     `component-collapse-header-label-icon-${ this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : typeof prop_icon == "function" ? prop_icon(prop_size , prop_iconColor) : prop_icon ,
+                        prop_icon : typeof prop_icon == "function" ? prop_icon({size: prop_size , colors:{primary: prop_iconColor}}) : prop_icon ,
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles :styles,
                     }
@@ -24054,7 +25310,7 @@ window.ComponentCollapse = class ComponentCollapse extends ComponentCollapseBase
             new window.ComponentIcon(
                 `component-collapse-header-label-icon-arrow-${ this._COMPONENT_RANDOM_ID}` ,
                 {
-                    prop_icon : this._BODY_SHOW  ? tools_icons.icon_arrow_down(prop_size , prop_iconColor) : tools_icons.icon_arrow_up(prop_size ,  prop_iconColor),
+                    prop_icon : this._BODY_SHOW  ? tools_icons.icon_arrow_down({size : prop_size , colors: {primary: prop_iconColor}}) : tools_icons.icon_arrow_up({size : prop_size , colors: {primary: prop_iconColor}} ),
                     prop_iconClass : ["position-absolute"] ,
                     prop_iconStyles :styles,
                 }
@@ -26860,16 +28116,26 @@ window.ComponentChangePage  = class ComponentChangePage extends ComponentChangeP
          
      <style>
          #${this._COMPONENT_ID} #ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}{
-         
+            
          }
          #${this._COMPONENT_ID} .ccomponent-change-page-form-pages-${this._COMPONENT_RANDOM_ID}-page{
              transition: left ease ${prop_duration}ms ,  right ease ${prop_duration}ms ,  top ease ${prop_duration}ms ,  bottom ease ${prop_duration}ms;
              width: 100%;
              height: 100%;
+             overflow-y: auto;
+             overflow-x: hidden;
              ${styleStr};
              z-index: ${tools_css.getZIndex(tools_css.standardZIndex.new_page.name , 10)};
              background-color: ${prop_backgroundColorPage};
          }
+         
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.4);
+  border-radius: 20px;
+}
      </style>
      
      ${html}
@@ -27044,9 +28310,13 @@ class ComponentPageHeaderBase extends ComponentBase{
             default: {}
         },
 
-        prop_colorIcon: {
-            prop: "prop_colorIcon",
-            default: tools_const?.styles?.pageHeader?.color_icon ?? ""
+        prop_colorIcon_primary: {
+            prop: "prop_colorIcon_primary",
+            default: tools_const?.styles?.pageHeader?.colorPrimary_icon ?? ""
+        },
+        prop_colorIcon_secondary: {
+            prop: "prop_colorIcon_secondary",
+            default: tools_const?.styles?.pageHeader?.colorSecondary_icon ?? ""
         },
         prop_hasIconBack: {
             prop: "prop_hasIconBack",
@@ -27099,7 +28369,8 @@ class ComponentPageHeaderBase extends ComponentBase{
 
         part_form_back_icon: [
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_colorIcon,
+            this._COMPONENT_PATTERN.prop_colorIcon_primary,
+            this._COMPONENT_PATTERN.prop_colorIcon_secondary,
             this._COMPONENT_PATTERN.prop_hasIconBack,
         ],
 
@@ -27127,7 +28398,8 @@ class ComponentPageHeaderBase extends ComponentBase{
 
         part_form_options_render: [
             this._COMPONENT_PATTERN.prop_size,
-            this._COMPONENT_PATTERN.prop_colorIcon,
+            this._COMPONENT_PATTERN.prop_colorIcon_primary,
+            this._COMPONENT_PATTERN.prop_colorIcon_secondary,
             this._COMPONENT_PATTERN.prop_optionsList,
         ]
 
@@ -27496,10 +28768,11 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
 
         if (data != null) {
 
-            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                 : null;
-            const prop_colorIcon        = data.hasOwnProperty("prop_colorIcon")                  ? data.prop_colorIcon            : "";
-            const prop_hasIconBack      = data.hasOwnProperty("prop_hasIconBack")                ? data.prop_hasIconBack          : true;
-            const directionRtl          =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl") ? this._COMPONENT_CONFIG.directionRtl      : false;
+            const prop_size                       = data.hasOwnProperty("prop_size")                           ? data.prop_size                           : null;
+            const prop_colorIcon_primary          = data.hasOwnProperty("prop_colorIcon_primary")              ? data.prop_colorIcon_primary              : "";
+            const prop_colorIcon_secondary        = data.hasOwnProperty("prop_colorIcon_secondary")            ? data.prop_colorIcon_secondary            : "";
+            const prop_hasIconBack                = data.hasOwnProperty("prop_hasIconBack")                    ? data.prop_hasIconBack                    : true;
+            const directionRtl                    =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")     ? this._COMPONENT_CONFIG.directionRtl      : false;
 
             if (prop_hasIconBack){
 
@@ -27513,7 +28786,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
                 new window.ComponentIcon(
                     `component-header-page-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
-                        prop_icon : directionRtl ? tools_icons.icon_back_right(prop_size , prop_colorIcon) : tools_icons.icon_back_left(prop_size , prop_colorIcon)  ,
+                        prop_icon : directionRtl ? tools_icons.icon_back_right({size : prop_size ,  colors: {primary: prop_colorIcon_primary , secondary: prop_colorIcon_secondary }}) : tools_icons.icon_back_left({size : prop_size ,  colors: {primary: prop_colorIcon_primary , secondary: prop_colorIcon_secondary }} )  ,
 
                         prop_iconClass : ["position-absolute"] ,
                         prop_iconStyles : styles ,
@@ -27532,9 +28805,10 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
 
         if (data != null) {
 
-            const prop_size             = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
-            const prop_colorIcon        = data.hasOwnProperty("prop_colorIcon")                  ? data.prop_colorIcon                      : "";
-            const prop_optionsList      = data.hasOwnProperty("prop_optionsList")                ? data.prop_optionsList                    : [];
+            const prop_size                       = data.hasOwnProperty("prop_size")                       ? data.prop_size                           : null;
+            const prop_colorIcon_primary          = data.hasOwnProperty("prop_colorIcon_primary")          ? data.prop_colorIcon_primary              : "";
+            const prop_colorIcon_secondary        = data.hasOwnProperty("prop_colorIcon_secondary")        ? data.prop_colorIcon_secondary            : "";
+            const prop_optionsList                = data.hasOwnProperty("prop_optionsList")                ? data.prop_optionsList                    : [];
 
             if (prop_optionsList != null && Array.isArray(prop_optionsList)){
                 const el = this.fn_getElFormOptions();
@@ -27561,7 +28835,7 @@ window.ComponentPageHeader = class ComponentPageHeader extends ComponentPageHead
                         new window.ComponentIcon(
                             `component-header-page-form-option-icon-${this._COMPONENT_RANDOM_ID}-${i}` ,
                             {
-                                prop_icon : typeof icon == "function" ? icon(prop_size , prop_colorIcon) : icon ,
+                                prop_icon : typeof icon == "function" ? icon({size: prop_size , colors: {primary: prop_colorIcon_primary , secondary: prop_colorIcon_secondary }}) : icon ,
                                 prop_title: itemOptions?.attrs?.title ?? "" ,
 
                                 prop_iconClass : ["position-absolute"] ,
@@ -27837,6 +29111,8 @@ window.ComponentPageCardInfo = class ComponentPageCardInfo extends ComponentPage
             new window.ComponentBorder(
                 `component-page-card-info-border-${this._COMPONENT_RANDOM_ID}` ,
                 {
+
+                    prop_borderColor :    null,
                     prop_structureClass:  prop_formClass ,
                     prop_structureStyles: prop_formStyles ,
                 }
@@ -27860,7 +29136,7 @@ window.ComponentPageCardInfo = class ComponentPageCardInfo extends ComponentPage
                     `component-page-card-info-border-icon-${this._COMPONENT_RANDOM_ID}` ,
                     {
                         classList: [ ] ,
-                        prop_icon: typeof  prop_icon == "function" ? prop_icon(prop_iconSize , prop_iconColor) : prop_icon ,
+                        prop_icon: typeof  prop_icon == "function" ? prop_icon({size: prop_iconSize , colors: {primary: prop_iconColor}} ) : prop_icon ,
 
                         prop_iconClass : [  ] ,
                         prop_iconStyles : {
@@ -27907,7 +29183,7 @@ window.ComponentPageCardInfo = class ComponentPageCardInfo extends ComponentPage
                         } ,
                         prop_title: `
 <b>${prop_titleBtn}</b>
-${ typeof prop_iconBtn == "function" ? prop_iconBtn(prop_size , prop_colorIconBtn) : prop_iconBtn}
+${ typeof prop_iconBtn == "function" ? prop_iconBtn({size: prop_size , colors: {primary: prop_colorIconBtn }} ) : prop_iconBtn}
                     ` ,
 
                         fn_callback: (event)=>{
@@ -28198,7 +29474,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
 
                         const icon = document.createElement('span');
                         icon.setAttribute("class" , `item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}`);
-                        icon.innerHTML = tools_icons.icon_pin_open(prop_size , prop_colorIcon);
+                        icon.innerHTML = tools_icons.icon_pin_open({size : prop_size /*, colors: {primary: prop_colorIcon}*/} );
                         icon.addEventListener('click', this.fn_onClickPinDraggable.bind(this , icon));
                         section.appendChild(icon);
                     }
@@ -28338,7 +29614,7 @@ window.ComponentDraggableOrders  = class ComponentDraggableOrders extends Compon
             const isPin = item.hasOwnProperty("isPin") ? !item.isPin : true;
             this._ITEM_ORDERS[ref].isPin = isPin;
 
-            element.innerHTML = isPin ? tools_icons.icon_pin_close(prop_size , prop_colorIcon) : tools_icons.icon_pin_open(prop_size , prop_colorIcon) ;
+            element.innerHTML = isPin ? tools_icons.icon_pin_close({size : prop_size /*, colors: {primary: prop_colorIcon}*/} ) : tools_icons.icon_pin_open({size : prop_size /*, colors: {primary: prop_colorIcon}*/} ) ;
 
             if (!isPin){
                 element.classList.remove(`item-daragble-orders-icon-${this._COMPONENT_RANDOM_ID}-active`)
@@ -28962,7 +30238,6 @@ window.ComponentToolsTableConfig = class ComponentToolsTableConfig extends Compo
                     prop_size ,
 
                     prop_order : ["id" , "header_name" , "header_title" , "header_background" , "header_color"  , "header_dataType" , "footer_background" , "footer_color" , "footer_action"] ,
-                    prop_headerIconSize: 45 ,
                     prop_header : [
                         {id:"id"                    , content: headerCol_id                                                                   ,  inMobile: true  },
                         {id:"header_name"           , content: headerCol_headerName                                                          ,  inMobile: true  },
@@ -30322,6 +31597,9 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 
                     prop_structureClass:  prop_elementClass ,
                     //prop_borderStyles: prop_elementStyles ,
+
+
+                    prop_borderColor : null,
                 }
             )
         }
@@ -30365,13 +31643,18 @@ window.ComponentPositionElement  = class ComponentPositionElement extends Compon
 -------------------------------------*/
 class ComponentBorderBase extends ComponentBase{
 
+    _BORDER_ARROW_TOP =    0
+    _BORDER_ARROW_RIGHT =  1
+    _BORDER_ARROW_BOTTOM = 2
+    _BORDER_ARROW_LEFT =   3
+
     /* ---------------------------------------------
          PROPERTYs Pattern
-  --------------------------------------------- */
+    --------------------------------------------- */
     _COMPONENT_PATTERN = {
         prop_structureClass: {
             prop: "prop_structureClass",
-            default: ["border", "shadow-sm", "rounded", "py-1", "px-2", "position-relative"]
+            default: [ /*"py-1", "px-2",*/ ]
         },
         prop_structureStyles: {
             prop: "prop_structureStyles",
@@ -30379,13 +31662,25 @@ class ComponentBorderBase extends ComponentBase{
         },
         prop_borderClass: {
             prop: "prop_borderClass",
-            default: [ "rounded"]
+            default: [ "shadow-sm", "rounded" , "position-relative" , "position-relative"]
         },
         prop_borderStyles: {
             prop: "prop_borderStyles",
             default: {
                 "display" : "flow-root"
             }
+        },
+        prop_borderArrowType: {
+            prop: "prop_borderArrowType",
+            default: null
+        },
+        prop_borderColor: {
+            prop: "prop_borderColor",
+            default: tools_const?.styles?.border?.color_border ?? ""
+        },
+        prop_borderArrowWidth: {
+            prop: "prop_borderArrowWidth",
+            default: 15
         },
         prop_content: {
             prop: "prop_content",
@@ -30418,6 +31713,9 @@ class ComponentBorderBase extends ComponentBase{
             this._COMPONENT_PATTERN.prop_structureStyles
         ],
         part_border: [
+            this._COMPONENT_PATTERN.prop_borderArrowType ,
+            this._COMPONENT_PATTERN.prop_borderArrowWidth ,
+            this._COMPONENT_PATTERN.prop_borderColor,
             this._COMPONENT_PATTERN.prop_borderClass,
             this._COMPONENT_PATTERN.prop_borderStyles,
             this._COMPONENT_PATTERN.prop_content ,
@@ -30479,19 +31777,7 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
 
     template_render_structure(partName) {
         const content = `
-     <style>
-         #${this._COMPONENT_ID} #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
-             opacity: 0.25;
-         }
-         #${this._COMPONENT_ID}:hover #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
-             transition: opacity 200ms ease;
-             opacity: 0.75;
-         }
-     </style>
-     
      ${this.templateFn("part_border") ?? ""}
-     
-     <component-icon id="component-border-icon-more-${this._COMPONENT_RANDOM_ID}"></component-icon>
                 `;
         return this.templateBasic_render_structure(content );
     }
@@ -30500,11 +31786,41 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
         const data = this.getPartProps(partName)
 
         if (data != null){
+            const directionRtl             =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                 ? this._COMPONENT_CONFIG.directionRtl          : false;
 
-            const prop_borderClass      =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass   : [];
-            const prop_borderStyles     =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles  : {};
-            const prop_minWidth         =  data.hasOwnProperty("prop_minWidth")                                  ?  data.prop_minWidth      : null;
-            const prop_content          =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content       : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+            const prop_borderArrowType     =  data.hasOwnProperty("prop_borderArrowType")                           ?  data.prop_borderArrowType                   : null;
+            const prop_borderArrowWidth    =  data.hasOwnProperty("prop_borderArrowWidth")                          ?  data.prop_borderArrowWidth                  : null;
+            const prop_borderColor         =  data.hasOwnProperty("prop_borderColor")                               ?  data.prop_borderColor                       : null;
+            const prop_borderClass         =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass                       : [];
+            const prop_borderStyles        =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles                      : {};
+            const prop_minWidth            =  data.hasOwnProperty("prop_minWidth")                                  ?  data.prop_minWidth                          : null;
+            const prop_content             =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content                           : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+
+            let borderArrow = "";
+            switch (prop_borderArrowType){
+                case this._BORDER_ARROW_TOP:
+                    borderArrow = `
+#${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}:after{
+   content:                                    "";
+   position:                                   absolute;
+   top:                                        -${prop_borderArrowWidth}px;
+   ${directionRtl? "right" : "left"}:          10px;
+   width:                                      0px;
+   height:                                     0px;
+   border-style:                               solid;
+   border-width:                               0 ${(2/3)*prop_borderArrowWidth}px ${prop_borderArrowWidth}px ${(2/3)*prop_borderArrowWidth}px;
+   border-color:                               transparent transparent ${prop_borderColor} transparent;
+   transform:                                  rotate(0deg);
+}
+                    `
+                    break;
+                case this._BORDER_ARROW_RIGHT:
+                    break;
+                case this._BORDER_ARROW_BOTTOM:
+                    break;
+                case this._BORDER_ARROW_LEFT:
+                    break;
+            }
 
             prop_content
             return `
@@ -30514,14 +31830,27 @@ window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
          onclick="${this.getFn("fn_callback" , "event")}">
          
      <style>
+         #${this._COMPONENT_ID} #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
+             opacity: 0.25;
+         }
+         #${this._COMPONENT_ID}:hover #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
+             transition: opacity 200ms ease;
+             opacity: 0.75;
+         }
+     
          #${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}{
              ${tools_public.renderListStyle(prop_borderStyles)}
              ${prop_minWidth ? `min-width: ${prop_minWidth}`: ""};
+             border: solid 2px ${prop_borderColor}  !important;
+             position: relative;
          }
+         
+         ${borderArrow}
      </style>
      
      ${prop_content}
      
+      <component-icon id="component-border-icon-more-${this._COMPONENT_RANDOM_ID}"></component-icon>
 </section>
         `;
         }
@@ -32263,9 +33592,6 @@ window.ComponentReport = class ComponentReport extends ComponentReportBase{
                </component-pages>
                
                ${this.fn_getHtmlPages(prop_pages )}
-               
-            
-            
 
        </component-change-page>
           
