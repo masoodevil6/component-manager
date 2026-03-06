@@ -567,7 +567,7 @@ tools_css = {
                 return;
             }
         });
-        return val;
+        return val+"px";
     },
 
 

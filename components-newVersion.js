@@ -185,7 +185,6 @@ class ReactiveElement {
 
         this.element = document.createElement(tagName);
         this._applyOptions();
-        this._setupHover();
     }
 
 
@@ -193,281 +192,132 @@ class ReactiveElement {
         return value instanceof Observable;
     }
 
-    _applyText(value) {
-        const apply = v => {
-            if (v == null) return;
 
-            // Node واقعی
-            if (v instanceof Node) {
-                this.element.innerHTML = "";
-                this.element.appendChild(v);
-                return;
-            }
+    // ========== className ==========
+    _applyClassName(className) {
+        if (!className) return;
 
-            // HTML string
-            if (typeof v === "string" && v.trim().startsWith("<")) {
-                this.element.innerHTML = v;
-                return;
-            }
-
-            // متن معمولی
-            this.element.textContent = v;
-        };
-
-        if (this._isObservable(value)) {
-            apply(value.get());
-            value.subscribe(apply);
-        } else if (value !== undefined) {
-            apply(value);
+        if (typeof className === "string") {
+            this.element.className = className;
+        } else if (Array.isArray(className)) {
+            this.element.className = className.join(" ");
         }
     }
 
+    _applyClassBind(classBind) {
+        if (!classBind) return;
 
-    _applyClassName(list = []) {
-        list.forEach(item => {
-
-            // 1. string
-            if (typeof item === "string") {
-                this.element.classList.add(item);
-                return;
-            }
-
-            // 2. Observable<string>
-            if (item instanceof Observable) {
-                let prev;
-
-                const apply = v => {
-                    if (prev) this.element.classList.remove(prev);
-                    if (typeof v === "string" && v) {
-                        this.element.classList.add(v);
-                        prev = v;
-                    }
-                    if (Array.isArray(v)) {
-                        for (let j = 0; j < v.length; j++) {
-                            const itemClass =v[j];
-                            this.element.classList.add(itemClass);
-                        }
-                    }
-                };
-
-                apply(item.get());
-                item.subscribe(apply);
-                return;
-            }
-
-            // 3. { className: Observable<boolean> }
-            if (typeof item === "object") {
-                Object.entries(item).forEach(([cls, obs]) => {
-                    if (!(obs instanceof Observable)) return;
-
-                    const apply = v =>
-                        this.element.classList.toggle(cls, !!v);
-
-                    apply(obs.get());
-                    obs.subscribe(apply);
-                });
-            }
+        Object.entries(classBind).forEach(([cls, observable]) => {
+            this._bindObservable(observable, value => {
+                if (value) this.element.classList.add(cls);
+                else this.element.classList.remove(cls);
+            });
         });
     }
 
 
+    // ========== styles ==========
+    _applyStyles(styles) {
+        if (!styles) return;
 
-
-
-
-    _applyStyles(styles = {}) {
         Object.entries(styles).forEach(([key, value]) => {
-
-            // Observable
-            if (value instanceof Observable) {
-                const current = value.get();
-
-                // اگر خروجی آبجکت است → چند style
-                if (current && typeof current === "object" && !Array.isArray(current)) {
-                    this._bindStyleObject(value);
-                }
-                // اگر primitive است → key یک style است
-                else {
-                    this._bindStyle(key, value);
-                }
-                return;
-            }
-
-            // مقدار ثابت
-            this._bindStyle(key, value);
+            this.element.style[key] = value;
         });
     }
 
-    _bindStyle(key, value) {
-        if (value instanceof Observable) {
+    _applyStylesBind(stylesBind) {
+        if (!stylesBind) return;
 
-            this.element.style[key] = value.get();
-            value.subscribe(v => {
-                this.element.style[key] = v ?? "";
+        Object.entries(stylesBind).forEach(([key, observable]) => {
+            this._bindObservable(observable, value => {
+                this.element.style[key] = value;
             });
-        } else {
-            if (value && typeof value === "object" && !Array.isArray(value)) {
-                Object.entries(value).forEach(([k, v]) => {
-
-                    if (v instanceof Observable) {
-                        this.element.style[k] = v?.get?.() ?? "";
-                    }
-                    else{
-                        this.element.style[k] = v ?? "";
-                    }
-                });
-            }
-            else{
-                this.element.style[key] = value ?? "";
-            }
-        }
-    }
-
-    _bindStyleObject(obs) {
-
-        const apply = (obj = {}) => {
-            Object.entries(obj).forEach(([k, v]) => {
-                this.element.style[k] = v ?? "";
-            });
-        };
-
-        apply(obs.get());
-        obs.subscribe(apply);
-    }
-
-
-
-    _setupHover(stylesHover = null) {
-        const hover = stylesHover || this._options.stylesHover;
-        if (!hover) return;
-
-        const applyStyles = (obj = {}) => {
-            Object.entries(obj).forEach(([k, v]) => {
-                this.element.style[k] = v ?? "";
-            });
-        };
-
-        const applySingle = (key, value) => {
-            if (value instanceof Observable) {
-                this.element.style[key] = value.get() ?? "";
-                value.subscribe(v => {
-                    if (!this._states.has('disabled') && !this._states.has('active')) {
-                        this.element.style[key] = v ?? "";
-                    }
-                });
-            } else {
-                this.element.style[key] = value ?? "";
-            }
-        };
-
-        this.element.addEventListener('mouseenter', () => {
-            if (this._states.has('disabled') || this._states.has('active')) return;
-
-            if (hover instanceof Observable) {
-                const val = hover.get();
-                if (typeof val === "object") applyStyles(val);
-            } else {
-                Object.entries(hover).forEach(([k, v]) => {
-                    applySingle(k, v);
-                });
-            }
-        });
-
-        this.element.addEventListener('mouseleave', () => {
-            if (this._states.has('disabled')) return;
-
-            // ری‌اپلای styles اصلی
-            if (this._options.styles) {
-                this._applyStyles(this._options.styles);
-            }
-
-            if (this._states.has('active') && this._options.styleActive) {
-                Object.assign(this.element.style, this._options.styleActive);
-            }
         });
     }
 
 
 
-
-
-
-
-
+    // ========== attrs ==========
     _applyAttrs(attrs) {
-        if (!attrs || typeof attrs !== "object") return;
+        if (!attrs) return;
 
-        Object.entries(attrs).forEach(([attr, val]) => {
-            const apply = v => {
-                if (v === false || v == null) {
-                    this.element.removeAttribute(attr);
-                } else {
-                    this.element.setAttribute(attr, v === true ? "" : v);
-                }
-            };
-
-            if (this._isObservable(val)) {
-                apply(val.get());
-                val.subscribe(apply);
-            } else {
-                apply(val);
+        Object.entries(attrs).forEach(([key, value]) => {
+            if (value !== false && value != null) {
+                this.element.setAttribute(key, value);
             }
+        });
+    }
+
+    _applyAttrsBind(attrsBind) {
+        if (!attrsBind) return;
+
+        Object.entries(attrsBind).forEach(([key, observable]) => {
+            this._bindObservable(observable, value => {
+                if (value === false || value == null) {
+                    this.element.removeAttribute(key);
+                } else {
+                    this.element.setAttribute(key, value);
+                }
+            });
         });
     }
 
 
 
-
-    _applyOptions() {
-        const o = this._options;
-
-        if (o.children) this._setChildren(o.children);
-        if (o.on) this._setEvents(o.on);
-
-        this._applyText(o.text);
-        this._applyClassName(o.className);
-        this._applyStyles(o.styles);
-
-
-        this._applyAttrs(o.attrs);
-
-        this._setupHover(o.stylesHover);
-
-    }
-
+    // ========== children ==========
     _setChildren(children) {
-        // پاک کردن children قبلی
-        while (this.element.firstChild) {
-            this.element.removeChild(this.element.firstChild);
-        }
-
+        this.element.textContent = "";
         this._children = [];
 
-        // اضافه کردن children جدید
-        children.forEach((child, index) => {
-            if (child instanceof ReactiveElement) {
-                this._children[index] = child;
-                this.element.appendChild(child.element);
-            } else if (child instanceof HTMLElement) {
-                this.element.appendChild(child);
-                this._children[index] = child;
-            } else if (typeof child === 'string') {
-                const textNode = document.createTextNode(child);
-                this.element.appendChild(textNode);
-                this._children[index] = textNode;
-            } else if (child === null || child === undefined) {
-                // ignore
-            } else {
-                // سعی کن به string تبدیل کنی
-                const textNode = document.createTextNode(String(child));
-                this.element.appendChild(textNode);
-                this._children[index] = textNode;
+        const append = (child) => {
+
+            if (child === null || child === undefined || child === false || child === true) {
+                return;
             }
-        });
+
+            if (Array.isArray(child)) {
+                child.forEach(append);
+                return;
+            }
+
+            if (child instanceof ReactiveElement) {
+                this._children.push(child);
+                this.element.appendChild(child.element);
+                return;
+            }
+
+            if (child instanceof HTMLElement) {
+                this._children.push(child);
+                this.element.appendChild(child);
+                return;
+            }
+
+            const textNode = document.createTextNode(String(child));
+            this._children.push(textNode);
+            this.element.appendChild(textNode);
+        };
+
+        append(children);
+    }
+
+    appendChild(child) {
+        if (child instanceof ReactiveElement) {
+            this._children.push(child);
+            this.element.appendChild(child.element);
+        } else if (child instanceof HTMLElement) {
+            this._children.push(child);
+            this.element.appendChild(child);
+        } else if (typeof child === 'string') {
+            const textNode = document.createTextNode(child);
+            this._children.push(textNode);
+            this.element.appendChild(textNode);
+        }
+        return this;
     }
 
 
 
+    // ========== events ==========
     _setEvents(events) {
         this._eventListeners.forEach(({ event, handler }) => {
             this.element.removeEventListener(event, handler);
@@ -489,222 +339,40 @@ class ReactiveElement {
         });
     }
 
-    // ========== Children Management ==========
 
-    appendChild(child) {
-        if (child instanceof ReactiveElement) {
-            this._children.push(child);
-            this.element.appendChild(child.element);
-        } else if (child instanceof HTMLElement) {
-            this._children.push(child);
-            this.element.appendChild(child);
-        } else if (typeof child === 'string') {
-            const textNode = document.createTextNode(child);
-            this._children.push(textNode);
-            this.element.appendChild(textNode);
-        }
-        return this;
-    }
 
-    prependChild(child) {
-        if (child instanceof ReactiveElement) {
-            this._children.unshift(child);
-            this.element.prepend(child.element);
-        } else if (child instanceof HTMLElement) {
-            this._children.unshift(child);
-            this.element.prepend(child);
-        } else if (typeof child === 'string') {
-            const textNode = document.createTextNode(child);
-            this._children.unshift(textNode);
-            this.element.prepend(textNode);
-        }
-        return this;
-    }
 
-    removeChild(child) {
-        const index = this._children.indexOf(child);
-        if (index > -1) {
-            this._children.splice(index, 1);
+    // ========== setup options ==========
+    _applyOptions() {
+        const o = this._options;
 
-            if (child instanceof ReactiveElement) {
-                this.element.removeChild(child.element);
-            } else if (child instanceof HTMLElement || child.nodeType === 3) {
-                this.element.removeChild(child);
-            }
-        }
-        return this;
-    }
+        if (o.children != null) this._setChildren(o.children);
 
-    clearChildren() {
-        while (this.element.firstChild) {
-            this.element.removeChild(this.element.firstChild);
-        }
-        this._children = [];
-        return this;
-    }
+        if (o.className) this._applyClassName(o.className);
+        if (o.classBind) this._applyClassBind(o.classBind);
 
-    getChildren() {
-        return [...this._children];
-    }
+        if (o.styles) this._applyStyles(o.styles);
+        if (o.stylesBind) this._applyStylesBind(o.stylesBind);
 
-    // ========== State Management ==========
+        if (o.attrs) this._applyAttrs(o.attrs);
+        if (o.attrsBind) this._applyAttrsBind(o.attrsBind);
 
-    enableHover() {
-        this._states.delete('no-hover');
-        return this;
-    }
-
-    disableHover() {
-        this._states.add('no-hover');
-        return this;
-    }
-
-    activate() {
-        this._states.add('active');
-        if (this._options.styleActive) {
-            Object.assign(this.element.style, this._options.styleActive);
-        }
-        return this;
-    }
-
-    deactivate() {
-        this._states.delete('active');
-        const opts = this._options;
-        if (opts.style) {
-            Object.assign(this.element.style, opts.style);
-        }
-        return this;
-    }
-
-    disable() {
-        this._states.add('disabled');
-        if (this._options.styleDisabled) {
-            Object.assign(this.element.style, this._options.styleDisabled);
-        }
-        this.element.style.cursor = 'not-allowed';
-        return this;
-    }
-
-    enable() {
-        this._states.delete('disabled');
-        const opts = this._options;
-        if (opts.style) {
-            Object.assign(this.element.style, opts.style);
-        }
-        this.element.style.cursor = '';
-        return this;
-    }
-
-    focus() {
-        this.element.focus();
-        if (this._options.styleFocus) {
-            Object.assign(this.element.style, this._options.styleFocus);
-        }
-        return this;
-    }
-
-    blur() {
-        this.element.blur();
-        const opts = this._options;
-        if (opts.style) {
-            Object.assign(this.element.style, opts.style);
-        }
-        return this;
-    }
-
-    toggleActive() {
-        if (this._states.has('active')) {
-            this.deactivate();
-        } else {
-            this.activate();
-        }
-        return this;
-    }
-
-    toggleDisabled() {
-        if (this._states.has('disabled')) {
-            this.enable();
-        } else {
-            this.disable();
-        }
-        return this;
-    }
-
-    isActive() {
-        return this._states.has('active');
-    }
-
-    isDisabled() {
-        return this._states.has('disabled');
-    }
-
-    isHoverEnabled() {
-        return !this._states.has('no-hover');
-    }
-
-    // ========== Public API ==========
-
-    setText(text) {
-        this.element.textContent = text;
-        return this;
-    }
-
-    setHtml(html) {
-        this.element.innerHTML = html;
-        return this;
-    }
-
-    setStyle(styleObj) {
-        Object.assign(this.element.style, styleObj);
-        this._options.style = { ...this._options.style, ...styleObj };
-        return this;
-    }
-
-    setStylesHover(styleObj) {
-        this._options.stylesHover = styleObj;
-        this._setupHover();
-        return this;
-    }
-
-    setStyleActive(styleObj) {
-        this._options.styleActive = styleObj;
-        return this;
-    }
-
-    setStyleDisabled(styleObj) {
-        this._options.styleDisabled = styleObj;
-        return this;
-    }
-
-    setStyleFocus(styleObj) {
-        this._options.styleFocus = styleObj;
-        return this;
-    }
-
-    setChildren(children) {
-        this._setChildren(children);
-        this._options.children = children;
-        return this;
-    }
-
-    addClass(className) {
-        this.element.classList.add(className);
-        return this;
-    }
-
-    removeClass(className) {
-        this.element.classList.remove(className);
-        return this;
-    }
-
-    toggleClass(className) {
-        this.element.classList.toggle(className);
-        return this;
+        if (o.on) this._setEvents(o.on);
     }
 
 
 
-    ///----------------------------------------------------
+    // ========== Binding ==========
+    _bindObservable(observable, callback) {
+        callback(observable.get());
+        const unsub = observable.subscribe(callback);
+        this._bindings.push(unsub);
+    }
+
+
+
+    // ========== creative API ==========
+
     getElement() {
         return this.element;
     }
@@ -1693,7 +1361,6 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
                 });
         }
 
-
         return ReactiveElement.section({
             attr: {
                 "data-part-name":  partName
@@ -1753,6 +1420,366 @@ window.ComponentMessages = class ComponentMessages extends ComponentMessagesBase
 }
 
 
+/*-------------------------------------
+ 01-02) Component ComponentIsEmpty
+-------------------------------------*/
+/*
+class ComponentIsEmptyBase extends ComponentBase{
+
+    /!* ---------------------------------------------
+       PROPERTYs Pattern
+     --------------------------------------------- *!/
+    _COMPONENT_PATTERN = {
+        prop_size: {
+            prop: "prop_size",
+            default: tools_css.standardSizes.m.name
+        },
+        prop_borderClass : {
+            prop: "prop_borderClass" ,
+            default: [ "rounded" , "shadow-sm"]
+        } ,
+        prop_borderStyles: {
+            prop: "prop_borderStyles" ,
+            default: {}
+        },
+        prop_icon: {
+            prop: "prop_icon" ,
+            default: tools_icons.icon_warning
+        } ,
+        prop_iconSize: {
+            prop: "prop_iconSize" ,
+            default: 80
+        } ,
+        prop_iconColor: {
+            prop: "prop_iconColor" ,
+            default: tools_const?.styles?.isEmpty?.color_icon ?? ""
+        } ,
+        prop_borderColor: {
+            prop: "prop_borderColor" ,
+            default: tools_const?.styles?.isEmpty?.borderColor_border ?? ""
+        } ,
+        prop_iconClass: {
+            prop: "prop_iconClass" ,
+            default: ["font-30pt" , "text-danger"]
+        } ,
+        prop_iconStyles: {
+            prop: "prop_iconStyles" ,
+            default: { "font-size" : "30px" , "display" : "block" ,  "text-align" : "center" , }
+        } ,
+        prop_title: {
+            prop: "prop_title" ,
+            default: null
+        } ,
+        prop_btnAddStatus: {
+            prop: "prop_btnAddStatus" ,
+            default: false
+        } ,
+        prop_btnAddClass: {
+            prop: "prop_btnAddClass" ,
+            default:  [ "mx-auto"]
+        } ,
+        prop_btnAddStyles: {
+            prop: "prop_btnAddStyles" ,
+            default:  {"cursor" : "pointer" , "width" : "100%" , "height" : "32px" , "text-align" : "center!important" ,}
+        } ,
+        prop_btnAddIcon: {
+            prop: "prop_btnAddIcon" ,
+            default:  tools_icons?.icon_reload
+        } ,
+        prop_btnAddIconColor: {
+            prop: "prop_btnAddIconColor" ,
+            default: tools_const?.styles?.isEmpty?.btnColor_icon ?? ""
+        } ,
+        prop_btnAddTitle: {
+            prop: "prop_btnAddTitle" ,
+            default: "add item"
+        } ,
+    }
+
+
+    /!* ---------------------------------------------
+      PROPERTYs Props
+      --------------------------------------------- *!/
+    _COMPONENT_PROPS = {
+        part_component: [],
+        part_structure: [
+
+        ] ,
+        part_border: [
+            this._COMPONENT_PATTERN.prop_borderClass ,
+            this._COMPONENT_PATTERN.prop_borderStyles ,
+            this._COMPONENT_PATTERN.prop_borderColor ,
+        ] ,
+        part_icon: [
+            this._COMPONENT_PATTERN.prop_icon ,
+            this._COMPONENT_PATTERN.prop_iconSize ,
+            this._COMPONENT_PATTERN.prop_iconColor ,
+            this._COMPONENT_PATTERN.prop_iconClass ,
+            this._COMPONENT_PATTERN.prop_iconStyles ,
+        ] ,
+        part_title: [
+            this._COMPONENT_PATTERN.prop_title ,
+            this._COMPONENT_PATTERN.prop_size ,
+        ] ,
+        part_btn_retry: [
+            this._COMPONENT_PATTERN.prop_btnAddStatus ,
+            this._COMPONENT_PATTERN.prop_btnAddClass ,
+            this._COMPONENT_PATTERN.prop_btnAddStyles ,
+            this._COMPONENT_PATTERN.prop_btnAddIcon ,
+            this._COMPONENT_PATTERN.prop_btnAddIconColor ,
+            this._COMPONENT_PATTERN.prop_size ,
+            this._COMPONENT_PATTERN.prop_btnAddTitle ,
+        ] ,
+    }
+
+
+    /!* ---------------------------------------------
+      PROPERTYs Pattern
+    --------------------------------------------- *!/
+    _COMPONENT_METHODS= {
+
+    };
+
+    /!* ---------------------------------------------
+      PROPERTYs Pattern
+   --------------------------------------------- *!/
+    _COMPONENT_TEMPLATES= {
+
+    };
+
+
+    /!* ---------------------------------------------
+         PROPERTYs Schema
+     --------------------------------------------- *!/
+    _COMPONENT_SCHEMA = {
+        part_component: {
+            part_structure: {
+                part_border: {
+                    part_icon: {} ,
+                    part_title: {} ,
+                    part_btn_retry: {} ,
+                }
+            }
+        }
+    }
+
+}
+window.ComponentIsEmpty = class ComponentIsEmpty extends ComponentIsEmptyBase{
+
+    /!* ---------------------------------------------
+       SETUP
+   --------------------------------------------- *!/
+    constructor() {
+        let elId = null;
+        let config = null;
+        if (arguments.length === 1) {
+            config = arguments[0];
+        } else if (arguments.length === 2) {
+            elId = arguments[0];
+            config = arguments[1];
+        }
+
+        super(
+            "component-is-empty" ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /!* ---------------------------------------------
+      TEMPLATEs
+     --------------------------------------------- *!/
+    componentFn(){
+        this.templateFn(  "part_border");
+        this.templateFn(  "part_icon");
+        this.templateFn(  "part_btn_retry");
+    }
+
+    templateFn(partName = null){
+        switch (partName){
+            case "part_structure":
+                return this.template_render_structure(partName);
+            case "part_border":
+                return this.componentFn_render_border(partName);
+            case "part_title":
+                return this.template_render_title(partName);
+            case "part_icon":
+                return this.componentFn_render_icon(partName);
+            case "part_btn_retry":
+                return this.componentFn_render_button(partName);
+            default:
+                return this.templateBasic_render();
+        }
+    }
+
+    template_render_structure(partName) {
+        const content = `
+           <component-border id="component-is-empty-border-${this._COMPONENT_RANDOM_ID}">
+               <component-body>
+               
+                    <component-icon id="component-is-empty-icon-${this._COMPONENT_RANDOM_ID}"></component-icon>
+         
+                    ${this.templateFn("part_title") ?? ""}
+         
+                    <div class="d-block mx-auto">
+                        <component-button id="component-is-empty-button-${this._COMPONENT_RANDOM_ID}"></component-button>
+                    </div>
+                    
+               </component-body>
+          </component-border> 
+                `;
+        return this.templateBasic_render_structure(content);
+    }
+
+    template_render_title(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_title =     data.hasOwnProperty("prop_title")    ?  data.prop_title     : (componentSlots != null && componentSlots.hasOwnProperty("body") ? componentSlots.body : '');
+            const prop_size  =      data.hasOwnProperty("prop_size")    ?  data.prop_size      :  null
+
+            const elHeight = tools_css.getFontSize(prop_size);
+
+            return `
+<section data-part-name="${partName}" 
+         id="component-is-empty-title-${this._COMPONENT_RANDOM_ID}" 
+         class="">
+    <style>
+        #${this._COMPONENT_ID} #component-is-empty-title-${this._COMPONENT_RANDOM_ID}{
+             text-align: center!important;
+             font-size: ${elHeight}px;
+       }
+    </style>
+    <p>
+         <b>
+            ${prop_title} 
+         </b>
+    </p>
+</section>
+        `;
+        }
+
+        return `
+<section data-part-name="${partName}"></section>
+        `;
+    }
+
+    componentFn_render_border(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+
+            const prop_borderClass =      data.hasOwnProperty("prop_borderClass")     ? data.prop_borderClass    : null;
+            const prop_borderStyles =     data.hasOwnProperty("prop_borderStyles")    ? data.prop_borderStyles   : null;
+            const prop_borderColor =      data.hasOwnProperty("prop_borderColor")     ? data.prop_borderColor    : null;
+
+            new window.ComponentBorder(
+                `component-is-empty-border-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    prop_btnMore_show: false ,
+
+                    prop_borderColor : null,
+                    prop_structureClass: prop_borderClass ,
+                    prop_structureStyles: {
+                        ...prop_borderStyles ,
+                        "border" : `2px solid ${prop_borderColor}`
+                    } ,
+                }
+            )
+        }
+    }
+
+    componentFn_render_icon(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_icon        =  data.hasOwnProperty("prop_icon")            ?  data.prop_icon         : null;
+            const prop_iconSize    =  data.hasOwnProperty("prop_iconSize")        ?  data.prop_iconSize     : 80;
+            const prop_iconColor   =  data.hasOwnProperty("prop_iconColor")       ?  data.prop_iconColor    : "#000";
+            const prop_iconClass   =  data.hasOwnProperty("prop_iconClass")       ?  data.prop_iconClass    : [  "mx-3"];
+            const prop_iconStyles  =  data.hasOwnProperty("prop_iconStyles")      ?  data.prop_iconStyles   : {
+                "font-size" : "30px" ,
+                "width" : "100%" ,
+                "display" : "block" ,
+                "text-align" : "center" ,
+            };
+
+            this._COMPONENT_PATTERN.prop_iconSize ,
+                this._COMPONENT_PATTERN.prop_iconColor ,
+
+
+                new window.ComponentIcon(
+                    `component-is-empty-icon-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_iconClass: prop_iconClass ,
+                        prop_iconStyles: prop_iconStyles ,
+                        prop_icon: typeof prop_icon == "function" ? prop_icon({size: prop_iconSize /!*, colors:{ primary: prop_iconColor}*!/}) : prop_icon,
+                    }
+                )
+        }
+    }
+
+    componentFn_render_button(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null && data.hasOwnProperty("prop_btnAddStatus") && data.prop_btnAddStatus){
+
+            const prop_btnAddClass        =      data.hasOwnProperty("prop_btnAddClass")             ?  data.prop_btnAddClass            :  [];
+            const prop_btnAddStyles       =      data.hasOwnProperty("prop_btnAddStyles")            ?  data.prop_btnAddStyles           :  {
+                "cursor" : "pointer" ,
+                "height" : "32px" ,
+                "text-align" : "center!important" ,
+            };
+            const prop_btnAddIcon         =      data.hasOwnProperty("prop_btnAddIcon")              ?  data.prop_btnAddIcon             :  "&#10082;";
+            const prop_btnAddIconColor    =      data.hasOwnProperty("prop_btnAddIconColor")         ?  data.prop_btnAddIconColor        :  "#000"
+            const prop_size               =      data.hasOwnProperty("prop_size")                    ?  data.prop_size                   :  null
+            const prop_btnAddTitle        =      data.hasOwnProperty("prop_btnAddTitle")             ?  data.prop_btnAddTitle            :  "add item";
+
+            new window.ComponentButton(
+                `component-is-empty-button-${this._COMPONENT_RANDOM_ID}` ,
+                {
+                    classList: ["d-block" , "m-auto" , "mb-1"] ,
+                    styles: {
+                        "width" : "200px"
+                    },
+
+                    prop_size: prop_size ,
+                    prop_btnClass: prop_btnAddClass ,
+                    prop_btnStyles: prop_btnAddStyles ,
+                    prop_title: `
+<span class="mx-1">
+      ${typeof prop_btnAddIcon == "function" ? prop_btnAddIcon(prop_size , prop_btnAddIconColor) : prop_btnAddIcon}
+</span>
+<span class="d-none d-md-inline">
+      ${prop_btnAddTitle}
+</span>
+                    ` ,
+
+                    fn_callback: (event)=>{
+                        this.fn_onCLickRetry(event)
+                    }
+
+                }
+            )
+        }
+    }
+
+
+
+    /!* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- *!/
+    fn_onCLickRetry(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+}
+*/
 
 
 
@@ -2050,6 +2077,11 @@ window.ComponentButton = class ComponentButton extends ComponentButtonBase{
 
 
 
+
+//===============================================================================================================
+// [99] Others
+//===============================================================================================================
+
 /*-------------------------------------
  99-01) Component Icon
 -------------------------------------*/
@@ -2083,7 +2115,7 @@ class ComponentIconBase extends ComponentBase{
     };
 
     /* ---------------------------------------------
-        PROPERTYs Pattern
+        PROPERTYs Methods
      --------------------------------------------- */
     _COMPONENT_METHODS= {
         fn_callback: {
@@ -2103,7 +2135,7 @@ class ComponentIconBase extends ComponentBase{
     };
 
     /* ---------------------------------------------
-        PROPERTYs Pattern
+        PROPERTYs templates
      --------------------------------------------- */
     _COMPONENT_TEMPLATES= {
         body: {
@@ -2240,6 +2272,313 @@ window.ComponentIcon  = class ComponentIcon extends ComponentIconBase{
 
 }
 
+
+/*-------------------------------------
+ 99-03) Component border
+-------------------------------------*/
+class ComponentBorderBase extends ComponentBase{
+
+    _BORDER_ARROW_TOP =    0
+    _BORDER_ARROW_RIGHT =  1
+    _BORDER_ARROW_BOTTOM = 2
+    _BORDER_ARROW_LEFT =   3
+
+    /* ---------------------------------------------
+         PROPERTYs Pattern
+    --------------------------------------------- */
+    _COMPONENT_PATTERN = {
+        prop_structureClass: {
+            prop: "prop_structureClass",
+            default: [ /*"py-1", "px-2",*/ ]
+        },
+        prop_structureStyles: {
+            prop: "prop_structureStyles",
+            default: { }
+        },
+        prop_borderClass: {
+            prop: "prop_borderClass",
+            default: [ "shadow-sm", "rounded" , "position-relative" , "position-relative"]
+        },
+        prop_borderStyles: {
+            prop: "prop_borderStyles",
+            default: {
+                "display" : "flow-root"
+            }
+        },
+        prop_borderArrowType: {
+            prop: "prop_borderArrowType",
+            default: null
+        },
+        prop_borderColor: {
+            prop: "prop_borderColor",
+            default: tools_const?.styles?.border?.color_border ?? ""
+        },
+        prop_borderArrowWidth: {
+            prop: "prop_borderArrowWidth",
+            default: 15
+        },
+        prop_content: {
+            prop: "prop_content",
+            default: null
+        },
+        prop_btnMore_icon: {
+            prop: "prop_btnMore_icon",
+            default: ""
+        },
+        prop_btnMore_show: {
+            prop: "prop_btnMore_show",
+            default: false
+        },
+        prop_btnMore_link: {
+            prop: "prop_btnMore_link",
+            default: null
+        } ,
+        prop_minWidth: {
+            prop: "prop_minWidth",
+            default: null
+        }
+    };
+
+    /* ---------------------------------------------
+           PROPERTYs Props
+    --------------------------------------------- */
+    _COMPONENT_PROPS = {
+        part_component: [
+
+        ],
+        part_structure: [
+            this._COMPONENT_PATTERN.prop_structureClass,
+            this._COMPONENT_PATTERN.prop_structureStyles
+        ],
+        part_border: [
+            this._COMPONENT_PATTERN.prop_borderArrowType ,
+            this._COMPONENT_PATTERN.prop_borderArrowWidth ,
+            this._COMPONENT_PATTERN.prop_borderColor,
+            this._COMPONENT_PATTERN.prop_borderClass,
+            this._COMPONENT_PATTERN.prop_borderStyles,
+            this._COMPONENT_PATTERN.prop_content ,
+            this._COMPONENT_PATTERN.prop_minWidth ,
+        ],
+        part_icon_more: [
+            this._COMPONENT_PATTERN.prop_btnMore_icon,
+            this._COMPONENT_PATTERN.prop_btnMore_show,
+            this._COMPONENT_PATTERN.prop_btnMore_link
+        ]
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs Methods
+     --------------------------------------------- */
+    _COMPONENT_METHODS= {
+
+    };
+
+    /* ---------------------------------------------
+        PROPERTYs templates
+     --------------------------------------------- */
+    _COMPONENT_TEMPLATES= {
+
+    };
+
+
+    /* ---------------------------------------------
+   PROPERTYs Schema
+   --------------------------------------------- */
+    _COMPONENT_SCHEMA = {
+        part_component: {
+            part_structure: {
+                part_border: {} ,
+                part_icon_more: {} ,
+            } ,
+        }
+    }
+
+}
+window.ComponentBorder = class ComponentBorder extends ComponentBorderBase{
+
+    /* ---------------------------------------------
+       SETUP
+    --------------------------------------------- */
+    constructor() {
+        let elId = null;
+        let config = null;
+        if (arguments.length === 1) {
+            config = arguments[0];
+        } else if (arguments.length === 2) {
+            elId = arguments[0];
+            config = arguments[1];
+        }
+
+        super(
+            "component-border" ,
+            elId
+        );
+        super.renderComponent(config);
+    }
+
+
+
+    /* ---------------------------------------------
+      TEMPLATEs
+     --------------------------------------------- */
+
+    templateFn(){
+        return this.templateBasic_render();
+    }
+
+    template_render_structure() {
+        const partName = "part_structure";
+        return this.templateBasic_render_structure(
+            ReactiveElement.section({
+                children: [
+                    `<style>
+    #test{
+      color: res
+    }
+</style>` ,
+                    `<div id="test"></div>`
+
+                    //this.#template_render_border() ,
+                ]
+            })
+        );
+    }
+
+    template_render_border() {
+        const partName = "part_border";
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const directionRtl             =  this._COMPONENT_CONFIG.hasOwnProperty("directionRtl")                 ? this._COMPONENT_CONFIG.directionRtl          : false;
+
+            const prop_borderArrowType     =  data.hasOwnProperty("prop_borderArrowType")                           ?  data.prop_borderArrowType                   : null;
+            const prop_borderArrowWidth    =  data.hasOwnProperty("prop_borderArrowWidth")                          ?  data.prop_borderArrowWidth                  : null;
+            const prop_borderColor         =  data.hasOwnProperty("prop_borderColor")                               ?  data.prop_borderColor                       : null;
+            const prop_borderClass         =  data.hasOwnProperty("prop_borderClass")                               ?  data.prop_borderClass                       : [];
+            const prop_borderStyles        =  data.hasOwnProperty("prop_borderStyles")                              ?  data.prop_borderStyles                      : {};
+            const prop_minWidth            =  data.hasOwnProperty("prop_minWidth")                                  ?  data.prop_minWidth                          : null;
+            const prop_content             =  data.hasOwnProperty("prop_content")  && data.prop_content != null     ?  data.prop_content                           : this._COMPONENT_SLOTS?.body?.[0]?.html ?? "";
+
+            let borderArrow = "";
+            switch (prop_borderArrowType){
+                case this._BORDER_ARROW_TOP:
+                    borderArrow = `
+#${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}:after{
+   content:                                    "";
+   position:                                   absolute;
+   top:                                        -${prop_borderArrowWidth}px;
+   ${directionRtl? "right" : "left"}:          10px;
+   width:                                      0px;
+   height:                                     0px;
+   border-style:                               solid;
+   border-width:                               0 ${(2/3)*prop_borderArrowWidth}px ${prop_borderArrowWidth}px ${(2/3)*prop_borderArrowWidth}px;
+   border-color:                               transparent transparent ${prop_borderColor} transparent;
+   transform:                                  rotate(0deg);
+}
+                    `
+                    break;
+                case this._BORDER_ARROW_RIGHT:
+                    break;
+                case this._BORDER_ARROW_BOTTOM:
+                    break;
+                case this._BORDER_ARROW_LEFT:
+                    break;
+            }
+
+            prop_content
+            return `
+<section data-part-name="${partName}" 
+         id="component-border-border-${this._COMPONENT_RANDOM_ID}"
+         class="${tools_public.renderListClass(prop_borderClass)}"
+         onclick="${this.getFn("fn_callback" , "event")}">
+         
+     <style>
+         #${this._COMPONENT_ID} #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
+             opacity: 0.25;
+         }
+         #${this._COMPONENT_ID}:hover #component-border-icon-more-${this._COMPONENT_RANDOM_ID}{
+             transition: opacity 200ms ease;
+             opacity: 0.75;
+         }
+     
+         #${this._COMPONENT_ID} #component-border-border-${this._COMPONENT_RANDOM_ID}{
+             ${tools_public.renderListStyle(prop_borderStyles)}
+             ${prop_minWidth ? `min-width: ${prop_minWidth}`: ""};
+             border: solid 2px ${prop_borderColor}  !important;
+             position: relative;
+         }
+         
+         ${borderArrow}
+     </style>
+     
+     ${prop_content}
+     
+      <component-icon id="component-border-icon-more-${this._COMPONENT_RANDOM_ID}"></component-icon>
+</section>
+        `;
+        }
+
+        return ReactiveElement.section({
+            attr: {
+                "data-part-name":  partName
+            }
+        });
+    }
+
+    componentFn_render_iconMore(partName) {
+        const data = this.getPartProps(partName)
+
+        if (data != null){
+            const prop_btnMore_icon  =  data.hasOwnProperty("prop_btnMore_icon")         ?  data.prop_btnMore_icon      : "";
+            const prop_btnMore_show  =  data.hasOwnProperty("prop_btnMore_show")         ?  data.prop_btnMore_show      : false;
+            const prop_btnMore_link  =  data.hasOwnProperty("prop_btnMore_link")         ?  data.prop_btnMore_link      : null;
+
+            if (prop_btnMore_show){
+                new window.ComponentIcon(
+                    `component-border-icon-more-${this._COMPONENT_RANDOM_ID}` ,
+                    {
+                        prop_icon: prop_btnMore_icon ,
+
+                        prop_iconClass: ["position-absolute" , "border-dark" , "rounded"  , "shadow-sm" , "p-1"] ,
+                        prop_iconStyles: {
+                            "top" : "10px" ,
+                            "left" : "10px" ,
+                            "background-color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_backgroundColor")  ? tools_const.styles.elementBorder.btnMore_backgroundColor : "" ,
+                            "color" : tools_const.hasOwnProperty("styles") && tools_const.styles.hasOwnProperty("elementBorder") && tools_const.styles.elementBorder.hasOwnProperty("btnMore_color")  ? tools_const.styles.elementBorder.btnMore_color : "" ,
+                            "cursor" : "pointer" ,
+                            "z-index": `${tools_css.getZIndex(tools_css.standardZIndex.tools_btn.name, 9)}` ,
+                        } ,
+
+                        fn_callback: (event)=>{
+                            this.fn_onCLickIconMore(event , prop_btnMore_link);
+                        }
+                    }
+                )
+            }
+
+        }
+
+    }
+
+
+
+    /* ---------------------------------------------
+       FUNCTIONs
+    --------------------------------------------- */
+    fn_onCLickIconMore(event , prop_btnMore_link){
+        if (prop_btnMore_link != null){
+            window.open(prop_btnMore_link,'_blank');
+        }
+    }
+
+    fn_callback(event){
+        const data = this._COMPONENT_CONFIG;
+        if (data.hasOwnProperty("fn_callback") && typeof data.fn_callback != null){
+            data.fn_callback(event);
+        }
+    }
+
+}
 
 
 

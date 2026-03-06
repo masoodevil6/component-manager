@@ -9,16 +9,28 @@
 
 <section id="template-main" class=" mx-2 my-2 row">
 
-    <component-messages  id="message-success">
-    </component-messages>
+    <component-message  id="message-success"></component-message>
 
-    <component-icon  id="c-icon">
+    <component-button id="button"></component-button>
+
+
+    <component-icon id="c-icon">
         <!--<template>
             <component-body name="a">
                 123
             </component-body>
         </template>-->
     </component-icon>
+
+
+    <component-border id="border">
+        <template>
+            <component-body>
+                <p class="m-2">border Body</p>
+            </component-body>
+        </template>
+    </component-border>
+
 
 
 </section>
@@ -37,9 +49,9 @@
 
 
     /*-------------------------------------
-   01-01) Component Messages
-   -------------------------------------*/
-    messagee =new  window.ComponentMessages(
+     Component Messages
+    -------------------------------------*/
+   /* message =new  window.ComponentMessages(
         "message-success" ,
         {
             classList: "col-md-3 col-12 mt-2"  ,
@@ -51,13 +63,34 @@
     );
 
 
+    /!*-------------------------------------
+       Component Button
+    -------------------------------------*!/
+    new window.ComponentButton(
+        "button" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_size: "m" ,
+            prop_title: "asd" ,
+            fn_callback: ()=>{
+                alert("asd");
+            }
+        }
+    )
+
+
+
+    /!*-------------------------------------
+       Component Icon
+    -------------------------------------*!/
      icon = new window.ComponentIcon(
         "c-icon" ,
         {
-            classList: ["col-md-3", "col-12" ,"mt-2"]  ,
-            styles: {
+            classList: "col-md-3 col-12 mt-2"  ,
+            /!*styles: {
                 color: "red"
-            }  ,
+            }  ,*!/
             prop_show : true ,
             prop_icon: tools_icons.icon_application({size: 30 , colors : {primary: "#bb1414"}}) ,
 
@@ -67,6 +100,74 @@
             } ,
         }
     )
+
+
+    /!*-------------------------------------
+        99-03) Component border
+      -------------------------------------*!/
+    new window.ComponentBorder(
+        "border" ,
+        {
+            classList: "col-md-3 col-12 mt-2"  ,
+
+            prop_borderArrowType: 0 ,
+            prop_btnMore_show: true,
+            prop_btnMore_icon: "&#10127;" ,
+            prop_btnMore_link: "/asd" ,
+            prop_borderStyles: {
+                "height" : "150px"
+            } ,
+        }
+    )*/
+
+
+
+    const colorObs = new  Observable("red");
+
+    const el = ReactiveElement.section({
+        stylesBind:{
+            color: colorObs
+        } ,
+        children: [
+           /* (() => {
+                const style = document.createElement("style");
+                style.textContent = `
+                #test {
+                    color: red;
+                } `;
+                return style;
+            })(),*/
+            (() => {
+                const div = document.createElement("div");
+                div.id = "test";
+                div.textContent = "شششش";
+
+                return div
+            })()
+
+            //this.#template_render_border() ,
+        ]
+    })
+
+    const parent = document.getElementById("template-main");
+    parent.appendChild(el.getElement())
+
+    colorObs.set("blue" )
+
+</script>
+
+
+
+
+
+<!--
+<link href="./bootstrap.css" rel="stylesheet" type="text/css">
+
+
+<body></body>
+
+<script>
+
   //  icon.set("directionRtl" , false )
 
 
@@ -95,26 +196,6 @@
     icon.set("styles" , {
         color: "blue"
     } )*/
-
-
-
-
-
-
-</script>
-
-
-
-
-
-<!--
-<link href="./bootstrap.css" rel="stylesheet" type="text/css">
-
-
-<body></body>
-
-<script>
-
 
     class ReactiveElement {
         constructor(tagName, options = {}) {
