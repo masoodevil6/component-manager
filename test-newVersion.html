@@ -5,6 +5,7 @@
 
 
 <link href="./bootstrap.css" rel="stylesheet" type="text/css">
+<link href="./components.css" rel="stylesheet" type="text/css">
 
 
 <section id="template-main" class=" mx-2 my-2 row">
@@ -39,13 +40,16 @@
 <script src="./qrcode.js"></script>
 <script src="./jalali.js"></script>
 <script src="./highcharts.js"></script>
+
+<script src="./component-languages.js"></script>
 <script src="./components-newVersion.js"></script>
+
 <script src="./tools.js"></script>
 
 
 <script>
 
-    tools_init.renderToolsConst()
+    //tools_init.renderToolsConst()
 
 
     /*-------------------------------------
@@ -122,12 +126,40 @@
 
 
 
+
+    const rtl = AppConfig.observable("directionRtl")
+
+    const primary = AppConfig.color.get("primary")
+
+
+    const isActive = new Observable(false);
+    const status = new Observable("error");
+
     const colorObs = new  Observable("red");
 
     const el = ReactiveElement.section({
-        stylesBind:{
-            color: colorObs
+        styles: {
+           //backgroundColor: "red" ,
+            cursor: "pointer" ,
+            //color: "var(--primary)"
         } ,
+        stylesBind: el => ({
+            //color: colorObs ,
+            direction: rtl.mapBoolean("rtl" , "ltr") ,
+            color: el.active.mapBoolean("var(--shanColor3)", "var(--successColor2)")
+        }) ,
+        className: [
+            "rounded" , "shadow-sm" , "p-2" , "btn"
+        ] ,
+        classBind:[
+            isActive.mapBoolean("active" , "di-active") ,
+
+            status.mapList({
+                error: "btn-danger" ,
+                success: "btn-success" ,
+                warning: "btn-warning" ,
+            })
+        ] ,
         children: [
            /* (() => {
                 const style = document.createElement("style");
@@ -137,23 +169,26 @@
                 } `;
                 return style;
             })(),*/
-            (() => {
-                const div = document.createElement("div");
-                div.id = "test";
-                div.textContent = "شششش";
-
-                return div
-            })()
-
-            //this.#template_render_border() ,
-        ]
+            Lang.translate("test.login", { name:"Ali" })
+        ],
+        on:{
+            click: (event) => {
+                console.log(event)
+            },
+        }
     })
 
     const parent = document.getElementById("template-main");
     parent.appendChild(el.getElement())
 
-    colorObs.set("blue" )
+    colorObs.set("white" )
+    isActive.set(true )
+    status.set("success" )
 
+    //
+
+    AppConfig.color.set("primary" , "#fff")
+    Lang.setLanguage("en")
 </script>
 
 
